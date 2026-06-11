@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kinematics: Average Speed & Velocity Calculator</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Custom style.css -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[#0B0F19] text-gray-100 min-h-screen flex flex-col items-center justify-between font-sans selection:bg-purple-500 selection:text-white relative overflow-x-hidden py-8 px-4">
+
+  <!-- Subtle radial gradient background glow (violet top-left, cyan bottom-right) -->
+  <div class="fixed top-0 left-0 w-96 h-96 bg-purple-900/20 rounded-full blur-[120px] pointer-events-none -translate-x-1/3 -translate-y-1/3"></div>
+  <div class="fixed bottom-0 right-0 w-96 h-96 bg-cyan-900/20 rounded-full blur-[120px] pointer-events-none translate-x-1/3 translate-y-1/3"></div>
+
+  <!-- Main Container -->
+  <main class="w-full max-w-2xl mx-auto flex-grow flex flex-col justify-center items-center gap-6 relative z-10">
+    
+    <!-- Title and Header -->
+    <header class="text-center w-full">
+      <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-2 font-outfit uppercase">
+        Kinematics Calculator
+      </h1>
+      <p class="text-xs md:text-sm text-gray-400 font-medium tracking-wide uppercase">
+        Singapore O-Level Physics Syllabus 6091
+      </p>
+    </header>
+
+    <!-- Syllabus Toggle Card (Always Visible) -->
+    <section class="w-full glass-card p-4 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 border border-white/5 shadow-2xl">
+      <span class="text-sm font-semibold tracking-wider text-gray-300 uppercase select-none">
+        Syllabus Stream:
+      </span>
+      <!-- Custom Toggle Slider Switch -->
+      <div class="flex items-center gap-3">
+        <span id="toggle-label-science" class="text-sm font-bold uppercase transition-colors duration-300">Combined Science</span>
+        <button id="syllabus-toggle-btn" class="w-16 h-8 rounded-full bg-gray-800 p-1 relative flex items-center transition-all duration-300 focus:outline-none border border-white/10" aria-label="Toggle Syllabus Mode">
+          <div id="toggle-dot" class="w-6 h-6 rounded-full bg-white transition-all duration-300 shadow-md absolute left-1"></div>
+        </button>
+        <span id="toggle-label-pure" class="text-sm font-bold uppercase text-gray-500 transition-colors duration-300">Pure Physics</span>
+      </div>
+    </section>
+
+    <!-- Dynamic Context/Scenario Panel (Hidden if no scenario is generated) -->
+    <section id="scenario-panel" class="w-full glass-card p-5 rounded-2xl border border-white/5 shadow-2xl hidden transition-all duration-300">
+      <p class="text-xs font-semibold text-purple-400 uppercase tracking-widest mb-1 select-none">Current Scenario</p>
+      <p id="scenario-text" class="text-base md:text-lg font-outfit text-gray-100 font-medium leading-relaxed italic">
+        Select "Randomize" to load a kinematics scenario context.
+      </p>
+    </section>
+
+    <!-- Core Calculator Card -->
+    <section class="w-full glass-card p-6 md:p-8 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden flex flex-col gap-8">
+      
+      <!-- Input Sliders -->
+      <div class="flex flex-col gap-6">
+        <!-- Slider 1: Distance / Displacement -->
+        <div class="flex flex-col gap-2">
+          <div class="flex justify-between items-center">
+            <label for="slider-distance" class="text-sm font-bold uppercase tracking-wider text-gray-300" id="label-distance">
+              Total Distance
+            </label>
+            <div class="flex items-center gap-2 font-mono">
+              <span id="display-distance-container" class="text-2xl font-bold transition-all duration-300">
+                <span id="display-distance">500</span><span class="text-sm text-gray-400 ml-1">m</span>
+              </span>
+              <button id="solution-trigger-distance" class="hidden text-red-500 hover:text-red-400 transition-all p-1 hover:scale-110 active:scale-95" title="Show Worked Solution">
+                <!-- Eye Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <input type="range" id="slider-distance" min="10" max="1000" step="10" value="500" class="w-full h-2 rounded-lg appearance-none cursor-pointer bg-gray-800 transition-all">
+          <div class="flex justify-between text-[10px] text-gray-500 font-mono">
+            <span>10m</span>
+            <span>500m</span>
+            <span>1000m</span>
+          </div>
+        </div>
+
+        <!-- Slider 2: Time Taken -->
+        <div class="flex flex-col gap-2">
+          <div class="flex justify-between items-center">
+            <label for="slider-time" class="text-sm font-bold uppercase tracking-wider text-gray-300">
+              Time Taken
+            </label>
+            <div class="flex items-center gap-2 font-mono">
+              <span id="display-time-container" class="text-2xl font-bold transition-all duration-300">
+                <span id="display-time">25</span><span class="text-sm text-gray-400 ml-1">s</span>
+              </span>
+              <button id="solution-trigger-time" class="hidden text-red-500 hover:text-red-400 transition-all p-1 hover:scale-110 active:scale-95" title="Show Worked Solution">
+                <!-- Eye Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <input type="range" id="slider-time" min="1" max="100" step="1" value="25" class="w-full h-2 rounded-lg appearance-none cursor-pointer bg-gray-800 transition-all">
+          <div class="flex justify-between text-[10px] text-gray-500 font-mono">
+            <span>1s</span>
+            <span>50s</span>
+            <span>100s</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Card Area -->
+      <div class="border-t border-white/10 pt-6 flex flex-col items-center gap-4">
+        <!-- Display Header (Dynamic Label) -->
+        <span class="text-xs font-bold uppercase tracking-widest text-gray-400" id="label-result-header">
+          Calculated Average Speed
+        </span>
+
+        <!-- Calculated Speed/Velocity Output -->
+        <div class="flex items-center gap-3">
+          <div id="display-result-container" class="font-mono text-4xl md:text-5xl font-extrabold tracking-tight transition-all duration-300">
+            <span id="display-result">20.0</span> <span class="text-2xl font-bold text-gray-400">m/s</span>
+          </div>
+          <button id="solution-trigger-result" class="hidden text-red-500 hover:text-red-400 transition-all p-1 hover:scale-110 active:scale-95" title="Show Worked Solution">
+            <!-- Eye Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Formula Reminder -->
+        <div class="px-4 py-2 bg-black/30 rounded-xl border border-white/5 text-center mt-2 w-full max-w-md">
+          <p class="text-[11px] font-mono uppercase tracking-wide text-gray-400 mb-1">Formula Reference</p>
+          <p id="formula-text" class="font-mono text-xs md:text-sm font-semibold tracking-normal text-amber-400">
+            average speed = total distance / time taken
+          </p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Controls Buttons Panel -->
+    <section class="w-full grid grid-cols-3 gap-3 md:gap-4 select-none">
+      <button id="btn-test-mode" class="glass-btn hover:scale-105 active:scale-95 text-xs md:text-sm font-bold uppercase tracking-wider py-3 px-4 rounded-xl flex flex-col md:flex-row items-center justify-center gap-2 border border-white/10 transition-all duration-300">
+        <span class="w-2.5 h-2.5 rounded-full bg-gray-500 inline-block mr-1" id="test-mode-indicator"></span>
+        Test Mode
+      </button>
+      <button id="btn-randomize" class="glass-btn hover:scale-105 active:scale-95 text-xs md:text-sm font-bold uppercase tracking-wider py-3 px-4 rounded-xl flex flex-col md:flex-row items-center justify-center gap-2 border border-white/10 transition-all duration-300">
+        <!-- Sparkles icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+        </svg>
+        Randomize
+      </button>
+      <button id="btn-reset" class="glass-btn hover:scale-105 active:scale-95 text-xs md:text-sm font-bold uppercase tracking-wider py-3 px-4 rounded-xl flex flex-col md:flex-row items-center justify-center gap-2 border border-white/10 transition-all duration-300">
+        <!-- Reset/Arrow icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 7.89M9 11l3-3 3 3m-3-3v12" />
+        </svg>
+        Reset
+      </button>
+    </section>
+
+  </main>
+
+  <!-- Worked Solution Modal Overlay -->
+  <div id="solution-modal" class="fixed inset-0 w-full h-full bg-black/80 backdrop-blur-md flex items-center justify-center z-50 opacity-0 pointer-events-none transition-all duration-300">
+    <div class="glass-card max-w-md w-11/12 p-6 md:p-8 rounded-3xl border border-white/10 shadow-2xl relative flex flex-col gap-6">
+      
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center border-b border-white/10 pb-4">
+        <h2 class="text-xl font-bold font-outfit text-white flex items-center gap-2">
+          <!-- Lightbulb Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+          Worked Solution
+        </h2>
+        <button id="modal-close" class="text-gray-400 hover:text-white transition-colors duration-200 focus:outline-none p-1" aria-label="Close modal">
+          <!-- Close Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Steps Body -->
+      <div class="flex flex-col gap-4">
+        <!-- Formula Step -->
+        <div class="flex flex-col gap-1">
+          <p class="text-xs font-bold uppercase tracking-widest text-purple-400">Step 1: Write the formula</p>
+          <div id="modal-step1" class="font-mono text-sm bg-black/30 p-3 rounded-lg border border-white/5 text-gray-200">
+            average speed = total distance / time taken
+          </div>
+        </div>
+
+        <!-- Substitution Step -->
+        <div class="flex flex-col gap-1">
+          <p class="text-xs font-bold uppercase tracking-widest text-purple-400">Step 2: Substitute values</p>
+          <div id="modal-step2" class="font-mono text-sm bg-black/30 p-3 rounded-lg border border-white/5 text-gray-200">
+            average speed = 500m / 25s
+          </div>
+        </div>
+
+        <!-- Calculation Step -->
+        <div class="flex flex-col gap-1">
+          <p class="text-xs font-bold uppercase tracking-widest text-purple-400">Step 3: Calculate</p>
+          <div id="modal-step3" class="font-mono text-sm bg-black/30 p-3 rounded-lg border border-white/5 text-gray-200">
+            average speed = 20.0 m/s
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Close Button -->
+      <button id="modal-close-btn" class="w-full py-3 bg-white/5 hover:bg-white/10 text-white font-semibold rounded-xl border border-white/10 transition-all active:scale-95 duration-200 text-sm tracking-wider uppercase">
+        Got it, thanks!
+      </button>
+
+    </div>
+  </div>
+
+  <footer class="w-full text-center text-[10px] md:text-xs text-gray-500 mt-8 font-mono select-none">
+    &copy; 2026 Singapore O-Level Physics 6091 helper. Designed to be premium & responsive.
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
