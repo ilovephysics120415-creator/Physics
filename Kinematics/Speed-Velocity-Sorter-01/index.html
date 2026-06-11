@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speed vs Velocity Sorter | Singapore O-Level Physics 6091</title>
+  <!-- Tailwind CSS v4 CDN -->
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: #0B0F19;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.07) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(0, 242, 254, 0.07) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(99, 102, 241, 0.05) 0px, transparent 50%);
+    }
+    .code-font {
+      font-family: 'Fira Code', monospace;
+    }
+    .glass {
+      background: rgba(20, 27, 45, 0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-speed {
+      background: rgba(245, 158, 11, 0.04);
+      border: 1px solid rgba(245, 158, 11, 0.15);
+    }
+    .glass-velocity {
+      background: rgba(0, 242, 254, 0.04);
+      border: 1px solid rgba(0, 242, 254, 0.15);
+    }
+    .correct-glow {
+      box-shadow: 0 0 40px 10px rgba(34, 197, 94, 0.4);
+      border-color: rgba(34, 197, 94, 0.6);
+    }
+    .wrong-glow {
+      box-shadow: 0 0 40px 10px rgba(239, 68, 68, 0.4);
+      border-color: rgba(239, 68, 68, 0.6);
+    }
+    /* Prevent text selection during drag */
+    .no-select {
+      user-select: none;
+      -webkit-user-select: none;
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col justify-between overflow-x-hidden text-slate-100 no-select">
+
+  <!-- Header -->
+  <header class="w-full max-w-6xl mx-auto px-4 pt-6 pb-2 flex flex-col sm:flex-row items-center justify-between gap-4 z-10">
+    <div class="flex flex-col items-center sm:items-start">
+      <div class="flex items-center gap-2">
+        <span class="px-2 py-0.5 text-xs font-semibold tracking-wider text-amber-400 bg-amber-400/10 rounded-md border border-amber-400/20">O-LEVEL 6091</span>
+        <span class="text-xs font-semibold tracking-wider text-indigo-400 bg-indigo-400/10 rounded-md border border-indigo-400/20">KINEMATICS</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-400 via-slate-100 to-[#00F2FE] mt-1">
+        Speed vs Velocity Sorter
+      </h1>
+    </div>
+
+    <!-- Stats and Toggles -->
+    <div class="flex flex-wrap items-center justify-center gap-4">
+      <!-- Test Mode Toggle -->
+      <button id="test-mode-btn" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-700 bg-slate-900/60 hover:bg-slate-800 transition-all duration-300 cursor-pointer">
+        <span class="relative flex h-3 w-3">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-400 opacity-75" id="test-ping"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-slate-500" id="test-indicator"></span>
+        </span>
+        <span class="text-xs font-semibold uppercase tracking-wider text-slate-300">Test Mode</span>
+      </button>
+
+      <!-- Score & Streak -->
+      <div class="flex items-center gap-3">
+        <div class="glass px-4 py-1.5 rounded-xl flex items-center gap-2 text-sm">
+          <span class="text-slate-400 font-medium">Score:</span>
+          <span id="score-counter" class="code-font font-bold text-lg text-indigo-400">0/0</span>
+        </div>
+        <div class="glass px-4 py-1.5 rounded-xl flex items-center gap-2 text-sm border-amber-500/20">
+          <span class="text-slate-400 font-medium">🔥 Streak:</span>
+          <span id="streak-counter" class="code-font font-bold text-lg text-amber-500">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-grow flex items-center justify-center w-full max-w-6xl mx-auto px-4 py-4 relative">
+    
+    <!-- Game Container Grid -->
+    <div class="w-full grid grid-cols-1 md:grid-cols-5 gap-6 items-center min-h-[500px]">
+      
+      <!-- SPEED Bucket (Left) -->
+      <div id="bucket-speed" class="glass glass-speed md:col-span-1.5 h-36 md:h-96 rounded-3xl flex flex-col items-center justify-center p-6 border-amber-500/30 transition-all duration-300 shadow-lg relative overflow-hidden group select-none">
+        <div class="absolute inset-0 bg-gradient-to-t from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+        <div class="flex flex-col items-center text-center pointer-events-none z-10">
+          <div class="text-3xl md:text-5xl mb-2">⚖️</div>
+          <h2 class="text-xl md:text-2xl font-bold text-amber-400 uppercase tracking-widest label-speed">SPEED</h2>
+          <p class="text-xs text-amber-500/80 font-semibold tracking-wider uppercase mt-1 label-speed-sub">Scalar (Magnitude Only)</p>
+        </div>
+        <div class="absolute bottom-4 text-[10px] text-amber-500/40 uppercase tracking-widest font-mono hidden md:block">Drag Card Here</div>
+      </div>
+
+      <!-- Play Zone (Center Card Stack) -->
+      <div class="md:col-span-2 flex flex-col items-center justify-center min-h-[350px] relative">
+        
+        <!-- Flash Feedback Overlay -->
+        <div id="flash-feedback" class="absolute inset-0 rounded-3xl opacity-0 pointer-events-none transition-all duration-300 z-30 flex items-center justify-center">
+          <span id="flash-text" class="text-4xl font-extrabold uppercase tracking-widest text-white drop-shadow-lg scale-75 transition-transform duration-300"></span>
+        </div>
+
+        <!-- Card Container -->
+        <div id="card-container" class="relative w-full max-w-[340px] aspect-[3/4] flex items-center justify-center select-none">
+          <!-- Active Scenario Card -->
+          <div id="scenario-card" class="glass w-full h-full rounded-3xl p-6 flex flex-col justify-between cursor-grab active:cursor-grabbing shadow-2xl transition-shadow border-slate-700/60 touch-none absolute z-20 select-none">
+            
+            <!-- Card Header -->
+            <div class="flex items-center justify-between w-full">
+              <span id="card-index" class="text-xs font-semibold code-font text-slate-500 uppercase tracking-wider">Card 01/20</span>
+              <button id="explanation-btn" class="w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 border border-slate-700/60 flex items-center justify-center cursor-pointer transition-transform hover:scale-110 active:scale-95 shadow-md" title="Worked Explanation">
+                <span class="text-amber-400 text-lg">💡</span>
+              </button>
+            </div>
+
+            <!-- Card Body / Scenario Text -->
+            <div class="my-auto text-center flex flex-col justify-center items-center py-4">
+              <div class="text-4xl mb-4" id="scenario-emoji">🚗</div>
+              <p id="scenario-text" class="text-lg sm:text-xl font-semibold leading-relaxed text-slate-100 px-2 select-none">
+                Loading scenario...
+              </p>
+            </div>
+
+            <!-- Card Footer / Indicators -->
+            <div class="flex flex-col items-center w-full gap-2">
+              <!-- Explanation Feedback Row -->
+              <div id="feedback-explanation" class="text-center text-xs font-semibold text-emerald-400 opacity-0 transition-opacity duration-200 min-h-[16px] px-2 leading-relaxed">
+                Correct! Direction is stated, so this is velocity.
+              </div>
+              
+              <!-- Drag Instructions -->
+              <div class="flex justify-between items-center w-full text-xs text-slate-500 font-medium px-1 mt-2 pointer-events-none">
+                <span class="flex items-center gap-1">← Drag Speed</span>
+                <span class="text-[10px] uppercase font-mono bg-slate-800/80 px-2 py-0.5 rounded">6091 Syllabus</span>
+                <span class="flex items-center gap-1">Drag Velocity →</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Behind Card (Visual Stack Effect) -->
+          <div class="glass w-[94%] h-[98%] rounded-3xl absolute translate-y-3 scale-95 opacity-50 z-10 border-slate-800"></div>
+          <div class="glass w-[88%] h-[96%] rounded-3xl absolute translate-y-6 scale-90 opacity-20 z-0 border-slate-800"></div>
+        </div>
+
+        <!-- Manual Sorter Buttons for ease of access / backup -->
+        <div class="flex items-center gap-6 mt-6 w-full max-w-[340px]">
+          <button id="btn-select-speed" class="flex-1 py-3 px-4 rounded-2xl bg-amber-500/10 hover:bg-amber-500/20 active:scale-95 border border-amber-500/30 text-amber-400 font-bold tracking-wide transition-all shadow-md cursor-pointer text-center text-sm">
+            ← SPEED
+          </button>
+          <button id="btn-select-velocity" class="flex-1 py-3 px-4 rounded-2xl bg-cyan-500/10 hover:bg-cyan-500/20 active:scale-95 border border-cyan-500/30 text-[#00F2FE] font-bold tracking-wide transition-all shadow-md cursor-pointer text-center text-sm">
+            VELOCITY →
+          </button>
+        </div>
+      </div>
+
+      <!-- VELOCITY Bucket (Right) -->
+      <div id="bucket-velocity" class="glass glass-velocity md:col-span-1.5 h-36 md:h-96 rounded-3xl flex flex-col items-center justify-center p-6 border-cyan-500/30 transition-all duration-300 shadow-lg relative overflow-hidden group select-none">
+        <div class="absolute inset-0 bg-gradient-to-t from-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+        <div class="flex flex-col items-center text-center pointer-events-none z-10">
+          <div class="text-3xl md:text-5xl mb-2">🚀</div>
+          <h2 class="text-xl md:text-2xl font-bold text-[#00F2FE] uppercase tracking-widest label-velocity">VELOCITY</h2>
+          <p class="text-xs text-cyan-400/80 font-semibold tracking-wider uppercase mt-1 label-velocity-sub">Vector (Magnitude + Dir)</p>
+        </div>
+        <div class="absolute bottom-4 text-[10px] text-cyan-500/40 uppercase tracking-widest font-mono hidden md:block">Drag Card Here</div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer Info / Audio Button -->
+  <footer class="w-full max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2 z-10">
+    <div class="flex items-center gap-4">
+      <span>Physics Syllabus 6091 (Kinematics)</span>
+      <span>•</span>
+      <button id="toggle-sound" class="hover:text-slate-300 font-semibold flex items-center gap-1 cursor-pointer">
+        <span id="sound-icon">🔊</span> Sound: On
+      </button>
+    </div>
+    <div>Designed for 16-year-old Students</div>
+  </footer>
+
+  <!-- Worked Explanation Modal -->
+  <div id="explanation-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="glass w-full max-w-lg rounded-3xl p-6 shadow-2xl border-slate-700/60 scale-95 transition-transform duration-300 flex flex-col max-h-[90vh] overflow-y-auto" id="modal-content">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">💡</span>
+          <h3 class="text-xl font-bold text-slate-100">Worked Explanation</h3>
+        </div>
+        <button id="modal-close" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-slate-200 transition-colors cursor-pointer text-lg font-bold">×</button>
+      </div>
+
+      <!-- Scenario Card in Modal -->
+      <div class="bg-slate-900/50 border border-slate-800 p-4 rounded-2xl mb-6 text-center">
+        <span class="text-xs uppercase font-mono tracking-widest text-slate-500">The Scenario</span>
+        <p id="modal-scenario-text" class="text-base font-semibold text-slate-200 mt-1">"A car travels 60 km/h northward"</p>
+      </div>
+
+      <!-- 4-Step Explanation Pathway -->
+      <div class="space-y-4 flex-grow">
+        <!-- Step 1 -->
+        <div class="flex gap-4">
+          <div class="flex flex-col items-center">
+            <div class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center text-xs font-bold font-mono">1</div>
+            <div class="w-0.5 h-full bg-slate-800 mt-2"></div>
+          </div>
+          <div class="pb-2">
+            <h4 class="text-sm font-bold text-amber-400 uppercase tracking-wide">Step 1: What is Speed?</h4>
+            <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">Speed is a <strong>scalar quantity</strong>. It has magnitude (size/value) only, with no direction.</p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="flex gap-4">
+          <div class="flex flex-col items-center">
+            <div class="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 flex items-center justify-center text-xs font-bold font-mono">2</div>
+            <div class="w-0.5 h-full bg-slate-800 mt-2"></div>
+          </div>
+          <div class="pb-2">
+            <h4 class="text-sm font-bold text-cyan-400 uppercase tracking-wide">Step 2: What is Velocity?</h4>
+            <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">Velocity is a <strong>vector quantity</strong>. It is defined as speed in a specified direction. (Magnitude + Direction)</p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="flex gap-4">
+          <div class="flex flex-col items-center">
+            <div class="w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center text-xs font-bold font-mono">3</div>
+            <div class="w-0.5 h-full bg-slate-800 mt-2"></div>
+          </div>
+          <div class="pb-2">
+            <h4 class="text-sm font-bold text-indigo-400 uppercase tracking-wide">Step 3: Analyze the Scenario</h4>
+            <p class="text-xs text-slate-400 mt-0.5 leading-relaxed" id="modal-step3-text">Does this scenario state a direction? Yes, "northward".</p>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="flex gap-4">
+          <div class="flex flex-col items-center">
+            <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-xs font-bold font-mono">4</div>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-emerald-400 uppercase tracking-wide">Step 4: Conclusion</h4>
+            <p class="text-xs text-slate-300 mt-0.5 leading-relaxed" id="modal-step4-text">Therefore, the quantity described is Velocity.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Close Action -->
+      <button id="modal-ok-btn" class="w-full mt-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm tracking-wider transition-colors shadow-lg cursor-pointer">
+        Got it!
+      </button>
+    </div>
+  </div>
+
+  <!-- Round Complete / Game Over Screen Overlay -->
+  <div id="game-over-overlay" class="fixed inset-0 z-40 bg-[#0B0F19] flex flex-col items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500 overflow-y-auto">
+    <div class="glass w-full max-w-xl rounded-3xl p-8 text-center flex flex-col items-center justify-center shadow-2xl relative overflow-hidden">
+      <!-- Animated sparkles background -->
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(99,102,241,0.15),transparent_60%)] pointer-events-none"></div>
+
+      <!-- Icon / Status -->
+      <div class="text-6xl mb-4 animate-bounce">🏆</div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-[#00F2FE]">
+        Round Complete!
+      </h2>
+      <p class="text-sm text-slate-400 mt-2 max-w-md">Excellent work sorting through O-Level Physics 6091 Kinematics quantities!</p>
+
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-3 gap-4 w-full my-8 max-w-md">
+        <!-- Score Card -->
+        <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-4 flex flex-col items-center">
+          <span class="text-xs text-slate-500 font-semibold uppercase">Score</span>
+          <span id="final-score" class="text-2xl font-bold text-indigo-400 code-font mt-1">20/20</span>
+        </div>
+        <!-- Accuracy -->
+        <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-4 flex flex-col items-center">
+          <span class="text-xs text-slate-500 font-semibold uppercase">Accuracy</span>
+          <span id="final-accuracy" class="text-2xl font-bold text-emerald-400 code-font mt-1">100%</span>
+        </div>
+        <!-- Max Streak -->
+        <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-4 flex flex-col items-center">
+          <span class="text-xs text-slate-500 font-semibold uppercase">Best Streak</span>
+          <span id="final-streak" class="text-2xl font-bold text-amber-500 code-font mt-1">12</span>
+        </div>
+      </div>
+
+      <!-- Grade/Evaluation message -->
+      <div class="bg-indigo-950/20 border border-indigo-500/20 rounded-2xl p-4 w-full max-w-md mb-8">
+        <p class="text-xs text-slate-400 uppercase tracking-widest font-semibold">Syllabus 6091 Evaluation</p>
+        <p id="grade-message" class="text-sm font-semibold text-indigo-300 mt-1">You fully understand the difference between Scalar & Vector quantities!</p>
+      </div>
+
+      <!-- Action Button -->
+      <button id="retry-btn" class="w-full max-w-xs py-4 px-8 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold tracking-wider hover:scale-105 active:scale-95 transition-all shadow-lg cursor-pointer">
+        Play Again (Reshuffle)
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // SCENARIO BANK (Minimum 20 items)
+    const scenarios = [
+      {
+        text: "A car travels 60 km/h northward",
+        emoji: "🚗",
+        type: "velocity",
+        explanation: "Correct! The direction ('northward') is specified alongside magnitude.",
+        direction: "Yes, 'northward'",
+        step4: "Therefore, because direction is specified, this is a velocity (vector quantity)."
+      },
+      {
+        text: "A runner completes a 100m race in 10s",
+        emoji: "🏃",
+        type: "speed",
+        explanation: "Correct! Only distance and time are mentioned, with no specified direction.",
+        direction: "No direction is specified.",
+        step4: "Therefore, without a direction, this refers to speed (scalar quantity)."
+      },
+      {
+        text: "A car travels at 80 km/h",
+        emoji: "🚘",
+        type: "speed",
+        explanation: "Correct! This is a trick question. 80 km/h is speed; no direction is stated.",
+        direction: "No direction is specified.",
+        step4: "Therefore, this is speed (scalar quantity) because direction is missing."
+      },
+      {
+        text: "A typhoon travels at 150 km/h northwest",
+        emoji: "🌀",
+        type: "velocity",
+        explanation: "Correct! The wind rate is paired with a specific direction ('northwest').",
+        direction: "Yes, 'northwest'",
+        step4: "Therefore, this is a velocity (vector quantity)."
+      },
+      {
+        text: "A garden snail crawls at 1 cm/s",
+        emoji: "🐌",
+        type: "speed",
+        explanation: "Correct! Just a magnitude of rate of motion is given.",
+        direction: "No direction is specified.",
+        step4: "Therefore, this is speed (scalar quantity)."
+      },
+      {
+        text: "An athlete runs at a steady 8 m/s on a circular track",
+        emoji: "🏃‍♀️",
+        type: "speed",
+        explanation: "Correct! The steady rate is speed. (Note: velocity changes continuously because direction changes).",
+        direction: "No specific straight-line direction is stated.",
+        step4: "Therefore, this steady value is speed (scalar quantity)."
+      },
+      {
+        text: "A spacecraft ascends vertically upwards at 250 m/s",
+        emoji: "🚀",
+        type: "velocity",
+        explanation: "Correct! Direction is explicitly given as 'vertically upwards'.",
+        direction: "Yes, 'vertically upwards'",
+        step4: "Therefore, this is a velocity (vector quantity)."
+      },
+      {
+        text: "A cargo train travels 120 km in 2 hours",
+        emoji: "🚂",
+        type: "speed",
+        explanation: "Correct! Distance over time calculates speed, not velocity.",
+        direction: "No direction is specified.",
+        step4: "Therefore, the average rate is speed (scalar quantity)."
+      },
+      {
+        text: "An elevator descends downwards at 1.5 m/s",
+        emoji: "🛗",
+        type: "velocity",
+        explanation: "Correct! The rate of travel is paired with the direction 'downwards'.",
+        direction: "Yes, 'downwards'",
+        step4: "Therefore, this is velocity (vector quantity)."
+      },
+      {
+        text: "A pigeon flies at 12 m/s towards the south",
+        emoji: "🐦",
+        type: "velocity",
+        explanation: "Correct! Speed value is paired with 'towards the south'.",
+        direction: "Yes, 'towards the south'",
+        step4: "Therefore, this is velocity (vector quantity)."
+      },
+      {
+        text: "A fidget spinner's outer edge rotates with a linear rate of 2 m/s",
+        emoji: "🌀",
+        type: "speed",
+        explanation: "Correct! The rate of rotation on the edge is speed; direction constantly loops.",
+        direction: "No straight-line direction is specified.",
+        step4: "Therefore, this is speed (scalar quantity)."
+      },
+      {
+        text: "A submarine dives at 5 m/s at an angle of 30° below the horizontal",
+        emoji: "🌊",
+        type: "velocity",
+        explanation: "Correct! An angle relative to horizontal defines a clear direction vector.",
+        direction: "Yes, '30° below the horizontal'",
+        step4: "Therefore, this is velocity (vector quantity)."
+      },
+      {
+        text: "The Earth orbits the Sun at a rate of 30 km/s",
+        emoji: "🌍",
+        type: "speed",
+        explanation: "Correct! The speed along the orbit is a scalar. (Velocity vector changes direction constantly).",
+        direction: "No constant direction is specified.",
+        step4: "Therefore, this orbital rate is speed (scalar quantity)."
+      },
+      {
+        text: "A car drives from Singapore to Johor Bahru heading north at 80 km/h",
+        emoji: "🏎️",
+        type: "velocity",
+        explanation: "Correct! The motion is specified with the direction 'north'.",
+        direction: "Yes, 'north'",
+        step4: "Therefore, this is velocity (vector quantity)."
+      },
+      {
+        text: "A skateboarder glides around a park bowl at a steady 10 km/h",
+        emoji: "🛹",
+        type: "speed",
+        explanation: "Correct! Gliding around a curved surface means direction changes, making 10 km/h a scalar speed.",
+        direction: "No constant direction is specified.",
+        step4: "Therefore, this steady value is speed (scalar quantity)."
+      },
+      {
+        text: "A jet airplane flies at 900 km/h on a bearing of 270° (due west)",
+        emoji: "✈️",
+        type: "velocity",
+        explanation: "Correct! The bearing of 270° defines a precise direction (due west).",
+        direction: "Yes, 'bearing of 270° (due west)'",
+        step4: "Therefore, this is velocity (vector quantity)."
+      },
+      {
+        text: "A pendulum swings back and forth with a maximum rate of 0.5 m/s",
+        emoji: "⏳",
+        type: "speed",
+        explanation: "Correct! A maximum rate without specifying direction at that instant is speed.",
+        direction: "No direction is specified.",
+        step4: "Therefore, this rate is speed (scalar quantity)."
+      },
+      {
+        text: "A parcel dropped from a window falls at 9.8 m/s vertically downwards",
+        emoji: "📦",
+        type: "velocity",
+        explanation: "Correct! It specifies the rate along with the direction 'vertically downwards'.",
+        direction: "Yes, 'vertically downwards'",
+        step4: "Therefore, this is velocity (vector quantity)."
+      },
+      {
+        text: "A car speedometer reads 60 km/h",
+        emoji: "📟",
+        type: "speed",
+        explanation: "Correct! Speedometers only show speed magnitude, not direction. (Hence the name!)",
+        direction: "No direction is shown by a speedometer.",
+        step4: "Therefore, speedometer values represent speed (scalar quantity)."
+      },
+      {
+        text: "A coastal wind blows at 15 knots from the northeast",
+        emoji: "💨",
+        type: "velocity",
+        explanation: "Correct! Winds defined with a direction origin ('from the northeast') specify a velocity vector.",
+        direction: "Yes, 'from the northeast'",
+        step4: "Therefore, wind rate with a direction is velocity (vector quantity)."
+      }
+    ];
+
+    // Sound Generator (Web Audio API)
+    const AudioEngine = {
+      ctx: null,
+      enabled: true,
+      init() {
+        if (!this.ctx) {
+          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+      },
+      playSuccess() {
+        if (!this.enabled) return;
+        this.init();
+        const now = this.ctx.currentTime;
+        
+        // Success Chime: Quick arpeggio
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        notes.forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gainNode = this.ctx.createGain();
+          
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+          
+          gainNode.gain.setValueAtTime(0.15, now + idx * 0.08);
+          gainNode.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
+          
+          osc.connect(gainNode);
+          gainNode.connect(this.ctx.destination);
+          
+          osc.start(now + idx * 0.08);
+          osc.stop(now + idx * 0.08 + 0.35);
+        });
+      },
+      playError() {
+        if (!this.enabled) return;
+        this.init();
+        const now = this.ctx.currentTime;
+        
+        // Error Buzz: Discordant low frequency
+        const osc1 = this.ctx.createOscillator();
+        const osc2 = this.ctx.createOscillator();
+        const gainNode = this.ctx.createGain();
+        
+        osc1.type = 'sawtooth';
+        osc1.frequency.setValueAtTime(150, now);
+        
+        osc2.type = 'square';
+        osc2.frequency.setValueAtTime(154, now); // slightly detuned for buzzer effect
+        
+        gainNode.gain.setValueAtTime(0.15, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+        
+        osc1.connect(gainNode);
+        osc2.connect(gainNode);
+        gainNode.connect(this.ctx.destination);
+        
+        osc1.start(now);
+        osc2.start(now);
+        
+        osc1.stop(now + 0.5);
+        osc2.stop(now + 0.5);
+      }
+    };
+
+    // State variables
+    let gameSession = [];
+    let currentIndex = 0;
+    let score = 0;
+    let attempted = 0;
+    let currentStreak = 0;
+    let maxStreak = 0;
+    let testMode = false;
+    let blockInput = false;
+
+    // DOM Elements
+    const card = document.getElementById('scenario-card');
+    const cardContainer = document.getElementById('card-container');
+    const scenarioText = document.getElementById('scenario-text');
+    const scenarioEmoji = document.getElementById('scenario-emoji');
+    const cardIndexLabel = document.getElementById('card-index');
+    const feedbackExplanation = document.getElementById('feedback-explanation');
+    const flashFeedback = document.getElementById('flash-feedback');
+    const flashText = document.getElementById('flash-text');
+    const scoreCounter = document.getElementById('score-counter');
+    const streakCounter = document.getElementById('streak-counter');
+    
+    const testModeBtn = document.getElementById('test-mode-btn');
+    const testIndicator = document.getElementById('test-indicator');
+    const testPing = document.getElementById('test-ping');
+    const labelSpeed = document.querySelector('.label-speed');
+    const labelSpeedSub = document.querySelector('.label-speed-sub');
+    const labelVelocity = document.querySelector('.label-velocity');
+    const labelVelocitySub = document.querySelector('.label-velocity-sub');
+    const bucketSpeed = document.getElementById('bucket-speed');
+    const bucketVelocity = document.getElementById('bucket-velocity');
+    
+    const explanationBtn = document.getElementById('explanation-btn');
+    const explanationModal = document.getElementById('explanation-modal');
+    const modalClose = document.getElementById('modal-close');
+    const modalOkBtn = document.getElementById('modal-ok-btn');
+    const modalScenarioText = document.getElementById('modal-scenario-text');
+    const modalStep3Text = document.getElementById('modal-step3-text');
+    const modalStep4Text = document.getElementById('modal-step4-text');
+
+    const gameOverOverlay = document.getElementById('game-over-overlay');
+    const finalScore = document.getElementById('final-score');
+    const finalAccuracy = document.getElementById('final-accuracy');
+    const finalStreak = document.getElementById('final-streak');
+    const gradeMessage = document.getElementById('grade-message');
+    const retryBtn = document.getElementById('retry-btn');
+    
+    const btnSelectSpeed = document.getElementById('btn-select-speed');
+    const btnSelectVelocity = document.getElementById('btn-select-velocity');
+    const toggleSoundBtn = document.getElementById('toggle-sound');
+    const soundIcon = document.getElementById('sound-icon');
+
+    // Drag configuration
+    let startX = 0;
+    let startY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let isDragging = false;
+    const dragThreshold = 100; // threshold in pixels to register a sort
+
+    // Shuffle scenarios
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // Initialize/Restart Game
+    function initGame() {
+      gameSession = shuffleArray([...scenarios]);
+      currentIndex = 0;
+      score = 0;
+      attempted = 0;
+      currentStreak = 0;
+      maxStreak = 0;
+      blockInput = false;
+      
+      updateStats();
+      showCard(currentIndex);
+      
+      gameOverOverlay.classList.add('opacity-0', 'pointer-events-none');
+      feedbackExplanation.classList.add('opacity-0');
+      
+      // Reset card styling
+      card.style.transform = '';
+      card.style.opacity = '1';
+      card.className = "glass w-full h-full rounded-3xl p-6 flex flex-col justify-between cursor-grab active:cursor-grabbing shadow-2xl transition-shadow border-slate-700/60 touch-none absolute z-20 select-none";
+    }
+
+    // Update Scores / Stats Display
+    function updateStats() {
+      scoreCounter.innerText = `${score}/${attempted}`;
+      streakCounter.innerText = currentStreak;
+    }
+
+    // Display Active Card Details
+    function showCard(index) {
+      if (index >= gameSession.length) {
+        endGame();
+        return;
+      }
+      
+      const item = gameSession[index];
+      scenarioText.innerText = `"${item.text}"`;
+      scenarioEmoji.innerText = item.emoji;
+      cardIndexLabel.innerText = `Card ${String(index + 1).padStart(2, '0')}/${gameSession.length}`;
+      feedbackExplanation.classList.add('opacity-0');
+      
+      // Reset position & class
+      card.style.transform = 'translate3d(0,0,0) rotate(0deg)';
+      card.style.opacity = '1';
+      card.className = "glass w-full h-full rounded-3xl p-6 flex flex-col justify-between cursor-grab active:cursor-grabbing shadow-2xl transition-shadow border-slate-700/60 touch-none absolute z-20 select-none";
+      
+      blockInput = false;
+    }
+
+    // Evaluate Sorting Decision
+    function evaluateChoice(choice) {
+      if (blockInput) return;
+      blockInput = true;
+      
+      const item = gameSession[currentIndex];
+      const isCorrect = (choice === item.type);
+      
+      attempted++;
+      if (isCorrect) {
+        score++;
+        currentStreak++;
+        if (currentStreak > maxStreak) maxStreak = currentStreak;
+        
+        AudioEngine.playSuccess();
+        triggerVisualFeedback(true, item.explanation);
+      } else {
+        currentStreak = 0;
+        AudioEngine.playError();
+        triggerVisualFeedback(false, `Wrong. Remember: speed is scalar, velocity is vector. ${item.explanation}`);
+      }
+      
+      updateStats();
+      
+      // Auto-advance after 1.5s
+      setTimeout(() => {
+        // Slide card away animate direction
+        const flyOutDir = choice === 'speed' ? -500 : 500;
+        card.style.transition = 'all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
+        card.style.transform = `translate3d(${flyOutDir}px, 0px, 0) rotate(${flyOutDir / 10}deg)`;
+        card.style.opacity = '0';
+        
+        setTimeout(() => {
+          card.style.transition = '';
+          currentIndex++;
+          showCard(currentIndex);
+        }, 300);
+      }, 1500);
+    }
+
+    // Green / Red Flash Feedback Visualizer
+    function triggerVisualFeedback(isCorrect, explanationMsg) {
+      // Show feedback explanation line
+      feedbackExplanation.innerText = explanationMsg;
+      feedbackExplanation.className = `text-center text-xs font-semibold px-2 leading-relaxed transition-opacity duration-200 mt-2 ${isCorrect ? 'text-emerald-400' : 'text-rose-400'}`;
+      feedbackExplanation.classList.remove('opacity-0');
+      
+      // Pulse Target Card
+      card.classList.add(isCorrect ? 'correct-glow' : 'wrong-glow');
+      
+      // Screen Flash
+      flashFeedback.className = `absolute inset-0 rounded-3xl opacity-100 pointer-events-none z-30 transition-all duration-150 flex items-center justify-center ${isCorrect ? 'bg-emerald-500/20' : 'bg-rose-500/20'}`;
+      flashText.innerText = isCorrect ? "CORRECT! +1" : "INCORRECT";
+      flashText.className = `text-2xl font-extrabold uppercase tracking-widest drop-shadow-md scale-100 transition-transform duration-150 ${isCorrect ? 'text-emerald-400' : 'text-rose-400'}`;
+      
+      // Clean up overlay quickly
+      setTimeout(() => {
+        flashFeedback.classList.remove('opacity-100');
+        flashFeedback.classList.add('opacity-0');
+        flashText.className = "text-2xl font-extrabold uppercase tracking-widest scale-75 transition-transform duration-150";
+      }, 800);
+    }
+
+    // Toggle Test Mode Functionality
+    function toggleTestMode() {
+      testMode = !testMode;
+      if (testMode) {
+        testModeBtn.classList.add('border-indigo-500', 'bg-indigo-950/40');
+        testIndicator.classList.replace('bg-slate-500', 'bg-indigo-400');
+        testPing.classList.replace('bg-slate-400', 'bg-indigo-400');
+        
+        // Hide bucket names
+        labelSpeed.innerText = "BUCKET A";
+        labelSpeedSub.innerText = "SCALAR OR VECTOR?";
+        labelVelocity.innerText = "BUCKET B";
+        labelVelocitySub.innerText = "SCALAR OR VECTOR?";
+      } else {
+        testModeBtn.classList.remove('border-indigo-500', 'bg-indigo-950/40');
+        testIndicator.classList.replace('bg-indigo-400', 'bg-slate-500');
+        testPing.classList.replace('bg-indigo-400', 'bg-slate-400');
+        
+        // Reveal labels
+        labelSpeed.innerText = "SPEED";
+        labelSpeedSub.innerText = "Scalar (Magnitude Only)";
+        labelVelocity.innerText = "VELOCITY";
+        labelVelocitySub.innerText = "Vector (Magnitude + Dir)";
+      }
+    }
+
+    // Worked Explanation Modal Handlers
+    function openExplanationModal() {
+      if (currentIndex >= gameSession.length) return;
+      const item = gameSession[currentIndex];
+      
+      modalScenarioText.innerText = `"${item.text}"`;
+      modalStep3Text.innerText = `Does this scenario state a direction? ${item.direction}.`;
+      modalStep4Text.innerText = item.step4;
+      
+      explanationModal.classList.remove('opacity-0', 'pointer-events-none');
+      document.getElementById('modal-content').classList.remove('scale-95');
+      document.getElementById('modal-content').classList.add('scale-100');
+    }
+
+    function closeExplanationModal() {
+      explanationModal.classList.add('opacity-0', 'pointer-events-none');
+      document.getElementById('modal-content').classList.remove('scale-100');
+      document.getElementById('modal-content').classList.add('scale-95');
+    }
+
+    // Game End Screen / Evaluation
+    function endGame() {
+      finalScore.innerText = `${score}/${gameSession.length}`;
+      const pct = Math.round((score / gameSession.length) * 100);
+      finalAccuracy.innerText = `${pct}%`;
+      finalStreak.innerText = maxStreak;
+      
+      let msg = "";
+      if (pct === 100) {
+        msg = "Flawless score! You are officially an O-Level Kinematics expert! 🌟";
+      } else if (pct >= 80) {
+        msg = "Fantastic work! You have a solid grasp of scalars and vectors. 👍";
+      } else if (pct >= 50) {
+        msg = "Good effort! Review the worked explanations to master the tricky direction-less questions.";
+      } else {
+        msg = "Keep practicing! Remember: Speed is just a value, Velocity requires a direction (like East or Downwards).";
+      }
+      gradeMessage.innerText = msg;
+      
+      gameOverOverlay.classList.remove('opacity-0', 'pointer-events-none');
+    }
+
+    // Touch & Pointer Drag Listeners
+    card.addEventListener('pointerdown', (e) => {
+      if (blockInput) return;
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      card.setPointerCapture(e.pointerId);
+      card.style.transition = 'none';
+    });
+
+    card.addEventListener('pointermove', (e) => {
+      if (!isDragging) return;
+      
+      currentX = e.clientX - startX;
+      currentY = e.clientY - startY;
+      
+      // Add slight rotational shear based on horizontal movement
+      const rot = currentX * 0.05;
+      card.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) rotate(${rot}deg)`;
+      
+      // Visually highlight corresponding buckets based on drag direction
+      if (currentX < -30) {
+        bucketSpeed.classList.add('scale-105', 'bg-amber-500/10', 'border-amber-500');
+        bucketVelocity.className = bucketVelocity.className.replace('scale-105', '').replace('border-cyan-500', '');
+      } else if (currentX > 30) {
+        bucketVelocity.classList.add('scale-105', 'bg-cyan-500/10', 'border-cyan-500');
+        bucketSpeed.className = bucketSpeed.className.replace('scale-105', '').replace('border-amber-500', '');
+      } else {
+        resetBucketHighlights();
+      }
+    });
+
+    function resetBucketHighlights() {
+      bucketSpeed.classList.remove('scale-105', 'bg-amber-500/10', 'border-amber-500');
+      bucketVelocity.classList.remove('scale-105', 'bg-cyan-500/10', 'border-cyan-500');
+    }
+
+    card.addEventListener('pointerup', (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      card.releasePointerCapture(e.pointerId);
+      resetBucketHighlights();
+      
+      // Determine if drag exceeds threshold to finalize sorting
+      if (currentX < -dragThreshold) {
+        evaluateChoice('speed');
+      } else if (currentX > dragThreshold) {
+        evaluateChoice('velocity');
+      } else {
+        // Snap back to center
+        card.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        card.style.transform = 'translate3d(0, 0, 0) rotate(0deg)';
+      }
+    });
+
+    // Manual Sorter Button Listeners
+    btnSelectSpeed.addEventListener('click', () => {
+      if (blockInput) return;
+      card.style.transition = 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)';
+      card.style.transform = `translate3d(-150px, 0, 0) rotate(-15deg)`;
+      evaluateChoice('speed');
+    });
+
+    btnSelectVelocity.addEventListener('click', () => {
+      if (blockInput) return;
+      card.style.transition = 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)';
+      card.style.transform = `translate3d(150px, 0, 0) rotate(15deg)`;
+      evaluateChoice('velocity');
+    });
+
+    // UI Interactive Event bindings
+    testModeBtn.addEventListener('click', toggleTestMode);
+    explanationBtn.addEventListener('click', openExplanationModal);
+    modalClose.addEventListener('click', closeExplanationModal);
+    modalOkBtn.addEventListener('click', closeExplanationModal);
+    retryBtn.addEventListener('click', initGame);
+
+    // Audio toggling
+    toggleSoundBtn.addEventListener('click', () => {
+      AudioEngine.enabled = !AudioEngine.enabled;
+      if (AudioEngine.enabled) {
+        soundIcon.innerText = "🔊";
+        toggleSoundBtn.innerHTML = '<span id="sound-icon">🔊</span> Sound: On';
+      } else {
+        soundIcon.innerText = "🔇";
+        toggleSoundBtn.innerHTML = '<span id="sound-icon">🔇</span> Sound: Off';
+      }
+    });
+
+    // Close modal on click outside
+    explanationModal.addEventListener('click', (e) => {
+      if (e.target === explanationModal) closeExplanationModal();
+    });
+
+    // Kickoff App
+    window.addEventListener('DOMContentLoaded', initGame);
+  </script>
+</body>
+</html>
