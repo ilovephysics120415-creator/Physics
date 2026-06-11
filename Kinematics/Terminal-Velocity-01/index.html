@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminal Velocity Simulator | O-Level Physics 6091</title>
+  <!-- Google Fonts for Orbitron (futuristic digits/headings) & Outfit (sleek body text) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-area">
+        <span class="badge">O-LEVEL 6091</span>
+        <h1>TERMINAL VELOCITY <span class="accent-text">LAB</span></h1>
+      </div>
+      <div class="status-indicator">
+        <span class="status-dot green" id="status-dot"></span>
+        <span class="status-label" id="status-label">READY</span>
+      </div>
+    </header>
+
+    <!-- Controls Panel -->
+    <section class="controls-card">
+      <div class="control-group">
+        <label for="gravity-slider">
+          <span>Gravity (g)</span>
+          <span class="value-display" id="gravity-val">9.8 m/s²</span>
+        </label>
+        <input type="range" id="gravity-slider" min="1.5" max="25" step="0.1" value="9.8">
+      </div>
+
+      <div class="control-group">
+        <label for="height-slider">
+          <span>Initial Height (h₀)</span>
+          <span class="value-display" id="height-val">2000 m</span>
+        </label>
+        <input type="range" id="height-slider" min="1000" max="3000" step="10" value="2000">
+      </div>
+
+      <div class="control-group">
+        <label for="mass-slider">
+          <span>Mass (m)</span>
+          <span class="value-display" id="mass-val">10 kg</span>
+        </label>
+        <input type="range" id="mass-slider" min="1" max="50" step="1" value="10">
+      </div>
+
+      <div class="control-group">
+        <label>Fluid Medium</label>
+        <div class="toggle-container">
+          <label class="radio-label">
+            <input type="radio" name="fluid-type" value="air" checked id="fluid-air">
+            <span class="radio-btn">Air</span>
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="fluid-type" value="liquid" id="fluid-liquid">
+            <span class="radio-btn">Liquid</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label for="density-slider">
+          <span id="density-title">Air Density (ρ)</span>
+          <span class="value-display" id="density-val">1.2 kg/m³</span>
+        </label>
+        <input type="range" id="density-slider" min="0.5" max="2" step="0.1" value="1.2">
+      </div>
+
+      <div class="control-group">
+        <label for="speed-slider">
+          <span>Animation Speed</span>
+          <span class="value-display" id="speed-val">1x</span>
+        </label>
+        <input type="range" id="speed-slider" min="1" max="10" step="1" value="1">
+      </div>
+    </section>
+
+    <!-- Simulation Dashboard (Dual Canvas Layout) -->
+    <main class="sim-grid">
+      <!-- Left Column: Fall Animation -->
+      <div class="canvas-card">
+        <div class="card-header">
+          <h3>FREE-FALL ANIMATION</h3>
+          <div class="action-buttons">
+            <button id="btn-start" class="btn btn-primary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              RUN
+            </button>
+            <button id="btn-reset" class="btn btn-secondary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+              RESET
+            </button>
+          </div>
+        </div>
+        <div class="canvas-wrapper">
+          <canvas id="animation-canvas"></canvas>
+          <div class="altitude-marker" id="alt-overlay">Height: 2000m</div>
+        </div>
+      </div>
+
+      <!-- Right Column: Velocity-Time Graph -->
+      <div class="canvas-card">
+        <div class="card-header">
+          <h3>VELOCITY-TIME GRAPH</h3>
+          <span class="graph-status" id="graph-status">Sketching...</span>
+        </div>
+        <div class="canvas-wrapper">
+          <canvas id="graph-canvas"></canvas>
+        </div>
+      </div>
+    </main>
+
+    <!-- Live Telemetry / Data Summary -->
+    <section class="telemetry-panel">
+      <div class="telemetry-item">
+        <span class="telemetry-lbl">INITIAL HEIGHT</span>
+        <span class="telemetry-val" id="tele-init-height">2000 m</span>
+      </div>
+      <div class="telemetry-item highlight-cyan">
+        <span class="telemetry-lbl">INSTANTANEOUS SPEED</span>
+        <span class="telemetry-val" id="tele-inst-speed">0.0 m/s</span>
+      </div>
+      <div class="telemetry-item highlight-pink">
+        <span class="telemetry-lbl">IMPACT SPEED</span>
+        <span class="telemetry-val" id="tele-impact-speed">--</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-lbl">NET ACCELERATION</span>
+        <span class="telemetry-val" id="tele-accel">9.8 m/s²</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-lbl">TERMINAL VELOCITY (CALC)</span>
+        <span class="telemetry-val" id="tele-terminal-calc">--</span>
+      </div>
+    </section>
+
+    <!-- Fill In The Blanks Section -->
+    <section class="quiz-card">
+      <h2>CONCEPT CHECK: FILL IN THE BLANKS</h2>
+      <p class="quiz-sub">Test your understanding of terminal velocity concepts below. Answer all questions to check your score.</p>
+      
+      <div class="quiz-form">
+        <!-- Q1 -->
+        <div class="quiz-row">
+          <span class="num">1</span>
+          <span class="quiz-text">
+            State the time at which the object's acceleration is equal to the acceleration due to gravity:
+            <input type="number" step="any" id="q1-input" placeholder="Enter time" class="quiz-input"> s.
+          </span>
+          <span class="feedback-icon" id="q1-feedback"></span>
+        </div>
+
+        <!-- Q2 -->
+        <div class="quiz-row">
+          <span class="num">2</span>
+          <span class="quiz-text">
+            State the velocity of the object at the start of the fall:
+            <input type="number" step="any" id="q2-input" placeholder="Enter velocity" class="quiz-input"> m/s.
+          </span>
+          <span class="feedback-icon" id="q2-feedback"></span>
+        </div>
+
+        <!-- Q3 -->
+        <div class="quiz-row">
+          <span class="num">3</span>
+          <span class="quiz-text">
+            Before reaching terminal velocity, the velocity of the object
+            <select id="q3-select" class="quiz-select">
+              <option value="" disabled selected>-- Choose Option --</option>
+              <option value="increase">increase</option>
+              <option value="decrease">decrease</option>
+              <option value="constant">is constant</option>
+              <option value="maximum">is maximum</option>
+              <option value="minimum">is minimum</option>
+            </select>
+            as it falls.
+          </span>
+          <span class="feedback-icon" id="q3-feedback"></span>
+        </div>
+
+        <!-- Q4 -->
+        <div class="quiz-row">
+          <span class="num">4</span>
+          <span class="quiz-text">
+            Before reaching terminal velocity, the gradient of the v-t graph is
+            <select id="q4-select" class="quiz-select">
+              <option value="" disabled selected>-- Choose Option --</option>
+              <option value="increasing">increasing</option>
+              <option value="decreasing">decreasing</option>
+              <option value="constant">constant</option>
+              <option value="maximum">maximum</option>
+              <option value="minimum">minimum</option>
+            </select>
+            as it falls.
+          </span>
+          <span class="feedback-icon" id="q4-feedback"></span>
+        </div>
+
+        <!-- Q5 -->
+        <div class="quiz-row">
+          <span class="num">5</span>
+          <span class="quiz-text">
+            Therefore, the acceleration of the falling object is
+            <select id="q5-select" class="quiz-select">
+              <option value="" disabled selected>-- Choose Option --</option>
+              <option value="increasing">increasing</option>
+              <option value="decreasing">decreasing</option>
+              <option value="constant">constant</option>
+              <option value="maximum">maximum</option>
+              <option value="minimum">minimum</option>
+            </select>
+            as it falls.
+          </span>
+          <span class="feedback-icon" id="q5-feedback"></span>
+        </div>
+      </div>
+
+      <div class="quiz-actions">
+        <button id="btn-check-quiz" class="btn btn-primary">SUBMIT ANSWERS</button>
+        <div id="quiz-result" class="quiz-result-msg"></div>
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
