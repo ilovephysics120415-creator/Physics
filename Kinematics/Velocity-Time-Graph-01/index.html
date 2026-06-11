@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics 6091 Kinematics Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .modal-overlay {
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+        }
+        input[type=range] {
+            height: 6px;
+            -webkit-appearance: none;
+            background: #e2e8f0;
+            border-radius: 5px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #4f46e5;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen font-sans text-slate-900">
+
+    <div class="max-w-7xl mx-auto p-4 md:p-6">
+        <!-- Header -->
+        <header class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-indigo-950 flex items-center gap-2 tracking-tight">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    Physics 6091 Kinematics Lab
+                </h1>
+                <p class="text-xs text-slate-500 font-medium mt-1">Interactive velocity-time graph assessment with step-by-step solutions.</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <button onclick="randomize()" class="flex items-center gap-2 px-4 py-2 bg-indigo-50 border border-indigo-200 rounded-lg text-sm font-semibold text-indigo-700 hover:bg-indigo-100 transition-all">
+                    Randomize
+                </button>
+                <button onclick="resetLab()" class="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-all">
+                    Reset
+                </button>
+            </div>
+        </header>
+
+        <!-- Controls Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+            <!-- Velocity Controls -->
+            <div class="lg:col-span-2 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b pb-2 mb-4">Velocity Nodes (m/s)</div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-700">
+                            <span>Initial v₀</span><span id="v0-val" class="bg-indigo-50 text-indigo-700 px-1.5 rounded">0</span>
+                        </div>
+                        <input type="range" id="v0" min="0" max="20" value="0" class="w-full" oninput="updateValues()">
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-700">
+                            <span>Stage 1 v₁</span><span id="v1-val" class="bg-indigo-50 text-indigo-700 px-1.5 rounded">10</span>
+                        </div>
+                        <input type="range" id="v1" min="0" max="20" value="10" class="w-full" oninput="updateValues()">
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-700">
+                            <span>Stage 2 v₂</span><span id="v2-val" class="bg-indigo-50 text-indigo-700 px-1.5 rounded">10</span>
+                        </div>
+                        <input type="range" id="v2" min="0" max="20" value="10" class="w-full" oninput="updateValues()">
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-700">
+                            <span>Final v₃</span><span id="v3-val" class="bg-indigo-50 text-indigo-700 px-1.5 rounded">0</span>
+                        </div>
+                        <input type="range" id="v3" min="0" max="20" value="0" class="w-full" oninput="updateValues()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Time Controls -->
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b pb-2 mb-4">Time Durations (s)</div>
+                <div class="space-y-4">
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-700">
+                            <span>Stage 1 Δt₁</span><span id="t1-val" class="bg-emerald-50 text-emerald-700 px-1.5 rounded">5s</span>
+                        </div>
+                        <input type="range" id="t1" min="1" max="15" value="5" class="w-full" oninput="updateValues()">
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-700">
+                            <span>Stage 2 Δt₂</span><span id="t2-val" class="bg-emerald-50 text-emerald-700 px-1.5 rounded">5s</span>
+                        </div>
+                        <input type="range" id="t2" min="1" max="15" value="5" class="w-full" oninput="updateValues()">
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-700">
+                            <span>Stage 3 Δt₃</span><span id="t3-val" class="bg-emerald-50 text-emerald-700 px-1.5 rounded">5s</span>
+                        </div>
+                        <input type="range" id="t3" min="1" max="15" value="5" class="w-full" oninput="updateValues()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Graph Section -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6">
+            <h2 class="text-sm font-bold text-slate-800 uppercase tracking-tight mb-6">Velocity vs. Time Graph</h2>
+            <div class="h-[400px] w-full">
+                <canvas id="vtChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Assessment Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="cards-container">
+            <!-- Cards will be populated by JS -->
+        </div>
+    </div>
+
+    <!-- Solution Modal -->
+    <div id="solutionModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-indigo-50">
+                <h3 class="font-bold text-indigo-900 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-500"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                    Step-by-Step Solution
+                </h3>
+                <button onclick="closeModal()" class="p-1 hover:bg-white rounded-lg transition-colors text-slate-400 hover:text-slate-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <div id="modal-content" class="p-6 space-y-4">
+                <!-- Content injected here -->
+            </div>
+            <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+                <button onclick="closeModal()" class="px-6 py-2 bg-indigo-600 text-white rounded-xl font-bold text-sm shadow-md hover:bg-indigo-700 transition-all active:scale-95">
+                    Close Solution
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let chart;
+        const state = {
+            v0: 0, v1: 10, v2: 10, v3: 0,
+            t1: 5, t2: 5, t3: 5,
+            revealed: new Set()
+        };
+
+        function initChart() {
+            const ctx = document.getElementById('vtChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [0, 5, 10, 15],
+                    datasets: [{
+                        label: 'Velocity (m/s)',
+                        data: [0, 10, 10, 0],
+                        borderColor: '#4f46e5',
+                        borderWidth: 3,
+                        tension: 0,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#4f46e5',
+                        pointRadius: 6,
+                        fill: true,
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { type: 'linear', title: { display: true, text: 'Time (s)', font: { weight: 'bold' } }, min: 0, max: 15 },
+                        y: { title: { display: true, text: 'Velocity (m/s)', font: { weight: 'bold' } }, min: 0, max: 20 }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function updateValues() {
+            state.v0 = parseInt(document.getElementById('v0').value);
+            state.v1 = parseInt(document.getElementById('v1').value);
+            state.v2 = parseInt(document.getElementById('v2').value);
+            state.v3 = parseInt(document.getElementById('v3').value);
+            state.t1 = parseInt(document.getElementById('t1').value);
+            state.t2 = parseInt(document.getElementById('t2').value);
+            state.t3 = parseInt(document.getElementById('t3').value);
+
+            // Update UI Labels
+            document.getElementById('v0-val').innerText = state.v0;
+            document.getElementById('v1-val').innerText = state.v1;
+            document.getElementById('v2-val').innerText = state.v2;
+            document.getElementById('v3-val').innerText = state.v3;
+            document.getElementById('t1-val').innerText = state.t1 + 's';
+            document.getElementById('t2-val').innerText = state.t2 + 's';
+            document.getElementById('t3-val').innerText = state.t3 + 's';
+
+            // Update Chart
+            const totalTime = state.t1 + state.t2 + state.t3;
+            chart.data.datasets[0].data = [
+                {x: 0, y: state.v0},
+                {x: state.t1, y: state.v1},
+                {x: state.t1 + state.t2, y: state.v2},
+                {x: totalTime, y: state.v3}
+            ];
+            chart.options.scales.x.max = totalTime;
+            chart.update('none');
+
+            renderCards();
+        }
+
+        function calculateResults() {
+            const a1 = (state.v1 - state.v0) / state.t1;
+            const a2 = (state.v2 - state.v1) / state.t2;
+            const a3 = (state.v3 - state.v2) / state.t3;
+            const s1 = 0.5 * (state.v0 + state.v1) * state.t1;
+            const s2 = 0.5 * (state.v1 + state.v2) * state.t2;
+            const s3 = 0.5 * (state.v2 + state.v3) * state.t3;
+            const totalS = s1 + s2 + s3;
+            const avgV = totalS / (state.t1 + state.t2 + state.t3);
+
+            return {
+                a1: a1.toFixed(2), a2: a2.toFixed(2), a3: a3.toFixed(2),
+                s1: s1.toFixed(1), s2: s2.toFixed(1), s3: s3.toFixed(1),
+                totalS: totalS.toFixed(1),
+                avgV: avgV.toFixed(2)
+            };
+        }
+
+        function getSolutionSteps(key) {
+            const data = calculateResults();
+            const solutions = {
+                a1: { title: "Stage 1 Accel", steps: ["Formula: a = (v - u) / t", `Substitution: a = (${state.v1} - ${state.v0}) / ${state.t1}`, `Calculation: a = ${state.v1 - state.v0} / ${state.t1}`, `Result: ${data.a1} m/s²`] },
+                s1: { title: "Stage 1 Displacement", steps: ["Formula: Area = ½(u + v) × t", `Substitution: Area = ½(${state.v0} + ${state.v1}) × ${state.t1}`, `Calculation: Area = ${0.5 * (state.v0 + state.v1)} × ${state.t1}`, `Result: ${data.s1} m`] },
+                a2: { title: "Stage 2 Accel", steps: ["Formula: a = (v - u) / t", `Substitution: a = (${state.v2} - ${state.v1}) / ${state.t2}`, `Calculation: a = ${state.v2 - state.v1} / ${state.t2}`, `Result: ${data.a2} m/s²`] },
+                s2: { title: "Stage 2 Displacement", steps: ["Formula: Area = ½(u + v) × t", `Substitution: Area = ½(${state.v1} + ${state.v2}) × ${state.t2}`, `Calculation: Area = ${0.5 * (state.v1 + state.v2)} × ${state.t2}`, `Result: ${data.s2} m`] },
+                a3: { title: "Stage 3 Accel", steps: ["Formula: a = (v - u) / t", `Substitution: a = (${state.v3} - ${state.v2}) / ${state.t3}`, `Calculation: a = ${state.v3 - state.v2} / ${state.t3}`, `Result: ${data.a3} m/s²`] },
+                s3: { title: "Stage 3 Displacement", steps: ["Formula: Area = ½(u + v) × t", `Substitution: Area = ½(${state.v2} + ${state.v3}) × ${state.t3}`, `Calculation: Area = ${0.5 * (state.v2 + state.v3)} × ${state.t3}`, `Result: ${data.s3} m`] },
+                totalS: { title: "Total Displacement", steps: ["Formula: Total Area = Area 1 + Area 2 + Area 3", `Substitution: Total Area = ${data.s1} + ${data.s2} + ${data.s3}`, `Result: ${data.totalS} m`] },
+                avgV: { title: "Average Velocity", steps: ["Formula: Avg v = Total Displacement / Total Time", `Substitution: Avg v = ${data.totalS} / (${state.t1} + ${state.t2} + ${state.t3})`, `Calculation: Avg v = ${data.totalS} / ${state.t1 + state.t2 + state.t3}`, `Result: ${data.avgV} m/s`] }
+            };
+            return solutions[key];
+        }
+
+        function showSolution(key) {
+            const sol = getSolutionSteps(key);
+            const container = document.getElementById('modal-content');
+            container.innerHTML = `
+                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">${sol.title}</h4>
+                <div class="space-y-4">
+                    ${sol.steps.map((step, idx) => `
+                        <div class="flex gap-4">
+                            <div class="flex-none w-6 h-6 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold">${idx + 1}</div>
+                            <p class="text-slate-700 font-mono text-sm pt-0.5">${step}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            document.getElementById('solutionModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('solutionModal').classList.add('hidden');
+        }
+
+        function toggleReveal(id) {
+            if (state.revealed.has(id)) state.revealed.delete(id);
+            else state.revealed.add(id);
+            renderCards();
+        }
+
+        function renderCards() {
+            const results = calculateResults();
+            const container = document.getElementById('cards-container');
+            const stages = [
+                { id: 1, label: 'Stage 1', a: results.a1, s: results.s1, keyA: 'a1', keyS: 's1', color: 'blue' },
+                { id: 2, label: 'Stage 2', a: results.a2, s: results.s2, keyA: 'a2', keyS: 's2', color: 'purple' },
+                { id: 3, label: 'Stage 3', a: results.a3, s: results.s3, keyA: 'a3', keyS: 's3', color: 'pink' }
+            ];
+
+            let html = '';
+            stages.forEach(s => {
+                html += `
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+                    <div class="h-1.5 bg-${s.color}-500"></div>
+                    <div class="p-5 space-y-5">
+                        <span class="text-[10px] font-black text-${s.color}-600 uppercase tracking-widest">${s.label}</span>
+                        
+                        <div class="space-y-1">
+                            <p class="text-[9px] text-slate-400 font-bold uppercase">Acceleration</p>
+                            <div class="flex items-center justify-between">
+                                <p class="text-xl font-mono font-bold ${state.revealed.has(s.keyA) ? 'text-slate-900' : 'text-slate-200'}">
+                                    ${state.revealed.has(s.keyA) ? s.a + ' m/s²' : '??.?' }
+                                </p>
+                                <div class="flex gap-1">
+                                    <button onclick="showSolution('${s.keyA}')" class="p-1.5 rounded-lg bg-amber-50 text-amber-600 border border-amber-100 hover:bg-amber-100 transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                                    </button>
+                                    <button onclick="toggleReveal('${s.keyA}')" class="p-1.5 rounded-lg transition-all border ${state.revealed.has(s.keyA) ? `bg-${s.color}-50 text-${s.color}-600 border-${s.color}-100` : 'text-slate-300 border-transparent hover:bg-slate-50'}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1 border-t border-slate-100 pt-4">
+                            <p class="text-[9px] text-slate-400 font-bold uppercase">Displacement</p>
+                            <div class="flex items-center justify-between">
+                                <p class="text-xl font-mono font-bold ${state.revealed.has(s.keyS) ? 'text-slate-900' : 'text-slate-200'}">
+                                    ${state.revealed.has(s.keyS) ? s.s + ' m' : '??.?' }
+                                </p>
+                                <div class="flex gap-1">
+                                    <button onclick="showSolution('${s.keyS}')" class="p-1.5 rounded-lg bg-amber-50 text-amber-600 border border-amber-100 hover:bg-amber-100 transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                                    </button>
+                                    <button onclick="toggleReveal('${s.keyS}')" class="p-1.5 rounded-lg transition-all border ${state.revealed.has(s.keyS) ? `bg-${s.color}-50 text-${s.color}-600 border-${s.color}-100` : 'text-slate-300 border-transparent hover:bg-slate-50'}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            });
+
+            // Summary Card
+            html += `
+            <div class="bg-indigo-900 rounded-xl border border-indigo-800 shadow-md overflow-hidden text-white flex flex-col">
+                <div class="h-1.5 bg-yellow-400"></div>
+                <div class="p-5 flex-1 space-y-5">
+                    <span class="text-[10px] font-black text-indigo-300 uppercase tracking-widest flex items-center gap-1">Global Metrics</span>
+                    
+                    <div class="space-y-1">
+                        <p class="text-[9px] text-indigo-400 font-bold uppercase">Total Displacement</p>
+                        <div class="flex items-center justify-between">
+                            <p class="text-xl font-mono font-bold ${state.revealed.has('totalS') ? 'text-yellow-400' : 'text-indigo-800'}">
+                                ${state.revealed.has('totalS') ? results.totalS + ' m' : '???.?' }
+                            </p>
+                            <div class="flex gap-1">
+                                <button onclick="showSolution('totalS')" class="p-1.5 rounded-lg bg-indigo-800/50 text-yellow-400 border border-indigo-700 hover:bg-indigo-800 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                                </button>
+                                <button onclick="toggleReveal('totalS')" class="p-1.5 rounded-lg border ${state.revealed.has('totalS') ? 'bg-indigo-800 text-yellow-400 border-indigo-700' : 'text-indigo-600 border-transparent hover:bg-indigo-800'}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1 border-t border-indigo-800 pt-4">
+                        <p class="text-[9px] text-indigo-400 font-bold uppercase">Avg Velocity</p>
+                        <div class="flex items-center justify-between">
+                            <p class="text-xl font-mono font-bold ${state.revealed.has('avgV') ? 'text-white' : 'text-indigo-800'}">
+                                ${state.revealed.has('avgV') ? results.avgV + ' m/s' : '??.?' }
+                            </p>
+                            <div class="flex gap-1">
+                                <button onclick="showSolution('avgV')" class="p-1.5 rounded-lg bg-indigo-800/50 text-indigo-200 border border-indigo-700 hover:bg-indigo-800 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                                </button>
+                                <button onclick="toggleReveal('avgV')" class="p-1.5 rounded-lg border ${state.revealed.has('avgV') ? 'bg-indigo-800 text-white border-indigo-700' : 'text-indigo-600 border-transparent hover:bg-indigo-800'}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+            container.innerHTML = html;
+        }
+
+        function randomize() {
+            document.getElementById('v0').value = Math.floor(Math.random() * 21);
+            document.getElementById('v1').value = Math.floor(Math.random() * 21);
+            document.getElementById('v2').value = Math.floor(Math.random() * 21);
+            document.getElementById('v3').value = Math.floor(Math.random() * 21);
+            document.getElementById('t1').value = Math.floor(Math.random() * 15) + 1;
+            document.getElementById('t2').value = Math.floor(Math.random() * 15) + 1;
+            document.getElementById('t3').value = Math.floor(Math.random() * 15) + 1;
+            state.revealed.clear();
+            updateValues();
+        }
+
+        function resetLab() {
+            document.getElementById('v0').value = 0;
+            document.getElementById('v1').value = 10;
+            document.getElementById('v2').value = 10;
+            document.getElementById('v3').value = 0;
+            document.getElementById('t1').value = 5;
+            document.getElementById('t2').value = 5;
+            document.getElementById('t3').value = 5;
+            state.revealed.clear();
+            updateValues();
+        }
+
+        window.onload = () => {
+            initChart();
+            updateValues();
+        };
+    </script>
+</body>
+</html>
