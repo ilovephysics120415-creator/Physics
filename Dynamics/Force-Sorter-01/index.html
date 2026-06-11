@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamics Force Sorter | O-Level Physics</title>
+  <!-- Google Fonts for premium typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Dark mode gradient mesh background -->
+  <div class="bg-mesh"></div>
+
+  <main class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <h1>Dynamics <span class="text-highlight">Force Sorter</span></h1>
+      </div>
+      <div class="subtitle">O-Level Physics Revision Game</div>
+    </header>
+
+    <!-- Start / Introduction Screen -->
+    <section id="screen-start" class="screen active">
+      <div class="glass-card start-card">
+        <div class="badge">Topic: Dynamics</div>
+        <h2>Master Force Types</h2>
+        <p>Test your knowledge on Contact and Non-Contact forces. Drag each force card into its correct bin, then test your understanding with a quick conceptual quiz!</p>
+        
+        <div class="features-preview">
+          <div class="feature-item">
+            <span class="feat-icon">🎯</span>
+            <div>
+              <strong>Drag & Drop Sorter</strong>
+              <p>Sort 10 forces with real-time feedback</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feat-icon">📝</span>
+            <div>
+              <strong>Conceptual Quiz</strong>
+              <p>5 randomly selected multiple-choice questions</p>
+            </div>
+          </div>
+        </div>
+
+        <button id="btn-start" class="btn btn-primary">Start Sorting Game</button>
+      </div>
+    </section>
+
+    <!-- Game: Sorter Screen -->
+    <section id="screen-sorter" class="screen">
+      <div class="sorter-info-bar">
+        <div class="progress-indicator">
+          <span>Progress:</span>
+          <strong id="sorted-count">0</strong> / 10
+        </div>
+        <div class="score-indicator">
+          <span>Success Rate:</span>
+          <strong id="sorter-score">100%</strong>
+        </div>
+      </div>
+
+      <div class="sorter-arena">
+        <!-- Contact Forces Bin (Left) -->
+        <div class="bin-zone bin-contact" id="bin-contact">
+          <div class="bin-header">
+            <span class="bin-icon">🤝</span>
+            <h2>Contact Forces</h2>
+          </div>
+          <p class="bin-desc">Require physical contact to act</p>
+          <div class="bin-dropzone" data-type="contact">
+            <span class="drop-placeholder">Drop Contact Forces Here</span>
+          </div>
+        </div>
+
+        <!-- Cards Deck (Middle Area) -->
+        <div class="cards-deck-container">
+          <div class="cards-deck" id="cards-deck">
+            <!-- Cards will be dynamically injected and shuffled here -->
+          </div>
+        </div>
+
+        <!-- Non-Contact Forces Bin (Right) -->
+        <div class="bin-zone bin-noncontact" id="bin-non-contact">
+          <div class="bin-header">
+            <span class="bin-icon">🧲</span>
+            <h2>Non-Contact Forces</h2>
+          </div>
+          <p class="bin-desc">Act over a distance without touching</p>
+          <div class="bin-dropzone" data-type="non-contact">
+            <span class="drop-placeholder">Drop Non-Contact Forces Here</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz Screen -->
+    <section id="screen-quiz" class="screen">
+      <div class="quiz-container glass-card">
+        <div class="quiz-header">
+          <div class="quiz-badge">Round 2: Conceptual Quiz</div>
+          <div class="quiz-progress">Question <span id="quiz-current-num">1</span> of 5</div>
+        </div>
+
+        <!-- Question Card -->
+        <div class="question-box">
+          <h3 id="question-text">Question goes here?</h3>
+        </div>
+
+        <!-- Options Container -->
+        <div class="options-container" id="options-container">
+          <!-- 4 Multiple choice buttons injected here -->
+        </div>
+
+        <!-- Explanation & Next Button Container -->
+        <div class="quiz-feedback-box hidden" id="quiz-feedback-box">
+          <div class="feedback-indicator">
+            <span id="feedback-icon">✓</span>
+            <span id="feedback-status-text">Correct!</span>
+          </div>
+          <p id="feedback-explanation">Explanation or details go here.</p>
+          <button id="btn-next-question" class="btn btn-secondary">Next Question</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final Score Screen -->
+    <section id="screen-results" class="screen">
+      <div class="glass-card results-card">
+        <div class="results-header">
+          <span class="trophy-icon">🏆</span>
+          <h2>Session Complete!</h2>
+          <p class="results-tagline" id="results-tagline">Outstanding! You've mastered Dynamics forces.</p>
+        </div>
+
+        <div class="results-stats">
+          <div class="stat-box">
+            <span class="stat-label">Sorting Score</span>
+            <span class="stat-val" id="final-sorter-score">10/10</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">Quiz Score</span>
+            <span class="stat-val" id="final-quiz-score">5/5</span>
+          </div>
+        </div>
+
+        <div class="results-summary">
+          <h3>Summary Feedback</h3>
+          <p id="final-summary-text">You have shown a solid grasp of how forces interact with matter. Keep practicing to maintain your O-level grade!</p>
+        </div>
+
+        <button id="btn-restart" class="btn btn-primary btn-large">Restart Revision</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>&copy; 2026 Dynamics Force Sorter. Designed for O-Level Physics preparation.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
