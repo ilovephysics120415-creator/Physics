@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Fall Physics Simulation</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .mono-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-cyan-500 selection:text-slate-900">
+
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-cyan-500/10 rounded-lg text-cyan-400 border border-cyan-500/20">
+                    <i data-lucide="chevrons-down" class="w-6 h-6 animate-bounce"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                        Free Fall Simulation <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 font-medium">Concept: Acceleration (g)</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Visualizing 1D Kinematics & Constant Acceleration on Earth</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 text-xs text-slate-400">
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Negligible Air Resistance</div>
+                <div id="header-g-val" class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-cyan-500"></span> g = 10.0 m/s²</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-6 flex flex-col gap-6">
+        
+        <!-- Row 1: Key Concept Insights & Simulation Parameters (Top) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Conceptual Insights -->
+            <div class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-center">
+                <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
+                    <i data-lucide="lightbulb" class="w-4 h-4 text-yellow-400"></i> Key Concept Insights
+                </h2>
+                <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
+                    <div class="p-3 bg-slate-950 rounded-xl border border-slate-850">
+                        <p class="font-semibold text-slate-200 mb-1">What defines Free Fall?</p>
+                        <p class="text-slate-400">Free fall is the motion of an object falling solely under the influence of gravity. Here, acceleration is constant (g). Velocity increases by exactly g m/s every single second.</p>
+                    </div>
+                    <div class="p-3 bg-slate-950 rounded-xl border border-slate-850">
+                        <p class="font-semibold text-slate-200 mb-1">Observe the Strobe Trail</p>
+                        <p class="text-slate-400">Notice how the visual ghost markers get further and further apart near the bottom. This expanding gap directly proves that the ball is accelerating, not moving at a constant speed.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls Card & Simulation Parameters -->
+            <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+                <div>
+                    <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2">
+                        <i data-lucide="sliders" class="w-4 h-4 text-cyan-400"></i> Simulation Parameters
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Left Controls Column -->
+                        <div class="space-y-4">
+                            <!-- Initial Height Slider -->
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <label for="height-slider" class="text-sm font-medium text-slate-300">Initial Height (y₀)</label>
+                                    <div class="flex items-center gap-1.5">
+                                        <!-- Test Controls for Initial Height -->
+                                        <div id="ctrl-initheight" class="flex items-center gap-1 hidden">
+                                            <button onclick="toggleRevealTestMetric('initheight')" class="text-slate-400 hover:text-cyan-400 p-1 bg-slate-950 rounded border border-slate-800 animate-pulse" title="Reveal/Hide Answer">
+                                                <i data-lucide="eye" class="w-3.5 h-3.5" id="eye-initheight"></i>
+                                            </button>
+                                            <button onclick="showWorking('initheight')" class="text-slate-400 hover:text-yellow-455 p-1 bg-slate-950 rounded border border-slate-800" title="Show Working">
+                                                <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i>
+                                            </button>
+                                        </div>
+                                        <span id="height-val" class="mono-font text-cyan-400 text-sm font-bold bg-slate-950 px-2 py-1 rounded border border-slate-800 transition-all">100.0 m</span>
+                                    </div>
+                                </div>
+                                <input type="range" id="height-slider" min="10" max="100" step="5" value="100" 
+                                       class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 disabled:opacity-45 disabled:cursor-not-allowed">
+                                <div class="flex justify-between text-xs text-slate-500">
+                                    <span>10 m</span>
+                                    <span>50 m</span>
+                                    <span>100 m</span>
+                                </div>
+                            </div>
+
+                            <!-- Gravity Slider -->
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <label for="gravity-slider" class="text-sm font-medium text-slate-300">Gravity (g)</label>
+                                    <div class="flex items-center gap-1.5">
+                                        <!-- Test Controls for Gravity -->
+                                        <div id="ctrl-gravity" class="flex items-center gap-1 hidden">
+                                            <button onclick="toggleRevealTestMetric('gravity')" class="text-slate-400 hover:text-cyan-400 p-1 bg-slate-950 rounded border border-slate-800 animate-pulse" title="Reveal/Hide Answer">
+                                                <i data-lucide="eye" class="w-3.5 h-3.5" id="eye-gravity"></i>
+                                            </button>
+                                            <button onclick="showWorking('gravity')" class="text-slate-400 hover:text-yellow-455 p-1 bg-slate-950 rounded border border-slate-800" title="Show Working">
+                                                <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i>
+                                            </button>
+                                        </div>
+                                        <span id="gravity-val-display" class="mono-font text-cyan-400 text-sm font-bold bg-slate-950 px-2 py-1 rounded border border-slate-800 transition-all">10.0 m/s²</span>
+                                    </div>
+                                </div>
+                                <input type="range" id="gravity-slider" min="0.8" max="25" step="0.1" value="10" 
+                                       class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 disabled:opacity-45 disabled:cursor-not-allowed">
+                                <div class="flex justify-between text-xs text-slate-500">
+                                    <span>0.8 m/s²</span>
+                                    <span>10.0 m/s²</span>
+                                    <span>25.0 m/s²</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Controls Column -->
+                        <div class="space-y-4">
+                            <!-- Strobe Interval -->
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <label class="text-sm font-medium text-slate-300 flex items-center gap-1.5">
+                                        Strobe Flash (Ghost Trail)
+                                    </label>
+                                    <span class="text-xs text-slate-400 font-mono" id="strobe-val">Every 0.2s</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="setStrobe(0.2)" id="strobe-02" class="strobe-btn flex-1 py-1.5 text-xs font-semibold rounded bg-cyan-500/25 text-cyan-300 border border-cyan-500/30">0.2s</button>
+                                    <button onclick="setStrobe(0.4)" id="strobe-04" class="strobe-btn flex-1 py-1.5 text-xs font-semibold rounded bg-slate-950 text-slate-400 border border-slate-800">0.4s</button>
+                                    <button onclick="toggleStrobe(false)" id="strobe-off" class="strobe-btn flex-1 py-1.5 text-xs font-semibold rounded bg-slate-950 text-slate-400 border border-slate-800">Off</button>
+                                </div>
+                            </div>
+
+                            <!-- Simulation Speed -->
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium text-slate-300 block">Simulation Speed</label>
+                                <div class="grid grid-cols-4 gap-2">
+                                    <button type="button" onclick="setSpeed(1.0)" id="speed-1" class="speed-btn py-1.5 px-2 text-xs font-semibold rounded-lg border border-cyan-500/30 bg-cyan-500/15 text-cyan-400 transition-all">1.0x (Real)</button>
+                                    <button type="button" onclick="setSpeed(0.5)" id="speed-05" class="speed-btn py-1.5 px-2 text-xs font-semibold rounded-lg border border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700 transition-all">0.5x</button>
+                                    <button type="button" onclick="setSpeed(0.2)" id="speed-02" class="speed-btn py-1.5 px-2 text-xs font-semibold rounded-lg border border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700 transition-all">0.2x</button>
+                                    <button type="button" onclick="setSpeed(0.1)" id="speed-01" class="speed-btn py-1.5 px-2 text-xs font-semibold rounded-lg border border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700 transition-all">0.1x</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kinematic Calculations Legend Section -->
+                    <div class="mt-5 pt-4 border-t border-slate-800/80">
+                        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2.5 flex items-center gap-1.5">
+                            <i data-lucide="calculator" class="w-4 h-4 text-cyan-400"></i> Graphical Calculations Breakdown
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800/60 hover:border-cyan-500/20 transition-all flex flex-col justify-between">
+                                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Velocity</span>
+                                <span class="text-xs font-semibold text-cyan-400 font-mono mt-1">Gradient of s-t graph</span>
+                            </div>
+                            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800/60 hover:border-amber-500/20 transition-all flex flex-col justify-between">
+                                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Acceleration</span>
+                                <span class="text-xs font-semibold text-amber-400 font-mono mt-1">Gradient of v-t graph</span>
+                            </div>
+                            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800/60 hover:border-emerald-500/20 transition-all flex flex-col justify-between">
+                                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Displacement</span>
+                                <span class="text-xs font-semibold text-emerald-400 font-mono mt-1">Area under v-t graph</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Row 2: Visual Drop Tower & Motion Graphs (Middle) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Visual Drop Tower Simulation (Dynamic Column Width) -->
+            <div id="tower-container-card" class="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col transition-all duration-300">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                        <i data-lucide="eye" class="w-4 h-4 text-indigo-400"></i> Visual Drop Tower
+                    </h2>
+                    <!-- Impact state indicator -->
+                    <div id="impact-badge" class="hidden px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 animate-pulse">
+                        Impact!
+                    </div>
+                </div>
+
+                <!-- Control, Test & Capture Buttons Shipped Directly Above Visual Tower -->
+                <div class="grid grid-cols-4 gap-1.5 mb-4">
+                    <button id="play-pause-btn" class="flex items-center justify-center gap-1 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2.5 px-2 rounded-xl shadow-lg shadow-cyan-500/10 transition-all hover:scale-[1.02] active:scale-[0.98] text-[11px] sm:text-xs">
+                        <i data-lucide="play" class="w-3.5 h-3.5 fill-slate-950"></i> <span id="play-btn-text">Drop Ball</span>
+                    </button>
+                    <button id="test-btn" class="flex items-center justify-center gap-1 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2.5 px-2 rounded-xl border border-slate-750 transition-all hover:scale-[1.02] active:scale-[0.98] text-[11px] sm:text-xs">
+                        <i data-lucide="help-circle" class="w-3.5 h-3.5"></i> <span>Test Mode</span>
+                    </button>
+                    <button id="capture-btn" class="flex items-center justify-center gap-1 bg-violet-600 hover:bg-violet-500 text-white font-bold py-2.5 px-2 rounded-xl shadow-lg shadow-violet-500/10 transition-all hover:scale-[1.02] active:scale-[0.98] text-[11px] sm:text-xs">
+                        <i data-lucide="camera" class="w-3.5 h-3.5"></i> <span>Capture</span>
+                    </button>
+                    <button id="reset-btn" class="flex items-center justify-center gap-1 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2.5 px-2 rounded-xl border border-slate-750 transition-all active:scale-[0.98] text-[11px] sm:text-xs">
+                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset
+                    </button>
+                </div>
+
+                <!-- Tower Simulator Container -->
+                <div class="relative flex-1 bg-slate-950 rounded-xl border border-slate-800 overflow-hidden min-h-[420px] flex">
+                    
+                    <!-- Meter Ruler (Left side of the tower) -->
+                    <div id="ruler" class="w-14 border-r border-slate-800 flex flex-col justify-between py-6 px-1 relative select-none">
+                        <!-- Dynamic meter intervals generated by JS -->
+                    </div>
+
+                    <!-- Drop Channel (Right side) -->
+                    <div class="flex-1 relative" id="drop-zone">
+                        <!-- Grid background -->
+                        <div class="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:100%_4%]"></div>
+                        
+                        <!-- Ground/Landing platform visual -->
+                        <div class="absolute bottom-0 inset-x-0 h-6 bg-gradient-to-t from-slate-900 to-slate-950 border-t-2 border-slate-700 flex items-center justify-center">
+                            <span class="text-[9px] text-slate-500 uppercase tracking-widest font-bold">Landing Zone (0 m)</span>
+                        </div>
+
+                        <!-- Instantaneous Capture Data Box Container (Hosts captured boxes statically at their heights) -->
+                        <div id="capture-container" class="absolute inset-0 pointer-events-none z-20">
+                            <!-- Dynamic anchored boxes will be appended here -->
+                        </div>
+
+                        <!-- Interactive Drop Height Limit Line -->
+                        <div id="initial-height-line" class="absolute left-0 right-0 border-t border-dashed border-cyan-500/40 z-10 flex items-center justify-end pr-4 pointer-events-none transition-all duration-200">
+                            <span class="text-[9px] text-cyan-400/80 bg-slate-950/90 px-1 py-0.5 rounded border border-cyan-500/20">Drop Point</span>
+                        </div>
+
+                        <!-- Canvas for Strobe Marks, Vectors, and Ball Trails -->
+                        <canvas id="simulation-canvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+
+                        <!-- Actual falling ball DOM element for crystal-clear render -->
+                        <div id="falling-ball" class="absolute w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-500 to-cyan-300 shadow-lg shadow-cyan-500/50 flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2 left-1/2 pointer-events-none">
+                            <!-- Shading highlight inside ball -->
+                            <div class="w-2.5 h-2.5 rounded-full bg-white/40 absolute top-1.5 left-1.5"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real-Time Kinematics Graphs (Dynamic Column Width) -->
+            <div id="graphs-container-card" class="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col transition-all duration-300">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-2">
+                    <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                        <i data-lucide="trending-up" class="w-4 h-4 text-violet-400"></i> Motion Graphs
+                    </h2>
+                    
+                    <!-- Layout Mode Switcher (Single vs split graph) -->
+                    <div class="flex bg-slate-950 p-1 rounded-lg border border-slate-850 shrink-0 self-start md:self-auto">
+                        <button onclick="setLayoutMode('single')" id="layout-single" class="px-2.5 py-1 text-[10px] font-bold rounded-md bg-slate-900 text-white transition-all">
+                            Single Plot
+                        </button>
+                        <button onclick="setLayoutMode('split')" id="layout-split" class="px-2.5 py-1 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all">
+                            Split (s-t & v-t)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tabs & Coordinate system switch row -->
+                <div class="flex flex-col sm:flex-row gap-3 justify-between items-stretch sm:items-center mb-4">
+                    <!-- Tabs to switch between graphs -->
+                    <div id="graph-tabs-container" class="flex gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800 flex-1">
+                        <button onclick="setActiveGraph('pos')" id="tab-pos" class="graph-tab flex-1 py-1.5 text-xs font-semibold rounded-md bg-slate-900 text-white border border-slate-850 shadow transition-all">
+                            s-t
+                        </button>
+                        <button onclick="setActiveGraph('vel')" id="tab-vel" class="graph-tab flex-1 py-1.5 text-xs font-semibold rounded-md text-slate-400 hover:text-slate-200 transition-all">
+                            v-t
+                        </button>
+                        <button onclick="setActiveGraph('acc')" id="tab-acc" class="graph-tab flex-1 py-1.5 text-xs font-semibold rounded-md text-slate-400 hover:text-slate-200 transition-all">
+                            a-t
+                        </button>
+                    </div>
+
+                    <!-- Sign Convention Selector -->
+                    <div class="flex bg-slate-950 p-1 rounded-lg border border-slate-800 self-start sm:self-auto shrink-0">
+                        <button onclick="setConvention('up')" id="conv-up" class="px-2.5 py-1.5 text-[10px] font-bold rounded-md bg-slate-900 text-white transition-all">
+                            Upwards (+)
+                        </button>
+                        <button onclick="setConvention('down')" id="conv-down" class="px-2.5 py-1.5 text-[10px] font-bold rounded-md text-slate-400 hover:text-slate-200 transition-all">
+                            Downwards (+)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Plot Canvas Box -->
+                <div class="flex-1 bg-slate-950 rounded-xl border border-slate-800/80 p-3 flex flex-col justify-between min-h-[350px]">
+                    <div class="flex justify-between items-center text-xs text-slate-400 mb-2">
+                        <span id="graph-y-axis" class="font-mono text-cyan-400 font-bold">Position y (m)</span>
+                        <span class="font-mono text-slate-500">Time t (s)</span>
+                    </div>
+                    
+                    <div class="flex-1 relative">
+                        <canvas id="kinematics-graph" class="w-full h-full"></canvas>
+                    </div>
+
+                    <!-- Graph Stats / Formula Display -->
+                    <div class="mt-3 pt-3 border-t border-slate-900 flex justify-between items-center text-xs text-slate-500 font-mono">
+                        <span>Max Domain: 5.0 s</span>
+                        <span id="graph-formula-text" class="text-cyan-400/80">y = y₀ - 0.5·g·t²</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Row 3: Live Dynamics Dashboard (Bottom) -->
+        <div class="w-full bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+            <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2">
+                <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i> Live Dynamics Dashboard
+            </h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Height Display -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/80 relative flex flex-col justify-between overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <span class="text-xs text-slate-400 font-medium block mb-1">Height (y)</span>
+                    </div>
+                    <div class="flex items-baseline gap-1 mt-2">
+                        <span id="live-height" class="mono-font text-3xl font-bold text-white transition-all">100.00</span>
+                        <span class="text-xs text-slate-500 font-mono">m</span>
+                    </div>
+                </div>
+
+                <!-- Time Display -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/80 relative flex flex-col justify-between overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <span class="text-xs text-slate-400 font-medium block mb-1">Elapsed Time (t)</span>
+                    </div>
+                    <div class="flex items-baseline gap-1 mt-2">
+                        <span id="live-time" class="mono-font text-3xl font-bold text-cyan-400 transition-all">0.000</span>
+                        <span class="text-xs text-slate-500 font-mono">s</span>
+                    </div>
+                </div>
+
+                <!-- Velocity Display -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/80 relative flex flex-col justify-between overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <span class="text-xs text-slate-400 font-medium block mb-1">Velocity (vy)</span>
+                    </div>
+                    <div class="flex items-baseline gap-1 mt-2">
+                        <span id="live-velocity" class="mono-font text-3xl font-bold text-amber-400 transition-all">0.00</span>
+                        <span class="text-xs text-slate-500 font-mono">m/s</span>
+                    </div>
+                </div>
+
+                <!-- Acceleration Display -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/80 relative flex flex-col justify-between overflow-hidden">
+                    <div class="flex justify-between items-start">
+                        <span class="text-xs text-slate-400 font-medium block mb-1">Acceleration (ay)</span>
+                    </div>
+                    <div class="flex items-baseline gap-1 mt-2">
+                        <span id="live-accel" class="mono-font text-3xl font-bold text-rose-500 transition-all">-10.0</span>
+                        <span class="text-xs text-slate-500 font-mono">m/s²</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Working Formulas Overlay Modal (Test Mode) -->
+    <div id="working-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[100] flex items-center justify-center hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="flex items-center gap-2 mb-4">
+                <div class="p-2 bg-yellow-500/10 rounded-lg text-yellow-400 border border-yellow-500/20">
+                    <i data-lucide="lightbulb" class="w-5 h-5"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white font-sans">Kinematic Calculation Working</h3>
+            </div>
+            <div id="modal-content" class="text-xs text-slate-300 space-y-3 font-mono bg-slate-950 p-4 rounded-xl border border-slate-800 overflow-y-auto max-h-[300px] leading-relaxed">
+                <!-- Dynamic physics working -->
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button onclick="closeModal()" class="bg-slate-850 hover:bg-slate-800 text-slate-200 font-semibold py-2 px-5 rounded-xl border border-slate-750 transition-colors">
+                    Got it!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-900 bg-slate-950 py-4 px-6 text-center text-xs text-slate-500 mt-auto">
+        <p>© 2026 Physics Lab Suite. Conceptualized for educational excellence in kinematics.</p>
+    </footer>
+
+    <!-- Interactive script for pure simulation logic -->
+    <script>
+        // Init Lucide Icons
+        lucide.createIcons();
+
+        // State Variables
+        let initialHeight = 100.0; // Initial drop point (m)
+        let gVal = 10.0;           // Acceleration due to gravity (m/s^2)
+        const MAX_Y = 100.0;       // Max vertical drop tower height (m)
+        let simTime = 0.0;         // Simulated elapsed time (s)
+        let isRunning = false;     // Play/pause state
+        let timeScale = 1.0;       // Simulation speed multiplier
+        let activeGraphType = 'pos'; // 'pos', 'vel', or 'acc'
+        let strobeInterval = 0.2;  // s (flash interval). If null, strobe is off.
+        let strobeActive = true;
+        let captures = [];         // Store logged frames
+        let signConvention = 'up'; // Coordinate direction convention ('up' or 'down')
+        let layoutMode = 'single'; // 'single' or 'split'
+        
+        // Test Mode State Variables
+        let testModeActive = false;
+        let hiddenTestMetric = null; // Can be: 'initheight' or 'gravity'
+        let testMetricRevealed = false;
+        let capturePool = ['t', 'y', 'v']; // Active pool for capture unknowns
+
+        // Kinematics Data Tracking
+        let timeHistory = [];
+        let posHistory = [];
+        let velHistory = [];
+        let accHistory = [];
+
+        // Animation Frames / Clocking
+        let lastTimestamp = null;
+        let animationFrameId = null;
+
+        // DOM elements
+        const heightSlider = document.getElementById('height-slider');
+        const heightVal = document.getElementById('height-val');
+        const gravitySlider = document.getElementById('gravity-slider');
+        const gravityValDisplay = document.getElementById('gravity-val-display');
+        const headerGVal = document.getElementById('header-g-val');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const playBtnText = document.getElementById('play-btn-text');
+        const testBtn = document.getElementById('test-btn');
+        const captureBtn = document.getElementById('capture-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const liveHeight = document.getElementById('live-height');
+        const liveTime = document.getElementById('live-time');
+        const liveVelocity = document.getElementById('live-velocity');
+        const liveAccel = document.getElementById('live-accel');
+        const fallingBall = document.getElementById('falling-ball');
+        const dropZone = document.getElementById('drop-zone');
+        const captureContainer = document.getElementById('capture-container');
+        const initialHeightLine = document.getElementById('initial-height-line');
+        const simulationCanvas = document.getElementById('simulation-canvas');
+        const kinematicsGraph = document.getElementById('kinematics-graph');
+        const impactBadge = document.getElementById('impact-badge');
+        const ruler = document.getElementById('ruler');
+        
+        // Layout elements
+        const towerContainerCard = document.getElementById('tower-container-card');
+        const graphsContainerCard = document.getElementById('graphs-container-card');
+
+        // Contexts
+        const simCtx = simulationCanvas.getContext('2d');
+        const graphCtx = kinematicsGraph.getContext('2d');
+
+        // Setup the vertical ruler metrics dynamically
+        function setupRuler() {
+            ruler.innerHTML = '';
+            for (let i = MAX_Y; i >= 0; i -= 10) {
+                const tick = document.createElement('div');
+                tick.className = 'flex items-center justify-between w-full relative h-0';
+                
+                // Position accurately as percentage of height
+                const percentFromTop = ((MAX_Y - i) / MAX_Y) * 100;
+                tick.style.position = 'absolute';
+                tick.style.top = `${percentFromTop}%`;
+                tick.style.left = '0';
+                tick.style.right = '0';
+
+                tick.innerHTML = `
+                    <span class="mono-font text-[10px] font-bold text-slate-400">${i}m</span>
+                    <span class="w-2.5 h-[1.5px] bg-slate-700"></span>
+                `;
+                ruler.appendChild(tick);
+            }
+        }
+
+        // Initialize simulation container, sizes, markers
+        function initSimulation() {
+            setupRuler();
+            resizeCanvases();
+            updateBallPosition(initialHeight);
+            updateDashboard(0, initialHeight, 0, -gVal);
+            resetKinematicsData();
+            drawStaticGraphics();
+            drawGraph();
+        }
+
+        // Make sure Canvas matches exact responsive scale
+        function resizeCanvases() {
+            // Drop Tower Canvas
+            const rect = dropZone.getBoundingClientRect();
+            simulationCanvas.width = rect.width * window.devicePixelRatio;
+            simulationCanvas.height = rect.height * window.devicePixelRatio;
+            simCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+            // Kinematics Graph Canvas
+            const graphRect = kinematicsGraph.parentNode.getBoundingClientRect();
+            kinematicsGraph.width = graphRect.width * window.devicePixelRatio;
+            kinematicsGraph.height = graphRect.height * window.devicePixelRatio;
+            graphCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+            
+            drawStaticGraphics();
+            drawGraph();
+        }
+
+        // Reset analytical data history
+        function resetKinematicsData() {
+            timeHistory = [0];
+            posHistory = [initialHeight];
+            velHistory = [0];
+            accHistory = [-gVal];
+        }
+
+        // Physics solver for position & velocity at time t
+        function solveFreeFall(t) {
+            // Kinematic formula: y(t) = y0 - 0.5 * g * t^2
+            let y = initialHeight - 0.5 * gVal * t * t;
+            let v = -gVal * t; // v(t) = -g * t
+            let a = -gVal;
+
+            if (y <= 0) {
+                // Impact limit conditions
+                y = 0;
+                // Solve precise terminal timing
+                const impactTime = Math.sqrt((2 * initialHeight) / gVal);
+                v = -gVal * impactTime; 
+                a = 0; // Accel stops once landed/impacted
+            }
+            return { y, v, a };
+        }
+
+        // Update Dashboard Readings & Test Parameter Hiding
+        function updateDashboard(t, y, v, a) {
+            const formattedT = t.toFixed(3);
+            const formattedY = y.toFixed(2);
+            const formattedV = v.toFixed(2);
+            const formattedA = a.toFixed(1);
+
+            // Show or hide controls based on testModeActive (Only initheight & gravity)
+            const initHeightCtrl = document.getElementById('ctrl-initheight');
+            if (testModeActive && hiddenTestMetric === 'initheight') {
+                initHeightCtrl.classList.remove('hidden');
+                heightSlider.disabled = true; // Deactivate slider to prevent tampering
+            } else {
+                initHeightCtrl.classList.add('hidden');
+                heightSlider.disabled = false;
+            }
+
+            const gravityCtrl = document.getElementById('ctrl-gravity');
+            if (testModeActive && hiddenTestMetric === 'gravity') {
+                gravityCtrl.classList.remove('hidden');
+                gravitySlider.disabled = true; // Deactivate slider to prevent tampering
+            } else {
+                gravityCtrl.classList.add('hidden');
+                gravitySlider.disabled = false;
+            }
+
+            // Render slider textual values (Initial Height, Gravity)
+            if (testModeActive && !testMetricRevealed && hiddenTestMetric === 'initheight') {
+                heightVal.textContent = "???";
+                heightVal.className = "mono-font text-cyan-400 text-sm font-bold bg-slate-950 px-2 py-1 rounded border border-slate-850 blur-[2px]";
+            } else {
+                heightVal.textContent = `${initialHeight.toFixed(1)} m`;
+                heightVal.className = "mono-font text-cyan-400 text-sm font-bold bg-slate-950 px-2 py-1 rounded border border-slate-800";
+            }
+
+            if (testModeActive && !testMetricRevealed && hiddenTestMetric === 'gravity') {
+                gravityValDisplay.textContent = "???";
+                gravityValDisplay.className = "mono-font text-cyan-400 text-sm font-bold bg-slate-950 px-2 py-1 rounded border border-slate-850 blur-[2px]";
+            } else {
+                gravityValDisplay.textContent = `${gVal.toFixed(1)} m/s²`;
+                gravityValDisplay.className = "mono-font text-cyan-400 text-sm font-bold bg-slate-950 px-2 py-1 rounded border border-slate-800";
+            }
+
+            // Dashboard stats remain fully visible in this version
+            liveHeight.textContent = formattedY;
+            liveHeight.className = "mono-font text-3xl font-bold text-white";
+            liveTime.textContent = formattedT;
+            liveTime.className = "mono-font text-3xl font-bold text-cyan-400";
+            liveVelocity.textContent = formattedV;
+            liveVelocity.className = "mono-font text-3xl font-bold text-amber-400";
+            liveAccel.textContent = formattedA;
+            liveAccel.className = "mono-font text-3xl font-bold text-rose-500";
+
+            // Sync reveal eyes icons across the active nodes
+            ['initheight', 'gravity'].forEach(metric => {
+                const icon = document.getElementById(`eye-${metric}`);
+                if (icon) {
+                    if (testMetricRevealed) {
+                        icon.setAttribute('data-lucide', 'eye-off');
+                    } else {
+                        icon.setAttribute('data-lucide', 'eye');
+                    }
+                }
+            });
+            lucide.createIcons();
+
+            // Show impact indicator
+            if (y <= 0 && simTime > 0) {
+                impactBadge.classList.remove('hidden');
+            } else {
+                impactBadge.classList.add('hidden');
+            }
+        }
+
+        // Render ball position correctly relative to drop zone
+        function updateBallPosition(height) {
+            const dropZoneRect = dropZone.getBoundingClientRect();
+            const topMargin = 24; // Visual top padding inside channel
+            const bottomMargin = 24; // Visual bottom padding (ground)
+            const usableHeight = dropZoneRect.height - topMargin - bottomMargin;
+
+            // Height to percentage layout calculation
+            const yFraction = height / MAX_Y; 
+            const topPx = topMargin + (1 - yFraction) * usableHeight;
+
+            fallingBall.style.top = `${topPx}px`;
+
+            // Position initial height guide dashed line
+            const initialFraction = initialHeight / MAX_Y;
+            const initialTopPx = topMargin + (1 - initialFraction) * usableHeight;
+            initialHeightLine.style.top = `${initialTopPx}px`;
+        }
+
+        // Draw visual indicators, velocity vectors on tower canvas
+        function drawStaticGraphics() {
+            const rect = simulationCanvas.getBoundingClientRect();
+            const w = rect.width;
+            const h = rect.height;
+            simCtx.clearRect(0, 0, w, h);
+
+            if (h === 0 || w === 0) return;
+
+            const topMargin = 24;
+            const bottomMargin = 24;
+            const usableHeight = h - topMargin - bottomMargin;
+
+            // Draw strobe ghost marks
+            if (strobeActive) {
+                const maxSimulationTime = Math.sqrt((2 * initialHeight) / gVal);
+                const limitTime = Math.min(simTime, maxSimulationTime);
+
+                for (let t = strobeInterval; t <= limitTime; t += strobeInterval) {
+                    const kinematics = solveFreeFall(t);
+                    const yFraction = kinematics.y / MAX_Y;
+                    const ghostY = topMargin + (1 - yFraction) * usableHeight;
+                    const ghostX = w / 2;
+
+                    // Draw ghost circle representation
+                    simCtx.beginPath();
+                    simCtx.arc(ghostX, ghostY, 12, 0, Math.PI * 2);
+                    simCtx.fillStyle = 'rgba(6, 182, 212, 0.18)'; // transparent cyan
+                    simCtx.fill();
+                    simCtx.strokeStyle = 'rgba(6, 182, 212, 0.4)';
+                    simCtx.lineWidth = 1;
+                    simCtx.stroke();
+
+                    // Tiny time stamp marker beside ghost ball
+                    simCtx.fillStyle = 'rgba(148, 163, 184, 0.8)';
+                    simCtx.font = '10px monospace';
+                    simCtx.fillText(`${t.toFixed(1)}s`, ghostX + 22, ghostY + 4);
+
+                    // Tiny meter stamp marker
+                    simCtx.fillStyle = 'rgba(148, 163, 184, 0.5)';
+                    simCtx.fillText(`${kinematics.y.toFixed(0)}m`, ghostX - 48, ghostY + 4);
+                }
+            }
+
+            // Draw velocity vector arrow over the falling ball
+            const kinematics = solveFreeFall(simTime);
+            if (simTime > 0 && kinematics.y > 0) {
+                const yFraction = kinematics.y / MAX_Y;
+                const ballY = topMargin + (1 - yFraction) * usableHeight;
+                const ballX = w / 2;
+
+                // Scale arrow based on speed
+                const speed = Math.abs(kinematics.v);
+                const vectorLength = speed * 1.5; // Scale factor for visual representation
+
+                if (vectorLength > 5) {
+                    simCtx.beginPath();
+                    simCtx.moveTo(ballX, ballY + 16); // Start below ball edge
+                    simCtx.lineTo(ballX, ballY + 16 + vectorLength);
+                    simCtx.strokeStyle = '#f59e0b'; // Amber-500
+                    simCtx.lineWidth = 2.5;
+                    simCtx.stroke();
+
+                    // Arrow head
+                    simCtx.beginPath();
+                    simCtx.moveTo(ballX - 5, ballY + 12 + vectorLength);
+                    simCtx.lineTo(ballX, ballY + 18 + vectorLength);
+                    simCtx.lineTo(ballX + 5, ballY + 12 + vectorLength);
+                    simCtx.fillStyle = '#f59e0b';
+                    simCtx.fill();
+
+                    // Text display of velocity vector magnitude
+                    simCtx.fillStyle = '#f59e0b';
+                    simCtx.font = 'bold 10px monospace';
+                    simCtx.fillText(`${speed.toFixed(1)} m/s`, ballX + 12, ballY + 22 + vectorLength / 2);
+                }
+            }
+        }
+
+        // Modular Single Plot Graph Drawing Helper
+        function drawSinglePlot(startX, endX, h, type, customTitle) {
+            // padding configurations
+            const paddingLeft = startX + 35;
+            const paddingRight = ((kinematicsGraph.width / window.devicePixelRatio) - endX) + 15;
+            const paddingTop = 30;
+            const paddingBottom = 25;
+            const chartW = (endX - startX) - 50;
+            const chartH = h - paddingTop - paddingBottom;
+
+            // Draw axis borders and lines
+            graphCtx.strokeStyle = 'rgba(30, 41, 59, 0.5)';
+            graphCtx.lineWidth = 1;
+
+            // Draw Y-axis title label
+            graphCtx.fillStyle = type === 'pos' ? '#06b6d4' : (type === 'vel' ? '#f59e0b' : '#f43f5e');
+            graphCtx.font = 'bold 9px monospace';
+            let graphTitle = '';
+            if (type === 'pos') {
+                graphTitle = signConvention === 'up' ? 'Position y (m)' : 'Displacement s (m)';
+            } else if (type === 'vel') {
+                graphTitle = signConvention === 'up' ? 'Velocity v (m/s)' : 'Velocity v (m/s) [Down]';
+            } else {
+                graphTitle = signConvention === 'up' ? 'Acceleration a (m/s²)' : 'Acceleration a (m/s²) [Down]';
+            }
+            if (customTitle) graphTitle = customTitle;
+            graphCtx.fillText(graphTitle, startX + 8, paddingTop - 12);
+
+            const maxDuration = 5.0; // Fixed x-axis domain
+
+            // Vertical grids
+            for (let t = 0; t <= maxDuration; t += 1.0) {
+                const x = paddingLeft + (t / maxDuration) * chartW;
+                graphCtx.beginPath();
+                graphCtx.moveTo(x, paddingTop);
+                graphCtx.lineTo(x, h - paddingBottom);
+                graphCtx.stroke();
+
+                // X-axis label
+                graphCtx.fillStyle = '#64748b';
+                graphCtx.font = '8px monospace';
+                graphCtx.fillText(`${t.toFixed(0)}s`, x - 4, h - paddingBottom + 12);
+            }
+
+            // Determine graph scales based on selection and conventions
+            let dataMin, dataMax, dataPoints, color;
+            if (type === 'pos') {
+                dataMin = 0;
+                dataMax = 100;
+                dataPoints = signConvention === 'up' ? posHistory : posHistory.map(y => initialHeight - y);
+                color = '#06b6d4';
+            } else if (type === 'vel') {
+                dataMin = signConvention === 'up' ? -80 : 0;
+                dataMax = signConvention === 'up' ? 0 : 80;
+                dataPoints = signConvention === 'up' ? velHistory : velHistory.map(v => -v);
+                color = '#f59e0b';
+            } else {
+                dataMin = -25;
+                dataMax = 25;
+                dataPoints = signConvention === 'up' ? accHistory : accHistory.map(a => -a);
+                color = '#f43f5e';
+            }
+
+            // Adjust y-axis subdivisions (steps) to show intervals of 10 for position (0 to 100) and velocity (80 range), and 5 for acceleration (-25 to 25)
+            let steps = 4;
+            if (type === 'pos') {
+                steps = 10; // intervals of 10 for y/s (0 to 100)
+            } else if (type === 'vel') {
+                steps = 8;  // intervals of 10 for velocity (0 to 80 or -80 to 0)
+            } else {
+                steps = 10; // intervals of 5 for acceleration (-25 to 25)
+            }
+
+            // Draw horizontal grids
+            for (let i = 0; i <= steps; i++) {
+                const val = dataMin + (i / steps) * (dataMax - dataMin);
+                const y = h - paddingBottom - (i / steps) * chartH;
+                graphCtx.beginPath();
+                graphCtx.moveTo(paddingLeft, y);
+                graphCtx.lineTo(endX - 15, y);
+                graphCtx.stroke();
+
+                // Y-axis tick labels
+                graphCtx.fillStyle = '#64748b';
+                graphCtx.font = '8px monospace';
+                graphCtx.fillText(`${val.toFixed(0)}`, startX + 6, y + 3);
+            }
+
+            // Draw dynamic plotted tracks
+            if (dataPoints.length > 0) {
+                graphCtx.strokeStyle = color;
+                graphCtx.lineWidth = 2.2;
+                graphCtx.lineCap = 'round';
+                graphCtx.lineJoin = 'round';
+                graphCtx.beginPath();
+
+                for (let idx = 0; idx < timeHistory.length; idx++) {
+                    const t = timeHistory[idx];
+                    const val = dataPoints[idx];
+
+                    const cx = paddingLeft + (t / maxDuration) * chartW;
+                    const valRatio = (val - dataMin) / (dataMax - dataMin);
+                    const cy = h - paddingBottom - valRatio * chartH;
+
+                    if (idx === 0) {
+                        graphCtx.moveTo(cx, cy);
+                    } else {
+                        const prevVal = dataPoints[idx - 1];
+                        // Detect jump discontinuity at floor landing impact
+                        const isJump = Math.abs(val - prevVal) > 2;
+
+                        if (isJump) {
+                            // Close standard path
+                            graphCtx.stroke();
+
+                            // Draw dynamic dotted transition line for jumps
+                            graphCtx.beginPath();
+                            graphCtx.setLineDash([3, 3]);
+                            const prevT = timeHistory[idx - 1];
+                            const prevCx = paddingLeft + (prevT / maxDuration) * chartW;
+                            const prevValRatio = (prevVal - dataMin) / (dataMax - dataMin);
+                            const prevCy = h - paddingBottom - prevValRatio * chartH;
+                            
+                            graphCtx.moveTo(prevCx, prevCy);
+                            graphCtx.lineTo(cx, cy);
+                            graphCtx.stroke();
+
+                            // Restore solid styling
+                            graphCtx.setLineDash([]);
+                            graphCtx.beginPath();
+                            graphCtx.moveTo(cx, cy);
+                        } else {
+                            graphCtx.lineTo(cx, cy);
+                        }
+                    }
+                }
+                graphCtx.stroke();
+
+                // Draw end indicator marker point
+                const lastIdx = timeHistory.length - 1;
+                const currentT = timeHistory[lastIdx];
+                const currentVal = dataPoints[lastIdx];
+                const cx = paddingLeft + (currentT / maxDuration) * chartW;
+                const valRatio = (currentVal - dataMin) / (dataMax - dataMin);
+                const cy = h - paddingBottom - valRatio * chartH;
+
+                graphCtx.beginPath();
+                graphCtx.arc(cx, cy, 4, 0, Math.PI * 2);
+                graphCtx.fillStyle = color;
+                graphCtx.fill();
+                graphCtx.strokeStyle = '#ffffff';
+                graphCtx.lineWidth = 1;
+                graphCtx.stroke();
+            }
+        }
+
+        // Draw Motion Plots (Either standard single or side-by-side split)
+        function drawGraph() {
+            const rect = kinematicsGraph.getBoundingClientRect();
+            const w = rect.width;
+            const h = rect.height;
+            graphCtx.clearRect(0, 0, w, h);
+
+            if (h === 0 || w === 0) return;
+
+            const graphYAxisLabel = document.getElementById('graph-y-axis');
+
+            if (layoutMode === 'single') {
+                // Draw normal single plot layout
+                graphYAxisLabel.classList.remove('hidden');
+                drawSinglePlot(0, w, h, activeGraphType);
+            } else {
+                // Draw side-by-side split layout (s-t left, v-t right)
+                graphYAxisLabel.classList.add('hidden'); // Title labeled inline in split views
+                const halfW = w / 2;
+                drawSinglePlot(0, halfW - 10, h, 'pos');
+                drawSinglePlot(halfW + 10, w, h, 'vel');
+            }
+        }
+
+        // Toggle Single vs Split layouts (Updates block widths dynamically)
+        function setLayoutMode(mode) {
+            layoutMode = mode;
+
+            // Dynamically alter the layout grid widths
+            if (mode === 'single') {
+                towerContainerCard.classList.remove('lg:col-span-4');
+                towerContainerCard.classList.add('lg:col-span-6');
+                graphsContainerCard.classList.remove('lg:col-span-8');
+                graphsContainerCard.classList.add('lg:col-span-6');
+            } else { // split
+                towerContainerCard.classList.remove('lg:col-span-6');
+                towerContainerCard.classList.add('lg:col-span-4');
+                graphsContainerCard.classList.remove('lg:col-span-6');
+                graphsContainerCard.classList.add('lg:col-span-8');
+            }
+
+            // Set button styles
+            document.getElementById('layout-single').className = "px-2.5 py-1 text-[10px] font-bold rounded-md " + 
+                (mode === 'single' ? "bg-slate-900 text-white" : "text-slate-400 hover:text-slate-200");
+            document.getElementById('layout-split').className = "px-2.5 py-1 text-[10px] font-bold rounded-md " + 
+                (mode === 'split' ? "bg-slate-900 text-white" : "text-slate-400 hover:text-slate-200");
+
+            // Disable/Styling tabs container when side-by-side is active
+            const tabsContainer = document.getElementById('graph-tabs-container');
+            if (mode === 'split') {
+                tabsContainer.classList.add('opacity-40', 'pointer-events-none');
+                document.getElementById('graph-formula-text').textContent = 's-t: s = 0.5·g·t² | v-t: v = g·t';
+            } else {
+                tabsContainer.classList.remove('opacity-40', 'pointer-events-none');
+                setActiveGraph(activeGraphType); // Restore formula text for single mode
+            }
+
+            // Request layout changes to complete, then resize canvas coordinates and redraw
+            setTimeout(resizeCanvases, 0);
+        }
+
+        // Toggle sign convention coordinates (Up vs Downwards Positive)
+        function setConvention(convention) {
+            signConvention = convention;
+            
+            // Toggle visual styling for coordinate switch
+            document.getElementById('conv-up').className = "px-2.5 py-1.5 text-[10px] font-bold rounded-md " + 
+                (convention === 'up' ? "bg-slate-900 text-white" : "text-slate-400 hover:text-slate-200");
+            document.getElementById('conv-down').className = "px-2.5 py-1.5 text-[10px] font-bold rounded-md " + 
+                (convention === 'down' ? "bg-slate-900 text-white" : "text-slate-400 hover:text-slate-200");
+
+            // Dynamic graph updates
+            if (layoutMode === 'single') {
+                setActiveGraph(activeGraphType);
+            } else {
+                drawGraph();
+            }
+        }
+
+        // Handle Graph Tab Switching
+        function setActiveGraph(type) {
+            activeGraphType = type;
+            
+            // Adjust label titles
+            const formulaText = document.getElementById('graph-formula-text');
+            const yAxisLabel = document.getElementById('graph-y-axis');
+
+            // Reset tab visuals
+            document.querySelectorAll('.graph-tab').forEach(btn => {
+                btn.className = "graph-tab flex-1 py-1.5 text-xs font-semibold rounded-md text-slate-400 hover:text-slate-200 transition-all";
+            });
+
+            const activeBtn = document.getElementById(`tab-${type}`);
+            activeBtn.className = "graph-tab flex-1 py-1.5 text-xs font-semibold rounded-md bg-slate-900 text-white border border-slate-850 shadow transition-all";
+
+            if (type === 'pos') {
+                yAxisLabel.textContent = signConvention === 'up' ? 'Position y (m)' : 'Displacement s (m)';
+                yAxisLabel.className = 'font-mono text-cyan-400 font-bold';
+                formulaText.textContent = signConvention === 'up' ? 'y = y₀ - 0.5·g·t²' : 's = 0.5·g·t²';
+            } else if (type === 'vel') {
+                yAxisLabel.textContent = 'Velocity v (m/s)';
+                yAxisLabel.className = 'font-mono text-amber-500 font-bold';
+                formulaText.textContent = signConvention === 'up' ? 'v = -g·t' : 'v = g·t';
+            } else {
+                yAxisLabel.textContent = 'Acceleration a (m/s²)';
+                yAxisLabel.className = 'font-mono text-rose-500 font-bold';
+                formulaText.textContent = signConvention === 'up' ? 'a = -g' : 'a = g';
+            }
+
+            drawGraph();
+        }
+
+        // Set speed multipliers
+        function setSpeed(factor) {
+            timeScale = factor;
+            
+            // Reset active styles on speed buttons
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.className = "speed-btn py-1.5 px-2 text-xs font-semibold rounded-lg border border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-700 transition-all";
+            });
+
+            // Map UI updates
+            let activeId = 'speed-1';
+            if (factor === 0.5) activeId = 'speed-05';
+            else if (factor === 0.2) activeId = 'speed-02';
+            else if (factor === 0.1) activeId = 'speed-01';
+
+            document.getElementById(activeId).className = "speed-btn py-1.5 px-2 text-xs font-semibold rounded-lg border border-cyan-500/30 bg-cyan-500/15 text-cyan-400 transition-all";
+        }
+
+        // Set Strobe intervals
+        function setStrobe(interval) {
+            strobeActive = true;
+            strobeInterval = interval;
+            document.getElementById('strobe-val').textContent = `Every ${interval}s`;
+
+            // Style buttons
+            document.querySelectorAll('.strobe-btn').forEach(btn => {
+                btn.className = "strobe-btn flex-1 py-1.5 text-xs font-semibold rounded bg-slate-950 text-slate-400 border border-slate-800 transition-all";
+            });
+            const activeId = interval === 0.2 ? 'strobe-02' : 'strobe-04';
+            document.getElementById(activeId).className = "strobe-btn flex-1 py-1.5 text-xs font-semibold rounded bg-cyan-500/25 text-cyan-300 border border-cyan-500/30 transition-all";
+            
+            drawStaticGraphics();
+        }
+
+        // Toggle strobe activation state
+        function toggleStrobe(enable) {
+            strobeActive = enable;
+            document.getElementById('strobe-val').textContent = 'Off';
+            
+            document.querySelectorAll('.strobe-btn').forEach(btn => {
+                btn.className = "strobe-btn flex-1 py-1.5 text-xs font-semibold rounded bg-slate-950 text-slate-400 border border-slate-800 transition-all";
+            });
+            document.getElementById('strobe-off').className = "strobe-btn flex-1 py-1.5 text-xs font-semibold rounded bg-cyan-500/25 text-cyan-300 border border-cyan-500/30 transition-all";
+            
+            drawStaticGraphics();
+        }
+
+        // Snapshot Logger rendering engine (Renders static cards left anchored at exact fall heights)
+        function spawnCaptureBox(t, y, v, count, hiddenParam, revealed) {
+            const dropZoneRect = dropZone.getBoundingClientRect();
+            const topMargin = 24;
+            const bottomMargin = 24;
+            const usableHeight = dropZoneRect.height - topMargin - bottomMargin;
+
+            const yFraction = y / MAX_Y; 
+            const topPx = topMargin + (1 - yFraction) * usableHeight;
+
+            const box = document.createElement('div');
+            box.id = `cap-box-${count}`;
+            box.className = "absolute z-30 bg-slate-900/95 border border-violet-500/40 rounded-lg p-2 shadow-2xl text-[9px] font-mono flex flex-col gap-0.5 pointer-events-auto transition-all hover:scale-105 hover:border-violet-400 select-none";
+            box.style.top = `${topPx}px`;
+            box.style.left = "56%";
+            box.style.width = "125px";
+            box.style.transform = "translateY(-50%)";
+
+            const isHiddenT = (testModeActive && hiddenParam === 't' && !revealed);
+            const isHiddenY = (testModeActive && hiddenParam === 'y' && !revealed);
+            const isHiddenV = (testModeActive && hiddenParam === 'v' && !revealed);
+
+            const displayT = isHiddenT ? "???" : `${t.toFixed(2)}s`;
+            const displayY = isHiddenY ? "???" : `${y.toFixed(1)}m`;
+            const displayV = isHiddenV ? "???" : `${v.toFixed(1)}m/s`;
+
+            box.innerHTML = `
+                <div class="flex justify-between items-center text-violet-400 border-b border-slate-800/85 pb-1 mb-1 font-sans">
+                    <span class="font-bold">t = ${displayT}</span>
+                    ${testModeActive && hiddenParam ? `
+                        <div class="flex items-center gap-1 shrink-0">
+                            <button onclick="toggleCaptureReveal(${count})" class="text-slate-400 hover:text-violet-300 transition-colors" title="Reveal/Hide Answer">
+                                <i data-lucide="${revealed ? 'eye-off' : 'eye'}" class="w-3.5 h-3.5"></i>
+                            </button>
+                            <button onclick="showCaptureWorking(${count})" class="text-slate-400 hover:text-yellow-455 transition-colors" title="Show Working">
+                                <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="flex flex-col gap-0.5 text-slate-300">
+                    <div>height: <span class="${isHiddenY ? 'text-slate-500 blur-[1px]' : 'text-cyan-400 font-bold'}">${displayY}</span></div>
+                    <div>v: <span class="${isHiddenV ? 'text-slate-500 blur-[1px]' : 'text-amber-400 font-bold'}">${displayV}</span></div>
+                </div>
+            `;
+            
+            captureContainer.appendChild(box);
+            lucide.createIcons();
+        }
+
+        // Clear captured log
+        function clearCaptures() {
+            captures = [];
+            captureContainer.innerHTML = '';
+            // Reset the randomized unknowns pool
+            capturePool = ['t', 'y', 'v'];
+        }
+
+        // Toggle capture hidden reveal individual states
+        window.toggleCaptureReveal = function(count) {
+            const cap = captures.find(c => c.count === count);
+            if (cap) {
+                cap.revealed = !cap.revealed;
+                // Redraw all captures to synchronize values instantly
+                captureContainer.innerHTML = '';
+                captures.forEach(c => spawnCaptureBox(c.t, c.y, c.v, c.count, c.hiddenParam, c.revealed));
+            }
+        };
+
+        // Toggle Test Metric show/reveal state (Unified toggler)
+        window.toggleRevealTestMetric = function(metric) {
+            if (hiddenTestMetric === metric) {
+                testMetricRevealed = !testMetricRevealed;
+                const state = solveFreeFall(simTime);
+                updateDashboard(simTime, state.y, state.v, state.a);
+            }
+        };
+
+        // Modal popup working formulas routines using purely graphical/geometric approaches
+        window.showWorking = function(metric) {
+            let content = '';
+            const y0 = initialHeight;
+            const t = simTime;
+            const state = solveFreeFall(t);
+            const maxDuration = Math.sqrt((2 * initialHeight) / gVal);
+            const finalVelocity = -gVal * maxDuration;
+
+            if (metric === 'initheight') {
+                content = `
+                    <p class="font-semibold text-violet-400">Determine Initial Height (y₀) Graphically:</p>
+                    <p class="mt-1">In a velocity-time (v-t) graph, the total vertical displacement (the height fallen from y₀ to the ground) is represented by the area under the v-t graph.</p>
+                    
+                    <p class="mt-2 font-bold text-slate-400">1. Identify the Shape of the Total Fall Area:</p>
+                    <p>The graph is a right-angled triangle bounded by:</p>
+                    <p>• Time axis from t = 0 to t_impact = ${maxDuration.toFixed(2)} s</p>
+                    <p>• Velocity line from v = 0 to v_impact = ${Math.abs(finalVelocity).toFixed(1)} m/s</p>
+                    
+                    <p class="mt-2 font-bold text-slate-400">2. Geometrical Formula:</p>
+                    <p class="text-cyan-400">Area of Triangle = 0.5 · base (t) · height (v)</p>
+                    
+                    <p class="mt-2 font-bold text-slate-400">3. Parameters at Impact:</p>
+                    <p>Base (t) = ${maxDuration.toFixed(2)} s</p>
+                    <p>Height (v) = ${Math.abs(finalVelocity).toFixed(1)} m/s</p>
+                    
+                    <p class="mt-2 font-bold text-slate-400">4. Calculation:</p>
+                    <p>Area = 0.5 · ${maxDuration.toFixed(2)} · ${Math.abs(finalVelocity).toFixed(1)}</p>
+                    <p>Area = ${(0.5 * maxDuration * Math.abs(finalVelocity)).toFixed(1)} m</p>
+                    <p class="mt-1 text-slate-400">Since the ball lands at ground level (0m), the total displacement equals the initial height:</p>
+                    <p class="text-emerald-400 font-bold text-sm mt-1">y₀ = ${(0.5 * maxDuration * Math.abs(finalVelocity)).toFixed(1)} m</p>
+                `;
+            } else if (metric === 'gravity') {
+                content = `
+                    <p class="font-semibold text-violet-400">Determine Gravity (g) Graphically:</p>
+                    <p class="mt-1">The acceleration due to gravity is equal to the gradient (slope) of the velocity-time (v-t) graph.</p>
+                    
+                    <p class="mt-2 font-bold text-slate-400">1. Choose Two Points on the Line:</p>
+                    <p>• Point 1: (0 s, 0 m/s)</p>
+                    <p>• Point 2: (${t.toFixed(3)} s, ${state.v.toFixed(2)} m/s)</p>
+                    
+                    <p class="mt-2 font-bold text-slate-400">2. Gradient Formula:</p>
+                    <p class="text-cyan-400">Slope = Δv / Δt = (v₂ - v₁) / (t₂ - t₁)</p>
+                    
+                    <p class="mt-2 font-bold text-slate-400">3. Calculate the Slope Magnitude:</p>
+                    <p>Magnitude of Slope = | ${state.v.toFixed(2)} - 0 | / | ${t.toFixed(3)} - 0 |</p>
+                    <p>Magnitude of Slope = ${Math.abs(state.v).toFixed(2)} / ${t.toFixed(3)}</p>
+                    <p class="text-emerald-400 font-bold text-sm mt-1">g = ${gVal.toFixed(1)} m/s²</p>
+                    <p class="text-slate-400 text-[10px] mt-1">(The negative sign in velocity indicates downward motion, confirming a constant downward acceleration slope of -${gVal.toFixed(1)} m/s²)</p>
+                `;
+            }
+
+            document.getElementById('modal-content').innerHTML = content;
+            document.getElementById('working-modal').classList.remove('hidden');
+        };
+
+        window.showCaptureWorking = function(count) {
+            const cap = captures.find(c => c.count === count);
+            if (!cap) return;
+
+            let content = '';
+            const y0 = initialHeight;
+
+            if (cap.hiddenParam === 't') {
+                content = `
+                    <p class="font-semibold text-violet-400">Determine captured time (t) at height = ${cap.y.toFixed(1)}m Graphically:</p>
+                    <p class="mt-1">The vertical distance fallen is represented by the triangular area under the v-t graph from 0 to time t.</p>
+                    
+                    <p class="mt-2 font-bold text-slate-400">1. Calculate Distance Fallen (Displacement s):</p>
+                    <p>s = y₀ - current height = ${y0.toFixed(1)} - ${cap.y.toFixed(1)} = ${(y0 - cap.y).toFixed(1)} m</p>
+                    
+                    <p class="mt-2 font-bold text-slate-400">2. Formulate Area Equation:</p>
+                    <p class="text-cyan-400">Area of Triangle = 0.5 · base (t) · height (v)</p>
+                    <p>Since the gradient (g) is constant: height (v) = g · t</p>
+                    <p class="text-cyan-400">Area = 0.5 · t · (g · t) = 0.5 · g · t²</p>
+                    
+                    <p class="mt-2 font-bold text-slate-400">3. Rearrange for Base (t):</p>
+                    <p class="text-amber-400">t = √[ 2 · Area / g ]</p>
+                    
+                    <p class="mt-2 font-bold text-slate-400">4. Solve Geometrically:</p>
+                    <p>t = √[ 2 · ${(y0 - cap.y).toFixed(1)} / ${gVal.toFixed(1)} ]</p>
+                    <p>t = √[ ${(2 * (y0 - cap.y)).toFixed(1)} / ${gVal.toFixed(1)} ]</p>
+                    <p class="text-emerald-400 font-bold text-sm mt-1">t = ${cap.t.toFixed(2)} s</p>
+                `;
+            } else if (cap.hiddenParam === 'y') {
+                content = `
+                    <p class="font-semibold text-violet-400">Determine captured height at time t = ${cap.t.toFixed(2)}s Graphically:</p>
+                    <p class="mt-1">The height is the initial height minus the vertical distance fallen (the triangular area under the v-t graph up to time t).</p>
+                    
+                    <p class="mt-2 font-bold text-slate-400">1. Calculate Distance Fallen (Area under v-t graph):</p>
+                    <p>The area under the linear v-t graph is a triangle of base = t and height = v.</p>
+                    <p class="text-cyan-400">Area of Triangle = 0.5 · base (t) · height (v) = 0.5 · t · v</p>
+                    <p>Where height (v) is derived from slope: v = g · t</p>
+                    <p class="text-cyan-400">Area = 0.5 · t · (g · t) = 0.5 · g · t²</p>
+                    <p>Area = 0.5 · ${gVal.toFixed(1)} · (${cap.t.toFixed(2)})²</p>
+                    <p>Area = ${(0.5 * gVal * cap.t * cap.t).toFixed(1)} m</p>
+                    
+                    <p class="mt-2 font-bold text-slate-400">2. Deduce Current height:</p>
+                    <p class="text-cyan-400">Height = y₀ - Area</p>
+                    <p>Height = ${y0.toFixed(1)} - ${(0.5 * gVal * cap.t * cap.t).toFixed(1)}</p>
+                    <p class="text-emerald-400 font-bold text-sm mt-1">height = ${cap.y.toFixed(1)} m</p>
+                `;
+            } else if (cap.hiddenParam === 'v') {
+                content = `
+                    <p class="font-semibold text-violet-400">Determine captured velocity (v) Graphically:</p>
+                    
+                    <p class="mt-2 font-bold text-slate-400">Using Area Relationship (Height y = ${cap.y.toFixed(1)}m):</p>
+                    <p>Distance fallen (Area under v-t) = ${y0.toFixed(1)} - ${cap.y.toFixed(1)} = ${(y0 - cap.y).toFixed(1)} m</p>
+                    <p class="text-cyan-400">Area of Triangle = 0.5 · base (t) · height (v) = 0.5 · t · v</p>
+                    <p>Since base (t) = v / g, substitute to obtain:</p>
+                    <p class="text-cyan-400">Area = 0.5 · v² / g</p>
+                    <p class="text-amber-400">v = -√[ 2 · g · Area ]</p>
+                    <p>v = -√[ 2 · ${gVal.toFixed(1)} · ${(y0 - cap.y).toFixed(1)} ]</p>
+                    <p>v = -√[ ${(2 * gVal * (y0 - cap.y)).toFixed(1)} ]</p>
+                    <p class="text-emerald-400 font-bold text-sm mt-1">v = ${cap.v.toFixed(1)} m/s</p>
+                `;
+            }
+
+            document.getElementById('modal-content').innerHTML = content;
+            document.getElementById('working-modal').classList.remove('hidden');
+        };
+
+        window.closeModal = function() {
+            document.getElementById('working-modal').classList.add('hidden');
+        };
+
+        // Simulation Step Engine
+        function tick(timestamp) {
+            if (!isRunning) return;
+
+            if (!lastTimestamp) lastTimestamp = timestamp;
+            const deltaRealSeconds = (timestamp - lastTimestamp) / 1000.0;
+            lastTimestamp = timestamp;
+
+            // Apply scaled step
+            simTime += deltaRealSeconds * timeScale;
+
+            // Resolve modern state metrics
+            const state = solveFreeFall(simTime);
+
+            // Populate kinematic plot tracks
+            timeHistory.push(simTime);
+            posHistory.push(state.y);
+            velHistory.push(state.v);
+            accHistory.push(state.a);
+
+            // Update interactive UI elements
+            updateBallPosition(state.y);
+            updateDashboard(simTime, state.y, state.v, state.a);
+            drawStaticGraphics();
+            drawGraph();
+
+            if (state.y <= 0) {
+                // Ball hit the floor. Terminate tick loop.
+                isRunning = false;
+                playPauseBtn.innerHTML = `<i data-lucide="play" class="w-5 h-5 fill-slate-950"></i> <span id="play-btn-text">Drop Ball</span>`;
+                lucide.createIcons();
+                return;
+            }
+
+            animationFrameId = requestAnimationFrame(tick);
+        }
+
+        // Event Listeners for triggers
+        playPauseBtn.addEventListener('click', () => {
+            const maxSimulationTime = Math.sqrt((2 * initialHeight) / gVal);
+            
+            // Check if ball is already landed. If yes, auto-reset first before dropping.
+            if (simTime >= maxSimulationTime) {
+                resetSimulation();
+            }
+
+            isRunning = !isRunning;
+            if (isRunning) {
+                lastTimestamp = null;
+                playPauseBtn.innerHTML = `<i data-lucide="pause" class="w-5 h-5 fill-slate-950"></i> <span id="play-btn-text">Pause</span>`;
+                animationFrameId = requestAnimationFrame(tick);
+            } else {
+                playPauseBtn.innerHTML = `<i data-lucide="play" class="w-5 h-5 fill-slate-950"></i> <span id="play-btn-text">Resume</span>`;
+            }
+            lucide.createIcons();
+        });
+
+        // Test Mode button listener
+        testBtn.addEventListener('click', () => {
+            testModeActive = true;
+            testMetricRevealed = false;
+
+            // Randomise initial height: 30 to 100
+            initialHeight = Math.floor(Math.random() * (100 - 30 + 1)) + 30;
+            heightSlider.value = initialHeight;
+            heightVal.textContent = `${initialHeight.toFixed(1)} m`;
+
+            // Randomise gravity: 0.8 to 25.0
+            gVal = parseFloat((Math.random() * (25.0 - 0.8) + 0.8).toFixed(1));
+            gravitySlider.value = gVal;
+            gravityValDisplay.textContent = `${gVal.toFixed(1)} m/s²`;
+            headerGVal.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-cyan-500"></span> g = ${gVal.toFixed(1)} m/s²`;
+
+            // Randomise gravity or initial height to hide (only 'initheight' or 'gravity')
+            const metrics = ['initheight', 'gravity'];
+            hiddenTestMetric = metrics[Math.floor(Math.random() * metrics.length)];
+
+            // Reset simulation (clears captures, resets clocks)
+            resetSimulation();
+
+            // Re-activate test states (resetSimulation turns off test states by default)
+            testModeActive = true;
+
+            // Update parameters instantly
+            updateBallPosition(initialHeight);
+            updateDashboard(0, initialHeight, 0, -gVal);
+            drawStaticGraphics();
+            drawGraph();
+
+            // Style test button to show active state
+            testBtn.className = "flex items-center justify-center gap-1 bg-violet-600/35 hover:bg-violet-600/45 text-violet-300 font-bold py-2.5 px-2 rounded-xl border border-violet-500/40 transition-all scale-[1.02] text-[11px] sm:text-xs";
+        });
+
+        // Capture data overlay logic with Non-Repeating Random Unknown selection
+        captureBtn.addEventListener('click', () => {
+            // Only allow logging during free fall (not static state)
+            if (simTime === 0.0) return;
+            const maxSimulationTime = Math.sqrt((2 * initialHeight) / gVal);
+            if (simTime >= maxSimulationTime) return; // Prevent post-impact capture
+
+            const state = solveFreeFall(simTime);
+            const count = captures.length + 1;
+            
+            let hiddenParam = null;
+
+            if (testModeActive) {
+                // If pool is empty, re-populate with all 3 options
+                if (capturePool.length === 0) {
+                    capturePool = ['t', 'y', 'v'];
+                }
+                
+                // Pick a random unknown from the remaining available pool
+                const randomIndex = Math.floor(Math.random() * capturePool.length);
+                hiddenParam = capturePool[randomIndex];
+                
+                // Remove the selected unknown from the pool so it cannot be selected again in this run
+                capturePool.splice(randomIndex, 1);
+            }
+
+            const snapshot = {
+                t: simTime,
+                y: state.y,
+                v: state.v,
+                count: count,
+                hiddenParam: hiddenParam,
+                revealed: false
+            };
+
+            captures.push(snapshot);
+            spawnCaptureBox(simTime, state.y, state.v, count, hiddenParam, false);
+        });
+
+        function resetSimulation() {
+            isRunning = false;
+            cancelAnimationFrame(animationFrameId);
+            simTime = 0.0;
+            lastTimestamp = null;
+            
+            // Turn off Test Mode variables on manual resets
+            testModeActive = false;
+            testMetricRevealed = false;
+            hiddenTestMetric = null;
+
+            // Reactivate sliders
+            heightSlider.disabled = false;
+            gravitySlider.disabled = false;
+
+            // Restore baseline buttons class visual styles
+            testBtn.className = "flex items-center justify-center gap-1 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2.5 px-2 rounded-xl border border-slate-750 transition-all active:scale-[0.98] text-[11px] sm:text-xs";
+            playPauseBtn.innerHTML = `<i data-lucide="play" class="w-5 h-5 fill-slate-950"></i> <span id="play-btn-text">Drop Ball</span>`;
+            lucide.createIcons();
+
+            resetKinematicsData();
+            updateBallPosition(initialHeight);
+            updateDashboard(0, initialHeight, 0, -gVal);
+            drawStaticGraphics();
+            drawGraph();
+            clearCaptures();
+        }
+
+        resetBtn.addEventListener('click', resetSimulation);
+
+        // Height adjustment slider mechanics
+        heightSlider.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            initialHeight = val;
+            heightVal.textContent = `${val.toFixed(1)} m`;
+            
+            // Update initial state instantly if not actively running
+            if (!isRunning && simTime === 0.0) {
+                resetKinematicsData();
+                updateBallPosition(initialHeight);
+                updateDashboard(0, initialHeight, 0, -gVal);
+                drawStaticGraphics();
+                drawGraph();
+                clearCaptures();
+            }
+        });
+
+        // Gravity adjustment slider mechanics
+        gravitySlider.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            gVal = val;
+            gravityValDisplay.textContent = `${val.toFixed(1)} m/s²`;
+            headerGVal.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-cyan-500"></span> g = ${val.toFixed(1)} m/s²`;
+            
+            // Update initial state instantly if not actively running
+            if (!isRunning && simTime === 0.0) {
+                resetKinematicsData();
+                updateBallPosition(initialHeight);
+                updateDashboard(0, initialHeight, 0, -gVal);
+                drawStaticGraphics();
+                drawGraph();
+                clearCaptures();
+            }
+        });
+
+        // Window resize listeners
+        window.addEventListener('resize', resizeCanvases);
+
+        // Initialization
+        window.onload = function() {
+            initSimulation();
+        };
+    </script>
+</body>
+</html>
