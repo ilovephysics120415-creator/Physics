@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminal Velocity Simulator | O-Level Physics 6091</title>
+  <meta name="description" content="An interactive simulator for terminal velocity studying O-Level Physics Singapore syllabus 6091. Explore gravity, air resistance, and forces in action.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Sticky Header for Formula Display -->
+  <header class="formula-header">
+    <div class="header-container">
+      <div class="title-area">
+        <h1>Terminal Velocity Simulator</h1>
+        <span class="syllabus-badge">Singapore Syllabus 6091</span>
+      </div>
+      <div class="formulas">
+        <div class="formula-card" id="formula-weight">
+          <span class="formula-label">Weight (W)</span>
+          <span class="formula-value">W = mg <small>(downward)</small></span>
+        </div>
+        <div class="formula-card" id="formula-resultant">
+          <span class="formula-label">Resultant Force (F<sub>net</sub>)</span>
+          <span class="formula-value">F<sub>net</sub> = W - AR</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="navigation-tabs" role="tablist">
+    <button class="tab-btn active" id="tab-animate" role="tab" aria-selected="true" aria-controls="section-animate">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      1. ANIMATE
+    </button>
+    <button class="tab-btn" id="tab-concept" role="tab" aria-selected="false" aria-controls="section-concept">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      2. CONCEPT CHECK
+    </button>
+    <button class="tab-btn" id="tab-quiz" role="tab" aria-selected="false" aria-controls="section-quiz">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+      3. GRAPH QUIZ
+    </button>
+  </nav>
+
+  <!-- Live Score Bar (for Section 2 & 3) -->
+  <div class="score-sticky-bar">
+    <div class="score-bar-container">
+      <span class="score-text">Total Score: <strong id="total-score-display">0</strong> / 26 points</span>
+      <button class="btn btn-reset-all" id="btn-reset-all">Reset All Progress</button>
+    </div>
+  </div>
+
+  <main class="main-content">
+    
+    <!-- SECTION 1: ANIMATION -->
+    <section id="section-animate" class="tab-section active" role="tabpanel">
+      <div class="animate-grid">
+        
+        <!-- Main Animation Panel -->
+        <div class="panel animation-container-panel">
+          <h2 class="panel-title">Falling Motion Shaft</h2>
+          <div class="shaft-viewport" id="shaft-viewport">
+            <!-- Sky environment with moving clouds -->
+            <div class="shaft-bg" id="shaft-bg">
+              <div class="cloud cloud-1"></div>
+              <div class="cloud cloud-2"></div>
+              <div class="cloud cloud-3"></div>
+              <div class="ground" id="shaft-ground"></div>
+            </div>
+
+            <!-- Stage overlay message -->
+            <div class="stage-overlay" id="stage-overlay">Stage 1: Just Released</div>
+
+            <!-- Falling Object Wrapper -->
+            <div class="falling-object-wrapper" id="falling-object-wrapper">
+              <!-- Forces Vectors -->
+              <div class="force-vector vector-up" id="vector-ar">
+                <span class="vector-label">Air Resistance (AR)</span>
+                <div class="arrow-line blue-arrow"></div>
+              </div>
+              <div class="falling-object" id="falling-object">
+                <!-- SVG will be injected here dynamically -->
+              </div>
+              <div class="force-vector vector-down" id="vector-w">
+                <div class="arrow-line red-arrow"></div>
+                <span class="vector-label">Weight (W)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Simulation Controls -->
+          <div class="controls-panel">
+            <div class="control-row">
+              <button class="btn btn-primary" id="btn-play-pause">
+                <svg class="play-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                <svg class="pause-icon hidden" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                <span>Play</span>
+              </button>
+              <button class="btn btn-secondary" id="btn-restart">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                Restart
+              </button>
+
+              <div class="toggle-container">
+                <span class="toggle-label">Air Resistance</span>
+                <label class="switch">
+                  <input type="checkbox" id="toggle-air-resistance" checked>
+                  <span class="slider round"></span>
+                </label>
+                <span class="toggle-status" id="ar-status-text">ON</span>
+              </div>
+            </div>
+
+            <div class="control-row">
+              <div class="control-group">
+                <label for="select-object">Object Type:</label>
+                <select id="select-object" class="select-input">
+                  <option value="skydiver">Skydiver (Terminal v ~ 50 m/s)</option>
+                </select>
+              </div>
+
+              <div class="control-group">
+                <label for="select-speed">Sim Speed:</label>
+                <select id="select-speed" class="select-input">
+                  <option value="0.5">Slow (0.5x)</option>
+                  <option value="1" selected>Normal (1.0x)</option>
+                  <option value="2">Fast (2.0x)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Graph & Stats Panel -->
+        <div class="panel graph-container-panel">
+          <h2 class="panel-title">Real-time Velocity-Time Graph</h2>
+          <div class="canvas-wrapper">
+            <canvas id="vt-graph" width="500" height="300"></canvas>
+          </div>
+          
+          <div class="live-stats">
+            <div class="stat-card">
+              <span class="stat-title">Time (t)</span>
+              <span class="stat-number" id="stat-time">0.00 <small>s</small></span>
+            </div>
+            <div class="stat-card accent-card">
+              <span class="stat-title">Velocity (v)</span>
+              <span class="stat-number" id="stat-velocity">0.0 <small>m/s</small></span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-title">Acceleration (a)</span>
+              <span class="stat-number" id="stat-acceleration">0.0 <small>m/s²</small></span>
+            </div>
+          </div>
+
+          <!-- Dynamic Info Box / Stage Description -->
+          <div class="info-stage-box" id="info-stage-box">
+            Press <strong>Play</strong> to start the drop and observe stages of forces.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Stage Summary Box (appears after animation completes) -->
+      <div class="summary-table-container hidden" id="summary-table-container">
+        <h3>Simulation Complete: Stages of Motion Summary</h3>
+        <div class="table-responsive">
+          <table class="summary-table">
+            <thead>
+              <tr>
+                <th>Stage</th>
+                <th>Forces Comparison</th>
+                <th>Resultant Force</th>
+                <th>Acceleration</th>
+                <th>Velocity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1. Moment of Release</td>
+                <td>Weight &gt; Air Resistance (0 N)</td>
+                <td>Maximum (equals Weight)</td>
+                <td>Maximum (g = 10 m/s²)</td>
+                <td>Zero (but increasing)</td>
+              </tr>
+              <tr>
+                <td>2. Accelerating Fall</td>
+                <td>Weight &gt; Air Resistance (Growing)</td>
+                <td>Decreasing (W - AR)</td>
+                <td>Decreasing (&lt; 10 m/s²)</td>
+                <td>Increasing (gradient flattens)</td>
+              </tr>
+              <tr>
+                <td>3. Terminal Velocity</td>
+                <td>Weight = Air Resistance</td>
+                <td>Zero (0 N)</td>
+                <td>Zero (0 m/s²)</td>
+                <td>Constant (Terminal speed reached)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: CONCEPT CHECK -->
+    <section id="section-concept" class="tab-section" role="tabpanel">
+      <div class="panel quiz-panel">
+        <div class="quiz-header">
+          <h2>Section 2: Concept Check Quiz</h2>
+          <div class="progress-indicator">Question <span id="concept-current-num">1</span> of <span id="concept-total-num">8</span></div>
+        </div>
+        
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="concept-progress-bar" style="width: 12.5%;"></div>
+        </div>
+
+        <div class="quiz-card">
+          <div class="quiz-question-text" id="concept-question-text">
+            At the moment of release, what is the air resistance on the falling object?
+          </div>
+          
+          <div class="quiz-options-container" id="concept-options">
+            <!-- Option buttons injected here dynamically -->
+          </div>
+
+          <div class="quiz-explanation hidden" id="concept-explanation">
+            <div class="explanation-title">Explanation:</div>
+            <div class="explanation-content" id="concept-explanation-text">
+              Explanation text goes here.
+            </div>
+          </div>
+        </div>
+
+        <div class="quiz-footer">
+          <div class="quiz-score-hint">Each question is worth 2 points.</div>
+          <button class="btn btn-primary hidden" id="btn-concept-next">Next Question</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: GRAPH QUIZ -->
+    <section id="section-quiz" class="tab-section" role="tabpanel">
+      <div class="quiz-layout-grid">
+        <!-- Static Diagram Panel showing marked letters -->
+        <div class="panel graph-diagram-panel">
+          <h2 class="panel-title">Reference Velocity-Time Graph</h2>
+          <div class="canvas-wrapper relative-canvas">
+            <canvas id="quiz-graph" width="500" height="300"></canvas>
+          </div>
+          <p class="graph-caption">Observe points <strong>A, B, C, D, and E</strong> on the curve representing the stages of a falling object with air resistance.</p>
+        </div>
+
+        <!-- Question Panel -->
+        <div class="panel quiz-question-panel">
+          <div class="quiz-header">
+            <h2>Section 3: Graph Reading Quiz</h2>
+            <div class="progress-indicator">Question <span id="graph-current-num">1</span> of 5</div>
+          </div>
+          
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="graph-progress-bar" style="width: 20%;"></div>
+          </div>
+
+          <div class="quiz-card">
+            <div class="quiz-point-badge" id="graph-point-badge">Point A (t = 0, v = 0)</div>
+            <div class="quiz-question-text" id="graph-question-text">
+              What is the velocity of the object at Point A?
+            </div>
+            
+            <div class="quiz-options-container" id="graph-options">
+              <!-- Option buttons injected here dynamically -->
+            </div>
+
+            <div class="quiz-explanation hidden" id="graph-explanation">
+              <div class="explanation-title">Explanation:</div>
+              <div class="explanation-content" id="graph-explanation-text">
+                Explanation text goes here.
+              </div>
+            </div>
+          </div>
+
+          <div class="quiz-footer">
+            <div class="quiz-score-hint">Each question is worth 2 points.</div>
+            <button class="btn btn-primary hidden" id="btn-graph-next">Next Question</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Complete / Summary Modal -->
+  <div class="modal-backdrop hidden" id="results-modal">
+    <div class="modal-content">
+      <button class="modal-close" id="btn-close-modal">&times;</button>
+      <div class="modal-emoji" id="modal-emoji">🏆</div>
+      <h2 id="modal-title">Quiz Completed!</h2>
+      <div class="modal-score-details">
+        <p>Section 2 (Concept Check): <strong id="modal-score-sec2">0</strong> / 16</p>
+        <p>Section 3 (Graph Reading): <strong id="modal-score-sec3">0</strong> / 10</p>
+        <hr class="modal-divider">
+        <p class="total-score-p">Total Score: <strong id="modal-score-total">0</strong> / 26</p>
+      </div>
+      <div class="grade-banner" id="modal-grade-banner">Excellent</div>
+      <p class="modal-feedback" id="modal-feedback-text">
+        Excellent - terminal velocity fully understood!
+      </p>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="btn-modal-restart">Restart Quizzes</button>
+        <button class="btn btn-secondary" id="btn-modal-close-action">Close Results</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
