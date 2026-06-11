@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Master mass, weight, and gravity in this interactive space-themed simulator. Perfect for O-Level Physics students.">
+  <title>Dynamics: Mass vs Weight - O-Level Physics</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts: Orbitron for Sci-Fi vibe, Outfit for clean body text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Starfield background elements -->
+  <div class="stars"></div>
+  <div class="stars2"></div>
+  <div class="stars3"></div>
+  <div class="nebula"></div>
+
+  <div class="game-container">
+    <!-- Header with Permanent Formula Banner -->
+    <header class="game-header">
+      <div class="title-section">
+        <h1>DYNAMICS</h1>
+        <div class="sub-title">MASS vs WEIGHT</div>
+      </div>
+      
+      <div class="formula-banner" id="formulaBanner">
+        <div class="formula-main">W = m × g</div>
+        <div class="formula-details">
+          <span><strong>W</strong> = Weight (N)</span>
+          <span><strong>m</strong> = Mass (kg)</span>
+          <span><strong>g</strong> = Gravitational strength (N/kg)</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- HUD (Heads-Up Display) for Scores & Rounds -->
+    <div class="game-hud">
+      <div class="hud-item" id="hudRound">
+        <span class="hud-label">ROUND</span>
+        <span class="hud-value" id="currentRoundVal">1 / 3</span>
+      </div>
+      <div class="hud-item" id="hudProgress">
+        <span class="hud-label">PROGRESS</span>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+        <span class="hud-value" id="progressVal">1 / 3</span>
+      </div>
+      <div class="hud-item" id="hudScore">
+        <span class="hud-label">SCORE</span>
+        <span class="hud-value" id="scoreVal">00</span>
+      </div>
+    </div>
+
+    <!-- Main Game Board -->
+    <main class="game-board glass-card" id="gameBoard">
+      
+      <!-- Welcome Screen (Initial State) -->
+      <div id="welcomeScreen" class="screen active">
+        <div class="hero-graphic">
+          <div class="planet-preview earth-preview"></div>
+          <div class="astronaut-preview float-anim">👨‍🚀</div>
+        </div>
+        <h2>Are you ready to beat gravity?</h2>
+        <p class="welcome-text">
+          Mass is constant everywhere in the universe. Weight changes depending on a planet's gravity. 
+          Use the formula <strong>W = mg</strong> to complete the calculations, bypass the misconception traps, and earn your Physics certification!
+        </p>
+        <div class="planet-reference">
+          <h3>Local Gravitational Field Strengths (g):</h3>
+          <div class="planet-grid">
+            <div class="planet-chip"><span class="dot moon-dot"></span> Moon (1.6 N/kg)</div>
+            <div class="planet-chip"><span class="dot mars-dot"></span> Mars (3.7 N/kg)</div>
+            <div class="planet-chip"><span class="dot venus-dot"></span> Venus (8.9 N/kg)</div>
+            <div class="planet-chip"><span class="dot earth-dot"></span> Earth (10 N/kg)</div>
+            <div class="planet-chip"><span class="dot jupiter-dot"></span> Jupiter (25 N/kg)</div>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-large" id="startBtn">LAUNCH MISSION</button>
+      </div>
+
+      <!-- Question Screen (Rounds 1 & 2) -->
+      <div id="questionScreen" class="screen">
+        <div class="round-intro" id="roundIntroText">Round 1: Find the Weight</div>
+        
+        <!-- Space Arena: Dynamic Planet & Astronaut -->
+        <div class="space-arena">
+          <div class="planet-container" id="planetVisualContainer">
+            <!-- Dynamic Planet Element loaded by JS -->
+            <div class="dynamic-planet" id="dynamicPlanet"></div>
+            <!-- Floating Astronaut -->
+            <div class="astronaut float-anim" id="astronautElement">
+              <svg viewBox="0 0 100 120" class="astronaut-svg">
+                <!-- Backpack -->
+                <rect x="25" y="40" width="50" height="60" rx="10" fill="#4a5568" stroke="#cbd5e0" stroke-width="3"/>
+                <rect x="30" y="45" width="10" height="20" rx="2" fill="#3182ce"/>
+                <!-- Suit Body -->
+                <rect x="30" y="50" width="40" height="50" rx="15" fill="#f7fafc" stroke="#cbd5e0" stroke-width="3"/>
+                <!-- Chest Control Panel -->
+                <rect x="40" y="60" width="20" height="15" rx="3" fill="#e2e8f0" stroke="#a0aec0" stroke-width="1.5"/>
+                <circle cx="45" cy="67" r="2" fill="#e53e3e"/>
+                <circle cx="50" cy="67" r="2" fill="#38a169"/>
+                <circle cx="55" cy="67" r="2" fill="#3182ce"/>
+                <!-- Helmet / Visor -->
+                <circle cx="50" cy="35" r="22" fill="#edf2f7" stroke="#cbd5e0" stroke-width="3"/>
+                <path d="M 33 33 Q 50 18 67 33 Q 67 48 50 48 Q 33 48 33 33 Z" fill="#2d3748" stroke="#4a5568" stroke-width="2"/>
+                <!-- Gold reflection on Visor -->
+                <path d="M 37 32 Q 50 24 63 32 Q 60 40 50 40 Q 40 40 37 32 Z" fill="#d69e2e" opacity="0.85"/>
+                <!-- Boots -->
+                <rect x="32" y="98" width="15" height="12" rx="4" fill="#a0aec0" stroke="#718096" stroke-width="2"/>
+                <rect x="53" y="98" width="15" height="12" rx="4" fill="#a0aec0" stroke="#718096" stroke-width="2"/>
+                <!-- Arms -->
+                <path d="M 28 55 Q 15 65 25 80" fill="none" stroke="#f7fafc" stroke-width="12" stroke-linecap="round"/>
+                <path d="M 28 55 Q 15 65 25 80" fill="none" stroke="#cbd5e0" stroke-width="14" stroke-linecap="round" style="z-index:-1"/>
+                <path d="M 72 55 Q 85 65 75 80" fill="none" stroke="#f7fafc" stroke-width="12" stroke-linecap="round"/>
+                <path d="M 72 55 Q 85 65 75 80" fill="none" stroke="#cbd5e0" stroke-width="14" stroke-linecap="round" style="z-index:-1"/>
+                <!-- Flag/Device in Hand (Optional) -->
+              </svg>
+            </div>
+            <!-- Ground Line for Planet -->
+            <div class="planet-horizon" id="planetHorizon"></div>
+          </div>
+          <div class="environment-badge" id="environmentBadge">
+            Planet: <span id="envPlanetName">Earth</span> (g = <span id="envGVal">10</span> N/kg)
+          </div>
+        </div>
+
+        <!-- Dynamic Question Content -->
+        <div class="question-container">
+          <div class="question-prompt" id="questionText">
+            An astronaut has a mass of <strong>75 kg</strong> on Earth.
+          </div>
+          
+          <!-- Input Form for Math Rounds -->
+          <div class="input-container" id="mathInputSection">
+            <div class="interactive-formula-helper" id="formulaHelper">
+              <span id="formulaHelperTarget">Weight = ?</span>
+            </div>
+            <div class="input-wrapper">
+              <input type="number" step="any" id="studentAnswer" placeholder="Value..." autocomplete="off">
+              <input type="text" id="studentUnit" placeholder="Unit" autocomplete="off" style="width: 80px; border-left: 2px solid rgba(255, 255, 255, 0.1); border-radius: 0 10px 10px 0; font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--text-main); background: transparent; outline: none; padding: 12px; text-align: center;">
+            </div>
+            <button class="btn btn-primary" id="submitBtn">SUBMIT ANSWER</button>
+          </div>
+
+          <!-- MCQ Option Grid for Round 3 -->
+          <div class="mcq-grid" id="mcqSection" style="display: none;">
+            <button class="mcq-option" data-index="0">Option A</button>
+            <button class="mcq-option" data-index="1">Option B</button>
+            <button class="mcq-option" data-index="2">Option C</button>
+            <button class="mcq-option" data-index="3">Option D</button>
+          </div>
+
+          <!-- Feedback & Working Panel -->
+          <div class="feedback-panel" id="feedbackPanel">
+            <div class="feedback-header">
+              <span class="feedback-icon" id="feedbackIcon"></span>
+              <span class="feedback-title" id="feedbackTitle">Correct!</span>
+            </div>
+            <div class="working-display" id="workingDisplay">
+              <strong>Working:</strong> W = m × g = 50 kg × 10 N/kg = 500 N
+            </div>
+            <div class="explanation-text" id="explanationText">
+              Explanation goes here.
+            </div>
+            <button class="btn btn-accent" id="nextBtn">NEXT QUESTION &rarr;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game Over / Results Screen -->
+      <div id="resultsScreen" class="screen">
+        <div class="trophy-graphic">🏆</div>
+        <h2>Mission Complete!</h2>
+        
+        <div class="score-card">
+          <div class="final-score">
+            <span class="score-num" id="finalScoreVal">14</span>
+            <span class="score-total">/ 16 PTS</span>
+          </div>
+          <div class="grade-badge" id="gradeBadge">EXCELLENT</div>
+          <div class="grade-feedback" id="gradeFeedback">
+            Fantastic job! You've mastered mass, weight, and the formula W = mg.
+          </div>
+        </div>
+
+        <div class="results-breakdown">
+          <h3>Your Performance Summary</h3>
+          <div class="breakdown-row">
+            <span>Round 1 (Weight Calculations):</span>
+            <strong id="r1Breakdown">3 / 3 correct</strong>
+          </div>
+          <div class="breakdown-row">
+            <span>Round 2 (Mass Calculations):</span>
+            <strong id="r2Breakdown">3 / 3 correct</strong>
+          </div>
+          <div class="breakdown-row">
+            <span>Round 3 (Misconception Traps):</span>
+            <strong id="r3Breakdown">4 / 4 correct</strong>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-large" id="restartBtn">REPLAY SIMULATION</button>
+      </div>
+
+    </main>
+    
+    <footer class="game-footer">
+      Designed for O-Level Physics • Dynamics Unit
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
