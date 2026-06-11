@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Distance-Time & Displacement-Time Graph Lab — O-Level Physics 6091</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- CSS CDNs -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+            mono: ['Fira Code', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-[#0B0F19] text-gray-200 min-h-screen relative font-sans overflow-x-hidden selection:bg-purple-500 selection:text-white">
+  
+  <!-- Ambient Background Glows -->
+  <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+  <div class="absolute bottom-0 right-0 w-[600px] h-[600px] bg-[#00F2FE]/5 rounded-full blur-[140px] -z-10 pointer-events-none"></div>
+
+  <!-- Header Banner -->
+  <header class="border-b border-gray-800/80 bg-[#0B0F19]/80 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <!-- App Branding -->
+      <div class="flex items-center gap-3">
+        <div class="bg-gradient-to-tr from-purple-600 to-[#00F2FE] p-2.5 rounded-xl shadow-lg shadow-purple-500/10">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold text-white tracking-tight">Kinematics Graph Lab</h1>
+          <p class="text-xs text-gray-400">Singapore O-Level Physics (Syllabus 6091)</p>
+        </div>
+      </div>
+
+      <!-- Syllabus Toggle + Explanation Trigger -->
+      <div class="flex items-center gap-4 flex-wrap">
+        <!-- Toggle -->
+        <div class="flex bg-gray-950/80 p-1 rounded-xl border border-gray-800 relative shadow-inner">
+          <button id="btn-combined" class="px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-300 z-10 text-white" onclick="setSyllabusMode('combined')">
+            Combined Science
+          </button>
+          <button id="btn-pure" class="px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-300 z-10 text-gray-400" onclick="setSyllabusMode('pure')">
+            Pure Physics
+          </button>
+          <div id="toggle-slider" class="absolute top-1 bottom-1 left-1 w-[130px] bg-amber-500 rounded-lg transition-all duration-300 shadow-lg shadow-amber-500/20 -z-0"></div>
+        </div>
+
+        <!-- Lightbulb Explanation Button -->
+        <button id="btn-open-explanation" class="p-2.5 bg-gray-900/60 hover:bg-gray-800/80 border border-gray-800 rounded-xl transition-all duration-200 hover:scale-105 group" title="Worked Explanation">
+          <svg class="w-5 h-5 text-amber-400 group-hover:animate-pulse" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464a1 1 0 10-1.414-1.414l-.707.707a1 1 0 101.414 1.414l.707-.707zM5 10a1 1 0 11-2 0H3a1 1 0 112 0zM8 11v-1a2 2 0 114 0v1H8z"></path>
+            <path d="M5 15a3 3 0 003 3h4a3 3 0 003-3v-1H5v1z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 py-8 space-y-8">
+    
+    <!-- Mode Banner Indicator -->
+    <div id="mode-banner" class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 text-center transition-all duration-300">
+      <span class="text-sm font-semibold tracking-wide uppercase text-amber-400" id="mode-banner-text">Combined Science Mode Active: Exploring Distance-Time & Speed</span>
+    </div>
+
+    <!-- Section 1: Interactive Graph Builder -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+      
+      <!-- Builder Controls (Left Side - 5 cols) -->
+      <div class="lg:col-span-5 bg-[#141B2D]/65 backdrop-blur-xl border border-gray-800/80 rounded-3xl p-6 flex flex-col justify-between shadow-2xl space-y-6">
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <span class="w-2.5 h-2.5 rounded-full bg-accent animate-ping"></span>
+            <h2 class="text-lg font-bold text-white tracking-wide">1. Interactive Graph Builder</h2>
+          </div>
+          
+          <!-- Motion Selector Buttons -->
+          <div class="space-y-2 mb-6">
+            <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Select Motion Type</label>
+            <div class="grid grid-cols-2 gap-2" id="motion-selector-container">
+              <button data-motion="rest" class="motion-btn active-motion px-3 py-2.5 rounded-xl border text-xs font-medium transition-all duration-200 hover:scale-102">
+                At Rest
+              </button>
+              <button data-motion="uniform" class="motion-btn px-3 py-2.5 rounded-xl border text-xs font-medium transition-all duration-200 hover:scale-102">
+                Uniform Speed
+              </button>
+              <button data-motion="non-uniform-acc" class="motion-btn px-3 py-2.5 rounded-xl border text-xs font-medium transition-all duration-200 hover:scale-102">
+                Accelerating
+              </button>
+              <button data-motion="non-uniform-dec" class="motion-btn px-3 py-2.5 rounded-xl border text-xs font-medium transition-all duration-200 hover:scale-102">
+                Decelerating
+              </button>
+              <button data-motion="backwards" id="btn-backwards-motion" class="motion-btn px-3 py-2.5 rounded-xl border text-xs font-medium transition-all duration-200 hover:scale-102 hidden">
+                Moving Backwards
+              </button>
+            </div>
+          </div>
+
+          <!-- Sliders -->
+          <div class="space-y-5">
+            <!-- Duration Slider -->
+            <div class="space-y-2">
+              <div class="flex justify-between items-center text-xs">
+                <span class="font-semibold text-gray-400 uppercase tracking-wider">Duration (t)</span>
+                <span class="font-mono text-accent text-sm" id="val-duration">10 s</span>
+              </div>
+              <input type="range" id="slide-duration" min="1" max="20" value="10" step="1" class="slider-input w-full bg-gray-900 h-1.5 rounded-lg appearance-none cursor-pointer">
+            </div>
+
+            <!-- Initial Position Slider -->
+            <div class="space-y-2">
+              <div class="flex justify-between items-center text-xs">
+                <span class="font-semibold text-gray-400 uppercase tracking-wider" id="label-initial-pos">Initial Distance</span>
+                <span class="font-mono text-accent text-sm" id="val-initial-pos">20 m</span>
+              </div>
+              <input type="range" id="slide-initial-pos" min="0" max="100" value="20" step="5" class="slider-input w-full bg-gray-900 h-1.5 rounded-lg appearance-none cursor-pointer">
+            </div>
+
+            <!-- Final Position Slider -->
+            <div class="space-y-2">
+              <div class="flex justify-between items-center text-xs">
+                <span class="font-semibold text-gray-400 uppercase tracking-wider" id="label-final-pos">Final Distance</span>
+                <span class="font-mono text-accent text-sm" id="val-final-pos">80 m</span>
+              </div>
+              <input type="range" id="slide-final-pos" min="0" max="200" value="80" step="5" class="slider-input w-full bg-gray-900 h-1.5 rounded-lg appearance-none cursor-pointer">
+            </div>
+          </div>
+        </div>
+
+        <!-- Calculated Output Dashboard -->
+        <div class="bg-gray-950/80 rounded-2xl p-4 border border-gray-800 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-gray-400 font-medium uppercase tracking-wider">Current Motion:</span>
+            <span class="text-sm font-semibold text-white px-2 py-0.5 rounded-md bg-purple-500/10 border border-purple-500/20" id="info-motion-detected">Uniform Speed</span>
+          </div>
+          <div class="flex items-center justify-between border-t border-gray-800/80 pt-3">
+            <span class="text-xs text-gray-400 font-medium uppercase tracking-wider" id="info-speed-label">Avg. Speed:</span>
+            <span class="font-mono text-accent font-bold text-base" id="info-speed-value">6.00 m/s</span>
+          </div>
+          <div class="bg-[#0B0F19] rounded-xl p-3 border border-gray-800/60 text-center">
+            <span class="text-[11px] font-semibold text-gray-500 block uppercase mb-1">Formula Reminder</span>
+            <span class="font-mono text-xs text-gray-300 bg-gray-950/40 px-2.5 py-1 rounded border border-gray-900 inline-block" id="formula-reminder">speed = gradient of distance-time graph</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Graph Display (Right Side - 7 cols) -->
+      <div class="lg:col-span-7 bg-[#141B2D]/65 backdrop-blur-xl border border-gray-800/80 rounded-3xl p-6 flex flex-col shadow-2xl min-h-[400px]">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-sm font-bold text-white tracking-wide uppercase" id="graph-main-title">Distance-Time Graph</h3>
+          <span class="text-xs text-gray-400 font-medium">Interactive Preview</span>
+        </div>
+        <div class="flex-grow relative w-full h-[320px]">
+          <canvas id="builderChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Graph Shape Quiz -->
+    <section class="bg-[#141B2D]/65 backdrop-blur-xl border border-gray-800/80 rounded-3xl p-6 shadow-2xl space-y-6">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+          </svg>
+          <h2 class="text-lg font-bold text-white tracking-wide">2. Graph Shape Quiz</h2>
+        </div>
+        
+        <!-- Score and Buttons -->
+        <div class="flex items-center gap-4">
+          <div class="bg-gray-950/80 px-4 py-2 rounded-xl border border-gray-800 flex items-center gap-2">
+            <span class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Score:</span>
+            <span class="font-mono text-accent font-bold" id="quiz-score">0 / 0</span>
+          </div>
+          <button id="btn-quiz-me" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-[#00F2FE] hover:scale-105 transition-all text-xs text-white font-bold rounded-xl shadow-lg shadow-purple-500/20">
+            Quiz Me!
+          </button>
+        </div>
+      </div>
+
+      <!-- Quiz Board Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center" id="quiz-workspace" style="display: none;">
+        <!-- Quiz Graph (7 cols) -->
+        <div class="md:col-span-7 bg-gray-950/40 rounded-2xl p-4 border border-gray-800/80 h-[280px] relative">
+          <canvas id="quizChart"></canvas>
+        </div>
+
+        <!-- Quiz Form / Feedback (5 cols) -->
+        <div class="md:col-span-5 space-y-4">
+          <div class="space-y-2">
+            <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider block">What type of motion does this graph show?</label>
+            <input type="text" id="quiz-answer" placeholder="e.g. uniform speed, at rest, accelerating..." class="w-full bg-gray-950 border border-gray-800 hover:border-gray-700 focus:border-accent text-white px-4 py-3 rounded-xl outline-none transition-all duration-200 font-sans text-sm focus:ring-1 focus:ring-accent/50">
+          </div>
+
+          <!-- Quiz Action Buttons -->
+          <div class="grid grid-cols-2 gap-2">
+            <button id="btn-submit-answer" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 text-xs text-white font-bold rounded-xl transition-all duration-200 hover:scale-102">
+              Submit Answer
+            </button>
+            <button id="btn-show-answer" class="px-4 py-3 bg-gray-900 border border-gray-800 hover:bg-gray-800 hover:text-white text-xs text-gray-300 font-bold rounded-xl transition-all duration-200 hover:scale-102">
+              Show Answer
+            </button>
+          </div>
+
+          <!-- Feedback alert panel -->
+          <div id="quiz-feedback" class="rounded-xl p-4 border transition-all duration-300 hidden">
+            <div class="flex items-start gap-3">
+              <span id="quiz-feedback-icon" class="text-lg"></span>
+              <div class="space-y-1">
+                <h4 id="quiz-feedback-title" class="text-sm font-bold"></h4>
+                <p id="quiz-feedback-body" class="text-xs text-gray-300 leading-relaxed"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Next Question Button -->
+          <button id="btn-next-question" class="w-full px-4 py-3 bg-gray-900 border border-gray-800 hover:bg-gray-800 text-xs text-white font-bold rounded-xl transition-all duration-200 hover:scale-102 hidden">
+            Next Question
+          </button>
+        </div>
+      </div>
+
+      <!-- Quiz Placeholder state -->
+      <div id="quiz-placeholder" class="text-center py-12 border-2 border-dashed border-gray-800 rounded-2xl bg-gray-950/20">
+        <svg class="w-12 h-12 text-gray-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <h3 class="text-sm font-bold text-gray-400 mb-1">Ready to test yourself?</h3>
+        <p class="text-xs text-gray-500 mb-4 max-w-sm mx-auto">Click "Quiz Me!" to generate a random kinematics graph and practice interpreting physical shapes.</p>
+      </div>
+
+    <!-- Section 3: Gradient Calculation Quiz -->
+    <section class="bg-[#141B2D]/65 backdrop-blur-xl border border-gray-800/80 rounded-3xl p-6 shadow-2xl space-y-6">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+          </svg>
+          <h2 class="text-lg font-bold text-white tracking-wide">3. Gradient Calculation Quiz</h2>
+        </div>
+        
+        <!-- Score and Quiz Me button -->
+        <div class="flex items-center gap-4">
+          <div class="bg-gray-950/80 px-4 py-2 rounded-xl border border-gray-800 flex items-center gap-2">
+            <span class="text-xs text-gray-400 uppercase tracking-wider font-semibold">Score:</span>
+            <span class="font-mono text-accent font-bold" id="grad-score">0 / 0</span>
+          </div>
+          <button id="btn-grad-quiz-me" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-[#00F2FE] hover:scale-105 transition-all text-xs text-white font-bold rounded-xl shadow-lg shadow-purple-500/20">
+            Start Quiz!
+          </button>
+        </div>
+      </div>
+
+      <!-- Quiz Board Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch" id="grad-workspace" style="display: none;">
+        <!-- Canvas Graph (7 cols) -->
+        <div class="lg:col-span-7 bg-gray-950/40 rounded-2xl p-4 border border-gray-800/80 h-[320px] relative">
+          <canvas id="gradChart"></canvas>
+        </div>
+
+        <!-- Inputs / Prompts (5 cols) -->
+        <div class="lg:col-span-5 flex flex-col justify-between space-y-4">
+          <div class="space-y-4">
+            <!-- Formula Reminder -->
+            <div class="bg-gray-950/60 rounded-xl p-3 border border-gray-800 text-center">
+              <span class="text-[10px] font-semibold text-gray-500 block uppercase mb-1">Gradient Formula</span>
+              <span class="font-mono text-xs text-gray-300" id="grad-formula-text">speed = gradient = change in distance / change in time</span>
+            </div>
+
+            <!-- Value Display Container with Pulsing Red border -->
+            <div class="bg-gray-950/80 rounded-2xl p-4 border border-gray-800 flex items-center justify-between">
+              <div>
+                <span class="text-xs text-gray-400 font-medium uppercase tracking-wider block" id="grad-question-label">Calculated Speed</span>
+                <!-- Pulse display -->
+                <div class="flex items-center gap-2 mt-1">
+                  <span id="grad-placeholder" class="pulse-border-red bg-red-500/10 border-red-500/50 text-red-400 px-3 py-1.5 rounded-lg font-mono text-base font-bold tracking-widest leading-none">??.?</span>
+                  <!-- Eye button -->
+                  <button id="btn-open-grad-explanation" class="p-2 bg-gray-900 border border-gray-800 hover:bg-gray-800 rounded-lg text-gray-400 hover:text-white transition-all scale-95 hover:scale-105" title="View Worked Solution">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-xs text-gray-500 uppercase tracking-wider block">Question Type:</span>
+                <span class="text-xs font-semibold text-white px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/20" id="grad-scenario-type">Scenario A</span>
+              </div>
+            </div>
+
+            <!-- Question text prompt -->
+            <p id="grad-prompt-text" class="text-xs text-gray-300 leading-relaxed"></p>
+
+            <!-- User input -->
+            <div class="space-y-2">
+              <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider block" id="grad-input-label">Enter your calculation result:</label>
+              <div class="relative">
+                <input type="number" step="0.1" id="grad-answer-input" placeholder="e.g. 5.0" class="w-full bg-gray-950 border border-gray-800 hover:border-gray-700 focus:border-accent text-white px-4 py-3 rounded-xl outline-none transition-all duration-200 font-sans text-sm focus:ring-1 focus:ring-accent/50 pr-12">
+                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-mono text-gray-500" id="grad-unit-label">m/s</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="space-y-2">
+            <div class="grid grid-cols-2 gap-2">
+              <button id="btn-submit-grad" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 text-xs text-white font-bold rounded-xl transition-all duration-200 hover:scale-102">
+                Submit Calculation
+              </button>
+              <button id="btn-show-grad" class="px-4 py-3 bg-gray-900 border border-gray-800 hover:bg-gray-800 text-xs text-gray-300 font-bold rounded-xl transition-all duration-200 hover:scale-102">
+                Show Answer
+              </button>
+            </div>
+            
+            <button id="btn-next-grad" class="w-full px-4 py-3 bg-gray-900 border border-gray-800 hover:bg-gray-800 text-xs text-white font-bold rounded-xl transition-all duration-200 hover:scale-102 hidden">
+              Next Question
+            </button>
+          </div>
+
+          <!-- Feedback Alert -->
+          <div id="grad-feedback" class="rounded-xl p-4 border transition-all duration-300 hidden">
+            <div class="flex items-start gap-3">
+              <span id="grad-feedback-icon" class="text-lg"></span>
+              <div class="space-y-1">
+                <h4 id="grad-feedback-title" class="text-sm font-bold"></h4>
+                <p id="grad-feedback-body" class="text-xs text-gray-300 leading-relaxed"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Placeholder -->
+      <div id="grad-placeholder-state" class="text-center py-12 border-2 border-dashed border-gray-800 rounded-2xl bg-gray-950/20">
+        <svg class="w-12 h-12 text-gray-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+        </svg>
+        <h3 class="text-sm font-bold text-gray-400 mb-1">Master Kinematics Math</h3>
+        <p class="text-xs text-gray-500 mb-4 max-w-sm mx-auto">Click "Start Quiz!" to practice calculating gradients, velocities, speeds, and time intervals from straight-line graphs.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Worked Explanation Modal -->
+  <div id="explanation-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
+    <div class="bg-[#141B2D] border border-gray-800/80 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl transform scale-95 transition-all duration-300">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-gray-800 flex justify-between items-center bg-gray-950/40 rounded-t-3xl">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464a1 1 0 10-1.414-1.414l-.707.707a1 1 0 101.414 1.414l.707-.707zM5 10a1 1 0 11-2 0H3a1 1 0 112 0zM8 11v-1a2 2 0 114 0v1H8z"></path>
+            <path d="M5 15a3 3 0 003 3h4a3 3 0 003-3v-1H5v1z"></path>
+          </svg>
+          <h3 class="text-base font-bold text-white tracking-wide">Step-by-Step Worked Explanation</h3>
+        </div>
+        <button id="btn-close-explanation" class="text-gray-400 hover:text-white p-1 hover:bg-gray-800 rounded-lg transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 space-y-6">
+        
+        <!-- Step 1 -->
+        <div class="flex gap-4">
+          <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/30 font-mono text-xs font-bold text-accent">1</div>
+          <div>
+            <h4 class="text-sm font-semibold text-white mb-1" id="exp-step-1-title">What does the slope represent?</h4>
+            <p class="text-xs text-gray-300 leading-relaxed" id="exp-step-1-body">
+              On a Distance-Time graph, the gradient/slope represents the speed of the object. On a Displacement-Time graph, the slope represents the velocity.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="flex gap-4">
+          <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/30 font-mono text-xs font-bold text-accent">2</div>
+          <div>
+            <h4 class="text-sm font-semibold text-white mb-1">Is the slope constant or changing?</h4>
+            <p class="text-xs text-gray-300 leading-relaxed" id="exp-step-2-body">
+              Look closely at the line:
+              <br>• Straight line = constant gradient (uniform rate)
+              <br>• Curved line = changing gradient (non-uniform rate)
+              <br>• Horizontal line = zero gradient (slope = 0)
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="flex gap-4">
+          <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/30 font-mono text-xs font-bold text-accent">3</div>
+          <div>
+            <h4 class="text-sm font-semibold text-white mb-1">What does that tell us about the motion?</h4>
+            <p class="text-xs text-gray-300 leading-relaxed" id="exp-step-3-body">
+              • A zero slope means speed/velocity is 0, so the object is at rest.
+              <br>• A positive constant slope means the object is moving forward at a constant speed/velocity.
+              <br>• A curve bending upwards (steeper slope) means the speed/velocity is increasing (accelerating).
+              <br>• A curve bending downwards (flatter slope) means the speed/velocity is decreasing (decelerating).
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="flex gap-4 border-t border-gray-800/80 pt-5">
+          <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 font-mono text-xs font-bold text-emerald-400">4</div>
+          <div class="w-full">
+            <h4 class="text-sm font-semibold text-emerald-400 mb-1">Final Interpretation Summary</h4>
+            <div class="bg-emerald-950/20 border border-emerald-500/20 rounded-xl p-4 mt-2">
+              <span class="text-xs text-gray-400 block mb-1">Motion Summary:</span>
+              <p class="font-bold text-sm text-white" id="exp-step-4-summary">Select a shape in Section 1 or load a quiz graph to see a specific interpretation summary here.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-4 border-t border-gray-800 flex justify-end bg-gray-950/20 rounded-b-3xl">
+        <button id="btn-close-explanation-footer" class="px-5 py-2.5 bg-gray-900 border border-gray-800 hover:bg-gray-800 text-xs text-white font-semibold rounded-xl transition-all duration-200">
+          Close Explanation
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Gradient Worked Solution Modal -->
+  <div id="gradient-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
+    <div class="bg-[#141B2D] border border-gray-800/80 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl transform scale-95 transition-all duration-300">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-gray-800 flex justify-between items-center bg-gray-950/40 rounded-t-3xl">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+          </svg>
+          <h3 class="text-base font-bold text-white tracking-wide">Gradient Calculation Worked Solution</h3>
+        </div>
+        <button id="btn-close-grad-modal" class="text-gray-400 hover:text-white p-1 hover:bg-gray-800 rounded-lg transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 space-y-6 font-sans">
+        
+        <!-- Step 1 -->
+        <div class="flex gap-4">
+          <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/30 font-mono text-xs font-bold text-accent">1</div>
+          <div>
+            <h4 class="text-sm font-semibold text-white mb-1">Step 1: Write Formula</h4>
+            <p class="font-mono text-xs text-gray-300 bg-gray-950/60 border border-gray-800/80 px-3 py-2 rounded-xl inline-block mt-1" id="grad-modal-step1"></p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="flex gap-4">
+          <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/30 font-mono text-xs font-bold text-accent">2</div>
+          <div>
+            <h4 class="text-sm font-semibold text-white mb-1" id="grad-modal-step2-title">Step 2: Read values from graph / Rearrange</h4>
+            <p class="text-xs text-gray-300 leading-relaxed" id="grad-modal-step2-body"></p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="flex gap-4">
+          <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/30 font-mono text-xs font-bold text-accent">3</div>
+          <div>
+            <h4 class="text-sm font-semibold text-white mb-1">Step 3: Substitute Values</h4>
+            <p class="font-mono text-xs text-gray-300 bg-gray-950/60 border border-gray-800/80 px-3 py-2 rounded-xl inline-block mt-1" id="grad-modal-step3"></p>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="flex gap-4 border-t border-gray-800/80 pt-5">
+          <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 font-mono text-xs font-bold text-emerald-400">4</div>
+          <div class="w-full">
+            <h4 class="text-sm font-semibold text-emerald-400 mb-1">Step 4: Final Answer</h4>
+            <div class="bg-emerald-950/20 border border-emerald-500/20 rounded-xl p-4 mt-2">
+              <p class="font-mono font-bold text-sm text-white" id="grad-modal-step4"></p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-4 border-t border-gray-800 flex justify-end bg-gray-950/20 rounded-b-3xl">
+        <button id="btn-close-grad-modal-footer" class="px-5 py-2.5 bg-gray-900 border border-gray-800 hover:bg-gray-800 text-xs text-white font-semibold rounded-xl transition-all duration-200">
+          Close Solution
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
