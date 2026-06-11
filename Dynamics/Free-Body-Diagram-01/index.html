@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamics Free Body Diagram (FBD) Builder</title>
+  <!-- Google Fonts: Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-area">
+        <span class="badge">Syllabus 6091</span>
+        <h1>Dynamics FBD Builder</h1>
+      </div>
+      <div class="score-board">
+        <div class="score-card">
+          <span class="score-label">FBD Points</span>
+          <span class="score-value" id="fbd-score">0 / 21</span>
+        </div>
+        <div class="score-card">
+          <span class="score-label">Quiz Points</span>
+          <span class="score-value" id="quiz-score">0 / 10</span>
+        </div>
+        <div class="score-card highlight">
+          <span class="score-label">Total Score</span>
+          <span class="score-value" id="total-score">0 / 31</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Game Area -->
+    <main class="game-layout" id="game-main">
+      <!-- Left Side: FBD Canvas Workspace -->
+      <section class="workspace-section">
+        <div class="progress-bar-container">
+          <div class="progress-info">
+            <span id="current-scenario-name">Scenario Name</span>
+            <span id="scenario-counter">Scenario 1 of 7</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width: 14%;"></div>
+          </div>
+        </div>
+
+        <div class="fbd-canvas-container">
+          <!-- The FBD drawing grid background -->
+          <div class="fbd-grid" id="fbd-canvas-grid">
+            <!-- SVG Overlay for drawing arrows -->
+            <svg class="fbd-arrows-svg" id="fbd-svg">
+              <defs>
+                <!-- Arrow heads in different colors representing force types -->
+                <marker id="arrow-weight" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L0,6 L9,3 z" fill="#ef4444" />
+                </marker>
+                <marker id="arrow-normal" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L0,6 L9,3 z" fill="#3b82f6" />
+                </marker>
+                <marker id="arrow-friction" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L0,6 L9,3 z" fill="#f97316" />
+                </marker>
+                <marker id="arrow-tension" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L0,6 L9,3 z" fill="#a855f7" />
+                </marker>
+                <marker id="arrow-air" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L0,6 L9,3 z" fill="#06b6d4" />
+                </marker>
+                <marker id="arrow-thrust" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L0,6 L9,3 z" fill="#eab308" />
+                </marker>
+                <marker id="arrow-applied" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L0,6 L9,3 z" fill="#10b981" />
+                </marker>
+                <!-- Feedback markers -->
+                <marker id="arrow-correct" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L0,6 L9,3 z" fill="#22c55e" />
+                </marker>
+                <marker id="arrow-incorrect" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                  <path d="M0,0 L0,6 L9,3 z" fill="#ef4444" />
+                </marker>
+              </defs>
+              <!-- Drawn arrows group -->
+              <g id="arrows-group"></g>
+            </svg>
+
+            <!-- Dynamic Physical Object Container -->
+            <div class="physical-object-container" id="object-container">
+              <!-- Visual representation of the object based on active scenario -->
+              <div class="physical-object" id="physical-object">
+                <div class="object-graphic" id="object-graphic">📦</div>
+                <div class="center-of-gravity" id="cog-point"></div>
+              </div>
+            </div>
+
+            <!-- Hotspot click indicators around the object center -->
+            <div class="hotspots-layer" id="hotspots-layer">
+              <button class="hotspot-btn hs-up" data-dir="up" title="Add force upwards">
+                <span class="hotspot-arrow">↑</span>
+              </button>
+              <button class="hotspot-btn hs-down" data-dir="down" title="Add force downwards">
+                <span class="hotspot-arrow">↓</span>
+              </button>
+              <button class="hotspot-btn hs-left" data-dir="left" title="Add force leftwards">
+                <span class="hotspot-arrow">←</span>
+              </button>
+              <button class="hotspot-btn hs-right" data-dir="right" title="Add force rightwards">
+                <span class="hotspot-arrow">→</span>
+              </button>
+              <button class="hotspot-btn hs-diag-left" data-dir="diag-left" title="Add force angled left-up">
+                <span class="hotspot-arrow">↖</span>
+              </button>
+              <button class="hotspot-btn hs-diag-right" data-dir="diag-right" title="Add force angled right-up">
+                <span class="hotspot-arrow">↗</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="scenario-context-card">
+          <p id="scenario-description">Physical context description loaded here...</p>
+        </div>
+      </section>
+
+      <!-- Right Side: Sidebar Controls -->
+      <aside class="sidebar-section">
+        <!-- Step 1: Force Selection -->
+        <div class="panel-card">
+          <h2 class="panel-title">1. Select Force</h2>
+          <div class="force-grid" id="force-selector-grid">
+            <button class="force-btn force-weight" data-force="Weight" data-color="#ef4444">
+              <span class="color-dot" style="background-color: #ef4444;"></span> Weight (W)
+            </button>
+            <button class="force-btn force-normal" data-force="Normal Force" data-color="#3b82f6">
+              <span class="color-dot" style="background-color: #3b82f6;"></span> Normal Force (R)
+            </button>
+            <button class="force-btn force-friction" data-force="Friction" data-color="#f97316">
+              <span class="color-dot" style="background-color: #f97316;"></span> Friction (fr)
+            </button>
+            <button class="force-btn force-tension" data-force="Tension" data-color="#a855f7">
+              <span class="color-dot" style="background-color: #a855f7;"></span> Tension (T)
+            </button>
+            <button class="force-btn force-air" data-force="Air Resistance" data-color="#06b6d4">
+              <span class="color-dot" style="background-color: #06b6d4;"></span> Air Resistance (R_air)
+            </button>
+            <button class="force-btn force-thrust" data-force="Thrust" data-color="#eab308">
+              <span class="color-dot" style="background-color: #eab308;"></span> Thrust (T_thrust)
+            </button>
+            <button class="force-btn force-applied" data-force="Applied Force" data-color="#10b981">
+              <span class="color-dot" style="background-color: #10b981;"></span> Applied Force (F)
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2: Size & Active Forces List -->
+        <div class="panel-card">
+          <h2 class="panel-title">2. Placed Forces</h2>
+          <div class="arrow-size-selection hidden" id="size-selector-container">
+            <span class="size-label">Arrow Length:</span>
+            <div class="size-options">
+              <button class="size-btn" data-size="small">Small</button>
+              <button class="size-btn active" data-size="medium">Medium</button>
+              <button class="size-btn" data-size="large">Large</button>
+            </div>
+          </div>
+          <div class="active-forces-list" id="active-forces-list">
+            <div class="empty-list-msg">Click a force, then click a directional arrow on the grid to add it.</div>
+          </div>
+        </div>
+
+        <!-- Step 3: Action Buttons -->
+        <div class="actions-panel">
+          <div class="attempts-indicator" id="attempts-left">Attempts Remaining: 2</div>
+          <div class="action-buttons-row">
+            <button class="btn btn-secondary" id="reset-scenario-btn">Clear All</button>
+            <button class="btn btn-primary" id="check-answer-btn">Check FBD</button>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Quiz overlay modal (displayed after FBD checks) -->
+    <div class="modal-overlay hidden" id="modal-container">
+      <div class="modal-card">
+        <!-- Scenario Feedback / Transition Dialog -->
+        <div class="modal-content" id="scenario-feedback-content">
+          <h2 class="modal-header-title" id="feedback-title">Correct!</h2>
+          <div class="validation-summary" id="validation-summary">
+            <!-- Lists matching/mismatched/missing arrows -->
+          </div>
+          <div class="quiz-sub-question" id="quiz-sub-question-container">
+            <p class="question-text" id="sub-question-text">Is this object accelerating?</p>
+            <div class="quiz-options-list" id="sub-question-options">
+              <!-- Options -->
+            </div>
+            <div class="explanation-box hidden" id="sub-explanation">
+              Explanation goes here.
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" id="next-scenario-btn">Next Scenario</button>
+          </div>
+        </div>
+
+        <!-- Final Score / Review Panel -->
+        <div class="modal-content hidden" id="final-results-content">
+          <h2 class="modal-header-title">FBD Master Grade Report</h2>
+          <div class="results-layout">
+            <div class="trophy-display" id="final-badge-graphic">🏆</div>
+            <div class="grade-banner" id="grade-banner">Excellent — FBD master!</div>
+            <div class="score-breakdown">
+              <div class="score-row">
+                <span>Free Body Diagrams Scored:</span>
+                <span class="bold" id="final-fbd-score">18 / 21</span>
+              </div>
+              <div class="score-row">
+                <span>MCQ Quiz Score:</span>
+                <span class="bold" id="final-quiz-score">8 / 10</span>
+              </div>
+              <div class="score-row total">
+                <span>Total O-Level Score:</span>
+                <span class="bold" id="final-total-score">26 / 31</span>
+              </div>
+            </div>
+            <p class="grade-comment" id="grade-comment">Outstanding grasp of contact and non-contact forces!</p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" id="restart-game-btn">Play Again</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Central MCQ Quiz Screen (replaces workspace after 7 scenarios) -->
+    <div class="quiz-screen-container hidden" id="mcq-quiz-screen">
+      <div class="quiz-card">
+        <div class="quiz-header">
+          <span class="quiz-subtitle">O-Level Physics Concept Round</span>
+          <h2 class="quiz-title">Concept Practice</h2>
+          <div class="quiz-progress-bar">
+            <div class="quiz-progress-fill" id="quiz-progress-fill" style="width: 20%;"></div>
+          </div>
+          <span class="quiz-counter" id="quiz-counter">Question 1 of 5</span>
+        </div>
+        <div class="quiz-body">
+          <p class="question-prompt" id="mcq-question-text">Question goes here?</p>
+          <div class="mcq-options-grid" id="mcq-options-container">
+            <!-- Buttons go here -->
+          </div>
+          <div class="explanation-box hidden" id="mcq-explanation">
+            Explanation text here.
+          </div>
+        </div>
+        <div class="quiz-footer">
+          <button class="btn btn-primary hidden" id="mcq-next-btn">Next Question</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
