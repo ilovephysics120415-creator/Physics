@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceleration Calculator — O-Level Physics 6091</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="An interactive web application for O-Level Physics students to calculate acceleration and master concepts of uniform acceleration and deceleration.">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Link to Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="flex flex-col items-center justify-between min-h-screen px-4 py-8 md:px-8">
+
+  <!-- Background Glow Elements -->
+  <div class="radial-glow glow-top-left"></div>
+  <div class="radial-glow glow-bottom-right"></div>
+
+  <!-- Main Container -->
+  <main class="relative z-10 w-full max-w-5xl flex-grow flex flex-col items-center justify-center gap-8">
+    
+    <!-- Top Header -->
+    <header class="w-full text-center mb-2">
+      <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-white mb-2 font-sans">
+        Acceleration Calculator
+      </h1>
+      <p class="text-gray-400 text-sm md:text-base font-light">
+        O-Level Physics Syllabus 6091 — Interactive Learning & Self-Testing
+      </p>
+    </header>
+
+    <!-- Syllabus Toggle Segment -->
+    <section class="w-full max-w-md glass-panel rounded-full p-1.5 flex items-center justify-between relative shadow-lg">
+      <button id="btn-combined-science" class="flex-1 py-2 px-4 rounded-full text-center text-xs md:text-sm font-semibold transition-all duration-300 z-10 text-white" aria-label="Toggle Combined Science Mode">
+        Combined Science
+      </button>
+      <button id="btn-pure-physics" class="flex-1 py-2 px-4 rounded-full text-center text-xs md:text-sm font-semibold transition-all duration-300 z-10 text-gray-400" aria-label="Toggle Pure Physics Mode">
+        Pure Physics
+      </button>
+      <!-- Sliding active background pill -->
+      <div id="syllabus-toggle-pill" class="absolute top-1.5 bottom-1.5 left-1.5 w-[calc(50%-6px)] rounded-full transition-all duration-300 ease-out shadow-md" style="background-color: var(--accent-combined);"></div>
+    </section>
+
+    <!-- Current Mode Badge -->
+    <div id="mode-badge" class="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-black font-sans transition-colors duration-300" style="background-color: var(--accent-combined);">
+      Combined Science Mode
+    </div>
+
+    <!-- Active Scenario Banner (Hidden by default, shown when randomized) -->
+    <div id="scenario-banner" class="w-full max-w-4xl glass-panel rounded-2xl p-4 border-l-4 border-amber-500 hidden transition-all duration-300">
+      <div class="flex items-start gap-3">
+        <span id="scenario-type-icon" class="text-2xl">⚡</span>
+        <div>
+          <span id="scenario-badge" class="text-xs font-bold uppercase px-2 py-0.5 rounded mr-2 bg-amber-500/20 text-amber-300">Scenario</span>
+          <span id="scenario-text" class="text-gray-200 text-sm md:text-base italic font-light">Loading scenario...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interface Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-4xl">
+      
+      <!-- Left Column: Controls (7 cols) -->
+      <section class="lg:col-span-7 flex flex-col gap-5 glass-panel rounded-3xl p-6 md:p-8">
+        <h2 class="text-lg font-semibold text-gray-200 mb-2 border-b border-gray-800 pb-2 flex items-center justify-between">
+          <span>Variables Input</span>
+          <span class="text-xs font-normal text-gray-500">Drag sliders to modify values</span>
+        </h2>
+
+        <!-- Input 1: Initial Speed / Velocity -->
+        <div class="flex flex-col gap-2 relative">
+          <div class="flex justify-between items-center">
+            <label id="lbl-initial" for="slider-initial" class="text-sm font-medium text-gray-400">
+              Initial speed
+            </label>
+            <div id="display-container-initial" class="flex items-center gap-1.5">
+              <span id="val-initial" class="font-mono-val text-xl font-bold text-white transition-all">20</span>
+              <span id="unit-initial" class="text-xs text-gray-500">m/s</span>
+              <button id="btn-sol-initial" class="text-red-400 hover:text-red-300 hidden transition-all" aria-label="View solution for Initial speed">
+                👁️
+              </button>
+            </div>
+          </div>
+          <input type="range" id="slider-initial" min="0" max="50" step="1" value="20" aria-label="Initial velocity slider">
+        </div>
+
+        <!-- Input 2: Final Speed / Velocity -->
+        <div class="flex flex-col gap-2 relative">
+          <div class="flex justify-between items-center">
+            <label id="lbl-final" for="slider-final" class="text-sm font-medium text-gray-400">
+              Final speed
+            </label>
+            <div id="display-container-final" class="flex items-center gap-1.5">
+              <span id="val-final" class="font-mono-val text-xl font-bold text-white transition-all">40</span>
+              <span id="unit-final" class="text-xs text-gray-500">m/s</span>
+              <button id="btn-sol-final" class="text-red-400 hover:text-red-300 hidden transition-all" aria-label="View solution for Final speed">
+                👁️
+              </button>
+            </div>
+          </div>
+          <input type="range" id="slider-final" min="0" max="100" step="1" value="40" aria-label="Final velocity slider">
+        </div>
+
+        <!-- Input 3: Time Taken -->
+        <div class="flex flex-col gap-2 relative">
+          <div class="flex justify-between items-center">
+            <label id="lbl-time" for="slider-time" class="text-sm font-medium text-gray-400">
+              Time taken
+            </label>
+            <div id="display-container-time" class="flex items-center gap-1.5">
+              <span id="val-time" class="font-mono-val text-xl font-bold text-white transition-all">10</span>
+              <span id="unit-time" class="text-xs text-gray-500">s</span>
+              <button id="btn-sol-time" class="text-red-400 hover:text-red-300 hidden transition-all" aria-label="View solution for Time taken">
+                👁️
+              </button>
+            </div>
+          </div>
+          <input type="range" id="slider-time" min="1" max="60" step="1" value="10" aria-label="Time slider">
+        </div>
+      </section>
+
+      <!-- Right Column: Result Panel (5 cols) -->
+      <section class="lg:col-span-5 flex flex-col justify-between glass-panel rounded-3xl p-6 md:p-8 relative overflow-hidden">
+        
+        <!-- Background accents -->
+        <div class="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent pointer-events-none"></div>
+
+        <div>
+          <h2 class="text-lg font-semibold text-gray-200 mb-6 border-b border-gray-800 pb-2">
+            Result Display
+          </h2>
+
+          <div class="flex flex-col items-center justify-center py-6 text-center">
+            <!-- Output Variable Name -->
+            <span id="lbl-result-title" class="text-xs font-bold tracking-wider text-gray-400 mb-2">
+              a =
+            </span>
+
+            <!-- Large Value Display -->
+            <div id="display-container-result" class="flex items-center gap-2 relative mb-4">
+              <div id="val-result-box" class="flex items-center justify-center p-3 rounded-2xl transition-all duration-300">
+                <span id="val-result" class="font-mono-val text-4xl md:text-5xl font-extrabold tracking-tight" style="color: var(--result-accel);">
+                  2.00
+                </span>
+                <span id="unit-result" class="font-mono-val text-lg ml-2 text-gray-400">
+                  m/s²
+                </span>
+              </div>
+              <button id="btn-sol-result" class="text-red-400 hover:text-red-300 hidden transition-all ml-1" aria-label="View solution for Acceleration">
+                👁️
+              </button>
+            </div>
+
+            <!-- Acceleration / Deceleration Type Badge -->
+            <div id="result-indicator-badge" class="flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold border" style="color: var(--result-accel); border-color: rgba(57, 255, 20, 0.3); background-color: rgba(57, 255, 20, 0.05);">
+              <span id="result-indicator-icon">📈</span>
+              <span id="result-indicator-text">Uniform Acceleration</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formula Reminder Card -->
+        <div class="mt-6 p-4 rounded-2xl bg-black/40 border border-gray-800">
+          <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-2">Formula Reference</p>
+          <div id="formula-reminder-content" class="text-gray-300 text-sm font-mono-val flex flex-col gap-1">
+            <div>acceleration = (final speed - initial speed) / time taken</div>
+            <div class="text-gray-500">a = (v - u) / t</div>
+          </div>
+        </div>
+
+      </section>
+    </div>
+
+    <!-- Control Buttons Panel -->
+    <div class="flex flex-wrap items-center justify-center gap-4 w-full max-w-4xl glass-panel rounded-2xl p-4">
+      <button id="btn-test-mode" class="flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold border border-red-500/30 bg-red-500/10 text-red-400 btn-hover transition-all" aria-label="Toggle Test Mode">
+        🎯 <span>Enter Test Mode</span>
+      </button>
+
+      <button id="btn-randomize" class="flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-black btn-hover transition-all" style="background-color: var(--accent-active);" aria-label="Load Random Scenario">
+        🎲 <span>Randomize Scenario</span>
+      </button>
+
+      <button id="btn-reset" class="flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold border border-gray-700 hover:bg-gray-800 text-gray-300 btn-hover transition-all" aria-label="Reset Calculator">
+        🔄 <span>Reset</span>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Worked Solution Modal Overlay -->
+  <div id="solution-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 opacity-0 pointer-events-none modal-overlay transition-opacity duration-300">
+    <!-- Modal Card -->
+    <div class="w-full max-w-lg glass-panel rounded-3xl p-6 md:p-8 flex flex-col gap-5 border border-gray-800 max-h-[85vh] overflow-y-auto custom-scrollbar">
+      
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center border-b border-gray-800 pb-3">
+        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+          📝 Worked Solution
+        </h3>
+        <button id="btn-close-modal" class="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-gray-800 transition-colors" aria-label="Close modal">
+          ✕
+        </button>
+      </div>
+
+      <!-- Modal Body Content -->
+      <div id="solution-modal-body" class="flex flex-col gap-4">
+        <!-- Dynamic content will be injected here by app.js -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex justify-end pt-3 border-t border-gray-800">
+        <button id="btn-close-modal-footer" class="px-5 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-medium transition-colors" aria-label="Close modal button">
+          Got it
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Info -->
+  <footer class="w-full text-center text-xs text-gray-600 mt-8 font-light relative z-10">
+    <p>Singapore O-Level Physics 6091 — Developed for educational purposes.</p>
+  </footer>
+
+  <!-- Link to External JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>
