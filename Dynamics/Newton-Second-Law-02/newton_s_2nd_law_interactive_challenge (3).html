@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unmasking F_net = ma // O-Level Physics 6091</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Space Grotesk & Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0f19;
+        }
+        .heading-font {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111827;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4B5563;
+        }
+
+        /* Full Page Red Flash Keyframe Animation for validation error */
+        @keyframes full-page-red-flash {
+            0% { 
+                background-color: rgba(244, 63, 94, 0);
+                box-shadow: inset 0 0 0px rgba(244, 63, 94, 0);
+            }
+            15% { 
+                background-color: rgba(244, 63, 94, 0.18);
+                box-shadow: inset 0 0 120px rgba(244, 63, 94, 0.45);
+            }
+            100% { 
+                background-color: rgba(244, 63, 94, 0);
+                box-shadow: inset 0 0 0px rgba(244, 63, 94, 0);
+            }
+        }
+        .animate-full-flash {
+            animation: full-page-red-flash 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+    </style>
+</head>
+<body class="text-gray-100 min-h-screen flex flex-col selection:bg-cyan-500 selection:text-black relative">
+
+    <!-- Full screen flash overlay for validation errors -->
+    <div id="full-page-flash" class="fixed inset-0 pointer-events-none z-[9999]"></div>
+
+    <!-- Header -->
+    <header class="border-b border-gray-800 bg-gray-900/80 backdrop-blur-md sticky top-0 z-50 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-tr from-cyan-500 to-fuchsia-500 p-2 rounded-xl shadow-lg shadow-cyan-500/10">
+                    <i data-lucide="zap" class="w-6 h-6 text-black fill-current animate-pulse"></i>
+                </div>
+                <div>
+                    <h1 class="heading-font text-xl font-bold tracking-tight bg-gradient-to-r from-cyan-400 to-fuchsia-400 bg-clip-text text-transparent">
+                        UNMASKING F_net = ma
+                    </h1>
+                    <p class="text-xs text-gray-400">Singapore Syllabus 6091 • Built for the Doomscrollers</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2 bg-gray-800/80 px-3 py-1.5 rounded-lg border border-gray-700 text-xs">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                <span class="text-gray-300 font-medium">Paradigm: F_net is always RESULTANT Force</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Column: Mission Setup & Simulation Screen (7 cols) -->
+        <div class="lg:col-span-7 flex flex-col gap-6">
+            
+            <!-- Gamified Level/Scenario Selector -->
+            <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4">
+                <h3 class="heading-font text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <i data-lucide="layers" class="w-4 h-4 text-cyan-400"></i> Select Physics Scenario
+                </h3>
+                <div class="grid grid-cols-3 gap-2.5">
+                    <button onclick="switchLevel('cybercar')" id="btn-cybercar" class="level-btn relative p-3 rounded-xl border text-left transition-all duration-300 overflow-hidden group border-cyan-500/50 bg-cyan-950/20 shadow-lg shadow-cyan-500/5">
+                        <div class="absolute top-0 right-0 p-1 text-cyan-400/20 group-hover:text-cyan-400 transition-colors">
+                            <i data-lucide="car" class="w-8 h-8"></i>
+                        </div>
+                        <span class="block text-xs text-cyan-400 font-semibold tracking-widest uppercase">Level 01</span>
+                        <span class="block font-bold text-sm mt-1 text-white">Cyber-Car Run</span>
+                        <span class="block text-[10px] text-gray-400 mt-1">Horizontal Dynamics</span>
+                    </button>
+
+                    <button onclick="switchLevel('rocket')" id="btn-rocket" class="level-btn relative p-3 rounded-xl border border-gray-800 bg-gray-900 hover:border-gray-700 text-left transition-all duration-300 overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-1 text-gray-600 group-hover:text-fuchsia-400/50 transition-colors">
+                            <i data-lucide="rocket" class="w-8 h-8"></i>
+                        </div>
+                        <span class="block text-xs text-gray-500 font-semibold tracking-widest uppercase">Level 02</span>
+                        <span class="block font-bold text-sm mt-1 text-gray-300 group-hover:text-white transition-colors">Escape Velocity</span>
+                        <span class="block text-[10px] text-gray-400 mt-1">Vertical Thrust vs Weight</span>
+                    </button>
+
+                    <button onclick="switchLevel('parachute')" id="btn-parachute" class="level-btn relative p-3 rounded-xl border border-gray-800 bg-gray-900 hover:border-gray-700 text-left transition-all duration-300 overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-1 text-gray-600 group-hover:text-emerald-400/50 transition-colors">
+                            <i data-lucide="umbrella" class="w-8 h-8"></i>
+                        </div>
+                        <span class="block text-xs text-gray-500 font-semibold tracking-widest uppercase">Level 03</span>
+                        <span class="block font-bold text-sm mt-1 text-gray-300 group-hover:text-white transition-colors">Drip Drop</span>
+                        <span class="block text-[10px] text-gray-400 mt-1">Terminal Velocity (a = 0)</span>
+                    </button>
+                </div>
+
+                <!-- Anti-Bypass Adaptive Scenario Randomiser Row -->
+                <div id="level-randomise-container" class="mt-4 pt-4 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-3 transition-all">
+                    <p id="randomise-explanation" class="text-xs text-gray-400">
+                        Friction-dodging bypass active! Generate a randomized scenario to test your true equation-building skills.
+                    </p>
+                    <div class="flex gap-2 shrink-0">
+                        <button id="btn-randomise-level" onclick="randomiseActiveLevel()" class="bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 hover:border-cyan-500/50 text-cyan-400 px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-lg shadow-cyan-500/5">
+                            <i data-lucide="dices" class="w-4 h-4"></i> <span id="randomise-btn-text">Randomise Level 01</span>
+                        </button>
+                        <button id="btn-reset-level" onclick="resetActiveLevel()" class="bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 hover:border-rose-500/50 text-rose-400 px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-lg shadow-rose-500/5">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> <span>Reset</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Physics Sandbox Canvas / Arena -->
+            <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4 flex flex-col relative overflow-hidden min-h-[320px]">
+                <div class="absolute top-3 left-3 bg-gray-900/80 backdrop-blur px-2.5 py-1 rounded-md text-[10px] uppercase font-bold tracking-widest border border-gray-800 z-10 flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Live Simulation Stage
+                </div>
+                
+                <div id="target-indicator" class="absolute top-3 right-3 bg-red-950/60 border border-red-800/80 text-red-300 px-2.5 py-1 rounded-md text-[10px] font-bold z-10">
+                    Target Acceleration: <span id="target-val">4</span> m/s²
+                </div>
+
+                <!-- Arena Viewport -->
+                <div id="simulation-track" class="flex-1 w-full bg-gray-950 rounded-xl relative overflow-hidden flex items-center justify-center border border-gray-800/50 min-h-[220px]">
+                    <!-- Parallax grid background -->
+                    <div class="absolute inset-0 bg-[linear-gradient(to_right,#1f2937_1px,transparent_1px),linear-gradient(to_bottom,#1f2937_1px,transparent_1px)] bg-[size:2rem_2rem] opacity-20"></div>
+                    
+                    <!-- Ground for level 1 -->
+                    <div id="ground-line" class="absolute bottom-10 left-0 right-0 h-1 bg-gray-800"></div>
+
+                    <!-- Dynamic Simulation Elements -->
+                    <!-- Cyber Car Group -->
+                    <div id="car-entity" class="absolute left-1/3 bottom-11 transition-all duration-100 flex flex-col items-center">
+                        <!-- Vector Overlay (Dynamic SVG) -->
+                        <div class="absolute -top-16 left-1/2 -translate-x-1/2 w-48 h-16 pointer-events-none flex items-center justify-between">
+                            <!-- Left opposing force vector -->
+                            <div class="flex items-center justify-end w-1/2">
+                                <span id="left-vector-lbl" class="text-[10px] text-rose-400 font-bold bg-rose-950/80 px-1 rounded mr-1">5N</span>
+                                <div id="left-vector-arrow" class="h-1.5 bg-rose-500 rounded relative origin-right flex items-center">
+                                    <div class="absolute left-0 -translate-x-1/2 border-y-[4px] border-y-transparent border-r-[6px] border-r-rose-500"></div>
+                                </div>
+                            </div>
+                            <!-- Center Mass Hub -->
+                            <div class="w-4 h-4 bg-white rounded-full border-2 border-cyan-400 z-10 shadow-lg"></div>
+                            <!-- Right force vector -->
+                            <div class="flex items-center w-1/2">
+                                <div id="right-vector-arrow" class="h-1.5 bg-cyan-500 rounded relative origin-left flex items-center">
+                                    <div class="absolute right-0 translate-x-1/2 border-y-[4px] border-y-transparent border-l-[6px] border-l-cyan-500"></div>
+                                </div>
+                                <span id="right-vector-lbl" class="text-[10px] text-cyan-400 font-bold bg-cyan-950/80 px-1 rounded ml-1">13N</span>
+                            </div>
+                        </div>
+
+                        <!-- Car SVG Sprite -->
+                        <div id="car-sprite" class="w-24 h-12 relative flex items-end justify-center">
+                            <!-- Simple custom vector cyberpunk car -->
+                            <svg class="w-full h-full text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.3)]" viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 25 C5 25 10 15 25 12 C40 9 70 9 85 18 C95 22 95 30 95 30 L5 30 Z" fill="#1e293b" stroke="currentColor" stroke-width="2"/>
+                                <rect x="35" y="15" width="20" height="8" rx="2" fill="currentColor" fill-opacity="0.2"/>
+                                <circle cx="25" cy="30" r="7" fill="#0f172a" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="75" cy="30" r="7" fill="#0f172a" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="25" cy="30" r="3" fill="currentColor"/>
+                                <circle cx="75" cy="30" r="3" fill="currentColor"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Rocket Sprite (Hidden initially) -->
+                    <div id="rocket-entity" class="absolute bottom-11 transition-all duration-100 hidden flex-col items-center">
+                        <!-- Vertical Vector Overlay -->
+                        <div class="absolute -left-12 top-1/2 -translate-y-1/2 h-36 w-12 pointer-events-none flex flex-col items-center justify-between">
+                            <!-- Top/Thrust Vector -->
+                            <div class="flex flex-col items-center h-1/2 justify-end">
+                                <span id="top-vector-lbl" class="text-[10px] text-fuchsia-400 font-bold bg-fuchsia-950/80 px-1 rounded mb-1">30N</span>
+                                <div id="top-vector-arrow" class="w-1.5 bg-fuchsia-500 rounded relative origin-bottom flex justify-center">
+                                    <div class="absolute top-0 -translate-y-1/2 border-x-[4px] border-x-transparent border-b-[6px] border-b-fuchsia-500"></div>
+                                </div>
+                            </div>
+                            <!-- Mass Hub -->
+                            <div class="w-4 h-4 bg-white rounded-full border-2 border-fuchsia-400 z-10 shadow-lg"></div>
+                            <!-- Bottom/Weight Vector -->
+                            <div class="flex flex-col items-center h-1/2">
+                                <div id="bottom-vector-arrow" class="w-1.5 bg-rose-500 rounded relative origin-top flex justify-center">
+                                    <div class="absolute bottom-0 translate-y-1/2 border-x-[4px] border-x-transparent border-t-[6px] border-t-rose-500"></div>
+                                </div>
+                                <span id="bottom-vector-lbl" class="text-[10px] text-rose-400 font-bold bg-rose-950/80 px-1 rounded mt-1">20N</span>
+                            </div>
+                        </div>
+
+                        <!-- Rocket Sprite -->
+                        <div class="w-16 h-28 relative">
+                            <svg class="w-full h-full text-fuchsia-400 drop-shadow-[0_0_12px_rgba(232,121,249,0.3)]" viewBox="0 0 40 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 5 L32 25 L32 60 L20 70 L8 60 L8 25 Z" fill="#1e293b" stroke="currentColor" stroke-width="2"/>
+                                <path d="M8 50 L2 65 L8 60 Z" fill="#1e293b" stroke="currentColor" stroke-width="2"/>
+                                <path d="M32 50 L38 65 L32 60 Z" fill="#1e293b" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="20" cy="35" r="5" fill="currentColor" fill-opacity="0.3"/>
+                                <!-- Rocket engine flame active when accelerating -->
+                                <path id="rocket-flame" class="hidden animate-bounce" d="M15 70 L20 85 L25 70 Z" fill="#f59e0b"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Parachutist Sprite (Hidden initially) -->
+                    <div id="para-entity" class="absolute top-10 transition-all duration-100 hidden flex-col items-center">
+                        <!-- Vertical Vector Overlay -->
+                        <div class="absolute -left-12 top-1/2 -translate-y-1/2 h-36 w-12 pointer-events-none flex flex-col items-center justify-between">
+                            <!-- Top Vector (Air Resistance) -->
+                            <div class="flex flex-col items-center h-1/2 justify-end">
+                                <span id="para-top-lbl" class="text-[10px] text-emerald-400 font-bold bg-emerald-950/80 px-1 rounded mb-1">10N</span>
+                                <div id="para-top-arrow" class="w-1.5 bg-emerald-500 rounded relative origin-bottom flex justify-center">
+                                    <div class="absolute top-0 -translate-y-1/2 border-x-[4px] border-x-transparent border-b-[6px] border-b-emerald-500"></div>
+                                </div>
+                            </div>
+                            <!-- Mass Hub -->
+                            <div class="w-4 h-4 bg-white rounded-full border-2 border-emerald-400 z-10 shadow-lg"></div>
+                            <!-- Bottom Vector (Weight) -->
+                            <div class="flex flex-col items-center h-1/2">
+                                <div id="para-bottom-arrow" class="w-1.5 bg-rose-500 rounded relative origin-top flex justify-center">
+                                    <div class="absolute bottom-0 translate-y-1/2 border-x-[4px] border-x-transparent border-t-[6px] border-t-rose-500"></div>
+                                </div>
+                                <span id="para-bottom-lbl" class="text-[10px] text-rose-400 font-bold bg-rose-950/80 px-1 rounded mt-1">10N</span>
+                            </div>
+                        </div>
+
+                        <!-- Parachutist Sprite -->
+                        <div class="w-20 h-28 relative">
+                            <svg class="w-full h-full text-emerald-400 drop-shadow-[0_0_12px_rgba(52,211,153,0.3)]" viewBox="0 0 50 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Parachute -->
+                                <path d="M5 25 C5 5 45 5 45 25 Z" fill="#1e293b" stroke="currentColor" stroke-width="2"/>
+                                <!-- Strings -->
+                                <line x1="5" y1="25" x2="25" y2="45" stroke="currentColor" stroke-width="1"/>
+                                <line x1="45" y1="25" x2="25" y2="45" stroke="currentColor" stroke-width="1"/>
+                                <!-- Skydiver body -->
+                                <circle cx="25" cy="45" r="4" fill="#1e293b" stroke="currentColor" stroke-width="2"/>
+                                <line x1="25" y1="49" x2="25" y2="60" stroke="currentColor" stroke-width="2"/>
+                                <line x1="20" y1="52" x2="30" y2="52" stroke="currentColor" stroke-width="2"/>
+                                <line x1="25" y1="60" x2="20" y2="68" stroke="currentColor" stroke-width="2"/>
+                                <line x1="25" y1="60" x2="30" y2="68" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Explosion effect container -->
+                    <div id="explosion-ring" class="absolute w-24 h-24 rounded-full border-4 border-rose-500 hidden scale-0 transition-transform duration-500 ease-out flex items-center justify-center bg-rose-500/10 z-20">
+                        <span class="text-xs font-bold text-rose-400 tracking-wider">CRASHED!</span>
+                    </div>
+
+                </div>
+
+                <!-- Simulation stats (Live Telemetry) -->
+                <div class="grid grid-cols-4 gap-2 mt-3 text-center">
+                    <div class="bg-gray-950/80 p-2 rounded-xl border border-gray-800">
+                        <span class="block text-[9px] text-gray-500 font-semibold tracking-wider uppercase">Applied Force</span>
+                        <span id="telemetry-applied" class="font-bold text-sm text-cyan-400">13.0 N</span>
+                    </div>
+                    <div class="bg-gray-950/80 p-2 rounded-xl border border-gray-800">
+                        <span class="block text-[9px] text-gray-500 font-semibold tracking-wider uppercase">Opposing Force</span>
+                        <span id="telemetry-opposing" class="font-bold text-sm text-rose-400">5.0 N</span>
+                    </div>
+                    <div class="bg-gray-950/80 p-2 rounded-xl border border-gray-800">
+                        <span class="block text-[9px] text-gray-500 font-semibold tracking-wider uppercase">Total Mass (m)</span>
+                        <span id="telemetry-mass" class="font-bold text-sm text-amber-400">2.0 kg</span>
+                    </div>
+                    <div class="bg-gray-950/80 p-2 rounded-xl border border-cyan-950">
+                        <span class="block text-[9px] text-cyan-500 font-semibold tracking-wider uppercase">Resultant Force</span>
+                        <span id="telemetry-resultant" class="font-bold text-sm text-cyan-300">? N</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Instant Savage Meme Feedback Block -->
+            <div id="feedback-block" class="bg-gradient-to-r from-gray-900 to-gray-950 border border-gray-800 p-4 rounded-2xl flex items-start gap-3 transition-all">
+                <div class="bg-gray-800 p-2 rounded-xl text-cyan-400">
+                    <i data-lucide="terminal" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Meme Analyzer System</h4>
+                    <p id="feedback-text" class="text-sm text-gray-300 italic">"Select variables and construct the equation of motion below. Don't worry, the physics engine doesn't bite, but gravity sure does."</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Control Center & Equation Constructor (5 cols) -->
+        <div class="lg:col-span-5 flex flex-col gap-6">
+            
+            <!-- Sandbox Slider Controls -->
+            <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5">
+                <h3 class="heading-font text-base font-bold text-white mb-4 flex items-center justify-between">
+                    <span>1. Dial in Variables</span>
+                    <span class="text-xs text-gray-400 bg-gray-800 px-2 py-0.5 rounded">Setup Phase</span>
+                </h3>
+                
+                <div class="space-y-4">
+                    <!-- Slider 1: Active Action Force -->
+                    <div>
+                        <div class="flex justify-between text-xs mb-1.5">
+                            <span id="slider-force-title" class="font-medium text-cyan-400 flex items-center gap-1">
+                                <i data-lucide="chevrons-right" class="w-4 h-4"></i> Engine Thrust (F_thrust)
+                            </span>
+                            <span id="force-val" class="font-bold text-cyan-300 text-sm">13 N</span>
+                        </div>
+                        <input type="range" id="input-force" min="3" max="50" step="1" value="13" 
+                               class="w-full h-2 bg-gray-950 rounded-lg appearance-none cursor-pointer accent-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500">
+                        <div class="flex justify-between text-[10px] text-gray-600 mt-1">
+                            <span>3 N</span>
+                            <span>Max: 50 N</span>
+                        </div>
+                    </div>
+
+                    <!-- Slider 2: Resistive / Opposing Force -->
+                    <div>
+                        <div class="flex justify-between text-xs mb-1.5">
+                            <span id="slider-resist-title" class="font-medium text-rose-400 flex items-center gap-1">
+                                <i data-lucide="shield" class="w-4 h-4"></i> Road Friction (f)
+                            </span>
+                            <span id="resist-val" class="font-bold text-rose-300 text-sm">5 N</span>
+                        </div>
+                        <input type="range" id="input-resist" min="2" max="8" step="1" value="5" 
+                               class="w-full h-2 bg-gray-950 rounded-lg appearance-none cursor-pointer accent-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500">
+                        <div class="flex justify-between text-[10px] text-gray-600 mt-1">
+                            <span id="resist-min-lbl">2 N</span>
+                            <span>Max: 8 N</span>
+                        </div>
+                    </div>
+
+                    <!-- Slider 3: Mass of Object / Dynamic Earth Gravity Display -->
+                    <div id="slider-3-container">
+                        <div class="flex justify-between text-xs mb-1.5">
+                            <span id="slider-mass-title" class="font-medium text-amber-400 flex items-center gap-1">
+                                <i data-lucide="scale" class="w-4 h-4"></i> Object Mass (m)
+                            </span>
+                            <span id="mass-val" class="font-bold text-amber-300 text-sm">2 kg</span>
+                        </div>
+                        <input type="range" id="input-mass" min="1" max="6" step="1" value="2" 
+                               class="w-full h-2 bg-gray-950 rounded-lg appearance-none cursor-pointer accent-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500">
+                        
+                        <!-- Level 3 Gravity Static Box -->
+                        <div id="static-g-display" class="hidden bg-gray-950 border border-amber-500/20 px-3.5 py-2.5 rounded-xl text-center text-amber-300 text-xs font-semibold shadow-inner">
+                            g = 10 m/s² (Constant Earth Gravity Strength)
+                        </div>
+
+                        <div id="slider-mass-bounds" class="flex justify-between text-[10px] text-gray-600 mt-1">
+                            <span>1 kg (Lightweight)</span>
+                            <span>6 kg (Heavy)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- The Equation Constructor Gatekeeper -->
+            <div class="bg-gray-900 border border-cyan-500/20 shadow-lg shadow-cyan-500/5 rounded-2xl p-5 flex-1 flex flex-col">
+                <h3 class="heading-font text-base font-bold text-white mb-2 flex items-center gap-2">
+                    <i data-lucide="calculator" class="w-5 h-5 text-fuchsia-400"></i>
+                    <span>2. Equation Constructor Gate</span>
+                </h3>
+                <p class="text-xs text-gray-400 mb-4">
+                    The syllabus equation is written everywhere as <strong class="text-red-400">F = ma</strong>. But in examinations, you get points ONLY when you build the <span class="text-cyan-400 font-semibold">Net Force</span> equation first! Fill in both templates below.
+                </p>
+
+                <div class="space-y-4 flex-1 flex flex-col justify-between">
+                    
+                    <!-- Interactive Blanks Form -->
+                    <div class="bg-gray-950 p-4 rounded-xl border border-gray-800 space-y-4">
+                        
+                        <!-- Symbolic Formula (Equation 1) -->
+                        <div class="text-center">
+                            <span class="text-[10px] text-gray-500 uppercase tracking-widest font-semibold block mb-2">Equation 1: Symbols</span>
+                            
+                            <!-- Equation Slots with dropdown fields -->
+                            <div class="flex flex-wrap items-center justify-center gap-1.5 md:gap-2 text-sm font-semibold text-gray-300">
+                                <!-- First Term -->
+                                <select id="eq-term-1" class="bg-gray-900 border border-gray-800 rounded px-1.5 py-1 text-cyan-400 text-xs focus:ring-1 focus:ring-cyan-500 outline-none">
+                                    <option value="" disabled selected>-- Select --</option>
+                                    <option value="F_thrust">Thrust (F)</option>
+                                    <option value="f_friction">Friction (f)</option>
+                                    <option value="m">Mass (m)</option>
+                                </select>
+                                
+                                <span class="text-xl text-gray-500 font-bold">-</span>
+                                
+                                <!-- Second Term -->
+                                <select id="eq-term-2" class="bg-gray-900 border border-gray-800 rounded px-1.5 py-1 text-rose-400 text-xs focus:ring-1 focus:ring-rose-500 outline-none">
+                                    <option value="" disabled selected>-- Select --</option>
+                                    <option value="F_thrust">Thrust (F)</option>
+                                    <option value="f_friction">Friction (f)</option>
+                                    <option value="m">Mass (m)</option>
+                                </select>
+
+                                <span class="text-xl text-gray-500 font-bold">=</span>
+
+                                <!-- RHS Mass variable -->
+                                <span class="bg-gray-900 border border-gray-800 rounded px-2.5 py-1 text-amber-400 text-xs">m</span>
+                                
+                                <span class="text-lg text-gray-500 font-bold">×</span>
+
+                                <!-- Acceleration field -->
+                                <span class="bg-gray-900 border border-gray-800 rounded px-2.5 py-1 text-fuchsia-400 text-xs">a</span>
+                            </div>
+                        </div>
+
+                        <!-- Numerical Value Form (Equation 2) -->
+                        <div class="border-t border-gray-900 pt-4 text-center">
+                            <span class="text-[10px] text-gray-500 uppercase tracking-widest font-semibold block mb-2">Equation 2: Numerical Values</span>
+                            
+                            <div class="flex flex-wrap items-center justify-center gap-1.5 md:gap-2 text-sm font-semibold text-gray-300">
+                                <!-- Value 1 (Applied force) -->
+                                <div class="flex items-center gap-0.5">
+                                    <input type="number" id="eq-val-1" placeholder="?" class="w-12 bg-gray-900 border border-gray-800 rounded text-center py-1 text-xs text-cyan-300 focus:outline-none focus:ring-1 focus:ring-cyan-500">
+                                    <span class="text-[9px] text-gray-600 font-normal">N</span>
+                                </div>
+                                
+                                <span class="text-xl text-gray-500 font-bold">-</span>
+                                
+                                <!-- Value 2 (Opposing force) -->
+                                <div class="flex items-center gap-0.5">
+                                    <input type="number" id="eq-val-2" placeholder="?" class="w-12 bg-gray-900 border border-gray-800 rounded text-center py-1 text-xs text-rose-300 focus:outline-none focus:ring-1 focus:ring-rose-500">
+                                    <span class="text-[9px] text-gray-600 font-normal">N</span>
+                                </div>
+
+                                <span class="text-xl text-gray-500 font-bold">=</span>
+
+                                <!-- Mass Input -->
+                                <div class="flex items-center gap-0.5">
+                                    <input type="number" id="eq-val-mass" placeholder="?" step="0.1" class="w-12 bg-gray-900 border border-gray-800 rounded text-center py-1 text-xs text-amber-300 focus:outline-none focus:ring-1 focus:ring-amber-500">
+                                    <span class="text-[9px] text-gray-600 font-normal">kg</span>
+                                </div>
+                                
+                                <span class="text-lg text-gray-500 font-bold">×</span>
+
+                                <!-- Expected Acceleration Input -->
+                                <div class="flex items-center gap-0.5">
+                                    <input type="number" id="eq-val-accel" placeholder="?" step="0.1" class="w-12 bg-gray-900 border border-gray-800 rounded text-center py-1 text-xs text-fuchsia-300 focus:outline-none focus:ring-1 focus:ring-fuchsia-500">
+                                    <span class="text-[9px] text-gray-600 font-normal">m/s²</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="space-y-2.5 pt-4">
+                        <!-- Submit & Verify Equation -->
+                        <button onclick="testEquations()" class="w-full bg-gradient-to-r from-cyan-500 to-fuchsia-500 hover:from-cyan-400 hover:to-fuchsia-400 text-black font-extrabold text-sm tracking-wider py-3.5 px-4 rounded-xl shadow-lg shadow-cyan-500/10 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+                            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                            RUN SIMULATION & TEST VALUES
+                        </button>
+
+                        <!-- Sandbox Quick Fill (Cheat/Guide button) -->
+                        <button onclick="autoPopulateHelp()" class="w-full bg-gray-800/50 hover:bg-gray-800 border border-gray-700/50 text-gray-300 py-2 px-4 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-1.5">
+                            <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+                            Stuck? Tap for formula help
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Interactive Bottom Cheat Sheet (O-Level Essentials) -->
+    <footer class="bg-gray-950 border-t border-gray-800/60 py-4 px-6 mt-12">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+            <div>
+                <strong class="text-gray-300">💡 Why we do this:</strong> Under the SEAB O-Level Syllabus 6091, ignoring opposing force (like friction or gravity) yields a 0-mark penalty for any multi-force calculation problem.
+            </div>
+            <div class="flex gap-4">
+                <span class="hover:text-cyan-400 cursor-help transition-colors" onclick="showTip('tip-fnet')">What is F_net?</span>
+                <span class="hover:text-cyan-400 cursor-help transition-colors" onclick="showTip('tip-t')">Terminal Velocity?</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Informational Modal/Overlay for Tips -->
+    <div id="tip-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl max-w-md w-full p-6 relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <h3 id="modal-title" class="heading-font text-lg font-bold text-white mb-2">Tip Header</h3>
+            <p id="modal-desc" class="text-sm text-gray-300 leading-relaxed">Tip contents...</p>
+        </div>
+    </div>
+
+    <script>
+        // Game State Variables
+        let activeLevel = 'cybercar'; // 'cybercar', 'rocket', 'parachute'
+        let targetAccel = 4;
+        let isSimulating = false;
+        
+        // Configuration mapping for current levels
+        const levelConfig = {
+            cybercar: {
+                title: "Level 01: Cyber-Car Run",
+                target: 4, // m/s²
+                labels: {
+                    applied: "Engine Thrust (F_thrust)",
+                    resist: "Road Friction (f)",
+                    mass: "Car Mass (m)"
+                },
+                vars: {
+                    force: 13, // N (Default solvable starting parameters: 13 - 5 = 2kg * 4m/s²)
+                    resist: 5,  // N
+                    mass: 2   // kg
+                },
+                equation: {
+                    term1: "F_thrust",
+                    term2: "f_friction"
+                }
+            },
+            rocket: {
+                title: "Level 02: Space Rocket Escape",
+                target: 3, // m/s² (Initial state target matched to beautiful solvable whole number values!)
+                labels: {
+                    applied: "Engine Thrust (T)",
+                    resist: "Rocket Weight (W)",
+                    mass: "Rocket Mass (m)"
+                },
+                vars: {
+                    force: 11, // N (T = m*a + W => 2*3 + 5 = 11N)
+                    resist: 5, // N
+                    mass: 2    // kg
+                },
+                equation: {
+                    term1: "F_thrust", // Standardise: Thrust is forward, weight acts as 'friction' or opposing in formula
+                    term2: "f_friction" // In code, mapped terms to correct abstract positions
+                }
+            },
+            parachute: {
+                title: "Level 03: Terminal Velocity Landing",
+                target: 0.0, // m/s², meaning forces are perfectly balanced!
+                labels: {
+                    applied: "Diver Weight (W)",
+                    resist: "Air Resistance (R)",
+                    mass: "Diver Mass (m)"
+                },
+                vars: {
+                    force: 25, // N (W = m*g => 2.5 kg * 10 m/s2)
+                    resist: 25, // N
+                    mass: 2.5  // Derived dynamic mass initial value
+                },
+                equation: {
+                    term1: "F_thrust", // Treat falling weight as driving force, air drag as opposing
+                    term2: "f_friction"
+                }
+            }
+        };
+
+        // DOM elements
+        const slideForce = document.getElementById('input-force');
+        const slideResist = document.getElementById('input-resist');
+        const slideMass = document.getElementById('input-mass');
+        
+        const forceValText = document.getElementById('force-val');
+        const resistValText = document.getElementById('resist-val');
+        const massValText = document.getElementById('mass-val');
+
+        const labelForceTitle = document.getElementById('slider-force-title');
+        const labelResistTitle = document.getElementById('slider-resist-title');
+
+        const telemetryApplied = document.getElementById('telemetry-applied');
+        const telemetryOpposing = document.getElementById('telemetry-opposing');
+        const telemetryMass = document.getElementById('telemetry-mass');
+        const telemetryResultant = document.getElementById('telemetry-resultant');
+
+        const feedbackText = document.getElementById('feedback-text');
+        const targetValSpan = document.getElementById('target-val');
+
+        // Initialize lucide icons
+        lucide.createIcons();
+
+        // Level Switching Logic
+        function switchLevel(levelKey) {
+            if (isSimulating) return; // Prevent switching mid-animation
+            
+            activeLevel = levelKey;
+            
+            // Highlight button active state using standard robust loops to bypass legacy environment limitations
+            const btnList = document.querySelectorAll('.level-btn');
+            for (let i = 0; i < btnList.length; i++) {
+                btnList[i].className = "level-btn relative p-3 rounded-xl border border-gray-800 bg-gray-900 hover:border-gray-700 text-left transition-all duration-300 overflow-hidden group";
+            }
+            
+            const activeBtn = document.getElementById(`btn-${levelKey}`);
+            if (levelKey === 'cybercar') {
+                activeBtn.className = "level-btn relative p-3 rounded-xl border text-left transition-all duration-300 overflow-hidden group border-cyan-500/50 bg-cyan-950/20 shadow-lg shadow-cyan-500/5";
+            } else if (levelKey === 'rocket') {
+                activeBtn.className = "level-btn relative p-3 rounded-xl border text-left transition-all duration-300 overflow-hidden group border-fuchsia-500/50 bg-fuchsia-950/20 shadow-lg shadow-fuchsia-500/5";
+            } else {
+                activeBtn.className = "level-btn relative p-3 rounded-xl border text-left transition-all duration-300 overflow-hidden group border-emerald-500/50 bg-emerald-950/20 shadow-lg shadow-emerald-500/5";
+            }
+
+            // Adaptive Anti-Dodging Randomise container show/hide & styling
+            const randomiseContainer = document.getElementById('level-randomise-container');
+            const randomiseExplanation = document.getElementById('randomise-explanation');
+            const randomiseBtn = document.getElementById('btn-randomise-level');
+            const randomiseBtnText = document.getElementById('randomise-btn-text');
+            const resetBtn = document.getElementById('btn-reset-level');
+            const resistMinLbl = document.getElementById('resist-min-lbl');
+
+            // Toggle Slider 3 vs Gravity constant elements
+            const sliderMassTitle = document.getElementById('slider-mass-title');
+            const sliderMassBounds = document.getElementById('slider-mass-bounds');
+            const staticGDisplay = document.getElementById('static-g-display');
+
+            if (levelKey === 'cybercar') {
+                randomiseContainer.style.display = 'flex';
+                randomiseExplanation.innerText = "Friction-dodging bypass active! Generate a randomized scenario to test your true equation-building skills.";
+                randomiseBtnText.innerText = "Randomise Level 01";
+                resetBtn.style.display = 'flex';
+                
+                // Cyan color styling for button
+                randomiseBtn.className = "bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 hover:border-cyan-500/50 text-cyan-400 px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-lg shadow-cyan-500/5";
+                
+                // Reset slider view
+                sliderMassTitle.innerHTML = `<i data-lucide="scale" class="w-4 h-4"></i> Object Mass (m)`;
+                slideMass.style.display = 'block';
+                sliderMassBounds.style.display = 'flex';
+                staticGDisplay.style.display = 'none';
+
+                // Strict integer step configuration for Level 1
+                slideForce.min = "3";
+                slideForce.max = "50";
+                slideForce.step = "1";
+                document.querySelector('#input-force + div span:last-child').innerText = "Max: 50 N";
+
+                slideResist.min = "2";
+                slideResist.max = "8";
+                slideResist.step = "1";
+                resistMinLbl.innerText = "2 N";
+                document.querySelector('#input-resist + div span:last-child').innerText = "Max: 8 N";
+
+                slideMass.min = "1";
+                slideMass.max = "6";
+                slideMass.step = "1";
+                document.querySelector('#slider-mass-bounds span:first-child').innerText = "1 kg (Lightweight)";
+                document.querySelector('#slider-mass-bounds span:last-child').innerText = "6 kg (Heavy)";
+            } else if (levelKey === 'rocket') {
+                randomiseContainer.style.display = 'flex';
+                randomiseExplanation.innerText = "Weight-dodging bypass active! Generate a randomized scenario to test your vertical rocket flight equations.";
+                randomiseBtnText.innerText = "Randomise Level 02";
+                resetBtn.style.display = 'flex'; 
+                
+                // Fuchsia color styling for button
+                randomiseBtn.className = "bg-fuchsia-500/15 hover:bg-fuchsia-500/25 border border-fuchsia-500/30 hover:border-fuchsia-500/50 text-fuchsia-400 px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-lg shadow-fuchsia-500/5";
+                
+                // Reset slider view
+                sliderMassTitle.innerHTML = `<i data-lucide="scale" class="w-4 h-4"></i> Object Mass (m)`;
+                slideMass.style.display = 'block';
+                sliderMassBounds.style.display = 'flex';
+                staticGDisplay.style.display = 'none';
+
+                // Strict integer step configuration for Level 2
+                slideForce.min = "3";
+                slideForce.max = "50";
+                slideForce.step = "1";
+                document.querySelector('#input-force + div span:last-child').innerText = "Max: 50 N";
+
+                slideResist.min = "2";
+                slideResist.max = "8";
+                slideResist.step = "1";
+                resistMinLbl.innerText = "2 N";
+                document.querySelector('#input-resist + div span:last-child').innerText = "Max: 8 N";
+
+                slideMass.min = "1";
+                slideMass.max = "6";
+                slideMass.step = "1";
+                document.querySelector('#slider-mass-bounds span:first-child').innerText = "1 kg (Lightweight)";
+                document.querySelector('#slider-mass-bounds span:last-child').innerText = "6 kg (Heavy)";
+            } else {
+                // Parachute Level 3 selected
+                randomiseContainer.style.display = 'none';
+                
+                // Replace mass slider with dynamic g display
+                sliderMassTitle.innerHTML = `<i data-lucide="globe" class="w-4 h-4"></i> Gravity (g)`;
+                slideMass.style.display = 'none';
+                sliderMassBounds.style.display = 'none';
+                staticGDisplay.style.display = 'block';
+
+                // General controls for Level 3
+                slideForce.min = "0";
+                slideForce.max = "60";
+                slideForce.step = "1";
+                document.querySelector('#input-force + div span:last-child').innerText = "Max: 60 N";
+
+                slideResist.min = "0";
+                slideResist.max = "40";
+                slideResist.step = "1";
+                resistMinLbl.innerText = "0 N";
+                document.querySelector('#input-resist + div span:last-child').innerText = "Max: 40 N";
+            }
+
+            // Update configuration target and labels
+            const config = levelConfig[levelKey];
+            targetAccel = config.target;
+            targetValSpan.innerText = Number.isInteger(targetAccel) ? targetAccel.toFixed(0) : targetAccel.toFixed(1);
+
+            // Reset Slider Ranges & Values
+            slideForce.value = config.vars.force;
+            slideResist.value = config.vars.resist;
+            slideMass.value = config.vars.mass;
+
+            // Display sprite changes
+            document.getElementById('car-entity').style.display = levelKey === 'cybercar' ? 'flex' : 'none';
+            document.getElementById('rocket-entity').style.display = levelKey === 'rocket' ? 'flex' : 'none';
+            document.getElementById('para-entity').style.display = levelKey === 'parachute' ? 'flex' : 'none';
+
+            // Reset equation form and user answers
+            document.getElementById('eq-term-1').value = "";
+            document.getElementById('eq-term-2').value = "";
+            document.getElementById('eq-val-1').value = "";
+            document.getElementById('eq-val-2').value = "";
+            document.getElementById('eq-val-mass').value = "";
+            document.getElementById('eq-val-accel').value = "";
+            telemetryResultant.innerText = "? N";
+
+            // Dynamically rewrite equation symbol option dropdown labels
+            const term1Sel = document.getElementById('eq-term-1');
+            const term2Sel = document.getElementById('eq-term-2');
+            
+            let opt1Thrust, opt1Friction, opt2Thrust, opt2Friction;
+            for (let idx = 0; idx < term1Sel.options.length; idx++) {
+                if (term1Sel.options[idx].value === 'F_thrust') opt1Thrust = term1Sel.options[idx];
+                if (term1Sel.options[idx].value === 'f_friction') opt1Friction = term1Sel.options[idx];
+            }
+            for (let idx = 0; idx < term2Sel.options.length; idx++) {
+                if (term2Sel.options[idx].value === 'F_thrust') opt2Thrust = term2Sel.options[idx];
+                if (term2Sel.options[idx].value === 'f_friction') opt2Friction = term2Sel.options[idx];
+            }
+
+            if (levelKey === 'cybercar') {
+                if (opt1Thrust) opt1Thrust.text = "Thrust (F)";
+                if (opt2Thrust) opt2Thrust.text = "Thrust (F)";
+                if (opt1Friction) opt1Friction.text = "Friction (f)";
+                if (opt2Friction) opt2Friction.text = "Friction (f)";
+            } else if (levelKey === 'rocket') {
+                if (opt1Thrust) opt1Thrust.text = "Thrust (T)";
+                if (opt2Thrust) opt2Thrust.text = "Thrust (T)";
+                if (opt1Friction) opt1Friction.text = "Rocket Weight (W)";
+                if (opt2Friction) opt2Friction.text = "Rocket Weight (W)";
+            } else if (levelKey === 'parachute') {
+                if (opt1Thrust) opt1Thrust.text = "Diver Weight (W)";
+                if (opt2Thrust) opt2Thrust.text = "Diver Weight (W)";
+                if (opt1Friction) opt1Friction.text = "Air Resistance (R)";
+                if (opt2Friction) opt2Friction.text = "Air Resistance (R)";
+            }
+
+            // Reset sprite animations/positions
+            resetSprites();
+
+            // Render live loops
+            updateVisualTelemetry();
+            lucide.createIcons();
+
+            feedbackText.innerHTML = `"Switching to ${config.title}. Configure forces, establish the equations of motion, and hit simulate. No cheating!"`;
+        }
+
+        // Adaptive randomisation controller
+        function randomiseActiveLevel() {
+            if (activeLevel === 'cybercar') {
+                randomiseLevel1();
+            } else if (activeLevel === 'rocket') {
+                randomiseLevel2();
+            }
+        }
+
+        // Adaptive reset controller
+        function resetActiveLevel() {
+            if (isSimulating) return;
+
+            if (activeLevel === 'cybercar') {
+                // 1. Randomise friction strictly between 2 and 8
+                const randomFriction = Math.floor(Math.random() * (8 - 2 + 1)) + 2; 
+
+                // 2. Randomise required target acceleration between 1 and 7 m/s²
+                const randomAccel = Math.floor(Math.random() * (7 - 1 + 1)) + 1;
+
+                // 3. Randomise object mass strictly between 1 and 6 kg
+                const randomMass = Math.floor(Math.random() * (6 - 1 + 1)) + 1;
+
+                // Force slider bounds
+                slideResist.min = "2";
+                document.getElementById('resist-min-lbl').innerText = "2 N";
+
+                // Update configuration vars
+                levelConfig.cybercar.vars.resist = randomFriction;
+                levelConfig.cybercar.vars.mass = randomMass;
+                targetAccel = randomAccel;
+
+                // Apply updates to sliders & telemetry view
+                targetValSpan.innerText = targetAccel.toFixed(0);
+                slideResist.value = randomFriction;
+                slideMass.value = randomMass;
+
+                // Sarcastic reset confirmation
+                feedbackText.innerHTML = `🔄 <strong>SCENARIO REBOOTED!</strong> Object returned to start. Random values set: Friction = <strong>${randomFriction} N</strong>, Mass = <strong>${randomMass} kg</strong>, Acceleration Target = <strong>${targetAccel.toFixed(0)} m/s²</strong>. Ready for fresh math.`;
+            } else if (activeLevel === 'rocket') {
+                // 1. Randomise weight strictly between 2 and 8
+                const randomWeight = Math.floor(Math.random() * (8 - 2 + 1)) + 2; 
+
+                // 2. Randomise required target acceleration between 1 and 7 m/s²
+                const randomAccel = Math.floor(Math.random() * (7 - 1 + 1)) + 1;
+
+                // 3. Randomise object mass strictly between 1 and 6 kg
+                const randomMass = Math.floor(Math.random() * (6 - 1 + 1)) + 1;
+
+                // Force slider bounds
+                slideResist.min = "2";
+                document.getElementById('resist-min-lbl').innerText = "2 N";
+
+                // Update configuration vars
+                levelConfig.rocket.vars.resist = randomWeight;
+                levelConfig.rocket.vars.mass = randomMass;
+                targetAccel = randomAccel;
+
+                // Apply updates to sliders & telemetry view
+                targetValSpan.innerText = targetAccel.toFixed(0);
+                slideResist.value = randomWeight;
+                slideMass.value = randomMass;
+
+                // Sarcastic reset confirmation
+                feedbackText.innerHTML = `🔄 <strong>SCENARIO REBOOTED!</strong> Rocket returned to launchpad. Random values set: Rocket Weight = <strong>${randomWeight} N</strong>, Mass = <strong>${randomMass} kg</strong>, Acceleration Target = <strong>${targetAccel.toFixed(0)} m/s²</strong>. Ready for vertical math!`;
+            }
+
+            // Reset positions
+            resetSprites();
+
+            // Render live vectors & values
+            updateVisualTelemetry();
+
+            // Clear equations
+            document.getElementById('eq-term-1').value = "";
+            document.getElementById('eq-term-2').value = "";
+            document.getElementById('eq-val-1').value = "";
+            document.getElementById('eq-val-2').value = "";
+            document.getElementById('eq-val-mass').value = "";
+            document.getElementById('eq-val-accel').value = "";
+            telemetryResultant.innerText = "? N";
+        }
+
+        // Randomise Level 1 Parameters (Anti-Bypass Feature) with only whole numbers [1 to 7 m/s²]
+        function randomiseLevel1() {
+            if (isSimulating) return;
+
+            // 1. Randomise friction to a whole number between 2 and 8
+            const randomFriction = Math.floor(Math.random() * (8 - 2 + 1)) + 2; // 2N to 8N
+            
+            // 2. Randomise required target acceleration to a whole number from 1 to 7 m/s²
+            const randomAccel = Math.floor(Math.random() * (7 - 1 + 1)) + 1; // 1 to 7 m/s²
+
+            // Force slider's physical minimum bound locked strictly to 2N
+            slideResist.min = "2";
+            document.getElementById('resist-min-lbl').innerText = "2 N";
+
+            // Update state configuration
+            levelConfig.cybercar.vars.resist = randomFriction;
+            targetAccel = randomAccel;
+
+            // Apply randomised bounds to UI
+            targetValSpan.innerText = targetAccel.toFixed(0);
+            slideResist.value = randomFriction;
+
+            // Update live vector sizes
+            updateVisualTelemetry();
+
+            // Sarcastic/engaging visual confirmation
+            feedbackText.innerHTML = `🎲 <strong>SCENARIO RANDOMIZED!</strong> Friction is locked at a minimum of 2 N. New Road Friction is <strong>${randomFriction} N</strong>, and Target Acceleration is <strong>${targetAccel.toFixed(0)} m/s²</strong>. Fill in the Equations below.`;
+
+            // Reset student answers
+            document.getElementById('eq-term-1').value = "";
+            document.getElementById('eq-term-2').value = "";
+            document.getElementById('eq-val-1').value = "";
+            document.getElementById('eq-val-2').value = "";
+            document.getElementById('eq-val-mass').value = "";
+            document.getElementById('eq-val-accel').value = "";
+            telemetryResultant.innerText = "? N";
+        }
+
+        // Randomise Level 2 Parameters (Rocket Weight Anti-Bypass) [1 to 7 m/s²]
+        function randomiseLevel2() {
+            if (isSimulating) return;
+
+            // 1. Randomise weight strictly between 2 and 8 (Never zero)
+            const randomWeight = Math.floor(Math.random() * (8 - 2 + 1)) + 2; // 2N to 8N
+            
+            // 2. Randomise required target acceleration strictly to a whole number from 1 to 7 m/s²
+            const randomAccel = Math.floor(Math.random() * (7 - 1 + 1)) + 1; // 1 to 7 m/s²
+
+            // Force slider's physical minimum bound locked strictly to 2N
+            slideResist.min = "2";
+            document.getElementById('resist-min-lbl').innerText = "2 N";
+
+            // Update state configuration
+            levelConfig.rocket.vars.resist = randomWeight;
+            targetAccel = randomAccel;
+
+            // Apply randomized bounds to UI
+            targetValSpan.innerText = targetAccel.toFixed(0);
+            slideResist.value = randomWeight;
+
+            // Update live vector sizes
+            updateVisualTelemetry();
+
+            // Sarcastic visual response
+            feedbackText.innerHTML = `🎲 <strong>SCENARIO RANDOMIZED!</strong> Rocket weight is locked at a minimum of 2 N. New Rocket Weight is <strong>${randomWeight} N</strong>, and Target Acceleration is <strong>${targetAccel.toFixed(0)} m/s²</strong>. Construct the equations below!`;
+
+            // Reset student answers
+            document.getElementById('eq-term-1').value = "";
+            document.getElementById('eq-term-2').value = "";
+            document.getElementById('eq-val-1').value = "";
+            document.getElementById('eq-val-2').value = "";
+            document.getElementById('eq-val-mass').value = "";
+            document.getElementById('eq-val-accel').value = "";
+            telemetryResultant.innerText = "? N";
+        }
+
+        // Reset positions
+        function resetSprites() {
+            const car = document.getElementById('car-entity');
+            const rocket = document.getElementById('rocket-entity');
+            const para = document.getElementById('para-entity');
+
+            car.style.transform = `translateX(0px)`;
+            rocket.style.transform = `translateY(0px)`;
+            para.style.transform = `translateY(0px)`;
+            document.getElementById('rocket-flame').classList.add('hidden');
+            document.getElementById('explosion-ring').classList.add('hidden');
+            document.getElementById('explosion-ring').classList.remove('scale-100');
+            document.getElementById('explosion-ring').classList.add('scale-0');
+        }
+
+        // Realtime Visual feedback of Sliders
+        updateVisualTelemetry = function() {
+            const f = parseFloat(slideForce.value);
+            const r = parseFloat(slideResist.value);
+            let m;
+
+            // Calculate derived mass for Level 3 Parachute landing (m = W / g)
+            if (activeLevel === 'parachute') {
+                m = f / 10.0;
+                massValText.innerText = "10 m/s²"; // Constant gravity strength
+                telemetryMass.innerText = `${m.toFixed(1)} kg`;
+            } else {
+                m = parseFloat(slideMass.value);
+                massValText.innerText = `${m} kg`;
+                telemetryMass.innerText = `${m.toFixed(1)} kg`;
+            }
+
+            // Suffix adjustment
+            forceValText.innerText = `${f} N`;
+            resistValText.innerText = `${r} N`;
+
+            telemetryApplied.innerText = `${f.toFixed(1)} N`;
+            telemetryOpposing.innerText = `${r.toFixed(1)} N`;
+
+            // Dynamically scale SVG vector arrow lengths relative to value
+            const maxVal = 60;
+            const minPx = 15;
+            const maxPx = 90;
+
+            const calcArrowPx = (val) => {
+                if (val === 0) return 0;
+                return Math.round(minPx + ((val / maxVal) * (maxPx - minPx)));
+            };
+
+            const rightArrowPx = calcArrowPx(f);
+            const leftArrowPx = calcArrowPx(r);
+
+            if (activeLevel === 'cybercar') {
+                document.getElementById('right-vector-arrow').style.width = `${rightArrowPx}px`;
+                document.getElementById('right-vector-lbl').innerText = `${f}N`;
+                
+                document.getElementById('left-vector-arrow').style.width = `${leftArrowPx}px`;
+                document.getElementById('left-vector-lbl').innerText = `${r}N`;
+            } else if (activeLevel === 'rocket') {
+                document.getElementById('top-vector-arrow').style.height = `${rightArrowPx}px`;
+                document.getElementById('top-vector-lbl').innerText = `${f}N`;
+                
+                document.getElementById('bottom-vector-arrow').style.height = `${leftArrowPx}px`;
+                document.getElementById('bottom-vector-lbl').innerText = `${r}N`;
+            } else if (activeLevel === 'parachute') {
+                document.getElementById('para-top-arrow').style.height = `${leftArrowPx}px`; // Opposing air resistance is top vector
+                document.getElementById('para-top-lbl').innerText = `${r}N`;
+                
+                document.getElementById('para-bottom-arrow').style.height = `${rightArrowPx}px`; // Downward weight is bottom vector
+                document.getElementById('para-bottom-lbl').innerText = `${f}N`;
+            }
+        }
+
+        // Add Input Event Listeners with a standard loop to prevent NodeList prototype issues
+        const inputSliders = [slideForce, slideResist, slideMass];
+        for (let i = 0; i < inputSliders.length; i++) {
+            if (inputSliders[i]) {
+                inputSliders[i].addEventListener('input', updateVisualTelemetry);
+            }
+        }
+
+        // Cheat help for students
+        function autoPopulateHelp() {
+            // Populate symbol dropdowns
+            document.getElementById('eq-term-1').value = "F_thrust";
+            document.getElementById('eq-term-2').value = "f_friction";
+
+            // Extract slider values
+            const f = parseFloat(slideForce.value);
+            const r = parseFloat(slideResist.value);
+            let m;
+            if (activeLevel === 'parachute') {
+                m = f / 10.0;
+            } else {
+                m = parseFloat(slideMass.value);
+            }
+
+            const netF = f - r;
+            const accel = netF / m;
+
+            // Populate numerical values in Equation 2 textboxes
+            document.getElementById('eq-val-1').value = f;
+            document.getElementById('eq-val-2').value = r;
+            document.getElementById('eq-val-mass').value = m.toFixed(1);
+            document.getElementById('eq-val-accel').value = Number.isInteger(accel) ? accel.toFixed(0) : accel.toFixed(1);
+            
+            if (activeLevel === 'cybercar') {
+                feedbackText.innerHTML = `"I got you! Left side holds the Forward Thrust (F_thrust) vector. Right side handles Opposing Friction (f). Formula: F_thrust - f = m * a."`;
+            } else if (activeLevel === 'rocket') {
+                feedbackText.innerHTML = `"I got you! Left side holds the Forward Thrust (T) vector. Right side handles Opposing Rocket Weight (W). Formula: T - W = m * a."`;
+            } else if (activeLevel === 'parachute') {
+                feedbackText.innerHTML = `"I got you! Left side holds the Forward Diver Weight (W) vector. Right side handles Opposing Air Resistance (R). Formula: W - R = m * a."`;
+            }
+        }
+
+        // Trigger full page viewport red flash on validation error
+        function triggerCanvasRedFlash() {
+            const flashOverlay = document.getElementById('full-page-flash');
+            if (flashOverlay) {
+                // Remove previous animation state
+                flashOverlay.classList.remove('animate-full-flash');
+                // Force browser layout reflow to register the animation removal
+                void flashOverlay.offsetWidth;
+                // Add the animation class back
+                flashOverlay.classList.add('animate-full-flash');
+            }
+        }
+
+        // Test Equation Logic (Main Engine Check)
+        function testEquations() {
+            if (isSimulating) return;
+
+            // Symbolic Inputs
+            const term1 = document.getElementById('eq-term-1').value;
+            const term2 = document.getElementById('eq-term-2').value;
+
+            // Numerical Inputs
+            const val1 = parseFloat(document.getElementById('eq-val-1').value);
+            const val2 = parseFloat(document.getElementById('eq-val-2').value);
+            const valMass = parseFloat(document.getElementById('eq-val-mass').value);
+            const valAccel = parseFloat(document.getElementById('eq-val-accel').value);
+
+            // Step 1: Check algebraic logic correctness
+            if (!term1 || !term2) {
+                triggerCanvasRedFlash();
+                feedbackText.innerHTML = `⚠️ <strong>INCOMPLETE SYMBOLS!</strong> You must choose variables for Equation 1 first. What is pulling? What is resisting?`;
+                return;
+            }
+
+            if (term1 !== 'F_thrust' || term2 !== 'f_friction') {
+                triggerCanvasRedFlash();
+                feedbackText.innerHTML = `❌ <strong>SYMBOL MALFUNCTION!</strong> Remember: Net Force must always subtract the <em>Opposing</em> force from the <em>Forward/Driving</em> force. Try: <code>Thrust/Weight</code> minus <code>Friction/Air Resistance</code>.`;
+                return;
+            }
+
+            // Step 2: Validate Numerical Inputs Presence
+            if (isNaN(val1) || isNaN(val2) || isNaN(valMass) || isNaN(valAccel)) {
+                triggerCanvasRedFlash();
+                feedbackText.innerHTML = `⚠️ <strong>INCOMPLETE NUMERICAL VALUES!</strong> You must fill out all textboxes in Equation 2 below with the variables matching your sliders.`;
+                return;
+            }
+
+            // Step 3: Validate Math Alignment with active sliders
+            const f = parseFloat(slideForce.value);
+            const r = parseFloat(slideResist.value);
+            let m;
+            if (activeLevel === 'parachute') {
+                m = f / 10.0;
+            } else {
+                m = parseFloat(slideMass.value);
+            }
+
+            const correctNet = f - r;
+            const correctAccel = correctNet / m;
+
+            if (val1 !== f) {
+                triggerCanvasRedFlash();
+                feedbackText.innerHTML = `❌ <strong>APPLIED FORCE MISMATCH!</strong> Your typed value for Equation 2 (Applied: ${val1}N) does not match the engine thrust slider value (${f}N).`;
+                return;
+            }
+
+            if (val2 !== r) {
+                triggerCanvasRedFlash();
+                feedbackText.innerHTML = `❌ <strong>OPPOSING FORCE MISMATCH!</strong> Your typed value for Equation 2 (Opposing: ${val2}N) does not match the resistance slider value (${r}N).`;
+                return;
+            }
+
+            if (activeLevel === 'parachute') {
+                if (Math.abs(valMass - m) > 0.05) {
+                    triggerCanvasRedFlash();
+                    feedbackText.innerHTML = `❌ <strong>MASS VALUE MISMATCH!</strong> Your typed mass value (${valMass}kg) does not match the calculated mass ($W/g = ${f}/10 = ${m.toFixed(1)}kg$).`;
+                    return;
+                }
+            } else {
+                if (valMass !== m) {
+                    triggerCanvasRedFlash();
+                    feedbackText.innerHTML = `❌ <strong>MASS VALUE MISMATCH!</strong> Your typed mass value (${valMass}kg) does not match the mass slider value (${m}kg).`;
+                    return;
+                }
+            }
+
+            // Verify the student's mathematical result logic
+            if (val1 - val2 !== correctNet) {
+                triggerCanvasRedFlash();
+                feedbackText.innerHTML = `❌ <strong>MATH ERROR!</strong> Your subtraction is incorrect: ${val1}N - ${val2}N should equal <strong>${correctNet}N</strong> (Resultant Force).`;
+                return;
+            }
+
+            // Verify acceleration math logic
+            if (Math.abs(valAccel - correctAccel) > 0.1) {
+                triggerCanvasRedFlash();
+                feedbackText.innerHTML = `❌ <strong>ACCELERATION PARADOX!</strong> Your a = F_net / m calculation does not match. Let's do the algebra: ${correctNet} N / ${m.toFixed(1)} kg = <strong>${Number.isInteger(correctAccel) ? correctAccel.toFixed(0) : correctAccel.toFixed(2)} m/s²</strong>. Double check your calculator.`;
+                return;
+            }
+
+            // If calculations are correct, reveal Resultant Force on telemetry and animate!
+            telemetryResultant.innerText = `${correctNet.toFixed(1)} N`;
+            runAnimation(correctAccel);
+        }
+
+        // Dynamic Vector Motion Simulation
+        function runAnimation(accel) {
+            isSimulating = true;
+            feedbackText.innerHTML = `🚀 <strong>EQUATIONS APPROVED!</strong> Initiating engine sequence. Monitoring telemetry metrics...`;
+
+            const duration = 2000; // ms
+            const start = performance.now();
+
+            const entity = activeLevel === 'cybercar' ? document.getElementById('car-entity') 
+                         : activeLevel === 'rocket' ? document.getElementById('rocket-entity')
+                         : document.getElementById('para-entity');
+
+            if (activeLevel === 'rocket') {
+                document.getElementById('rocket-flame').classList.remove('hidden');
+            }
+
+            function animate(now) {
+                const elapsed = now - start;
+                const t = Math.min(elapsed / duration, 1);
+
+                // Simple Euler-derived displacement: s = 1/2 * a * t^2
+                // Sizing factor for scale visual
+                const tSec = (elapsed / 1000) * 2; // Accelerated timescale
+                const displacement = 0.5 * accel * tSec * tSec;
+
+                if (activeLevel === 'cybercar') {
+                    // Drive to right
+                    const maxMove = 250;
+                    const visualMove = Math.min(displacement * 20, maxMove);
+                    entity.style.transform = `translateX(${visualMove}px)`;
+
+                    // Crash check if acceleration exceeded target spec
+                    if (visualMove >= maxMove && accel > targetAccel) {
+                        triggerCrash(entity);
+                        return;
+                    }
+                } else if (activeLevel === 'rocket') {
+                    // Fly upwards
+                    const maxMove = -180;
+                    const visualMove = Math.max(-displacement * 15, maxMove);
+                    entity.style.transform = `translateY(${visualMove}px)`;
+
+                    if (visualMove <= maxMove && accel > targetAccel) {
+                        triggerCrash(entity);
+                        return;
+                    }
+                } else if (activeLevel === 'parachute') {
+                    // Descent dynamics
+                    const maxMove = 140;
+                    const visualMove = Math.min(displacement * 12, maxMove);
+                    entity.style.transform = `translateY(${visualMove}px)`;
+                }
+
+                if (t < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    concludeSimulation(accel);
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // Visual crash event for overshooting values
+        function triggerCrash(entity) {
+            const explosion = document.getElementById('explosion-ring');
+            explosion.classList.remove('hidden');
+            explosion.classList.remove('scale-0');
+            explosion.classList.add('scale-100');
+
+            const f = parseFloat(slideForce.value);
+            let m;
+            if (activeLevel === 'parachute') {
+                m = f / 10.0;
+            } else {
+                m = parseFloat(slideMass.value);
+            }
+
+            feedbackText.innerHTML = `💥 <strong>ENGINE OVERLOAD / CRASHED!</strong> Your actual acceleration was <strong>${(parseFloat(slideForce.value - slideResist.value) / m).toFixed(1)} m/s²</strong>, overshooting the structural target limit of <strong>${Number.isInteger(targetAccel) ? targetAccel.toFixed(0) : targetAccel.toFixed(1)} m/s²</strong>. Dial down applied force or increase vehicle mass!`;
+            
+            setTimeout(() => {
+                resetSprites();
+                isSimulating = false;
+            }, 3500);
+        }
+
+        // Successful completion handling
+        function concludeSimulation(accel) {
+            isSimulating = false;
+            
+            if (Math.abs(accel - targetAccel) < 0.05) {
+                if (activeLevel === 'parachute') {
+                    feedbackText.innerHTML = `🏆 <strong>PERFECT TERMINAL VELOCITY MATCH!</strong> Excellent. Weight equals air resistance (25N = 25N). F_net = 0 resulting in terminal constant velocity (a = 0 m/s²). You hit the landing pad flawlessly!`;
+                } else {
+                    feedbackText.innerHTML = `🏆 <strong>MISSION SUCCESS!</strong> Your calculations are flawless. The vehicle achieved exactly the target acceleration of <strong>${targetAccel.toFixed(0)} m/s²</strong> using an balanced equation of motion. You are officially smarter than most textbooks.`;
+                }
+            } else {
+                feedbackText.innerHTML = `⚠️ <strong>MISSION ABORTED (OFF-TARGET).</strong> Your equation was calculated correctly, but the resulting acceleration of <strong>${Number.isInteger(accel) ? accel.toFixed(0) : accel.toFixed(1)} m/s²</strong> did not hit the target requirements of <strong>${Number.isInteger(targetAccel) ? targetAccel.toFixed(0) : targetAccel.toFixed(1)} m/s²</strong>. Adjust your sliders and recalculate!`;
+            }
+        }
+
+        // Info Modals Handling
+        function showTip(key) {
+            const modal = document.getElementById('tip-modal');
+            const title = document.getElementById('modal-title');
+            const desc = document.getElementById('modal-desc');
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            if (key === 'tip-fnet') {
+                title.innerText = "What is Resultant Force (F_net)?";
+                desc.innerHTML = `In physics, Newton's second law is written as F = ma, where F is <strong>not</strong> any random individual force. It is the vector sum of all forces acting on an object. <br/><br/>If there are opposite forces (like friction or air drag), they subtract from each other: <br/><br/>F_net = F_push - f_friction`;
+            } else if (key === 'tip-t') {
+                title.innerText = "The Terminal Velocity Condition";
+                desc.innerHTML = `When falling through air, a parachutist accelerates downward until the upward air resistance force grows to exactly match their downward weight force.<br/><br/>At that moment, the forces are balanced:<br/><br/>F_net = W - R = 0<br/><br/>Since F_net = 0, the acceleration is a = 0 and the velocity remains completely constant.`;
+            }
+        }
+
+        // closeModal helper
+        function closeModal() {
+            const modal = document.getElementById('tip-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Run setup initialization
+        switchLevel('cybercar');
+    </script>
+</body>
+</html>
