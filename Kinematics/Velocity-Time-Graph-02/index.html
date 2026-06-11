@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kinematics: Velocity-Time Graph Lab</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <div class="badge">Syllabus 6091</div>
+    <h1>Kinematics: Velocity-Time Graph</h1>
+    <p>Calculate acceleration as the gradient and displacement as the area under the graph.</p>
+  </header>
+
+  <main>
+    <!-- Left Column: Graph Visualizer -->
+    <div class="card graph-card">
+      <div class="graph-header">
+        <div class="graph-title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-cyan)"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          Interactive Graph
+        </div>
+        <div class="mode-selector">
+          <button id="explore-btn" class="mode-btn active" onclick="setMode('explore')">Explore</button>
+          <button id="test-btn" class="mode-btn" onclick="setMode('test')">Test Mode</button>
+        </div>
+      </div>
+
+      <div class="graph-container">
+        <canvas id="vt-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Right Column: Control & Question Panels -->
+    <div class="card controls-card">
+      <!-- Explore Panel -->
+      <div id="explore-panel">
+        <div class="panel-title">
+          <span>Graph Parameters</span>
+          <button class="icon-btn" onclick="resetSliders()" title="Reset to Defaults" style="width: auto; height: auto; padding: 0.3rem 0.6rem; font-size: 0.85rem;">Reset</button>
+        </div>
+
+        <!-- Segment 1 Sliders -->
+        <div class="segment-section" style="margin-bottom: 1.25rem;">
+          <div class="segment-title">Segment 1 (0 to t₁)</div>
+          
+          <div class="slider-group">
+            <div class="slider-info">
+              <span>Initial Velocity (v₀)</span>
+              <span class="value" id="val-v0">0.0 m/s</span>
+            </div>
+            <input type="range" id="slide-v0" class="custom-slider" min="0" max="20" step="0.5" value="0">
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-info">
+              <span>Mid Velocity (v₁)</span>
+              <span class="value" id="val-v1">10.0 m/s</span>
+            </div>
+            <input type="range" id="slide-v1" class="custom-slider" min="0" max="20" step="0.5" value="10">
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-info">
+              <span>Mid Time (t₁)</span>
+              <span class="value" id="val-t1">8 s</span>
+            </div>
+            <input type="range" id="slide-t1" class="custom-slider" min="1" max="19" step="1" value="8">
+          </div>
+
+          <div class="explore-results">
+            <div class="result-box">
+              <div class="result-label">Acceleration a₁</div>
+              <div class="result-val" id="exp-a1">1.25 m/s²</div>
+            </div>
+            <div class="result-box">
+              <div class="result-label">Displacement s₁</div>
+              <div class="result-val" id="exp-s1">40.0 m</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Segment 2 Sliders -->
+        <div class="segment-section seg-2">
+          <div class="segment-title seg-2">Segment 2 (t₁ to t₂)</div>
+
+          <div class="slider-group">
+            <div class="slider-info">
+              <span>Final Velocity (v₂)</span>
+              <span class="value" id="val-v2">5.0 m/s</span>
+            </div>
+            <input type="range" id="slide-v2" class="custom-slider" min="0" max="20" step="0.5" value="5">
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-info">
+              <span>End Time (t₂)</span>
+              <span class="value" id="val-t2">16 s</span>
+            </div>
+            <input type="range" id="slide-t2" class="custom-slider" min="1" max="20" step="1" value="16">
+          </div>
+
+          <div class="explore-results">
+            <div class="result-box">
+              <div class="result-label" style="color: var(--accent-purple);">Acceleration a₂</div>
+              <div class="result-val" id="exp-a2">-0.63 m/s²</div>
+            </div>
+            <div class="result-box">
+              <div class="result-label" style="color: var(--accent-purple);">Displacement s₂</div>
+              <div class="result-val" id="exp-s2">60.0 m</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Test Panel -->
+      <div id="test-panel" style="display: none;">
+        <div class="panel-title">
+          <span>Quiz Questions</span>
+          <button class="icon-btn" onclick="generateNewQuiz()" title="Randomize Values" style="width: auto; height: auto; padding: 0.3rem 0.6rem; font-size: 0.85rem;">New Quiz</button>
+        </div>
+
+        <!-- Quiz Segment 1 -->
+        <div class="segment-section" style="margin-bottom: 1.25rem;">
+          <div class="segment-title">Segment 1 (0 to t₁)</div>
+          <div class="question-group" id="q-group-1">
+            <!-- Dynamic questions go here -->
+          </div>
+        </div>
+
+        <!-- Quiz Segment 2 -->
+        <div class="segment-section seg-2">
+          <div class="segment-title seg-2">Segment 2 (t₁ to t₂)</div>
+          <div class="question-group" id="q-group-2">
+            <!-- Dynamic questions go here -->
+          </div>
+        </div>
+
+        <div class="quiz-feedback" id="quiz-feedback-box"></div>
+        
+        <button class="action-btn" onclick="checkAnswers()" style="margin-top: 1rem;">Submit Answers</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal for working -->
+  <div id="working-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-title">Working Steps</div>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-body">
+        <!-- Steps inserted dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
