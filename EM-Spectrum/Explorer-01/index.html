@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electromagnetic Spectrum Explorer</title>
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="glow-bg"></div>
+    
+    <header>
+        <div class="logo">
+            <span class="logo-icon">✨</span>
+            <h1>Electromagnetic Spectrum Explorer</h1>
+        </div>
+        <nav class="navigation">
+            <button class="nav-btn active" data-tab="map-tab">Spectrum Map</button>
+            <button class="nav-btn" data-tab="match-tab">Matching Quiz</button>
+            <button class="nav-btn" data-tab="order-tab">Ordering Quiz</button>
+        </nav>
+    </header>
+
+    <main class="content-area">
+        <!-- SPECTRUM MAP VIEW -->
+        <section id="map-tab" class="tab-content active">
+            <div class="card map-container">
+                <div class="interactive-wave-container">
+                    <svg id="wave-svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                        <path id="wave-path" d="" fill="none" stroke="url(#wave-gradient)" stroke-width="4"></path>
+                        <defs>
+                            <linearGradient id="wave-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#ff4b4b" />
+                                <stop offset="16%" stop-color="#ff7f00" />
+                                <stop offset="33%" stop-color="#ffff00" />
+                                <stop offset="50%" stop-color="#00ff00" />
+                                <stop offset="66%" stop-color="#0000ff" />
+                                <stop offset="83%" stop-color="#4b0082" />
+                                <stop offset="100%" stop-color="#9400d3" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="wave-labels">
+                        <span>Long Wavelength<br>Low Frequency</span>
+                        <span>Short Wavelength<br>High Frequency</span>
+                    </div>
+                </div>
+
+                <div class="spectrum-bar" id="spectrum-bar">
+                    <!-- Loaded dynamically via JS -->
+                </div>
+            </div>
+
+            <div class="details-grid">
+                <div class="card details-card" id="details-card">
+                    <!-- Loaded dynamically via JS -->
+                    <div class="details-placeholder">
+                        <span class="placeholder-icon">💡</span>
+                        <h3>Explore the Spectrum</h3>
+                        <p>Click on any region above to reveal details about its wavelength, frequency, uses, and physical properties.</p>
+                    </div>
+                </div>
+                
+                <div class="card comparison-card">
+                    <h3>Scale Comparison</h3>
+                    <div class="scale-visual" id="scale-visual">
+                        <div class="scale-icon">📡</div>
+                        <div class="scale-text">
+                            <h4 id="scale-title">Relative Size</h4>
+                            <p id="scale-desc">Select a region to see how its wavelength compares to objects in the physical world.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MATCHING QUIZ VIEW -->
+        <section id="match-tab" class="tab-content">
+            <div class="quiz-intro">
+                <h2>Region Matching Challenge</h2>
+                <p>Drag the application or typical use from the left panel and drop it into its correct electromagnetic spectrum region on the right.</p>
+                <div class="quiz-score-bar">
+                    <div class="score">Score: <span id="match-score">0</span> / 21</div>
+                    <button class="reset-btn" id="reset-match-btn">Reset Quiz</button>
+                </div>
+            </div>
+
+            <div class="match-game-layout">
+                <div class="card match-items-pool" id="match-items-pool">
+                    <h3>Typical Uses</h3>
+                    <div class="items-list" id="drag-items-container">
+                        <!-- Loaded dynamically via JS -->
+                    </div>
+                </div>
+
+                <div class="match-targets-grid" id="drop-targets-container">
+                    <!-- Loaded dynamically via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ORDERING QUIZ VIEW -->
+        <section id="order-tab" class="tab-content">
+            <div class="quiz-intro">
+                <h2>Spectrum Alignment Challenge</h2>
+                <p>Drag and reorder the electromagnetic spectrum regions into the correct sequence based on the sorting criteria.</p>
+                
+                <div class="order-controls">
+                    <div class="criteria-selector">
+                        <label for="order-criteria">Sort Criteria:</label>
+                        <select id="order-criteria">
+                            <option value="wavelength-desc">Wavelength: Longest to Shortest</option>
+                            <option value="wavelength-asc">Wavelength: Shortest to Longest</option>
+                            <option value="frequency-asc">Frequency: Lowest to Highest</option>
+                            <option value="frequency-desc">Frequency: Highest to Lowest</option>
+                        </select>
+                    </div>
+                    
+                    <div class="order-score-bar">
+                        <button class="reset-btn" id="check-order-btn">Validate Order</button>
+                        <button class="reset-btn secondary" id="reset-order-btn">Reset Quiz</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card order-container">
+                <div class="order-list" id="order-list-container">
+                    <!-- Loaded dynamically via JS -->
+                </div>
+                <div id="order-feedback" class="feedback-banner"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Interactive Electromagnetic Spectrum Explorer &bull; Designed for Students</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
