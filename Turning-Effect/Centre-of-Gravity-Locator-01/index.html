@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Turning Effect of Forces: Centre of Gravity Locator</title>
+  <meta name="description" content="Interactive learning app for O-Level physics students to master the concept of Centre of Gravity.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div id="app-shell">
+    <header>
+      <h1>Centre of Gravity Locator</h1>
+      <p>Turning Effect of Forces</p>
+    </header>
+
+    <nav aria-label="Main Navigation">
+      <button class="nav-tab active" id="tab-1" onclick="switchSection(1)">
+        <span>💡</span> Concept Intro
+      </button>
+      <button class="nav-tab" id="tab-2" onclick="switchSection(2)">
+        <span>📐</span> Plumb-Line Lab
+      </button>
+      <button class="nav-tab" id="tab-3" onclick="switchSection(3)">
+        <span>🎯</span> CG Challenge
+      </button>
+      <button class="nav-tab" id="tab-4" onclick="switchSection(4)">
+        <span>🃏</span> Flashcards
+      </button>
+      <button class="nav-tab" id="tab-5" onclick="switchSection(5)">
+        <span>📝</span> Master Quiz
+      </button>
+    </nav>
+
+    <main>
+      <!-- SECTION 1: Concept Introduction -->
+      <section id="section-1" class="section-panel active">
+        <div class="split-layout">
+          <div class="intro-panel">
+            <div class="card">
+              <h2>Concept Introduction</h2>
+              <div id="intro-explanation-text" style="min-height: 80px; margin-bottom: 1rem; color: var(--text-secondary);">
+                <!-- Dynamically populated -->
+              </div>
+              <div class="intro-controls">
+                <button class="step-indicator active" onclick="setIntroPart('A')">Part A: What is CG?</button>
+                <button class="step-indicator" onclick="setIntroPart('B')">Part B: Why it Matters</button>
+              </div>
+            </div>
+            
+            <div class="card" id="part-a-details">
+              <h2>Key takeaways</h2>
+              <ul style="padding-left: 1.25rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 0.5rem;">
+                <li>Every tiny particle in an object experiences a force of gravity pulling it down.</li>
+                <li>Instead of drawing hundreds of small forces, we can simplify: the entire weight acts from **one single point** called the **centre of gravity (CG)**.</li>
+                <li>The CG is represented with a dot and the letter <strong>G</strong>.</li>
+              </ul>
+            </div>
+
+            <div class="card" id="part-b-details" style="display: none;">
+              <h2>Key takeaways</h2>
+              <ul style="padding-left: 1.25rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 0.5rem;">
+                <li>If supported **exactly** at the CG, the object balances because the gravitational forces on either side balance each other out (net moment is zero).</li>
+                <li>If supported **off** its CG, gravity creates a turning effect (moment) around the pivot, causing it to tilt and fall.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="intro-anim-container">
+            <svg id="intro-svg" width="100%" height="100%" viewBox="0 0 400 350"></svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: Plumb-Line Simulator -->
+      <section id="section-2" class="section-panel">
+        <div class="split-layout">
+          <div class="card instructions-card">
+            <h2>Plumb-Line Simulator</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.95rem;">
+              Find the Centre of Gravity experimentally using a plumb-line. Choose a shape below:
+            </p>
+            
+            <div class="shape-selector-group">
+              <button class="shape-btn active" onclick="selectSimShape('irregular1')">Blob A</button>
+              <button class="shape-btn" onclick="selectSimShape('irregular2')">Blob B</button>
+              <button class="shape-btn" onclick="selectSimShape('irregular3')">Blob C</button>
+              <button class="shape-btn" onclick="selectSimShape('rectangle')">Rectangle</button>
+              <button class="shape-btn" onclick="selectSimShape('triangle')">Triangle</button>
+            </div>
+
+            <div class="instruction-step active" id="sim-step-1">
+              <div class="step-num">1</div>
+              <div>
+                <strong>Suspend &amp; Draw</strong>
+                <p style="font-size: 0.9rem; color: var(--text-secondary);">Click/tap on the shape near the vertical line to trace the plumb line. Try to draw it as straight and vertically aligned as possible.</p>
+              </div>
+            </div>
+
+            <div class="instruction-step" id="sim-step-2">
+              <div class="step-num">2</div>
+              <div>
+                <strong>Re-suspend &amp; Draw Additional Lines</strong>
+                <p style="font-size: 0.9rem; color: var(--text-secondary);">Tap the "Change Pivot" button to hang the shape from a new point, then click along the new plumb line to draw more lines (up to 4).</p>
+              </div>
+            </div>
+
+            <div class="instruction-step" id="sim-step-3">
+              <div class="step-num">3</div>
+              <div>
+                <strong>Find the Intersection</strong>
+                <p style="font-size: 0.9rem; color: var(--text-secondary);">Where the lines cross is the exact Centre of Gravity (G). Observe that all lines intersect at the exact same point!</p>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+              <button class="btn" id="change-pivot-btn" onclick="changeSimPivot()" style="display: none;">Change Pivot</button>
+              <button class="btn btn-secondary" onclick="resetSim()">Reset Shape</button>
+            </div>
+          </div>
+
+          <div class="canvas-panel">
+            <svg id="sim-svg" class="plumb-svg" viewBox="0 0 500 450"></svg>
+            <div id="sim-toast" class="toast">Trace closer to the plumb line!</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: CG Marker Challenge -->
+      <section id="section-3" class="section-panel">
+        <div class="challenge-grid">
+          <div class="canvas-panel" style="aspect-ratio: 1; max-height: 450px;">
+            <svg id="challenge-svg" class="plumb-svg" viewBox="0 0 400 400" style="cursor: crosshair;"></svg>
+          </div>
+
+          <div class="challenge-feedback-panel">
+            <div class="card" style="flex: 1; display: flex; flex-direction: column; justify-content: center; margin-bottom: 0;">
+              <h2>CG Challenge</h2>
+              <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem; text-align: center;">
+                Click where you think the Centre of Gravity is located!
+              </p>
+              
+              <div id="challenge-feedback-area" style="display: none;">
+                <div id="challenge-status" class="feedback-text">Spot on!</div>
+                <div class="feedback-score" id="challenge-distance">0.0%</div>
+                <p id="challenge-desc" style="color: var(--text-secondary); font-size: 0.9rem; text-align: center; margin-bottom: 1.5rem;">
+                  Distance from true CG.
+                </p>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <button class="btn" id="challenge-next-btn" onclick="nextChallengeShape()" style="display: none;">Next Shape</button>
+                <div id="challenge-progress-lbl" style="text-align: center; font-size: 0.8rem; color: var(--text-muted); font-family: 'Orbitron', sans-serif;">
+                  Shape 1 of 6
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: Flashcard Revision Mode -->
+      <section id="section-4" class="section-panel">
+        <div class="flashcards-container">
+          <div class="flashcard-wrapper" onclick="flipFlashcard()">
+            <div class="flashcard" id="flashcard-element">
+              <div class="card-face card-front">
+                <div class="card-index" id="flashcard-index">Card 1 / 10</div>
+                <div class="card-title">Centre of Gravity</div>
+                <div class="card-content" id="flashcard-front-text">Question front content goes here?</div>
+              </div>
+              <div class="card-face card-back">
+                <div class="card-index">Answer</div>
+                <div class="card-content" id="flashcard-back-text">Answer back content goes here.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-controls">
+            <button class="btn btn-secondary" onclick="prevFlashcard()">Previous</button>
+            <button class="btn btn-secondary" onclick="shuffleFlashcards()">Shuffle 🔀</button>
+            <button class="btn btn-secondary" onclick="nextFlashcard()">Next</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5: Randomized Quiz -->
+      <section id="section-5" class="section-panel">
+        <div class="quiz-container">
+          <div class="card">
+            <div class="quiz-header">
+              <span id="quiz-question-number" style="font-family: 'Orbitron', sans-serif; font-weight: bold; color: var(--neon-cyan);">Question 1/30</span>
+              <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="quiz-progress-bar"></div>
+              </div>
+              <span class="quiz-score-badge" id="quiz-score-display">Score: 0</span>
+            </div>
+
+            <!-- Quiz Play State -->
+            <div id="quiz-play-state">
+              <div class="question-text" id="quiz-question-text">
+                Why does this uniform block hang straight?
+              </div>
+
+              <div class="question-visual" id="quiz-visual-container">
+                <svg id="quiz-svg" width="100%" height="100%" viewBox="0 0 350 200"></svg>
+              </div>
+
+              <!-- MCQ Mode options -->
+              <div class="mcq-options" id="quiz-options-container">
+                <!-- Buttons dynamically loaded -->
+              </div>
+
+              <!-- Open-Ended text input (Type C) -->
+              <div id="quiz-structured-container" style="display: none;">
+                <textarea class="structured-textarea" id="quiz-structured-input" placeholder="Type your explanation here..."></textarea>
+                <button class="btn" onclick="submitStructuredAnswer()">Submit Explanation</button>
+              </div>
+
+              <!-- Explanation and self assessment -->
+              <div class="quiz-explanation" id="quiz-explanation-box" style="display: none;">
+                <div class="quiz-explanation-title" id="explanation-title">Explanation</div>
+                <div id="quiz-explanation-text">Because the CG is directly under the pivot.</div>
+              </div>
+
+              <div class="self-assess-container" id="quiz-self-assess-box" style="display: none;">
+                <div class="self-assess-title">Model Answer Self-Assessment</div>
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+                  Compare your answer and check if you included these key points:
+                </p>
+                <div id="self-assess-checklist">
+                  <!-- Checkboxes dynamic -->
+                </div>
+              </div>
+
+              <div class="quiz-actions">
+                <button class="btn" id="quiz-next-btn" onclick="nextQuizQuestion()" style="display: none;">Next Question</button>
+              </div>
+            </div>
+
+            <!-- Quiz Results State -->
+            <div id="quiz-results-state" class="results-panel" style="display: none;">
+              <h2>Quiz Completed!</h2>
+              <div class="score-display" id="quiz-final-score">18 / 20</div>
+              <div class="grade-badge" id="quiz-grade-badge">Excellent</div>
+              <p id="quiz-grade-desc" style="color: var(--text-secondary); max-width: 500px; margin: 0 auto 2rem;"></p>
+              <button class="btn" onclick="restartQuiz()">Restart Quiz</button>
+            </div>
+
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="confetti-container" id="confetti-holder"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
