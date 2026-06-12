@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liquid Pressure Lab - O-Level Physics</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="An interactive simulator for O-Level Physics students to master Density (ρ = m/V) and Liquid Pressure (P = hρg) concepts through visualization, live builders, and randomized quizzes.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ocean: '#0077B6',
+            aqua: '#00F5D4',
+            amber: '#FFB703',
+            darkbg: '#0D0D1A',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="index.css">
+</head>
+<body class="bg-darkbg text-white min-h-screen flex flex-col pb-24">
+
+  <!-- Header Header -->
+  <header class="w-full py-4 px-6 border-b border-aqua/10 bg-darkbg/80 backdrop-blur-md sticky top-0 z-40 flex flex-col space-y-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-ocean to-aqua flex items-center justify-center text-darkbg shadow-lg shadow-aqua/20">
+          <i class="fa-solid fa-water text-lg"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold font-tech tracking-wider text-aqua uppercase">Liquid Pressure Lab</h1>
+          <p class="text-xs text-gray-400 font-light">O-Level Physics Singapore • g = 10 N/kg</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5">
+        <span class="text-xs font-semibold uppercase tracking-wider text-gray-400">Status:</span>
+        <span class="w-2.5 h-2.5 rounded-full bg-aqua animate-pulse shadow-md shadow-aqua/50"></span>
+        <span class="text-xs font-tech text-aqua font-semibold">ONLINE</span>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs at the Top -->
+    <nav class="w-full border-t border-white/5 pt-2">
+      <div class="max-w-xl mx-auto flex justify-between items-center">
+        <!-- Concept tab link -->
+        <button class="nav-tab-btn flex flex-col items-center space-y-1 text-aqua" data-target="concept">
+          <i class="fa-solid fa-book-open text-base"></i>
+          <span class="text-[9px] font-tech font-bold uppercase tracking-wider">Concept</span>
+        </button>
+
+        <!-- Density tab link -->
+        <button class="nav-tab-btn flex flex-col items-center space-y-1 text-gray-500 hover:text-gray-300" data-target="density">
+          <i class="fa-solid fa-weight-hanging text-base"></i>
+          <span class="text-[9px] font-tech font-bold uppercase tracking-wider">Density</span>
+        </button>
+
+        <!-- Pressure tab link -->
+        <button class="nav-tab-btn flex flex-col items-center space-y-1 text-gray-500 hover:text-gray-300" data-target="pressure">
+          <i class="fa-solid fa-gauge-high text-base"></i>
+          <span class="text-[9px] font-tech font-bold uppercase tracking-wider">Pressure</span>
+        </button>
+
+        <!-- Flashcards tab link (placed before Quiz) -->
+        <button class="nav-tab-btn flex flex-col items-center space-y-1 text-gray-500 hover:text-gray-300" data-target="flashcards">
+          <i class="fa-solid fa-copy text-base"></i>
+          <span class="text-[9px] font-tech font-bold uppercase tracking-wider">Flashcards</span>
+        </button>
+
+        <!-- Quiz tab link -->
+        <button class="nav-tab-btn flex flex-col items-center space-y-1 text-gray-500 hover:text-gray-300" data-target="quiz">
+          <i class="fa-solid fa-graduation-cap text-base"></i>
+          <span class="text-[9px] font-tech font-bold uppercase tracking-wider">Quiz</span>
+        </button>
+
+        <!-- Score tab link -->
+        <button class="nav-tab-btn flex flex-col items-center space-y-1 text-gray-500 hover:text-gray-300" data-target="score">
+          <i class="fa-solid fa-chart-simple text-base"></i>
+          <span class="text-[9px] font-tech font-bold uppercase tracking-wider">Score</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main View Container -->
+  <main class="flex-grow max-w-4xl w-full mx-auto p-4 md:p-6">
+    
+    <!-- SECTION 1: CONCEPT INTRODUCTION -->
+    <section id="section-concept" class="tab-content hidden space-y-8">
+      <!-- Title & Intro -->
+      <div class="text-center md:text-left space-y-2">
+        <span class="text-xs font-bold tracking-widest text-aqua uppercase font-tech">01 // Foundation</span>
+        <h2 class="text-3xl font-extrabold font-tech tracking-tight">Core Formulas</h2>
+      </div>
+
+      <!-- Side-by-Side Formula Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Density Card -->
+        <div class="glass-panel p-6 flex flex-col justify-between space-y-4">
+          <div class="flex justify-between items-start">
+            <span class="text-xs font-tech tracking-wider text-amber font-semibold uppercase">DENSITY FORMULA</span>
+            <i class="fa-solid fa-scale-balanced text-amber/60 text-xl"></i>
+          </div>
+          <div class="text-4xl font-extrabold font-tech tracking-wider text-amber text-center py-6 border-y border-white/5">
+            &rho; = m &divide; V
+          </div>
+          <div class="text-xs text-gray-300 space-y-1 bg-black/25 p-3 rounded-lg">
+            <p><strong class="text-amber">&rho;</strong> = density (kg/m³)</p>
+            <p><strong class="text-white">m</strong> = mass (kg)</p>
+            <p><strong class="text-white">V</strong> = volume (m³)</p>
+          </div>
+        </div>
+
+        <!-- Pressure Card -->
+        <div class="glass-panel p-6 flex flex-col justify-between space-y-4">
+          <div class="flex justify-between items-start">
+            <span class="text-xs font-tech tracking-wider text-aqua font-semibold uppercase">LIQUID PRESSURE FORMULA</span>
+            <i class="fa-solid fa-compress text-aqua/60 text-xl"></i>
+          </div>
+          <div class="text-4xl font-extrabold font-tech tracking-wider text-aqua text-center py-6 border-y border-white/5">
+            P = h &rho; g
+          </div>
+          <div class="text-xs text-gray-300 space-y-1 bg-black/25 p-3 rounded-lg">
+            <p><strong class="text-aqua">P</strong> = pressure (Pa)</p>
+            <p><strong class="text-white">h</strong> = depth (m)</p>
+            <p><strong class="text-amber">&rho;</strong> = density (kg/m³)</p>
+            <p><strong class="text-white">g</strong> = gravitational field strength (10 N/kg)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key Insight Panel -->
+      <div class="glass-panel p-6 space-y-4">
+        <h3 class="text-sm font-semibold tracking-wider text-aqua font-tech uppercase">Key Insights</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div id="insight-1" class="flex items-center space-x-3 bg-white/5 border border-white/5 p-4 rounded-xl transition-all duration-500">
+            <div class="w-8 h-8 rounded-full bg-aqua/10 flex items-center justify-center text-aqua">
+              <i class="fa-solid fa-arrow-down-long"></i>
+            </div>
+            <p class="text-sm font-medium">Liquid pressure increases with depth.</p>
+          </div>
+          <div id="insight-2" class="flex items-center space-x-3 bg-white/5 border border-white/5 p-4 rounded-xl transition-all duration-500">
+            <div class="w-8 h-8 rounded-full bg-amber/10 flex items-center justify-center text-amber">
+              <i class="fa-solid fa-shapes"></i>
+            </div>
+            <p class="text-sm font-medium">Liquid pressure does NOT depend on container shape.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual Section: Different Containers, Same Height -->
+      <div class="glass-panel p-6 space-y-6">
+        <div class="flex justify-between items-center">
+          <h3 class="text-sm font-semibold tracking-wider text-aqua font-tech uppercase">Shape Independence Experiment</h3>
+          <span class="text-xs bg-white/10 px-2 py-1 rounded text-gray-300">Height (h) = 5.0m</span>
+        </div>
+        <div class="grid grid-cols-3 gap-4 h-48 relative border-b-2 border-white/20 pt-4">
+          <!-- Container 1: Tall Thin -->
+          <div class="flex flex-col items-center justify-end h-full relative">
+            <div class="w-10 bg-ocean/30 border-x border-t border-ocean h-3/4 rounded-t-sm relative flex items-end">
+              <div class="w-full bg-ocean/50 h-full"></div>
+            </div>
+            <span class="text-[10px] text-gray-400 mt-2 font-tech">Tall & Thin</span>
+            <div class="absolute bottom-12 bg-aqua/95 text-darkbg text-[10px] font-bold font-tech px-1.5 py-0.5 rounded shadow">P = 50 kPa</div>
+          </div>
+          <!-- Container 2: Wide Flat -->
+          <div class="flex flex-col items-center justify-end h-full relative">
+            <div class="w-24 bg-ocean/30 border-x border-t border-ocean h-3/4 rounded-t-sm relative flex items-end">
+              <div class="w-full bg-ocean/50 h-full"></div>
+            </div>
+            <span class="text-[10px] text-gray-400 mt-2 font-tech">Wide & Flat</span>
+            <div class="absolute bottom-12 bg-aqua/95 text-darkbg text-[10px] font-bold font-tech px-1.5 py-0.5 rounded shadow">P = 50 kPa</div>
+          </div>
+          <!-- Container 3: Irregular/Conical -->
+          <div class="flex flex-col items-center justify-end h-full relative">
+            <div class="w-20 h-3/4 relative flex items-end">
+              <!-- SVG Conical shape to show irregular structure -->
+              <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <polygon points="10,0 30,100 70,100 90,0" fill="rgba(0, 119, 182, 0.3)" stroke="#0077B6" stroke-width="1" />
+                <polygon points="10,0 30,100 70,100 90,0" fill="rgba(0, 119, 182, 0.5)" clip-path="inset(0% 0% 0% 0%)" />
+              </svg>
+            </div>
+            <span class="text-[10px] text-gray-400 mt-2 font-tech">Irregular</span>
+            <div class="absolute bottom-12 bg-aqua/95 text-darkbg text-[10px] font-bold font-tech px-1.5 py-0.5 rounded shadow">P = 50 kPa</div>
+          </div>
+        </div>
+        <p class="text-xs text-center text-gray-400 italic">
+          Note: Since the liquid level height (h) and liquid density (&rho;) are identical, the pressure at the bottom is the same for all containers regardless of width, slope, or volume.
+        </p>
+      </div>
+    </section>
+
+    <!-- SECTION 2A: DENSITY EXPLORER -->
+    <section id="section-density" class="tab-content hidden space-y-6">
+      <div class="text-center md:text-left space-y-2">
+        <span class="text-xs font-bold tracking-widest text-amber uppercase font-tech">02A // Interactive Simulator</span>
+        <h2 class="text-3xl font-extrabold font-tech tracking-tight text-amber">Density Explorer</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Interactive Controls -->
+        <div class="glass-panel p-6 space-y-6">
+          <h3 class="text-sm font-semibold tracking-wider text-amber font-tech uppercase mb-4">Input Controls</h3>
+          
+          <!-- Slider Mass -->
+          <div class="space-y-2">
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-300 font-medium">Mass (m)</span>
+              <span class="font-tech font-bold text-amber text-lg"><span id="density-mass-readout">10.0</span> kg</span>
+            </div>
+            <input type="range" id="density-mass-slider" class="w-full slider-amber" min="0.1" max="20.0" step="0.1" value="10.0">
+            <div class="flex justify-between text-[10px] text-gray-500 font-tech">
+              <span>0.1 kg</span>
+              <span>20.0 kg</span>
+            </div>
+          </div>
+
+          <!-- Slider Volume -->
+          <div class="space-y-2">
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-300 font-medium">Volume (V)</span>
+              <span class="font-tech font-bold text-aqua text-lg"><span id="density-volume-readout">0.010</span> m³</span>
+            </div>
+            <input type="range" id="density-volume-slider" class="w-full slider-aqua" min="0.001" max="0.020" step="0.001" value="0.010">
+            <div class="flex justify-between text-[10px] text-gray-500 font-tech">
+              <span>0.001 m³</span>
+              <span>0.020 m³</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Density Result -->
+        <div class="glass-panel p-6 flex flex-col justify-between space-y-6 relative overflow-hidden">
+          <div class="absolute -right-10 -top-10 w-32 h-32 bg-amber/5 rounded-full blur-2xl"></div>
+          <div>
+            <span class="text-xs font-tech tracking-wider text-gray-400 font-semibold uppercase">Calculated Density</span>
+            <div class="mt-4 flex items-baseline justify-center space-x-2">
+              <span id="calculated-density" class="text-5xl font-black font-tech tracking-wide text-amber glow-amber">1000.0</span>
+              <span class="text-lg text-gray-400 font-tech">kg/m³</span>
+            </div>
+          </div>
+
+          <!-- Reference Density Comparison Bar -->
+          <div class="space-y-4">
+            <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-wider font-tech">Density Scale Index</h4>
+            <div class="relative w-full h-8 bg-white/5 rounded-lg border border-white/10 flex items-center px-2">
+              <!-- Marker line -->
+              <div id="density-marker" class="absolute w-1.5 h-6 bg-amber shadow-[0_0_8px_#FFB703] transition-all duration-150 rounded" style="left: 50%;"></div>
+              
+              <!-- Indicator Ticks & Labels -->
+              <div class="w-full flex justify-between text-[8px] text-gray-500 select-none pointer-events-none font-tech pt-4">
+                <span>Air (1.2)</span>
+                <span>Water (1K)</span>
+                <span>Seawater (1.02K)</span>
+                <span>Glycerol (1.26K)</span>
+                <span>Mercury (13.6K)</span>
+              </div>
+            </div>
+
+            <!-- Identified Liquid Toast Message -->
+            <div id="liquid-ident-toast" class="h-10 bg-aqua/10 border border-aqua/30 text-aqua text-xs font-semibold px-4 py-2 rounded-lg text-center flex items-center justify-center transition-all duration-300">
+              <i class="fa-solid fa-flask-vial mr-2"></i> That's close to <span id="liquid-ident-name" class="underline ml-1">Water</span>!
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2B: LIQUID PRESSURE EXPLORER -->
+    <section id="section-pressure" class="tab-content hidden space-y-6">
+      <div class="text-center md:text-left space-y-2">
+        <span class="text-xs font-bold tracking-widest text-ocean uppercase font-tech">02B // Interactive Simulator</span>
+        <h2 class="text-3xl font-extrabold font-tech tracking-tight text-ocean">Liquid Pressure Explorer</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Container Diagram & Interactive Probe -->
+        <div class="glass-panel p-6 flex flex-col justify-between items-center relative overflow-hidden h-[360px]">
+          <span class="text-xs font-tech text-gray-400 self-start uppercase">Tank Cross Section</span>
+          
+          <!-- Tank simulation visual container -->
+          <div id="pressure-tank-bg" class="w-48 h-64 border-x-4 border-b-4 border-white/20 rounded-b-lg relative mt-4 overflow-hidden">
+            <!-- Simulated Liquid -->
+            <div id="liquid-volume-element" class="absolute bottom-0 left-0 w-full bg-ocean/30 transition-all duration-300" style="height: 100%;"></div>
+            
+            <!-- Depth Ticks -->
+            <div class="absolute left-2 top-0 h-full flex flex-col justify-between text-[9px] text-gray-400 font-tech py-2 pointer-events-none select-none">
+              <span>0.0 m (surface)</span>
+              <span>2.5 m</span>
+              <span>5.0 m</span>
+              <span>7.5 m</span>
+              <span>10.0 m (bottom)</span>
+            </div>
+
+            <!-- Draggable Pressure Probe -->
+            <div id="pressure-probe" class="absolute w-6 h-6 rounded-full bg-darkbg border-2 border-aqua flex items-center justify-center cursor-ns-resize shadow-[0_0_12px_#00F5D4] select-none z-10" style="bottom: 50%; left: 60%; transform: translateX(-50%) translateY(50%);">
+              <div class="w-2 h-2 rounded-full bg-aqua animate-ping"></div>
+            </div>
+
+            <!-- Pressure Indicator Dot (drawn over the probe) -->
+            <div id="pressure-dot" class="absolute pointer-events-none flex items-center justify-center" style="bottom: 50%; left: 60%; transform: translateX(-50%) translateY(50%);">
+              <div id="dot-element" class="w-4 h-4 rounded-full bg-aqua shadow-[0_0_20px_#00F5D4] border border-white transition-all duration-150"></div>
+            </div>
+          </div>
+          <span class="text-[10px] text-gray-500 italic mt-2">Drag the probe vertically to test different depths</span>
+        </div>
+
+        <!-- Sliders & Shortcuts -->
+        <div class="glass-panel p-6 space-y-6">
+          <!-- Depth Slider -->
+          <div class="space-y-2">
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-300 font-medium">Depth (h)</span>
+              <span class="font-tech font-bold text-ocean text-lg"><span id="pressure-depth-readout">5.0</span> m</span>
+            </div>
+            <input type="range" id="pressure-depth-slider" class="w-full slider-ocean" min="0.1" max="10.0" step="0.1" value="5.0">
+            <div class="flex justify-between text-[10px] text-gray-500 font-tech">
+              <span>0.1 m</span>
+              <span>10.0 m</span>
+            </div>
+          </div>
+
+          <!-- Density Slider -->
+          <div class="space-y-2">
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-300 font-medium">Liquid Density (&rho;)</span>
+              <span class="font-tech font-bold text-amber text-lg"><span id="pressure-density-readout">1000</span> kg/m³</span>
+            </div>
+            <input type="range" id="pressure-density-slider" class="w-full slider-amber" min="800" max="13600" step="100" value="1000">
+            <div class="flex justify-between text-[10px] text-gray-500 font-tech">
+              <span>800 kg/m³</span>
+              <span>13,600 kg/m³</span>
+            </div>
+          </div>
+
+          <!-- Density Shortcuts -->
+          <div class="space-y-2">
+            <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider font-tech">Presets Shortcuts</span>
+            <div class="grid grid-cols-2 gap-2 text-xs font-tech">
+              <button class="preset-btn px-3 py-2 border border-white/10 rounded-lg text-left hover:border-amber transition-all" data-density="800">
+                <span class="text-amber">Oil</span> <span class="text-gray-400">(800)</span>
+              </button>
+              <button class="preset-btn px-3 py-2 border border-white/10 rounded-lg text-left hover:border-amber transition-all" data-density="1000">
+                <span class="text-amber">Fresh Water</span> <span class="text-gray-400">(1000)</span>
+              </button>
+              <button class="preset-btn px-3 py-2 border border-white/10 rounded-lg text-left hover:border-amber transition-all" data-density="1025">
+                <span class="text-amber">Seawater</span> <span class="text-gray-400">(1025)</span>
+              </button>
+              <button class="preset-btn px-3 py-2 border border-white/10 rounded-lg text-left hover:border-amber transition-all" data-density="13600">
+                <span class="text-amber">Mercury</span> <span class="text-gray-400">(13.6K)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- locked Gravity Factor -->
+          <div class="flex justify-between items-center p-3 bg-white/5 border border-white/5 rounded-lg text-xs font-tech">
+            <span class="text-gray-400">GRAVITATIONAL FIELD STRENGTH (g)</span>
+            <span class="text-gray-300 font-semibold flex items-center">
+              10 N/kg <i class="fa-solid fa-lock text-gray-500 ml-2"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Calculations Readout & Calculations Panel -->
+      <div class="glass-panel p-6 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <!-- Live readout -->
+        <div>
+          <span class="text-xs font-tech tracking-wider text-gray-400 font-semibold uppercase">Total Liquid Pressure (P)</span>
+          <div class="mt-2 flex items-baseline justify-start space-x-2">
+            <span id="calculated-pressure" class="text-4xl font-black font-tech tracking-wide text-aqua glow-aqua">50,000</span>
+            <span id="calculated-pressure-unit" class="text-lg text-gray-400 font-tech">Pa</span>
+          </div>
+        </div>
+
+        <!-- Formula substitution -->
+        <div class="bg-black/25 p-4 rounded-xl border border-white/5 space-y-1 text-xs">
+          <span class="text-[10px] text-gray-500 font-semibold uppercase tracking-wider font-tech">Formula Steps</span>
+          <div class="font-tech tracking-wide text-white/90">
+            P = h &times; &rho; &times; g
+          </div>
+          <div class="font-tech text-aqua text-sm pt-1" id="calculation-steps">
+            P = 5.0 &times; 1000 &times; 10 = 50,000 Pa
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: QUIZ ENGINE -->
+    <section id="section-quiz" class="tab-content hidden space-y-6 max-w-2xl mx-auto">
+      <!-- Quiz Header -->
+      <div class="flex items-center justify-between border-b border-white/10 pb-4">
+        <div>
+          <span class="text-xs font-bold tracking-widest text-aqua uppercase font-tech">Active Quiz</span>
+          <h2 class="text-2xl font-bold font-tech" id="quiz-progress-text">Question 1 of 30</h2>
+        </div>
+        <div class="flex items-center bg-white/5 border border-white/10 px-3 py-1 rounded-full text-xs font-tech">
+          <span class="text-gray-400">Topic Master:</span>
+          <span class="text-aqua ml-1 font-semibold" id="quiz-correct-count">0/30</span>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="w-full bg-white/5 rounded-full h-2 overflow-hidden border border-white/5">
+        <div id="quiz-progress-bar" class="bg-aqua h-full transition-all duration-300" style="width: 3.33%;"></div>
+      </div>
+
+      <!-- Question Box -->
+      <div id="quiz-box" class="glass-panel p-6 md:p-8 space-y-6 relative overflow-hidden min-h-[300px]">
+        <!-- Celebratory Canvas -->
+        <canvas id="canvas-celebration"></canvas>
+
+        <!-- Question Prompt -->
+        <div class="space-y-4">
+          <span class="text-xs font-tech font-bold text-amber uppercase tracking-wider" id="quiz-type-badge">CALCULATE DENSITY</span>
+          <p class="text-lg md:text-xl font-medium leading-relaxed" id="quiz-question-prompt">
+            Loading your question.....
+          </p>
+        </div>
+
+        <!-- Answers Area -->
+        <div id="quiz-input-area" class="space-y-4">
+          <!-- Multi choice Options will load here -->
+        </div>
+
+        <!-- Feedback alert panel -->
+        <div id="quiz-feedback-panel" class="hidden p-4 rounded-xl border flex items-start space-x-3 transition-all duration-200">
+          <div id="quiz-feedback-icon" class="text-xl pt-0.5"></div>
+          <div>
+            <h4 id="quiz-feedback-title" class="font-bold text-sm">Feedback Title</h4>
+            <p id="quiz-feedback-desc" class="text-xs mt-1 text-gray-300">Explanation text</p>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-between items-center pt-4 border-t border-white/5">
+          <button id="quiz-submit-btn" class="w-full md:w-auto px-6 py-3 bg-aqua text-darkbg font-bold font-tech tracking-wider uppercase rounded-xl hover:bg-aqua/90 active:scale-95 transition-all shadow-lg shadow-aqua/20">
+            Submit Answer
+          </button>
+          <button id="quiz-next-btn" class="hidden w-full md:w-auto px-6 py-3 bg-white text-darkbg font-bold font-tech tracking-wider uppercase rounded-xl hover:bg-white/90 active:scale-95 transition-all">
+            Next Question <i class="fa-solid fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: SCORE AND FEEDBACK -->
+    <section id="section-score" class="tab-content hidden space-y-8 max-w-lg mx-auto text-center py-6">
+      <div class="glass-panel p-8 md:p-12 space-y-8 relative overflow-hidden">
+        <!-- Background glows -->
+        <div class="absolute -left-12 -top-12 w-48 h-48 bg-aqua/5 rounded-full blur-3xl"></div>
+        <div class="absolute -right-12 -bottom-12 w-48 h-48 bg-amber/5 rounded-full blur-3xl"></div>
+
+        <div class="space-y-3">
+          <i class="fa-solid fa-circle-check text-5xl text-aqua glow-aqua animate-bounce"></i>
+          <h2 class="text-3xl font-black font-tech tracking-wider uppercase">Session Report</h2>
+          <p class="text-xs text-gray-400 uppercase tracking-widest font-tech">O-Level Physics diagnostic completed</p>
+        </div>
+
+        <!-- Score & Stars Box -->
+        <div class="space-y-4 py-6 border-y border-white/10">
+          <div>
+            <span class="text-xs text-gray-500 uppercase tracking-wider font-tech">Final Score</span>
+            <div class="text-5xl font-black font-tech text-aqua glow-aqua tracking-widest mt-1">
+              <span id="final-score-readout">0</span> <span class="text-2xl text-gray-400">/ 30</span>
+            </div>
+          </div>
+
+          <!-- Star Ratings -->
+          <div class="flex justify-center space-x-3 text-3xl" id="star-rating-container">
+            <i class="fa-solid fa-star text-amber"></i>
+            <i class="fa-solid fa-star text-amber"></i>
+            <i class="fa-solid fa-star text-gray-600"></i>
+          </div>
+        </div>
+
+        <!-- Grade message text -->
+        <p class="text-base font-semibold px-4" id="score-grade-message">
+          Keep practising — revisit both formulas and try again.
+        </p>
+
+        <!-- CTAs buttons -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+          <button id="score-retry-btn" class="w-full px-5 py-3 border border-aqua/30 bg-aqua/5 text-aqua font-bold font-tech uppercase tracking-wider rounded-xl hover:bg-aqua/15 transition-all">
+            <i class="fa-solid fa-rotate-left mr-2"></i> Try Again
+          </button>
+          <button id="score-flashcards-btn" class="w-full px-5 py-3 bg-aqua text-darkbg font-bold font-tech uppercase tracking-wider rounded-xl hover:bg-aqua/95 transition-all shadow-lg shadow-aqua/10">
+            Review Cards <i class="fa-solid fa-clone ml-2"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: FLASHCARD REVISION -->
+    <section id="section-flashcards" class="tab-content hidden space-y-6 max-w-md mx-auto">
+      <div class="text-center space-y-2">
+        <span class="text-xs font-bold tracking-widest text-aqua uppercase font-tech">Revision Mode</span>
+        <h2 class="text-2xl font-bold font-tech">Flashcard Deck</h2>
+      </div>
+
+      <!-- Flashcard Interactive Box -->
+      <div class="flashcard-container w-full h-[280px]" id="flashcard-card-box">
+        <div class="flashcard-inner">
+          <!-- Front Face -->
+          <div class="flashcard-front">
+            <span class="text-[10px] text-aqua uppercase tracking-widest font-tech font-bold mb-4">QUESTION</span>
+            <p id="card-question-text" class="text-lg font-medium text-center leading-relaxed">
+              Formula for density?
+            </p>
+            <span class="text-[10px] text-gray-500 mt-6"><i class="fa-solid fa-rotate mr-1"></i> Tap to flip card</span>
+          </div>
+          <!-- Back Face -->
+          <div class="flashcard-back">
+            <span class="text-[10px] text-amber uppercase tracking-widest font-tech font-bold mb-4">ANSWER</span>
+            <p id="card-answer-text" class="text-xl font-bold text-center leading-relaxed text-amber">
+              &rho; = m &divide; V
+            </p>
+            <span class="text-[10px] text-gray-400 mt-6"><i class="fa-solid fa-rotate mr-1"></i> Tap to return</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card deck metadata -->
+      <div class="flex justify-between items-center px-2 text-xs font-tech">
+        <span class="text-gray-400">Card: <span id="card-index-counter" class="text-white font-semibold">1</span> / <span id="card-total-counter" class="text-white">12</span></span>
+        <span class="text-gray-400">Pending Review: <span id="card-pending-counter" class="text-amber font-semibold">12</span></span>
+      </div>
+
+      <!-- Controls triggers -->
+      <div class="grid grid-cols-2 gap-4">
+        <button id="card-review-btn" class="px-4 py-3 border border-amber/30 bg-amber/5 text-amber font-bold font-tech uppercase tracking-wider rounded-xl hover:bg-amber/15 transition-all">
+          <i class="fa-solid fa-rotate-left mr-2"></i> Review Again
+        </button>
+        <button id="card-gotit-btn" class="px-4 py-3 bg-aqua text-darkbg font-bold font-tech uppercase tracking-wider rounded-xl hover:bg-aqua/95 transition-all shadow-lg shadow-aqua/10">
+          Got it <i class="fa-solid fa-check ml-2"></i>
+        </button>
+      </div>
+
+      <!-- Deck completion box -->
+      <div id="deck-complete-panel" class="hidden glass-panel p-6 text-center space-y-4">
+        <i class="fa-solid fa-circle-check text-4xl text-aqua"></i>
+        <h3 class="text-lg font-bold font-tech uppercase tracking-wide">Deck Completed</h3>
+        <p class="text-xs text-gray-400">You've successfully reviewed and mastered all cards in the deck!</p>
+        <button id="card-reset-deck-btn" class="px-4 py-2 border border-white/10 rounded-lg text-xs font-tech text-gray-300 hover:text-white transition-all mx-auto">
+          Restart Deck
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Core Javascript code -->
+  <script src="app.js"></script>
+</body>
+</html>

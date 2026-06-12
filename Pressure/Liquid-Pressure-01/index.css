@@ -1,0 +1,219 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap');
+
+:root {
+  --color-bg: #0D0D1A;
+  --color-panel: rgba(18, 18, 36, 0.7);
+  --color-border: rgba(0, 245, 212, 0.15);
+  --color-border-hover: rgba(0, 245, 212, 0.4);
+  
+  --color-ocean: #0077B6;
+  --color-aqua: #00F5D4;
+  --color-amber: #FFB703;
+  --color-white: #FFFFFF;
+  --color-gray: #8A8F9E;
+  
+  --font-tech: 'Space Grotesk', 'Rajdhani', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-white);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+.font-tech {
+  font-family: var(--font-tech);
+}
+
+/* Glassmorphism Panels */
+.glass-panel {
+  background: var(--color-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-panel:hover {
+  border-color: var(--color-border-hover);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 0.75rem;
+}
+
+/* Neon glow texts */
+.glow-aqua {
+  text-shadow: 0 0 10px rgba(0, 245, 212, 0.6), 0 0 20px rgba(0, 245, 212, 0.3);
+}
+
+.glow-amber {
+  text-shadow: 0 0 10px rgba(255, 183, 3, 0.6), 0 0 20px rgba(255, 183, 3, 0.3);
+}
+
+.glow-ocean {
+  text-shadow: 0 0 10px rgba(0, 119, 182, 0.6), 0 0 20px rgba(0, 119, 182, 0.3);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-ocean);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-aqua);
+}
+
+/* Animations */
+@keyframes highlight-flash {
+  0% {
+    background-color: rgba(0, 245, 212, 0.2);
+    box-shadow: 0 0 20px rgba(0, 245, 212, 0.4);
+  }
+  100% {
+    background-color: transparent;
+    box-shadow: none;
+  }
+}
+
+.animate-flash {
+  animation: highlight-flash 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+.animate-shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+/* Custom inputs styling */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.1);
+  height: 6px;
+  border-radius: 3px;
+  outline: none;
+}
+
+/* Aqua sliders */
+input[type="range"].slider-aqua::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-aqua);
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--color-aqua);
+  transition: transform 0.1s ease;
+}
+input[type="range"].slider-aqua::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* Amber sliders */
+input[type="range"].slider-amber::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-amber);
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--color-amber);
+  transition: transform 0.1s ease;
+}
+input[type="range"].slider-amber::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* Ocean sliders */
+input[type="range"].slider-ocean::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-ocean);
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--color-ocean);
+  transition: transform 0.1s ease;
+}
+input[type="range"].slider-ocean::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* 3D Flashcards */
+.flashcard-container {
+  perspective: 1000px;
+}
+
+.flashcard-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.flashcard-container.flipped .flashcard-inner {
+  transform: rotateY(180deg);
+}
+
+.flashcard-front, .flashcard-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+}
+
+.flashcard-front {
+  background: rgba(20, 20, 45, 0.85);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+}
+
+.flashcard-back {
+  background: rgba(10, 35, 60, 0.95);
+  border: 1px solid var(--color-aqua);
+  box-shadow: 0 8px 32px 0 rgba(0, 245, 212, 0.15);
+  transform: rotateY(180deg);
+}
+
+/* Celebration particles canvas */
+#canvas-celebration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
