@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Thermal Processes Challenge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Canvas for particle bursts -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- Main App Frame -->
+  <div id="app-container">
+    <header class="app-header">
+      <div class="logo">
+        <span class="logo-accent">Thermal</span> Challenge
+      </div>
+      <div class="syllabus-tag">O-Level 6091</div>
+    </header>
+
+    <!-- Navigation Tabs (Moved Above App) -->
+    <nav class="app-tabs">
+      <button class="nav-item active" data-tab="explorer-section">
+        <svg viewBox="0 0 24 24" class="nav-icon">
+          <path d="M12 2L2 22h20L12 2zm0 3.99L19.53 19H4.47L12 5.99z" fill="currentColor"/>
+        </svg>
+        <span>Explorer</span>
+      </button>
+      <button class="nav-item" data-tab="flashcards-section">
+        <svg viewBox="0 0 24 24" class="nav-icon">
+          <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z" fill="currentColor"/>
+        </svg>
+        <span>Flashcards</span>
+      </button>
+      <button class="nav-item" data-tab="quiz-section">
+        <svg viewBox="0 0 24 24" class="nav-icon">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z" fill="currentColor"/>
+        </svg>
+        <span>Quiz</span>
+      </button>
+    </nav>
+ 
+    <!-- Main Content Area -->
+    <main class="app-content">
+      <!-- Section 2: Scenario Explorer Grid -->
+      <section id="explorer-section" class="tab-content active">
+        <div class="section-header">
+          <h2>Scenario Explorer</h2>
+          <p class="section-desc">Tap a real-world scenario to discover how heat moves.</p>
+        </div>
+        <div class="scenarios-grid" id="scenarios-grid">
+          <!-- Dynamically populated via JS -->
+        </div>
+      </section>
+
+      <!-- Section 2 Detail Panel (Overlay style slide-in) -->
+      <section id="scenario-detail" class="detail-panel hidden">
+        <div class="detail-header">
+          <button id="detail-back-btn" class="back-btn">
+            <svg viewBox="0 0 24 24" width="24" height="24">
+              <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="currentColor"/>
+            </svg>
+            <span>Back</span>
+          </button>
+          <h2 id="detail-title">Scenario Name</h2>
+        </div>
+        
+        <div class="detail-content">
+          <div class="detail-visual-wrapper" id="detail-visual-container">
+            <!-- Dynamic SVG illustration gets inserted here -->
+          </div>
+          
+          <div class="detail-info">
+            <div class="detail-modes" id="detail-modes-list">
+              <!-- e.g. Conduction ✓ Convection ✓ Radiation ✓ -->
+            </div>
+            
+            <div class="dominant-mode-pill" id="detail-dominant-pill">
+              <!-- Dominant Mode Highlight -->
+            </div>
+
+            <p class="detail-description" id="detail-description-text">
+              Two sentence physics description.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Flashcard Revision Mode -->
+      <section id="flashcards-section" class="tab-content hidden">
+        <div class="section-header">
+          <h2>Revision Flashcards</h2>
+          <p class="section-desc">Tap to flip, swipe or use arrows to navigate.</p>
+        </div>
+
+        <div class="flashcard-container-outer">
+          <div class="flashcard-wrapper" id="flashcard-deck">
+            <!-- Dynamic card inserted here -->
+          </div>
+
+          <div class="flashcard-controls">
+            <button id="prev-card-btn" class="nav-arrow-btn" aria-label="Previous card">
+              <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="currentColor"/></svg>
+            </button>
+            
+            <span class="card-indicator" id="card-counter">1 / 10</span>
+
+            <button id="next-card-btn" class="nav-arrow-btn" aria-label="Next card">
+              <svg viewBox="0 0 24 24" width="24" height="24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="currentColor"/></svg>
+            </button>
+          </div>
+
+          <button id="shuffle-cards-btn" class="neon-btn font-neon-orange action-btn">
+            <svg viewBox="0 0 24 24" width="20" height="20" class="btn-icon">
+              <path d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z" fill="currentColor"/>
+            </svg>
+            <span>Shuffle Deck</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Section 4: Quiz -->
+      <section id="quiz-section" class="tab-content hidden">
+        <div class="quiz-container">
+          <!-- Quiz active layout -->
+          <div id="quiz-active-panel">
+            <div class="quiz-header">
+              <div class="quiz-progress-bar">
+                <div class="quiz-progress-fill" id="quiz-progress-fill" style="width: 10%;"></div>
+              </div>
+              <div class="quiz-meta">
+                <span id="quiz-question-number">Question 1 of 10</span>
+                <span id="quiz-score-badge">Score: 0</span>
+              </div>
+            </div>
+
+            <div class="quiz-card" id="quiz-card-element">
+              <h3 class="quiz-question-text" id="quiz-question-text">Question goes here?</h3>
+              <div class="quiz-options-grid" id="quiz-options-container">
+                <!-- 4 Options dynamically rendered -->
+              </div>
+              
+              <div class="quiz-feedback-box hidden" id="quiz-feedback-box">
+                <div class="feedback-indicator" id="feedback-indicator">CORRECT</div>
+                <div class="feedback-explanation" id="feedback-explanation">Explanation here.</div>
+                <button id="quiz-next-btn" class="neon-btn font-neon-cyan">Next Question</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 5: Score Screen (rendered inside quiz tab space or full frame) -->
+          <div id="quiz-score-panel" class="score-panel hidden">
+            <div class="score-card">
+              <h2>Challenge Complete</h2>
+              <div class="score-radial">
+                <svg viewBox="0 0 100 100" class="radial-svg">
+                  <circle cx="50" cy="50" r="40" class="radial-track" />
+                  <circle cx="50" cy="50" r="40" class="radial-fill" id="score-radial-fill" />
+                </svg>
+                <div class="score-number-wrapper">
+                  <span class="score-num" id="score-final-val">0</span>
+                  <span class="score-denom">/10</span>
+                </div>
+              </div>
+              <h3 class="score-verdict" id="score-verdict-title">Verdict Title</h3>
+              <p class="score-feedback" id="score-feedback-text">Feedback details.</p>
+              
+              <button id="quiz-retry-btn" class="neon-btn font-neon-cyan action-btn">
+                <span>Try Another 10 Questions</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
