@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U-Tube Manometer Quiz Simulation</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --surface: #ffffff;
+            --background: #f1f5f9;
+            --border: #cbd5e1;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --fluid: #93c5fd;
+            --fluid-dark: #3b82f6;
+            --accent: #ef4444;
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--background);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background-color: var(--surface);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        h1 { text-align: center; margin-top: 0; font-size: 1.5rem; color: var(--text-main); }
+        
+        /* Top Sliders Box */
+        .top-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            background-color: var(--background);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        .control-group { display: flex; flex-direction: column; gap: 8px; }
+        .control-group label { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); }
+        input[type="range"] { width: 100%; cursor: pointer; }
+        input[type="range"]:disabled { cursor: not-allowed; opacity: 0.6; }
+
+        .main-display { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; }
+        
+        .svg-container {
+            flex: 1.2;
+            min-width: 350px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background-color: var(--surface);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+        svg { width: 100%; height: auto; max-height: 410px; }
+        
+        .quiz-panel { flex: 1; min-width: 320px; display: flex; flex-direction: column; gap: 16px; }
+        .variables-box { border: 1px solid var(--border); border-radius: 8px; padding: 16px; background-color: var(--surface); }
+        .var-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+        .var-row:last-child { border-bottom: none; }
+        .var-label { font-weight: 600; flex: 1; font-size: 0.95rem; }
+        .var-value { font-family: monospace; font-size: 1.1rem; background: var(--background); padding: 6px 12px; border-radius: 4px; min-width: 120px; text-align: right; border: 1px solid var(--border); }
+        
+        .eye-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); margin-left: 12px; padding: 4px; display: flex; align-items: center; justify-content: center; transition: color 0.2s; }
+        .eye-btn:hover { color: var(--primary); }
+        
+        .random-btn { background-color: var(--primary); color: white; border: none; padding: 14px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1rem; width: 100%; transition: background 0.2s; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2); }
+        .random-btn:hover { background-color: var(--primary-hover); }
+        
+        .svg-label { font-family: system-ui, sans-serif; font-size: 14px; fill: var(--text-main); font-weight: 600; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>U-Tube Manometer Quiz Challenge</h1>
+    
+    <div class="top-controls">
+        <div class="control-group">
+            <label for="slider-pgas">Adjust Gas Pressure (P_gas)</label>
+            <input type="range" id="slider-pgas" step="10">
+        </div>
+        <div class="control-group">
+            <label for="slider-patm">Adjust Atmospheric Pressure (P_atm)</label>
+            <input type="range" id="slider-patm" min="90000" max="130000" step="100" value="101300">
+        </div>
+    </div>
+
+    <div class="main-display">
+        <div class="svg-container">
+            <svg viewBox="0 0 400 420" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <marker id="arrowHead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#ef4444" />
+                    </marker>
+                </defs>
+
+                <text x="55" y="30" text-anchor="middle" class="svg-label">Gas Supply</text>
+                <text x="310" y="30" text-anchor="middle" class="svg-label">Atmosphere</text>
+
+                <rect x="10" y="40" width="60" height="45" fill="#cbd5e1" stroke="#475569" stroke-width="2" rx="4" />
+
+                <line x1="70" y1="58" x2="140" y2="58" stroke="#475569" stroke-width="4" stroke-linecap="square"/>
+                <line x1="70" y1="78" x2="140" y2="78" stroke="#475569" stroke-width="4" stroke-linecap="square"/>
+
+                <rect id="gas-pipe-fill" x="70" y="59" width="70" height="18" fill="#fde68a" opacity="0.6"/>
+
+                <line x1="140" y1="55" x2="180" y2="55" stroke="#475569" stroke-width="4" stroke-linecap="square"/>
+                <line x1="140" y1="55" x2="140" y2="58" stroke="#475569" stroke-width="4" stroke-linecap="square"/>
+                <line x1="140" y1="78" x2="140" y2="340" stroke="#475569" stroke-width="4" stroke-linecap="square"/>
+                <line x1="180" y1="55" x2="180" y2="340" stroke="#475569" stroke-width="4" stroke-linecap="square"/>
+
+                <path d="M 140 340 A 60 60 0 0 0 260 340" stroke="#475569" stroke-width="4" fill="none"/>
+                <path d="M 180 340 A 20 20 0 0 0 220 340" stroke="#475569" stroke-width="4" fill="none"/>
+
+                <line x1="220" y1="55" x2="220" y2="340" stroke="#475569" stroke-width="4" stroke-linecap="square"/>
+                <line x1="260" y1="55" x2="260" y2="340" stroke="#475569" stroke-width="4" stroke-linecap="square"/>
+
+                <path id="fluid-path" d="" fill="#93c5fd" stroke="#3b82f6" stroke-width="1" opacity="0.85"/>
+
+                <line id="line-left"  x1="100" y1="210" x2="190" y2="210" stroke="#ef4444" stroke-dasharray="5,4" stroke-width="1.5"/>
+                <line id="line-right" x1="210" y1="210" x2="300" y2="210" stroke="#ef4444" stroke-dasharray="5,4" stroke-width="1.5"/>
+
+                <line id="arrow-h" x1="295" y1="210" x2="295" y2="210" stroke="#ef4444" stroke-width="2"
+                      marker-start="url(#arrowHead)" marker-end="url(#arrowHead)"/>
+                <rect id="label-h-bg" x="298" y="195" width="72" height="20" fill="white" opacity="0.9" rx="3"/>
+                <text id="label-h" x="301" y="209" fill="#ef4444" font-weight="bold" font-family="monospace" font-size="13">h = 0.00 m</text>
+                <line id="brace-top" x1="288" y1="210" x2="296" y2="210" stroke="#ef4444" stroke-width="1.5"/>
+                <line id="brace-bot" x1="288" y1="210" x2="296" y2="210" stroke="#ef4444" stroke-width="1.5"/>
+            </svg>
+        </div>
+
+        <div class="quiz-panel">
+            <div class="variables-box">
+                <div class="var-row">
+                    <span class="var-label">Gas Pressure (P_gas)</span>
+                    <span class="var-value" id="val-pgas">101300 Pa</span>
+                    <button class="eye-btn" onclick="toggleReveal('pgas')" id="btn-pgas"></button>
+                </div>
+                <div class="var-row">
+                    <span class="var-label">Atm Pressure (P_atm)</span>
+                    <span class="var-value" id="val-patm">101300 Pa</span>
+                    <button class="eye-btn" onclick="toggleReveal('patm')" id="btn-patm"></button>
+                </div>
+                <div class="var-row">
+                    <span class="var-label">Liquid Density (ρ)</span>
+                    <span class="var-value" id="val-rho">1000 kg/m³</span>
+                    <button class="eye-btn" onclick="toggleReveal('rho')" id="btn-rho"></button>
+                </div>
+                <div class="var-row">
+                    <span class="var-label">Gravity (g)</span>
+                    <span class="var-value" id="val-g">9.81 m/s²</span>
+                    <button class="eye-btn" onclick="toggleReveal('g')" id="btn-g"></button>
+                </div>
+                <div class="var-row">
+                    <span class="var-label">Height Diff (h)</span>
+                    <span class="var-value" id="val-h">0.00 m</span>
+                    <button class="eye-btn" onclick="toggleReveal('h')" id="btn-h"></button>
+                </div>
+            </div>
+            <button class="random-btn" onclick="randomiseQuiz()">Randomise Scenario</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const DENSITIES = [1000, 800, 1025, 1260, 789, 13600]; 
+    const GRAVITIES = [9.81, 1.62, 3.72, 3.70, 8.87, 0.62]; 
+
+    const H_MAX = 2.0;
+    let state = { pgas: 101300, patm: 101300, rho: 1000, g: 9.81, h: 0 };
+    let revealed = { pgas: true, patm: true, rho: true, g: true, h: true };
+    let hiddenKey = null; 
+
+    const sliderPgas = document.getElementById('slider-pgas');
+    const sliderPatm = document.getElementById('slider-patm');
+
+    const iconEyeOpen = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>`;
+    const iconEyeClosed = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg>`;
+
+    function updatePhysicsFromSliders(source) {
+        state.patm = parseFloat(sliderPatm.value);
+        
+        let dp_max = H_MAX * state.rho * state.g;
+        let p_gas_min = Math.max(0, state.patm - dp_max);
+        let p_gas_max = state.patm + dp_max;
+        
+        if (source !== 'pgas_slider') {
+            sliderPgas.min = p_gas_min;
+            sliderPgas.max = p_gas_max;
+            if (state.pgas < p_gas_min) state.pgas = p_gas_min;
+            if (state.pgas > p_gas_max) state.pgas = p_gas_max;
+            sliderPgas.value = state.pgas;
+        } else {
+            state.pgas = parseFloat(sliderPgas.value);
+        }
+        
+        state.h = (state.pgas - state.patm) / (state.rho * state.g);
+        renderUI();
+    }
+
+    function formatValue(key, val, unit) {
+        if (!revealed[key]) return "?";
+        if (key === 'h') return Math.abs(val).toFixed(2) + " " + unit;
+        if (key === 'pgas' || key === 'patm') return Math.round(val).toLocaleString() + " " + unit;
+        return val + " " + unit;
+    }
+
+    function renderUI() {
+        document.getElementById('val-pgas').textContent = formatValue('pgas', state.pgas, "Pa");
+        document.getElementById('val-patm').textContent = formatValue('patm', state.patm, "Pa");
+        document.getElementById('val-rho').textContent  = formatValue('rho',  state.rho,  "kg/m³");
+        document.getElementById('val-g').textContent    = formatValue('g',    state.g,    "m/s²");
+        document.getElementById('val-h').textContent    = formatValue('h',    state.h,    "m");
+
+        // Disable top sliders if their respective values are hidden parameters to prevent cheating
+        sliderPgas.disabled = !revealed['pgas'];
+        sliderPatm.disabled = !revealed['patm'];
+
+        ['pgas', 'patm', 'rho', 'g', 'h'].forEach(k => {
+            const btn = document.getElementById('btn-' + k);
+            if (k === hiddenKey) {
+                btn.style.display = '';
+                btn.innerHTML = revealed[k] ? iconEyeOpen : iconEyeClosed;
+            } else {
+                btn.style.display = 'none'; 
+            }
+        });
+        renderSVG();
+    }
+
+    function renderSVG() {
+        const baseY  = 210;
+        const pxPerM = 100;
+        const h_px   = state.h * pxPerM;
+        const yL     = baseY + h_px / 2;
+        const yR     = baseY - h_px / 2;
+        const TOP_L  = 79;
+        const TOP_R  = 55;
+        const BOTTOM = 340;
+        const yLc = Math.min(Math.max(yL, TOP_L), BOTTOM);
+        const yRc = Math.min(Math.max(yR, TOP_R), BOTTOM);
+
+        const fp =
+            `M 140 ${yLc} ` +
+            `L 140 ${BOTTOM} ` +
+            `A 60 60 0 0 0 260 ${BOTTOM} ` +
+            `L 260 ${yRc} ` +
+            `L 220 ${yRc} ` +
+            `L 220 340 ` +
+            `A 20 20 0 0 1 180 340 ` +
+            `L 180 ${yLc} ` +
+            `Z`;
+        document.getElementById('fluid-path').setAttribute('d', fp);
+
+        document.getElementById('line-left').setAttribute('y1',  yLc);
+        document.getElementById('line-left').setAttribute('y2',  yLc);
+        document.getElementById('line-right').setAttribute('y1', yRc);
+        document.getElementById('line-right').setAttribute('y2', yRc);
+
+        const arrow    = document.getElementById('arrow-h');
+        const labelTxt = document.getElementById('label-h');
+        const labelBg  = document.getElementById('label-h-bg');
+        const braceTop = document.getElementById('brace-top');
+        const braceBo  = document.getElementById('brace-bot');
+
+        if (Math.abs(state.h) < 0.01 || !revealed['h']) {
+            [arrow, labelTxt, labelBg, braceTop, braceBo].forEach(el => el.style.display = 'none');
+        } else {
+            [arrow, labelTxt, labelBg, braceTop, braceBo].forEach(el => el.style.display = '');
+            const yTop = Math.min(yLc, yRc);
+            const yBot = Math.max(yLc, yRc);
+            arrow.setAttribute('x1', 295); arrow.setAttribute('y1', yBot);
+            arrow.setAttribute('x2', 295); arrow.setAttribute('y2', yTop);
+            const midY = (yTop + yBot) / 2;
+            labelBg.setAttribute('y',  midY - 10);
+            labelTxt.setAttribute('y', midY + 4);
+            labelTxt.textContent = "h = " + Math.abs(state.h).toFixed(2) + " m";
+            braceTop.setAttribute('y1', yTop); braceTop.setAttribute('y2', yTop);
+            braceTop.setAttribute('x1', 288);  braceTop.setAttribute('x2', 296);
+            braceBo.setAttribute('y1',  yBot); braceBo.setAttribute('y2',  yBot);
+            braceBo.setAttribute('x1',  288);  braceBo.setAttribute('x2',  296);
+        }
+    }
+
+    function toggleReveal(key) {
+        if (key === hiddenKey) {
+            revealed[key] = !revealed[key];
+            renderUI();
+        }
+    }
+
+    function randomiseQuiz() {
+        ['pgas', 'patm', 'rho', 'g', 'h'].forEach(k => revealed[k] = true);
+
+        state.rho = DENSITIES[Math.floor(Math.random() * DENSITIES.length)];
+        state.g   = GRAVITIES[Math.floor(Math.random() * GRAVITIES.length)];
+
+        state.patm = Math.floor(Math.random() * (130000 - 90000 + 1)) + 90000;
+        sliderPatm.value = state.patm;
+
+        const randomH = (Math.random() * 4.0) - 2.0; 
+        state.h = parseFloat(randomH.toFixed(2));
+
+        state.pgas = state.patm + (state.h * state.rho * state.g);
+        
+        let dp_max = H_MAX * state.rho * state.g;
+        sliderPgas.min = state.patm - dp_max;
+        sliderPgas.max = state.patm + dp_max;
+        sliderPgas.value = state.pgas;
+
+        const keys = ['pgas', 'patm', 'rho', 'g', 'h'];
+        hiddenKey = keys[Math.floor(Math.random() * keys.length)];
+        revealed[hiddenKey] = false;
+
+        renderUI();
+    }
+
+    sliderPgas.addEventListener('input', () => updatePhysicsFromSliders('pgas_slider'));
+    sliderPatm.addEventListener('input', () => updatePhysicsFromSliders('other'));
+
+    // Trigger initial quiz configuration setup
+    randomiseQuiz();
+</script>
+</body>
+</html>
