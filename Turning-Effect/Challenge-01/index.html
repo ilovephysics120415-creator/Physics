@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Turning Effect of Forces Challenge — O-Level Physics Revision</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="An interactive, gamified revision app for 16-year-old O-Level Physics students covering the Turning Effect of Forces. Includes concept dashboard, flashcards, randomized calculations, and progress tracker.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Neon Particles Canvas -->
+  <canvas id="particles-canvas"></canvas>
+
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo">
+        <span class="logo-accent">TORQUE</span><span class="logo-main">LAB</span>
+      </div>
+      <nav class="nav-links">
+        <button class="nav-btn active" data-section="dashboard" id="nav-dashboard-btn">Dashboard</button>
+        <button class="nav-btn" data-section="flashcards" id="nav-flashcards-btn">Flashcards</button>
+        <button class="nav-btn" data-section="quiz" id="nav-quiz-btn">Practice Quiz</button>
+        <button class="nav-btn" data-section="tracker" id="nav-tracker-btn">Progress</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <!-- SECTION 1: TOPIC OVERVIEW DASHBOARD -->
+    <section id="section-dashboard" class="content-section active">
+      <div class="section-hero">
+        <h1 class="hero-title">Turning Effect of Forces</h1>
+        <p class="hero-subtitle">Master the mechanics of moments, pivots, and stability for your O-Level exam.</p>
+      </div>
+
+      <div class="dashboard-grid">
+        <!-- Topic 1 -->
+        <div class="topic-tile" data-topic="0" id="tile-topic-0">
+          <div class="tile-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l.73-.73" />
+            </svg>
+          </div>
+          <h3 class="tile-title">Moment of a Force</h3>
+          <p class="tile-desc">Turning effect, M = F x d basic formula, and real-life scenarios like spanners, doors, and crowbars.</p>
+          <div class="tile-progress">
+            <span class="progress-label">Quiz Mastery</span>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="tile-progress-0" style="width: 0%"></div>
+            </div>
+            <span class="progress-percentage" id="tile-perc-0">0%</span>
+          </div>
+        </div>
+
+        <!-- Topic 2 -->
+        <div class="topic-tile" data-topic="1" id="tile-topic-1">
+          <div class="tile-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+              <line x1="12" y1="3" x2="12" y2="16" />
+            </svg>
+          </div>
+          <h3 class="tile-title">Perpendicular Distance</h3>
+          <p class="tile-desc">Line of action of forces, angled forces, resolving right-angled geometry, and torque effectiveness.</p>
+          <div class="tile-progress">
+            <span class="progress-label">Quiz Mastery</span>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="tile-progress-1" style="width: 0%"></div>
+            </div>
+            <span class="progress-percentage" id="tile-perc-1">0%</span>
+          </div>
+        </div>
+
+        <!-- Topic 3 -->
+        <div class="topic-tile" data-topic="2" id="tile-topic-2">
+          <div class="tile-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12h18M12 12v9M6 12L4 9M18 12l2-3" />
+            </svg>
+          </div>
+          <h3 class="tile-title">Principle of Moments</h3>
+          <p class="tile-desc">Sum of clockwise moments = sum of anticlockwise moments about a pivot for objects in equilibrium.</p>
+          <div class="tile-progress">
+            <span class="progress-label">Quiz Mastery</span>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="tile-progress-2" style="width: 0%"></div>
+            </div>
+            <span class="progress-percentage" id="tile-perc-2">0%</span>
+          </div>
+        </div>
+
+        <!-- Topic 4 -->
+        <div class="topic-tile" data-topic="3" id="tile-topic-3">
+          <div class="tile-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 19V5M5 12l7-7 7 7" />
+            </svg>
+          </div>
+          <h3 class="tile-title">Reaction Force at Pivot</h3>
+          <p class="tile-desc">Understanding why upward support force has zero moment, and using upward forces = downward forces to solve for R.</p>
+          <div class="tile-progress">
+            <span class="progress-label">Quiz Mastery</span>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="tile-progress-3" style="width: 0%"></div>
+            </div>
+            <span class="progress-percentage" id="tile-perc-3">0%</span>
+          </div>
+        </div>
+
+        <!-- Topic 5 -->
+        <div class="topic-tile" data-topic="4" id="tile-topic-4">
+          <div class="tile-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <circle cx="12" cy="12" r="1" fill="currentColor" />
+              <path d="M12 2v4M12 18v4M2 12h4M18 12h4" />
+            </svg>
+          </div>
+          <h3 class="tile-title">Centre of Gravity</h3>
+          <p class="tile-desc">Point where entire weight appears to act, plumb-line experiments, and dealing with non-uniform or loaded beams.</p>
+          <div class="tile-progress">
+            <span class="progress-label">Quiz Mastery</span>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="tile-progress-4" style="width: 0%"></div>
+            </div>
+            <span class="progress-percentage" id="tile-perc-4">0%</span>
+          </div>
+        </div>
+
+        <!-- Topic 6 -->
+        <div class="topic-tile" data-topic="5" id="tile-topic-5">
+          <div class="tile-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 20l4-16m4 16l-4-16M2 20h20" />
+            </svg>
+          </div>
+          <h3 class="tile-title">Stability</h3>
+          <p class="tile-desc">Effects of base area and CG height on stability, line of action relative to base, and types of equilibrium.</p>
+          <div class="tile-progress">
+            <span class="progress-label">Quiz Mastery</span>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="tile-progress-5" style="width: 0%"></div>
+            </div>
+            <span class="progress-percentage" id="tile-perc-5">0%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: FLASHCARD REVISION BANK -->
+    <section id="section-flashcards" class="content-section">
+      <div class="section-control-row">
+        <h2 class="section-title">Revision Flashcards</h2>
+        <div class="toggle-group" id="flashcard-toggles">
+          <button class="toggle-btn active" data-mode="topic">By Topic</button>
+          <button class="toggle-btn" data-mode="shuffle">Shuffle All</button>
+          <button class="toggle-btn" data-mode="weak">Weak Cards</button>
+        </div>
+      </div>
+
+      <div class="flashcard-sub-header">
+        <div class="topic-select-container" id="fc-topic-selector-wrapper">
+          <label for="fc-topic-select" class="control-label">Select Topic:</label>
+          <select id="fc-topic-select" class="styled-select">
+            <option value="0">Moment of a Force</option>
+            <option value="1">Perpendicular Distance</option>
+            <option value="2">Principle of Moments</option>
+            <option value="3">Reaction Force at Pivot</option>
+            <option value="4">Centre of Gravity</option>
+            <option value="5">Stability</option>
+          </select>
+        </div>
+        <div class="fc-overall-progress">
+          <span class="fc-progress-label">Got it: <strong id="fc-got-it-count">0</strong>/50</span>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="fc-mastery-progress" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard-display-area">
+        <div class="flashcard-outer">
+          <div class="flashcard-inner" id="interactive-flashcard">
+            <!-- Front of the Card -->
+            <div class="card-side card-front">
+              <div class="card-topic-tag" id="card-tag-front">Topic: Loading...</div>
+              <div class="card-content-text" id="card-question">Loading question...</div>
+              <div class="card-hint">Tap to flip & reveal answer</div>
+            </div>
+            <!-- Back of the Card -->
+            <div class="card-side card-back">
+              <div class="card-topic-tag" id="card-tag-back">Topic: Loading...</div>
+              <div class="card-content-text" id="card-answer">Loading answer...</div>
+              <div class="card-actions">
+                <button class="card-action-btn got-it" id="card-btn-got-it">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  Got it!
+                </button>
+                <button class="card-action-btn need-review" id="card-btn-review">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                  Need to review
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-navigation">
+          <button class="nav-control-btn" id="fc-prev-btn" title="Previous Card">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+          <span class="card-index-indicator" id="fc-index-text">Card 1 of 8</span>
+          <button class="nav-control-btn" id="fc-next-btn" title="Next Card">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: MIXED REVISION QUIZ -->
+    <section id="section-quiz" class="content-section">
+      <div id="quiz-intro-screen" class="quiz-state-panel active">
+        <h2 class="section-title">Mixed Revision Challenge</h2>
+        <div class="quiz-instructions">
+          <p>Get ready for a comprehensive 30-question test designed to mirror your O-Level GCSE exam.</p>
+          <ul>
+            <li><strong>30 Questions</strong>: Exactly 5 questions selected dynamically from each of the 6 topics.</li>
+            <li><strong>Random Parameters</strong>: Values, dimensions, angles, and variables change each time.</li>
+            <li><strong>Numerical Answers</strong>: Input your answers. A standard tolerance of ±2% is allowed.</li>
+            <li><strong>Detailed Step-by-Step Solutions</strong>: Review worked derivations on pivot supports, resolving moments, and cg offsets immediately.</li>
+          </ul>
+          <button class="action-btn glow-btn" id="start-quiz-btn">Initialize Quiz Challenge</button>
+        </div>
+      </div>
+
+      <div id="quiz-play-screen" class="quiz-state-panel">
+        <div class="quiz-header-status">
+          <span class="quiz-topic-label" id="quiz-question-topic">Topic: Principle of Moments</span>
+          <div class="quiz-progress-metrics">
+            <span class="quiz-question-counter" id="quiz-progress-text">Question 1 of 30</span>
+            <div class="progress-bar-container quiz-pbar">
+              <div class="progress-bar-fill" id="quiz-progress-fill" style="width: 3.33%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="quiz-card">
+          <div class="quiz-question-body">
+            <p class="quiz-question-text" id="quiz-question-description">Calculate the clockwise moment about pivot P when a force of 12N acts at a perpendicular distance of 0.45m.</p>
+            
+            <!-- Dynamic Canvas Diagram -->
+            <div class="quiz-diagram-container">
+              <canvas id="quiz-diagram" width="500" height="260"></canvas>
+            </div>
+
+            <!-- Answer Input Controls -->
+            <div class="quiz-input-container" id="quiz-answer-input-zone">
+              <!-- Rendered dynamically depending on multiple choice or numeric input -->
+            </div>
+
+            <button class="action-btn submit-answer-btn" id="quiz-submit-btn">Submit Answer</button>
+          </div>
+
+          <!-- Solution Panel (Hidden initially) -->
+          <div class="solution-panel hidden" id="quiz-solution-box">
+            <div class="solution-header">
+              <span class="solution-status-indicator" id="solution-status-text">CORRECT</span>
+            </div>
+            <div class="solution-body">
+              <p class="solution-text" id="solution-explanation">Worked derivation text goes here...</p>
+              <button class="action-btn next-question-btn" id="quiz-next-btn">Next Question</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="quiz-results-screen" class="quiz-state-panel">
+        <h2 class="results-title">Challenge Summary</h2>
+        <div class="results-container">
+          <div class="radial-score-ring">
+            <div class="score-display">
+              <span class="score-big" id="result-score-ratio">24/30</span>
+              <span class="score-percentage" id="result-score-perc">80%</span>
+            </div>
+          </div>
+
+          <div class="grade-feedback-card">
+            <h3 class="grade-text" id="result-grade-heading">Excellent</h3>
+            <p class="grade-desc" id="result-grade-desc">You are ready for your O-Level exam on this topic!</p>
+          </div>
+
+          <div class="recs-card">
+            <h3 class="recs-title">Topic Performance & Recommendation</h3>
+            <div class="topic-scores-list" id="result-topic-list">
+              <!-- Topic breakdown injected here -->
+            </div>
+            <div class="recommendation-box" id="result-recommendation-text">
+              We recommend revisiting topic **Perpendicular Distance** in flashcards.
+            </div>
+          </div>
+
+          <div class="results-actions">
+            <button class="action-btn glow-btn" id="quiz-restart-btn">Try New Challenge</button>
+            <button class="action-btn secondary-btn" id="quiz-view-flashcards-btn">Review Weak Cards</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: PERSONAL PROGRESS TRACKER -->
+    <section id="section-tracker" class="content-section">
+      <h2 class="section-title">Personal Progress Tracker</h2>
+
+      <div class="tracker-dashboard">
+        <!-- Overview Stats -->
+        <div class="stats-overview-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="stat-total-attempts">0</div>
+            <div class="stat-label">Total Quiz Attempts</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-best-score">N/A</div>
+            <div class="stat-label">Best Score (out of 30)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-strongest-topic">N/A</div>
+            <div class="stat-label">Strongest Area</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-weakest-topic">N/A</div>
+            <div class="stat-label">Focus Required</div>
+          </div>
+        </div>
+
+        <!-- History Chart & Detailed Breakdown -->
+        <div class="tracker-charts-row">
+          <div class="chart-container-card">
+            <h3>Recent Attempts (Last 5)</h3>
+            <div class="bar-chart" id="attempts-bar-chart">
+              <!-- Injected Bar Chart Bars -->
+              <div class="chart-empty-state" id="chart-placeholder">No attempts logged yet. Complete a quiz to view history!</div>
+            </div>
+          </div>
+
+          <div class="breakdown-container-card">
+            <h3>Cumulative Topic Mastery</h3>
+            <div class="topic-breakdown-list" id="tracker-topic-list">
+              <!-- Generated with progress elements -->
+            </div>
+          </div>
+        </div>
+
+        <div class="danger-zone">
+          <button class="reset-progress-btn" id="btn-reset-progress">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+            </svg>
+            Reset Progress Database
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>&copy; 2026 O-Level TorqueLab revision portal. Developed for GCSE and GCE O-Level Physics curricula.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
