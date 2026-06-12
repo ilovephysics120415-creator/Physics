@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pressure: Ultimate Revision - O-Level Physics</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Confetti Canvas -->
+  <canvas id="canvas-confetti"></canvas>
+
+  <!-- Sticky Header Wrapper -->
+  <div class="sticky-header-container">
+    <!-- Header -->
+    <header>
+      <div class="logo-container">
+        <span class="logo-icon"><i class="fa-solid fa-gauge-high"></i></span>
+        <h1 class="logo-text">Pressure Challenge</h1>
+      </div>
+      <div class="session-stat" id="header-accuracy-badge">
+        Session: <span id="session-correct-count">0</span>/<span id="session-total-count">0</span> Correct
+      </div>
+    </header>
+
+    <!-- Top Nav Bar -->
+    <nav class="top-nav">
+      <button class="nav-item active" id="nav-dashboard" onclick="app.navigateTo('dashboard')">
+        <span class="nav-icon"><i class="fa-solid fa-gauge-high"></i></span>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-item" id="nav-formulas" onclick="app.navigateTo('formulas')">
+        <span class="nav-icon"><i class="fa-solid fa-calculator"></i></span>
+        <span>Formulas</span>
+      </button>
+      <button class="nav-item" id="nav-flashcards" onclick="app.navigateTo('flashcards')">
+        <span class="nav-icon"><i class="fa-solid fa-layer-group"></i></span>
+        <span>Cards</span>
+      </button>
+      <button class="nav-item" id="nav-quiz" onclick="app.navigateTo('quiz')">
+        <span class="nav-icon"><i class="fa-solid fa-circle-question"></i></span>
+        <span>Quiz</span>
+      </button>
+      <button class="nav-item" id="nav-score" onclick="app.navigateTo('score')">
+        <span class="nav-icon"><i class="fa-solid fa-trophy"></i></span>
+        <span>Score</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Main Content Areas -->
+  <main>
+    
+    <!-- SECTION 1: DASHBOARD -->
+    <section id="section-dashboard" class="app-section active">
+      <div class="welcome-card">
+        <h2>MISSION CONTROL</h2>
+        <p>Welcome, O-Level Physics Cadet. This mission checks your mastery over all pressure topics. Choose a dedicated revision channel or challenge yourself with the full exam simulation.</p>
+      </div>
+
+      <div class="topic-grid">
+        <!-- Topic 1: Foundations -->
+        <div class="topic-card foundations">
+          <div class="topic-header-row">
+            <div class="topic-title-area">
+              <span class="topic-badge-icon"><i class="fa-solid fa-weight-hanging"></i></span>
+              <span class="topic-name">Foundations</span>
+              <span class="topic-formula">P = F ÷ A</span>
+            </div>
+            <div class="progress-container">
+              <svg class="progress-ring" width="50" height="50">
+                <circle class="progress-ring-circle" stroke="rgba(255,255,255,0.05)" stroke-width="4" fill="transparent" r="20" cx="25" cy="25"/>
+                <circle class="progress-ring-circle" id="ring-foundations" stroke="var(--color-foundations)" stroke-width="4" stroke-linecap="round" fill="transparent" r="20" cx="25" cy="25" stroke-dasharray="125.6" stroke-dashoffset="125.6"/>
+              </svg>
+              <span class="progress-text" id="text-foundations">0%</span>
+            </div>
+          </div>
+          <div class="topic-card-action">
+            <button class="btn-revise-sm" onclick="app.jumpToFlashcards('Foundations')">Revise Topic</button>
+          </div>
+        </div>
+
+        <!-- Topic 2: Hydraulics -->
+        <div class="topic-card hydraulics">
+          <div class="topic-header-row">
+            <div class="topic-title-area">
+              <span class="topic-badge-icon"><i class="fa-solid fa-oil-can"></i></span>
+              <span class="topic-name">Hydraulics</span>
+              <span class="topic-formula">F₁/A₁ = F₂/A₂</span>
+            </div>
+            <div class="progress-container">
+              <svg class="progress-ring" width="50" height="50">
+                <circle class="progress-ring-circle" stroke="rgba(255,255,255,0.05)" stroke-width="4" fill="transparent" r="20" cx="25" cy="25"/>
+                <circle class="progress-ring-circle" id="ring-hydraulics" stroke="var(--color-hydraulics)" stroke-width="4" stroke-linecap="round" fill="transparent" r="20" cx="25" cy="25" stroke-dasharray="125.6" stroke-dashoffset="125.6"/>
+              </svg>
+              <span class="progress-text" id="text-hydraulics">0%</span>
+            </div>
+          </div>
+          <div class="topic-card-action">
+            <button class="btn-revise-sm" onclick="app.jumpToFlashcards('Hydraulics')">Revise Topic</button>
+          </div>
+        </div>
+
+        <!-- Topic 3: Liquid Pressure -->
+        <div class="topic-card liquid">
+          <div class="topic-header-row">
+            <div class="topic-title-area">
+              <span class="topic-badge-icon"><i class="fa-solid fa-water"></i></span>
+              <span class="topic-name">Liquid & Density</span>
+              <span class="topic-formula">P = hρg & ρ = m/V</span>
+            </div>
+            <div class="progress-container">
+              <svg class="progress-ring" width="50" height="50">
+                <circle class="progress-ring-circle" stroke="rgba(255,255,255,0.05)" stroke-width="4" fill="transparent" r="20" cx="25" cy="25"/>
+                <circle class="progress-ring-circle" id="ring-liquid" stroke="var(--color-liquid)" stroke-width="4" stroke-linecap="round" fill="transparent" r="20" cx="25" cy="25" stroke-dasharray="125.6" stroke-dashoffset="125.6"/>
+              </svg>
+              <span class="progress-text" id="text-liquid">0%</span>
+            </div>
+          </div>
+          <div class="topic-card-action">
+            <button class="btn-revise-sm" onclick="app.jumpToFlashcards('Liquid')">Revise Topic</button>
+          </div>
+        </div>
+
+        <!-- Topic 4: Atmospheric -->
+        <div class="topic-card atmospheric">
+          <div class="topic-header-row">
+            <div class="topic-title-area">
+              <span class="topic-badge-icon"><i class="fa-solid fa-cloud-showers-water"></i></span>
+              <span class="topic-name">Atmospheric</span>
+              <span class="topic-formula">Barometer & Manometer</span>
+            </div>
+            <div class="progress-container">
+              <svg class="progress-ring" width="50" height="50">
+                <circle class="progress-ring-circle" stroke="rgba(255,255,255,0.05)" stroke-width="4" fill="transparent" r="20" cx="25" cy="25"/>
+                <circle class="progress-ring-circle" id="ring-atmospheric" stroke="var(--color-atmospheric)" stroke-width="4" stroke-linecap="round" fill="transparent" r="20" cx="25" cy="25" stroke-dasharray="125.6" stroke-dashoffset="125.6"/>
+              </svg>
+              <span class="progress-text" id="text-atmospheric">0%</span>
+            </div>
+          </div>
+          <div class="topic-card-action">
+            <button class="btn-revise-sm" onclick="app.jumpToFlashcards('Atmospheric')">Revise Topic</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-container">
+        <button class="btn-primary" onclick="app.startQuiz('full')">
+          <i class="fa-solid fa-bolt"></i> Full Revision Quiz (30 Qs)
+        </button>
+        <button class="btn-secondary" onclick="app.openTopicSelector()">
+          <i class="fa-solid fa-list-check"></i> Topic Quiz (15 Qs)
+        </button>
+      </div>
+    </section>
+
+    <!-- SECTION 2: FORMULA REFERENCE SHEET -->
+    <section id="section-formulas" class="app-section">
+      <div class="formula-header-section">
+        <h2>FORMULA REFERENCE</h2>
+        <span class="session-stat">Tap any card for a worked example</span>
+      </div>
+
+      <div class="formula-grid">
+        <!-- Topic 1: Foundations -->
+        <div class="formula-section-group foundations">
+          <h3 class="formula-section-title">Pressure Foundations</h3>
+          <div class="formula-cards-container">
+            <div class="formula-card" onclick="app.toggleFormulaExample(this, 'p-fa')">
+              <div class="formula-card-main">
+                <div>
+                  <div class="formula-card-expression">P = F ÷ A</div>
+                  <div class="formula-card-desc">Pressure = Force divided by Area. Unit: Pascal (Pa) = N/m²</div>
+                </div>
+                <div class="tap-to-expand"><i class="fa-solid fa-chevron-down"></i></div>
+              </div>
+              <div class="formula-worked-example" id="example-p-fa">
+                <!-- Javascript populated -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Topic 2: Hydraulics -->
+        <div class="formula-section-group hydraulics">
+          <h3 class="formula-section-title">Hydraulic Systems</h3>
+          <div class="formula-cards-container">
+            <div class="formula-card" onclick="app.toggleFormulaExample(this, 'hyd-ratio')">
+              <div class="formula-card-main">
+                <div>
+                  <div class="formula-card-expression">P = F₁/A₁ = F₂/A₂</div>
+                  <div class="formula-card-desc">Pascal's Principle: pressure is transmitted equally throughout an enclosed fluid.</div>
+                </div>
+                <div class="tap-to-expand"><i class="fa-solid fa-chevron-down"></i></div>
+              </div>
+              <div class="formula-worked-example" id="example-hyd-ratio">
+                <!-- Javascript populated -->
+              </div>
+            </div>
+            <div class="formula-card" onclick="app.toggleFormulaExample(this, 'hyd-f2')">
+              <div class="formula-card-main">
+                <div>
+                  <div class="formula-card-expression">F₂ = F₁ × (A₂ ÷ A₁)</div>
+                  <div class="formula-card-desc">Force multiplication based on the ratio of piston areas.</div>
+                </div>
+                <div class="tap-to-expand"><i class="fa-solid fa-chevron-down"></i></div>
+              </div>
+              <div class="formula-worked-example" id="example-hyd-f2">
+                <!-- Javascript populated -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Topic 3: Liquid Pressure & Density -->
+        <div class="formula-section-group liquid">
+          <h3 class="formula-section-title">Liquid Pressure & Density</h3>
+          <div class="formula-cards-container">
+            <div class="formula-card" onclick="app.toggleFormulaExample(this, 'density')">
+              <div class="formula-card-main">
+                <div>
+                  <div class="formula-card-expression">ρ = m ÷ V</div>
+                  <div class="formula-card-desc">Density = mass divided by volume. Standard SI unit: kg/m³.</div>
+                </div>
+                <div class="tap-to-expand"><i class="fa-solid fa-chevron-down"></i></div>
+              </div>
+              <div class="formula-worked-example" id="example-density">
+                <!-- Javascript populated -->
+              </div>
+            </div>
+            <div class="formula-card" onclick="app.toggleFormulaExample(this, 'liquid-p')">
+              <div class="formula-card-main">
+                <div>
+                  <div class="formula-card-expression">P = hρg</div>
+                  <div class="formula-card-desc">Liquid Pressure = depth × density × gravitational field strength (g = 10 N/kg).</div>
+                </div>
+                <div class="tap-to-expand"><i class="fa-solid fa-chevron-down"></i></div>
+              </div>
+              <div class="formula-worked-example" id="example-liquid-p">
+                <!-- Javascript populated -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Topic 4: Atmospheric Pressure & Manometers -->
+        <div class="formula-section-group atmospheric">
+          <h3 class="formula-section-title">Atmospheric Pressure & Manometers</h3>
+          <div class="formula-cards-container">
+            <div class="formula-card" onclick="app.toggleFormulaExample(this, 'barometer')">
+              <div class="formula-card-main">
+                <div>
+                  <div class="formula-card-expression">Pₐ = hρg</div>
+                  <div class="formula-card-desc">Barometer pressure. Mercury density (ρ) = 13,600 kg/m³.</div>
+                </div>
+                <div class="tap-to-expand"><i class="fa-solid fa-chevron-down"></i></div>
+              </div>
+              <div class="formula-worked-example" id="example-barometer">
+                <!-- Javascript populated -->
+              </div>
+            </div>
+            <div class="formula-card" onclick="app.toggleFormulaExample(this, 'gas-above')">
+              <div class="formula-card-main">
+                <div>
+                  <div class="formula-card-expression">Pgas = Pₐ + hρg</div>
+                  <div class="formula-card-desc">Manometer with gas pressure ABOVE atmospheric pressure.</div>
+                </div>
+                <div class="tap-to-expand"><i class="fa-solid fa-chevron-down"></i></div>
+              </div>
+              <div class="formula-worked-example" id="example-gas-above">
+                <!-- Javascript populated -->
+              </div>
+            </div>
+            <div class="formula-card" onclick="app.toggleFormulaExample(this, 'gas-below')">
+              <div class="formula-card-main">
+                <div>
+                  <div class="formula-card-expression">Pgas = Pₐ - hρg</div>
+                  <div class="formula-card-desc">Manometer with gas pressure BELOW atmospheric pressure.</div>
+                </div>
+                <div class="tap-to-expand"><i class="fa-solid fa-chevron-down"></i></div>
+              </div>
+              <div class="formula-worked-example" id="example-gas-below">
+                <!-- Javascript populated -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: QUIZ VIEW -->
+    <section id="section-quiz" class="app-section">
+      <div class="quiz-header">
+        <div>QUIZ IN PROGRESS</div>
+        <div id="quiz-progress-text">Question 1 of 30</div>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="quiz-progress-bar"></div>
+      </div>
+
+      <!-- Question Card Container -->
+      <div class="question-card" id="quiz-question-card">
+        <!-- Dynamic content: tag, question text, input fields, correct/incorrect status -->
+      </div>
+
+      <!-- Feedback Pane -->
+      <div class="feedback-overlay" id="quiz-feedback-pane">
+        <h4 class="feedback-title" id="feedback-pane-title">
+          <!-- Populated by JS -->
+        </h4>
+        <div class="feedback-working" id="feedback-pane-working">
+          <!-- Populated by JS -->
+        </div>
+        <div class="feedback-actions">
+          <button class="btn-next" id="btn-next-question" onclick="app.nextQuestion()">Next Question <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: SCORE AND FEEDBACK -->
+    <section id="section-score" class="app-section">
+      <div class="score-card">
+        <h2 class="score-title">CHALLENGE COMPLETED</h2>
+        <div class="score-readout" id="score-value">0<span>/30</span></div>
+        <div class="star-rating" id="score-stars">
+          <!-- Dynamic stars -->
+        </div>
+        <div class="feedback-msg-box" id="score-message">
+          <!-- Dynamic overall recommendation -->
+        </div>
+
+        <div class="topic-breakdown">
+          <h3 class="breakdown-title">Topic Breakdown</h3>
+          <div class="breakdown-row foundations">
+            <span class="breakdown-name">Pressure Foundations</span>
+            <span class="breakdown-score" id="breakdown-foundations">0/8</span>
+          </div>
+          <div class="breakdown-row hydraulics">
+            <span class="breakdown-name">Hydraulic Systems</span>
+            <span class="breakdown-score" id="breakdown-hydraulics">0/7</span>
+          </div>
+          <div class="breakdown-row liquid">
+            <span class="breakdown-name">Liquid & Density</span>
+            <span class="breakdown-score" id="breakdown-liquid">0/8</span>
+          </div>
+          <div class="breakdown-row atmospheric">
+            <span class="breakdown-name">Atmospheric Pressure</span>
+            <span class="breakdown-score" id="breakdown-atmospheric">0/7</span>
+          </div>
+        </div>
+
+        <!-- Highlight Weakest Topic -->
+        <div class="weakest-alert" id="weakest-topic-banner" style="display: none;" onclick="app.reviseWeakestTopic()">
+          <span class="weakest-icon"><i class="fa-solid fa-triangle-exclamation"></i></span>
+          <div>
+            <strong>Need to boost?</strong>
+            <div id="weakest-topic-text">You struggled most with Hydraulic Systems. Tap here to revise.</div>
+          </div>
+        </div>
+
+        <div class="score-actions">
+          <button class="btn-primary" onclick="app.restartQuizAfterScore()"><i class="fa-solid fa-rotate-left"></i> Try Again</button>
+          <button class="btn-secondary" onclick="app.navigateTo('flashcards')"><i class="fa-solid fa-layer-group"></i> Go to Flashcards</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: FLASHCARD REVISION -->
+    <section id="section-flashcards" class="app-section">
+      <div class="flashcards-header">
+        <h2>FLASHCARD REVISION</h2>
+      </div>
+
+      <!-- Filters -->
+      <div class="flashcard-filters">
+        <button class="filter-btn all active" onclick="app.filterFlashcards('all')">All</button>
+        <button class="filter-btn foundations" onclick="app.filterFlashcards('Foundations')">Foundations</button>
+        <button class="filter-btn hydraulics" onclick="app.filterFlashcards('Hydraulics')">Hydraulics</button>
+        <button class="filter-btn liquid" onclick="app.filterFlashcards('Liquid')">Liquid</button>
+        <button class="filter-btn atmospheric" onclick="app.filterFlashcards('Atmospheric')">Atmospheric</button>
+      </div>
+
+      <div id="flashcards-deck-view">
+        <div class="flashcard-status-info">
+          <div>Progress: <span id="flashcard-deck-index">1</span>/<span id="flashcard-deck-total">20</span></div>
+          <div>Remaining to Review: <strong id="flashcard-remaining-review">20</strong></div>
+        </div>
+
+        <!-- Flashcard -->
+        <div class="flashcard-perspective" id="interactive-flashcard" onclick="app.flipFlashcard()">
+          <div class="flashcard-inner">
+            <!-- Front of Card -->
+            <div class="flashcard-front">
+              <span class="card-topic-label" id="card-topic-tag">Topic Tag</span>
+              <div class="card-prompt-title">Question</div>
+              <div class="card-main-text" id="card-front-text">Front of card prompt text goes here.</div>
+              <div class="card-tip">Tap card to flip <i class="fa-solid fa-rotate"></i></div>
+            </div>
+            <!-- Back of Card -->
+            <div class="flashcard-back">
+              <span class="card-topic-label" id="card-topic-tag-back">Topic Tag</span>
+              <div class="card-prompt-title">Answer</div>
+              <div class="card-main-text" id="card-back-text">Back of card answer text goes here.</div>
+              <div class="card-tip">Tap card to flip back <i class="fa-solid fa-rotate"></i></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review Controls -->
+        <div class="flashcard-actions">
+          <button class="btn-review-again" onclick="app.handleFlashcardResponse(false, event)">
+            <i class="fa-solid fa-rotate-left"></i> Review again
+          </button>
+          <button class="btn-got-it" onclick="app.handleFlashcardResponse(true, event)">
+            <i class="fa-solid fa-check"></i> Got it
+          </button>
+        </div>
+      </div>
+
+      <!-- Empty Deck View -->
+      <div class="empty-deck-view" id="flashcards-empty-view">
+        <div class="empty-deck-icon"><i class="fa-solid fa-circle-check"></i></div>
+        <h3 class="empty-deck-title">Deck Completed!</h3>
+        <p class="empty-deck-desc">You've successfully verified all flashcards in this set.</p>
+        <button class="btn-secondary" style="margin: 0 auto;" onclick="app.resetFlashcardSession()">
+          <i class="fa-solid fa-rotate-left"></i> Reset and Review Again
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Navigation Selection Modal Overlay -->
+  <div class="modal-overlay" id="topic-quiz-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Select Focus Topic</h3>
+        <button class="btn-close" onclick="app.closeTopicSelector()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-options">
+        <button class="topic-select-btn foundations" onclick="app.startQuiz('Foundations')">
+          <span>Pressure Foundations</span>
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        <button class="topic-select-btn hydraulics" onclick="app.startQuiz('Hydraulics')">
+          <span>Hydraulic Systems</span>
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        <button class="topic-select-btn liquid" onclick="app.startQuiz('Liquid')">
+          <span>Liquid Pressure & Density</span>
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        <button class="topic-select-btn atmospheric" onclick="app.startQuiz('Atmospheric')">
+          <span>Atmospheric Pressure</span>
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script src="app.js"></script>
+</body>
+</html>
