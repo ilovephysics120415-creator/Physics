@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O-Level Physics: Sankey Diagrams & Efficiency Analyser</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- App Container -->
+  <div class="app-container">
+    
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo">
+        <span class="neon-text">SANKEY</span><span class="purple-light">ANALYSER</span>
+      </div>
+      <div class="syllabus-tag">Singapore O-Level Physics (6091)</div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="main-nav">
+      <button class="nav-btn active" data-target="section-intro">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.99L19.53 19H4.47L12 5.99zM13 16h-2v2h2v-2zm0-6h-2v4h2v-4z"/></svg>
+        <span>Concept</span>
+      </button>
+      <button class="nav-btn" data-target="section-exploration">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+        <span>Builder</span>
+      </button>
+      <button class="nav-btn" data-target="section-flashcards">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+        <span>Flashcards</span>
+      </button>
+      <button class="nav-btn" data-target="section-quiz">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+        <span>Quiz</span>
+      </button>
+    </nav>
+
+    <!-- Main Screens -->
+    <main class="app-main">
+
+      <!-- SECTION 1: CONCEPT INTRODUCTION -->
+      <section id="section-intro" class="screen-section active">
+        <div class="section-title-wrap">
+          <h2>Energy Transfers & Efficiency</h2>
+          <p class="subtitle">Understand Sankey diagram mechanics and calculations under the O-Level Syllabus.</p>
+        </div>
+
+        <div class="grid-container">
+          <!-- Concept Card -->
+          <div class="glass-card glow-card">
+            <h3>Sankey Diagram Principles</h3>
+            <ul class="syllabus-list">
+              <li>
+                <span class="bullet-highlight">Width</span> 
+                of each arrow is directly proportional to the amount of energy in Joules (J).
+              </li>
+              <li>
+                <span class="bullet-highlight">Input</span> 
+                arrow enters from the left (representing the initial energy store/transfer).
+              </li>
+              <li>
+                <span class="bullet-highlight">Useful Output</span> 
+                arrow continues to the right (representing the intended energy store/transfer).
+              </li>
+              <li>
+                <span class="bullet-highlight">Non-Useful Output</span> 
+                exits downwards, always labelled as <strong>"energy transferred to internal store"</strong>.
+              </li>
+              <li>
+                <span class="bullet-highlight">Conservation</span> 
+                of energy: Total Input Energy = Total Output Energy (all stores combined).
+              </li>
+            </ul>
+
+            <!-- Simple Diagram Illustration -->
+            <div class="mini-diagram-container">
+              <svg id="intro-sankey" viewBox="0 0 320 180" class="mini-sankey">
+                <!-- Static beautiful representation -->
+                <defs>
+                  <linearGradient id="grad-useful" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#a855f7" />
+                    <stop offset="100%" stop-color="#c084fc" />
+                  </linearGradient>
+                  <linearGradient id="grad-internal" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#a855f7" />
+                    <stop offset="100%" stop-color="#701a75" />
+                  </linearGradient>
+                </defs>
+                <!-- Input and Useful Arrow -->
+                <path d="M 20 40 L 160 40 L 160 80 L 20 80 Z" fill="url(#grad-useful)" />
+                <path d="M 160 40 L 260 40 L 260 30 L 285 50 L 260 70 L 260 60 L 160 60 Z" fill="url(#grad-useful)" />
+                <!-- Internal Store Arrow -->
+                <path d="M 160 60 C 160 110, 160 110, 190 110 L 190 100 L 210 115 L 190 130 L 190 120 C 145 120, 140 100, 140 80 L 160 80 Z" fill="url(#grad-internal)" />
+                <!-- Text Annotations -->
+                <text x="35" y="30" class="svg-txt input-lbl">Total Input</text>
+                <text x="270" y="20" class="svg-txt useful-lbl" text-anchor="end">Useful Output</text>
+                <text x="210" y="150" class="svg-txt internal-lbl" text-anchor="middle">Transferred to Internal Store</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Formula Card -->
+          <div class="glass-card glow-card formula-card">
+            <h3>The Efficiency Formula</h3>
+            <div class="formula-box">
+              <div class="math-expr">
+                <span>Efficiency</span> = <span class="fraction"><span class="numerator">Useful Energy Output</span><span class="denominator">Total Energy Input</span></span> &times; 100%
+              </div>
+            </div>
+            <p class="formula-desc">
+              Efficiency is expressed as a <strong>percentage (%)</strong> and can never exceed 100% due to unavoidable energy transfers to the internal store (e.g. via friction or resistance).
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: INTERACTIVE EXPLORATION -->
+      <section id="section-exploration" class="screen-section">
+        <div class="section-title-wrap">
+          <h2>Sankey Diagram Builder</h2>
+          <p class="subtitle">Select a device, input energy values, and watch the Sankey diagram scale in real-time.</p>
+        </div>
+
+        <!-- Device Selector Tabs -->
+        <div class="device-tabs-container">
+          <div class="tabs-scroll" id="device-tabs">
+            <!-- Dynamically populated or statically written buttons -->
+            <button class="device-tab active" data-device="lightbulb">Light Bulb</button>
+            <button class="device-tab" data-device="motor">Electric Motor</button>
+            <button class="device-tab" data-device="kettle">Kettle</button>
+            <button class="device-tab" data-device="car">Car Engine</button>
+            <button class="device-tab" data-device="solar">Solar Panel</button>
+            <button class="device-tab" data-device="hydro">Hydroelectric</button>
+          </div>
+        </div>
+
+        <div class="grid-container explorer-grid">
+          <!-- Controls and Inputs -->
+          <div class="glass-card controls-card">
+            <div class="device-info-header">
+              <h3 id="explorer-device-title">Light Bulb</h3>
+              <div class="device-animation-box" id="device-animation">
+                <!-- Simple dynamic visualizer via CSS/JS -->
+                <div class="bulb-glow-circle"></div>
+                <div class="bulb-base"></div>
+              </div>
+            </div>
+
+            <div class="input-group-grid">
+              <div class="input-wrap">
+                <label for="input-total">Total Energy Input (J)</label>
+                <div class="num-input-container">
+                  <input type="number" id="input-total" min="1" max="10000" value="100">
+                  <span class="unit-suffix">J</span>
+                </div>
+              </div>
+
+              <div class="input-wrap">
+                <label for="input-useful">Useful Energy Output (J)</label>
+                <div class="num-input-container">
+                  <input type="number" id="input-useful" min="0" max="10000" value="30">
+                  <span class="unit-suffix">J</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Error message container -->
+            <div id="explorer-error" class="error-toast hide">
+              ⚠️ Useful output must be less than the total energy input!
+            </div>
+
+            <div class="efficiency-result-box">
+              <div class="res-lbl">Calculated Efficiency</div>
+              <div class="res-val" id="explorer-efficiency">30.0%</div>
+            </div>
+
+            <div class="device-summary-box">
+              <p id="explorer-summary-text">For every 100 J entering the light bulb, 30 J transfers by wave propagation (light) and 70 J transfers to the internal store.</p>
+            </div>
+          </div>
+
+          <!-- Dynamic SVG Diagram Canvas -->
+          <div class="glass-card diagram-card">
+            <h3>Live Sankey Diagram</h3>
+            <div class="sankey-canvas-wrap">
+              <svg id="live-sankey-svg" viewBox="0 0 500 350" width="100%" height="100%">
+                <defs>
+                  <linearGradient id="live-useful-grad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#a855f7" />
+                    <stop offset="100%" stop-color="#d8b4fe" />
+                  </linearGradient>
+                  <linearGradient id="live-internal-grad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#a855f7" />
+                    <stop offset="100%" stop-color="#581c87" />
+                  </linearGradient>
+                </defs>
+                <!-- Rendered dynamically by script.js -->
+                <g id="sankey-paths"></g>
+                <g id="sankey-labels"></g>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: FLASHCARDS -->
+      <section id="section-flashcards" class="screen-section">
+        <div class="section-title-wrap">
+          <h2>Flashcard Revision</h2>
+          <p class="subtitle">Quick-fire revision cards using syllabus-specific stores and transfers.</p>
+        </div>
+
+        <div class="flashcard-deck-container">
+          <div class="card-counter">
+            Reviewed: <span id="cards-reviewed-count">0</span> / 20
+          </div>
+
+          <!-- The actual flip card -->
+          <div class="flashcard-wrapper" id="flashcard-element">
+            <div class="flashcard-inner">
+              <!-- Front Side -->
+              <div class="flashcard-front">
+                <div class="card-side-lbl">QUESTION</div>
+                <p class="flashcard-text" id="fc-front-text">Flashcard front text</p>
+                <div class="tap-hint">Tap to flip card 🔄</div>
+              </div>
+              <!-- Back Side -->
+              <div class="flashcard-back">
+                <div class="card-side-lbl">SYLLABUS SOLUTION</div>
+                <p class="flashcard-text" id="fc-back-text">Flashcard back text</p>
+                <div class="tap-hint">Tap to flip back 🔄</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div class="flashcard-controls">
+            <button class="control-btn" id="fc-prev-btn">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+              <span>Prev</span>
+            </button>
+            <button class="secondary-btn" id="fc-shuffle-btn">Shuffle Deck 🔀</button>
+            <button class="control-btn" id="fc-next-btn">
+              <span>Next</span>
+              <svg class="icon" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: QUIZ POOL -->
+      <section id="section-quiz" class="screen-section">
+        <div class="quiz-intro-box" id="quiz-start-screen">
+          <div class="section-title-wrap text-center">
+            <h2>Singapore Syllabus Revision Quiz</h2>
+            <p class="subtitle">Complete 15 randomly drawn questions. Practice units and calculations.</p>
+          </div>
+          <div class="quiz-rules-card glass-card">
+            <h4>⚠️ Important Answer Formatting Rules:</h4>
+            <ul>
+              <li>Always include BOTH the numerical value and the correct unit in your answer.</li>
+              <li>Unit matching is case-sensitive:
+                <ul>
+                  <li>Joules: <strong>J</strong> (not j)</li>
+                  <li>Watts: <strong>W</strong> (not w)</li>
+                  <li>Seconds: <strong>s</strong> (not S)</li>
+                  <li>Efficiency: must include the <strong>%</strong> symbol.</li>
+                </ul>
+              </li>
+              <li>Answers can be typed with or without a space (e.g. <code>250J</code> or <code>250 J</code>).</li>
+              <li>Numerical values must be rounded to between 0 and 4 decimal places.</li>
+            </ul>
+            <button class="primary-btn" id="start-quiz-btn">Start Quiz (15 Questions)</button>
+          </div>
+        </div>
+
+        <div id="quiz-play-screen" class="hide">
+          <div class="quiz-progress-bar-container">
+            <div class="progress-info">
+              <span>Question <span id="current-q-num">1</span> of 15</span>
+              <span>Score: <span id="running-score">0</span></span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="quiz-progress-fill" style="width: 6.67%"></div>
+            </div>
+          </div>
+
+          <div class="glass-card quiz-question-card">
+            <div class="question-header">
+              <span class="badge" id="question-category">Sankey Calculation</span>
+            </div>
+            
+            <p id="quiz-question-text" class="question-text">Question text goes here...</p>
+
+            <!-- Sankey Diagram Placeholder for Quiz if required -->
+            <div id="quiz-diagram-container" class="quiz-diag-box hide">
+              <svg id="quiz-sankey-svg" viewBox="0 0 400 250" class="mini-sankey"></svg>
+            </div>
+
+            <!-- Unit reminder banner shown on every question -->
+            <div class="unit-reminder">
+              💡 Remember: Include units! <strong>J</strong>, <strong>W</strong>, <strong>s</strong>, or <strong>%</strong> (case-sensitive).
+            </div>
+
+            <!-- Answer inputs (Dynamic based on MCQ / Text Input) -->
+            <div id="quiz-answer-options" class="answers-area">
+              <!-- Text input option -->
+              <div class="text-input-answer-wrap" id="quiz-text-input-wrap">
+                <input type="text" id="quiz-student-answer" placeholder="e.g. 75% or 120 J" autocomplete="off">
+                <button class="primary-btn submit-ans-btn" id="quiz-submit-btn">Submit Answer</button>
+              </div>
+
+              <!-- MCQ option -->
+              <div class="mcq-options-grid hide" id="quiz-mcq-wrap">
+                <!-- Dynamically generated buttons -->
+              </div>
+            </div>
+
+            <!-- Solution / Feedback Card (Revealed after submission) -->
+            <div id="quiz-feedback-box" class="quiz-feedback-box hide">
+              <div class="feedback-status-title" id="quiz-feedback-title">Correct! 🌟</div>
+              <div class="feedback-details">
+                <div class="worked-solution-lbl">Worked Solution:</div>
+                <div id="quiz-worked-solution" class="solution-text">Solution details...</div>
+              </div>
+              <button class="primary-btn next-q-btn" id="quiz-next-btn">Next Question</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 5: SCORING & FINAL FEEDBACK -->
+        <div id="quiz-result-screen" class="hide">
+          <div class="glass-card result-summary-card text-center">
+            <h2 class="neon-text">Quiz Complete!</h2>
+            <div class="final-score-display">
+              <span id="final-score">14</span> / 15
+            </div>
+            <div class="score-phrase" id="score-comment">Sankey Star! 🌟</div>
+            
+            <div class="action-buttons">
+              <button class="primary-btn" id="retry-quiz-btn">Try Again</button>
+              <button class="secondary-btn" id="review-builder-btn">Return to Builder</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Celebration Canvas overlay for high scores / correct answers -->
+    <canvas id="confetti-canvas"></canvas>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
