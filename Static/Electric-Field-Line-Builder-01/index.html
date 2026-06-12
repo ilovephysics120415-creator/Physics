@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Electric Field Line Builder - O-Level Physics</title>
+  <meta name="description" content="Master Static Electricity and Electric Field Lines for Singapore O-Level Physics (Syllabus 6091) through interactive builds and practice.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- App Container -->
+  <div class="app-container">
+    
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <h1>Electric Field Line Builder</h1>
+      </div>
+      <div class="syllabus-badge">O-Level Physics 6091</div>
+    </header>
+
+    <!-- Navigation Hub / Progress Tracker -->
+    <nav class="app-nav">
+      <button class="nav-btn active" data-section="intro" id="nav-intro">
+        <span class="btn-num">1</span>
+        <span class="btn-txt">Intro</span>
+      </button>
+      <button class="nav-btn" data-section="explorer" id="nav-explorer">
+        <span class="btn-num">2</span>
+        <span class="btn-txt">Explore</span>
+      </button>
+      <button class="nav-btn" data-section="flashcards" id="nav-flashcards">
+        <span class="btn-num">3</span>
+        <span class="btn-txt">Flashcards</span>
+      </button>
+      <button class="nav-btn" data-section="quiz" id="nav-quiz">
+        <span class="btn-num">4</span>
+        <span class="btn-txt">Quiz</span>
+      </button>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+
+      <!-- SECTION 1: CONCEPT INTRODUCTION -->
+      <section id="section-intro" class="content-section active">
+        <div class="section-card">
+          <div class="card-header">
+            <h2>Concept Introduction</h2>
+            <p class="subtitle">Tap the tabs below to visualize the rules of electric field lines.</p>
+          </div>
+
+          <!-- Interactive Concept Tabs -->
+          <div class="concept-tabs">
+            <button class="concept-tab-btn active" data-concept="c1">1. Force Region</button>
+            <button class="concept-tab-btn" data-concept="c2">2. Direction</button>
+            <button class="concept-tab-btn" data-concept="c3">3. Sign Rules</button>
+            <button class="concept-tab-btn" data-concept="c4">4. No Crossing</button>
+            <button class="concept-tab-btn" data-concept="c5">5. Spacing/Strength</button>
+          </div>
+
+          <!-- Concept Visualizers -->
+          <div class="concept-viewer">
+            <div class="viewer-canvas-container">
+              <svg id="intro-svg" width="100%" height="240" viewBox="0 0 400 240"></svg>
+            </div>
+            
+            <div class="concept-explanation-box">
+              <!-- Content injected dynamically via JS -->
+              <h3 id="concept-title">Electric Field Definition</h3>
+              <p id="concept-text">An electric field is a region in which an electric charge experiences an electric force.</p>
+            </div>
+          </div>
+          
+          <div class="section-footer">
+            <button class="btn btn-primary next-section-btn" data-target="explorer">Proceed to Interactive Explorer ➔</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: INTERACTIVE EXPLORATION -->
+      <section id="section-explorer" class="content-section">
+        <!-- Sub-navigation for Exploration Parts -->
+        <div class="sub-nav">
+          <button class="sub-nav-btn active" data-part="part-a" id="btn-part-a">Part A: Isolated Charge</button>
+          <button class="sub-nav-btn" data-part="part-b" id="btn-part-b">Part B: Two-Charge Builder</button>
+        </div>
+
+        <!-- PART A: Isolated Point Charge Explorer -->
+        <div id="explorer-part-a" class="explorer-part active">
+          <div class="section-card">
+            <div class="card-header">
+              <h3>Isolated Point Charge Explorer</h3>
+              <p class="subtitle">Toggle charge type & drag the test charge to see the force direction.</p>
+            </div>
+
+            <!-- Canvas View -->
+            <div class="canvas-wrapper">
+              <svg id="canvas-a" width="100%" height="320" viewBox="0 0 500 320">
+                <!-- SVG elements will be drawn dynamically -->
+              </svg>
+              <div class="canvas-overlay-instruction">Drag the positive test charge (q⁺) around!</div>
+            </div>
+
+            <!-- Controls Panel -->
+            <div class="controls-panel">
+              <div class="control-group">
+                <label>Source Charge Sign</label>
+                <div class="toggle-switch-wrapper">
+                  <button class="toggle-btn positive active" id="charge-a-sign-btn" data-val="1">Positive (+)</button>
+                  <button class="toggle-btn negative" id="charge-a-sign-neg-btn" data-val="-1">Negative (−)</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PART B: Two-Charge Field Pattern Builder -->
+        <div id="explorer-part-b" class="explorer-part">
+          <div class="section-card">
+            <div class="card-header">
+              <h3>Two-Charge Field Pattern Builder</h3>
+              <p class="subtitle">Set the signs for both charges to build and inspect field patterns.</p>
+            </div>
+
+            <!-- Canvas View -->
+            <div class="canvas-wrapper">
+              <svg id="canvas-b" width="100%" height="320" viewBox="0 0 500 320">
+                <!-- SVG elements will be drawn dynamically -->
+              </svg>
+              <!-- Pattern Label Overlay -->
+              <div class="pattern-badge" id="pattern-label-badge">Unlike Charges Pattern</div>
+            </div>
+
+            <!-- Controls Panel -->
+            <div class="controls-panel grid-2">
+              <div class="control-group">
+                <label>Left Charge ($q_1$)</label>
+                <div class="toggle-switch-wrapper mini">
+                  <button class="toggle-btn q1-toggle positive active" data-val="1">+</button>
+                  <button class="toggle-btn q1-toggle negative" data-val="-1">−</button>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label>Right Charge ($q_2$)</label>
+                <div class="toggle-switch-wrapper mini">
+                  <button class="toggle-btn q2-toggle negative active" data-val="-1">−</button>
+                  <button class="toggle-btn q2-toggle positive" data-val="1">+</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pattern Insight Box -->
+            <div class="insight-box" id="pattern-insight">
+              <strong>Key Feature:</strong> Field lines start from the positive charge and curve continuously to end on the negative charge.
+            </div>
+          </div>
+        </div>
+
+        <!-- Proceed Button -->
+        <div class="explorer-footer">
+          <button class="btn btn-primary next-section-btn" data-target="flashcards">Review Revision Flashcards ➔</button>
+        </div>
+      </section>
+
+      <!-- SECTION 3: QUIZ (MCQ) -->
+      <section id="section-quiz" class="content-section">
+        <div class="section-card">
+          <div class="card-header justify-between">
+            <div>
+              <h2>Concept Challenge</h2>
+              <p class="subtitle">O-Level Physics 6091 Static Electricity Quiz</p>
+            </div>
+            <div class="quiz-progress" id="quiz-progress-num">Question 1/10</div>
+          </div>
+
+          <!-- Quiz Setup / Start screen -->
+          <div id="quiz-start-screen" class="quiz-screen active">
+            <div class="quiz-info-card">
+              <div class="quiz-icon">📝</div>
+              <h3>Test Your Understanding</h3>
+              <p>You will be given 10 randomly selected multiple-choice questions from a pool of 30 syllabus questions.</p>
+              <ul class="quiz-rules-list">
+                <li>Instant visual verification for your answers</li>
+                <li>Exploratory diagrams for conceptual feedback</li>
+                <li>Earn score to complete Section 3 tracker</li>
+              </ul>
+              <button class="btn btn-primary btn-large" id="start-quiz-btn">Start Quiz</button>
+            </div>
+          </div>
+
+          <!-- Active Question Screen -->
+          <div id="quiz-active-screen" class="quiz-screen">
+            <!-- Progress Bar -->
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="quiz-progress-bar"></div>
+            </div>
+
+            <!-- Question Text -->
+            <div class="question-container">
+              <h3 id="question-text">Question goes here?</h3>
+              <!-- Optional visual representation of question (like SVG diagram) -->
+              <div id="question-diagram-wrapper" class="q-diagram-wrapper">
+                <svg id="quiz-q-svg" width="100%" height="180" viewBox="0 0 400 180"></svg>
+              </div>
+            </div>
+
+            <!-- Options List -->
+            <div class="options-grid" id="options-container">
+              <!-- Dynamically populated options -->
+            </div>
+
+            <!-- Explanation & Action Footer -->
+            <div class="quiz-footer-feedback hidden" id="quiz-feedback-box">
+              <div class="feedback-indicator">
+                <span class="feedback-icon" id="feedback-icon">✕</span>
+                <span class="feedback-title" id="feedback-title">Incorrect</span>
+              </div>
+              <p id="explanation-text">Explanation content goes here.</p>
+              <button class="btn btn-accent" id="next-q-btn">Next Question ➔</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: SCORING & FEEDBACK (DASHBOARD) -->
+      <section id="section-scoring" class="content-section">
+        <div class="section-card text-center">
+          <div class="scoring-celebration">
+            <div class="trophy-glow" id="score-emoji">🏆</div>
+            <h2 id="grade-tier-title">Excellent Job!</h2>
+            <p class="subtitle" id="grade-tier-desc">You've mastered the concepts of Electric Fields.</p>
+          </div>
+
+          <!-- Score Breakdowns -->
+          <div class="score-grid">
+            <div class="score-card">
+              <span class="score-label">Section 2A Explorer</span>
+              <span class="score-value text-cyan" id="score-2a-val">Completed</span>
+            </div>
+            <div class="score-card">
+              <span class="score-label">Section 2B Builder</span>
+              <span class="score-value text-magenta" id="score-2b-val">Completed</span>
+            </div>
+            <div class="score-card">
+              <span class="score-label">Section 3 MCQ Quiz</span>
+              <span class="score-value text-yellow" id="score-3-val">9/10</span>
+            </div>
+          </div>
+
+          <!-- Total Score Summary -->
+          <div class="score-summary-box">
+            <div class="overall-percentage" id="overall-percentage-txt">90%</div>
+            <div class="overall-label">Overall Completion Rating</div>
+          </div>
+
+          <!-- Personalized Syllabus Guidance -->
+          <div class="syllabus-guidance" id="syllabus-guidance-box">
+            <!-- Populated based on score tier -->
+          </div>
+
+          <div class="scoring-footer">
+            <button class="btn btn-secondary" id="restart-app-btn">Restart Entire Session</button>
+            <button class="btn btn-primary" id="goto-quiz-btn">Retake Quiz</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5: FLASHCARD REVISION MODE -->
+      <section id="section-flashcards" class="content-section">
+        <div class="section-card">
+          <div class="card-header justify-between">
+            <div>
+              <h2>Revision Flashcards</h2>
+              <p class="subtitle">Tap cards to flip and review definitions & field rules.</p>
+            </div>
+            <div class="flashcard-progress" id="flashcard-progress-txt">Card 1/8</div>
+          </div>
+
+          <!-- Card Deck Workspace -->
+          <div class="flashcard-workspace">
+            <div class="flashcard-container" id="flashcard-interactive">
+              <div class="flashcard-inner">
+                <!-- Front Side -->
+                <div class="flashcard-front">
+                  <div class="card-category">Definition</div>
+                  <div class="card-main-content" id="card-front-text">Electric Field</div>
+                  <div class="card-prompt">Tap to reveal answer ⚡</div>
+                </div>
+                <!-- Back Side -->
+                <div class="flashcard-back">
+                  <div class="card-category answer">Key Concept</div>
+                  <div class="card-main-content" id="card-back-text">An electric field is a region in which an electric charge experiences an electric force.</div>
+                  <div class="card-prompt">Tap to flip back 🔄</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flashcard Navigation -->
+          <div class="flashcard-controls">
+            <button class="btn btn-icon" id="fc-prev-btn">◀ Prev</button>
+            <button class="btn btn-secondary" id="fc-shuffle-btn">🔀 Shuffle</button>
+            <button class="btn btn-icon" id="fc-next-btn">Next ▶</button>
+          </div>
+
+          <div class="section-footer">
+            <button class="btn btn-primary next-section-btn" data-target="quiz">Ready for the Quiz Challenge ➔</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Global Celebration Effect Canvas -->
+    <canvas id="celebration-canvas" class="celebration-overlay"></canvas>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
