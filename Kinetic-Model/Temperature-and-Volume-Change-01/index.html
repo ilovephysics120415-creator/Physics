@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kinetic Model: Temperature, KE & Pressure</title>
+  <!-- Modern clean typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="header-logo">
+      <span class="logo-accent">KINETIC</span> MODEL
+    </div>
+    <div class="header-sub">Gas Behavior Lab</div>
+  </header>
+
+  <!-- Sticky Top Navigation -->
+  <nav class="app-nav">
+    <button class="nav-item active" data-tab="tab-explore">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/>
+      </svg>
+      <span>Explore</span>
+    </button>
+    <button class="nav-item" data-tab="tab-ke">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+      </svg>
+      <span>Kinetic Energy</span>
+    </button>
+    <button class="nav-item" data-tab="tab-flashcards">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/>
+      </svg>
+      <span>Flashcards</span>
+    </button>
+    <button class="nav-item" data-tab="tab-quiz">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+      </svg>
+      <span>Quiz</span>
+    </button>
+  </nav>
+
+  <!-- Main Content Areas (Tabs) -->
+  <main class="app-main">
+    
+    <!-- SECTION 1: Explore Tab -->
+    <section id="tab-explore" class="tab-content active">
+      <div class="card sim-card">
+        <div class="sim-header">
+          <h3>Particle Simulation</h3>
+          <span class="status-indicator">ACTIVE</span>
+        </div>
+        <div class="canvas-container">
+          <canvas id="explore-canvas"></canvas>
+        </div>
+        
+        <!-- Live descriptive message -->
+        <div class="feedback-message" id="explore-feedback">
+          Particles move at moderate speed — pressure is stable.
+        </div>
+      </div>
+
+      <!-- Controls & Gauge Row -->
+      <div class="controls-gauge-grid">
+        <!-- Sliders Container -->
+        <div class="card controls-card">
+          <div class="control-group">
+            <div class="control-label">
+              <span>Temperature</span>
+              <span id="temp-val-display" class="neon-text">Medium</span>
+            </div>
+            <input type="range" id="slider-temp" min="15" max="100" value="50" class="neon-slider">
+            <div class="slider-endpoints">
+              <span>Cold</span>
+              <span>Hot</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="control-label">
+              <span>Volume</span>
+              <span id="vol-val-display" class="neon-text">Medium</span>
+            </div>
+            <input type="range" id="slider-volume" min="30" max="100" value="70" class="neon-slider">
+            <div class="slider-endpoints">
+              <span>Small</span>
+              <span>Large</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="control-label">
+              <span>Particles</span>
+              <span id="count-val-display" class="neon-text">35</span>
+            </div>
+            <input type="range" id="slider-count" min="10" max="80" value="35" class="neon-slider">
+            <div class="slider-endpoints">
+              <span>Few</span>
+              <span>Many</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gauge Card -->
+        <div class="card gauge-card">
+          <div class="gauge-title">GAS PRESSURE</div>
+          <div class="gauge-wrapper">
+            <div class="pressure-dial">
+              <svg viewBox="0 0 100 100" class="dial-svg">
+                <circle class="dial-bg" cx="50" cy="50" r="40" />
+                <circle id="dial-progress" class="dial-progress" cx="50" cy="50" r="40" />
+              </svg>
+              <div class="pressure-display">
+                <span id="pressure-num">50</span>
+                <span class="pressure-unit">kPa</span>
+              </div>
+            </div>
+          </div>
+          <div id="pressure-level" class="pressure-badge level-medium">NORMAL</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: Kinetic Energy Tab -->
+    <section id="tab-ke" class="tab-content">
+      <!-- Side by Side Containers -->
+      <div class="comparison-grid">
+        <div class="card compare-card">
+          <div class="compare-title">Low Temperature</div>
+          <div class="mini-canvas-container">
+            <canvas id="canvas-ke-low"></canvas>
+          </div>
+          <div class="compare-label badge-low">Lower average kinetic energy</div>
+        </div>
+        
+        <div class="card compare-card">
+          <div class="compare-title">High Temperature</div>
+          <div class="mini-canvas-container">
+            <canvas id="canvas-ke-high"></canvas>
+          </div>
+          <div class="compare-label badge-high">Higher average kinetic energy</div>
+        </div>
+      </div>
+
+      <!-- Core Static Statement Callout -->
+      <div class="card statement-card">
+        <div class="statement-glow-border"></div>
+        <p class="core-statement">
+          A higher temperature means the particles have a higher average kinetic energy.
+        </p>
+      </div>
+
+      <!-- Interactive KE Adjuster -->
+      <div class="card interactive-ke-card">
+        <div class="ke-interactive-header">
+          <h3>Interactive Average KE Tester</h3>
+          <p>Drag the dial to adjust temperature and monitor kinetic energy.</p>
+        </div>
+        
+        <div class="ke-interactive-body">
+          <div class="interactive-canvas-wrapper">
+            <canvas id="canvas-ke-interactive"></canvas>
+            <div id="ke-status-badge" class="ke-status-badge state-medium">Medium Average KE</div>
+          </div>
+          
+          <div class="ke-dial-control">
+            <div class="dial-knob-container">
+              <div class="dial-glow"></div>
+              <input type="range" id="dial-ke-temp" min="10" max="100" value="50" class="ke-dial-slider">
+            </div>
+            <div class="dial-labels">
+              <span>COLD</span>
+              <span>WARM</span>
+              <span>HOT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: Flashcards Tab -->
+    <section id="tab-flashcards" class="tab-content">
+      <div class="flashcards-container">
+        <div class="flashcard-deck">
+          <div class="flashcard" id="active-card">
+            <div class="flashcard-inner">
+              <div class="flashcard-front">
+                <div class="card-count" id="card-index-display">1 / 15</div>
+                <div class="card-tag">CONCEPT</div>
+                <div class="card-text" id="card-front-text">Front of Card</div>
+                <div class="tap-hint">Tap to flip</div>
+              </div>
+              <div class="flashcard-back">
+                <div class="card-tag">EXPLANATION</div>
+                <div class="card-text" id="card-back-text">Back of Card</div>
+                <div class="tap-hint">Tap to flip back</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card controls -->
+        <div class="flashcard-controls">
+          <button class="btn btn-secondary" id="btn-prev-card">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <button class="btn btn-primary" id="btn-shuffle-cards">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            Shuffle
+          </button>
+          <button class="btn btn-secondary" id="btn-next-card">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: Quiz Tab -->
+    <section id="tab-quiz" class="tab-content">
+      <!-- Welcome Screen -->
+      <div id="quiz-start-screen" class="card quiz-card active">
+        <div class="quiz-badge">SYLLABUS 6091</div>
+        <h2>Test Your Understanding</h2>
+        <p class="quiz-subtitle">Answer 10 randomized multiple-choice questions on Temperature, Kinetic Energy, and Gas Pressure.</p>
+        
+        <div class="quiz-meta-grid">
+          <div class="meta-item">
+            <span class="meta-icon">❓</span>
+            <span class="meta-label">10 Questions</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-icon">⏱️</span>
+            <span class="meta-label">No Time Limit</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-icon">⚡</span>
+            <span class="meta-label">Accented Feedback</span>
+          </div>
+        </div>
+
+        <button class="btn btn-large btn-primary" id="btn-start-quiz">Start Quiz</button>
+      </div>
+
+      <!-- Active Question Screen -->
+      <div id="quiz-question-screen" class="card quiz-card">
+        <div class="quiz-progress-bar-container">
+          <div class="quiz-progress-bar" id="quiz-progress"></div>
+        </div>
+        <div class="quiz-header-info">
+          <span class="quiz-question-number" id="question-index-label">Question 1 of 10</span>
+          <span class="quiz-score-badge" id="quiz-live-score">Score: 0/0</span>
+        </div>
+        
+        <div class="quiz-question-container">
+          <h3 class="quiz-question-text" id="quiz-question-text">Question Text?</h3>
+        </div>
+
+        <div class="quiz-options" id="quiz-options-container">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+        <div class="quiz-action-bar">
+          <button class="btn btn-primary" id="btn-submit-answer" disabled>Submit Answer</button>
+          <button class="btn btn-primary" id="btn-next-question" style="display: none;">Next Question</button>
+        </div>
+      </div>
+
+      <!-- Results Screen -->
+      <div id="quiz-results-screen" class="card quiz-card">
+        <canvas id="celebration-canvas"></canvas>
+        <div class="results-header">
+          <h2>Quiz Completed</h2>
+          <div class="results-score-circle">
+            <span class="score-large" id="results-score-num">0</span>
+            <span class="score-total">/ 10</span>
+          </div>
+        </div>
+
+        <p class="results-message" id="results-message-text">Feedback Message</p>
+
+        <!-- Wrong questions summary -->
+        <div class="review-section" id="quiz-review-section">
+          <h4>Review Mistakes</h4>
+          <div class="review-list" id="quiz-review-list">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <button class="btn btn-large btn-primary" id="btn-retry-quiz">Try Again</button>
+      </div>
+    </section>
+
+  </main>
+
+
+
+  <script src="app.js"></script>
+</body>
+</html>
