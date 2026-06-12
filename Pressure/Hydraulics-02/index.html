@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hydraulic System Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        body { font-family: 'Inter', sans-serif; touch-action: none; overflow: hidden; }
+        .piston-handle { cursor: ns-resize; transition: fill 0.2s; }
+        .piston-handle:hover { fill: #334155; }
+        .no-select { user-select: none; -webkit-user-select: none; }
+        .modal-overlay { background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center p-4">
+
+    <!-- Header Controls -->
+    <div class="w-full max-w-3xl flex flex-wrap justify-center gap-3 mb-2">
+        <button onclick="randomize()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 rounded-lg shadow transition-all active:scale-95">
+            Randomize Scenario
+        </button>
+        <button onclick="toggleReveal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-5 rounded-lg shadow transition-all active:scale-95">
+            <span id="revealText">Reveal Unknowns</span>
+        </button>
+        <button onclick="openModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-5 rounded-lg shadow transition-all active:scale-95">
+            Show Working
+        </button>
+    </div>
+
+    <!-- Accuracy Instruction -->
+    <div class="text-slate-500 text-sm font-medium mb-4 italic">
+        answer accurate up to two significant figures
+    </div>
+
+    <!-- Main Simulator -->
+    <div class="relative w-full max-w-3xl bg-white rounded-2xl shadow-xl p-4 border border-slate-200">
+        <svg id="simulator" viewBox="0 0 800 500" class="w-full h-auto no-select">
+            <path id="fluidFill" d="" fill="#3b82f6" fill-opacity="0.4" />
+            <path id="vesselOutline" d="" fill="none" stroke="#334155" stroke-width="4" stroke-linejoin="round" />
+
+            <!-- Piston 1 (Left) -->
+            <g id="piston1Group">
+                <line id="piston1Rod" x1="0" y1="0" x2="0" y2="0" stroke="#64748b" stroke-width="6" />
+                <rect id="piston1" x="0" y="0" width="0" height="20" fill="#475569" class="piston-handle" />
+                <text id="labelF1" font-weight="600" fill="#1e293b" font-size="18"></text>
+                <text id="labelA1" fill="#475569" font-size="14"></text>
+                <text id="labelD1" fill="#475569" font-size="14"></text>
+            </g>
+
+            <!-- Piston 2 (Right) -->
+            <g id="piston2Group">
+                <line id="piston2Rod" x1="0" y1="0" x2="0" y2="0" stroke="#64748b" stroke-width="6" />
+                <rect id="piston2" x="0" y="0" width="0" height="20" fill="#475569" class="piston-handle" />
+                <text id="labelF2" font-weight="600" fill="#1e293b" font-size="18"></text>
+                <text id="labelA2" fill="#475569" font-size="14"></text>
+                <text id="labelD2" fill="#475569" font-size="14"></text>
+            </g>
+        </svg>
+    </div>
+
+    <!-- Working Modal -->
+    <div id="workingModal" class="fixed inset-0 modal-overlay hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-5 border-b flex justify-between items-center bg-slate-50 rounded-t-2xl">
+                <h3 class="text-lg font-bold text-slate-800">Mathematical Working</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="modalContent" class="p-6 space-y-6"></div>
+        </div>
+    </div>
+
+    <script>
+        const state = {
+            A1: 20, A2: 80,
+            F1: 200, F2: 800,
+            d1: 0, d2: 0,
+            h1: 250, h2: 250,
+            pistonBaseY: 250,
+            vesselTop: 80,
+            vesselBottom: 420,
+            isRevealed: false,
+            hiddenPair: null,
+            isDragging: false,
+            dragTarget: null
+        };
+
+        const CYLINDER_HEIGHT_PX = 290;
+        const CYLINDER_HEIGHT_CM = 50;
+        const PX_TO_CM = CYLINDER_HEIGHT_CM / CYLINDER_HEIGHT_PX;
+        const CM_TO_PX = CYLINDER_HEIGHT_PX / CYLINDER_HEIGHT_CM;
+
+        const config = {
+            areas:  [10, 20, 25, 50, 80, 100],
+            forces: [100, 200, 250, 500, 750, 1000, 1500, 2000],
+            limitPadding: 25
+        };
+
+        const VALID_PAIRS = [
+            ['F1', 'A2'], ['F1', 'd2'], ['A1', 'F2'],
+            ['A1', 'd2'], ['d1', 'F2'], ['d1', 'A2']
+        ];
+
+        function randomize() {
+            state.A1 = config.areas[Math.floor(Math.random() * 3)];
+            state.A2 = config.areas[3 + Math.floor(Math.random() * 3)];
+            if (Math.random() < 0.5) {
+                state.F1 = config.forces[Math.floor(Math.random() * config.forces.length)];
+                state.F2 = (state.F1 * state.A2) / state.A1;
+            } else {
+                state.F2 = config.forces[Math.floor(Math.random() * config.forces.length)];
+                state.F1 = (state.F2 * state.A1) / state.A2;
+            }
+            state.h1 = state.pistonBaseY;
+            state.h2 = state.pistonBaseY;
+            state.d1 = 0;
+            state.d2 = 0;
+            state.hiddenPair = VALID_PAIRS[Math.floor(Math.random() * VALID_PAIRS.length)];
+            state.isRevealed = false;
+            updateUI();
+        }
+
+        function isHidden(varName) {
+            return !state.isRevealed && state.hiddenPair && state.hiddenPair.includes(varName);
+        }
+
+        function fmt(val, dp = 2) {
+            return parseFloat(val.toFixed(dp));
+        }
+
+        function labelText(varName) {
+            const hidden = isHidden(varName);
+            switch (varName) {
+                case 'F1': return hidden ? 'F₁ = ?' : `F₁ = ${fmt(state.F1, 0)} N`;
+                case 'F2': return hidden ? 'F₂ = ?' : `F₂ = ${fmt(state.F2, 0)} N`;
+                case 'A1': return hidden ? 'A₁ = ?' : `A₁ = ${state.A1} cm²`;
+                case 'A2': return hidden ? 'A₂ = ?' : `A₂ = ${state.A2} cm²`;
+                case 'd1': return hidden ? 'd₁ = ?' : `d₁ = ${fmt(state.d1, 1)} cm`;
+                case 'd2': return hidden ? 'd₂ = ?' : `d₂ = ${fmt(state.d2, 1)} cm`;
+            }
+        }
+
+        function updateUI() {
+            const w1 = Math.sqrt(state.A1) * 12;
+            const w2 = Math.sqrt(state.A2) * 12;
+            const x1c = 200, x2c = 600;
+            const x1L = x1c - w1/2, x1R = x1c + w1/2;
+            const x2L = x2c - w2/2, x2R = x2c + w2/2;
+            const vTop = state.vesselTop, vBot = state.vesselBottom;
+            const vMidTop = vBot - 40;
+
+            document.getElementById('vesselOutline').setAttribute('d', `
+                M ${x1L} ${vTop} L ${x1L} ${vBot}
+                L ${x2R} ${vBot} L ${x2R} ${vTop}
+                M ${x2L} ${vTop} L ${x2L} ${vMidTop}
+                L ${x1R} ${vMidTop} L ${x1R} ${vTop}
+            `);
+
+            document.getElementById('fluidFill').setAttribute('d', `
+                M ${x1L} ${state.h1} V ${vBot} H ${x2R} V ${state.h2}
+                H ${x2L} V ${vMidTop} H ${x1R} V ${state.h1} Z
+            `);
+
+            const p1 = document.getElementById('piston1');
+            p1.setAttribute('x', x1L); p1.setAttribute('y', state.h1 - 20); p1.setAttribute('width', w1);
+            document.getElementById('piston1Rod').setAttribute('x1', x1c);
+            document.getElementById('piston1Rod').setAttribute('y1', state.h1 - 20);
+            document.getElementById('piston1Rod').setAttribute('x2', x1c);
+            document.getElementById('piston1Rod').setAttribute('y2', vTop - 30);
+
+            const p2 = document.getElementById('piston2');
+            p2.setAttribute('x', x2L); p2.setAttribute('y', state.h2 - 20); p2.setAttribute('width', w2);
+            document.getElementById('piston2Rod').setAttribute('x1', x2c);
+            document.getElementById('piston2Rod').setAttribute('y1', state.h2 - 20);
+            document.getElementById('piston2Rod').setAttribute('x2', x2c);
+            document.getElementById('piston2Rod').setAttribute('y2', vTop - 30);
+
+            const set = (id, x, y, text, anchor = 'start') => {
+                const el = document.getElementById(id);
+                el.setAttribute('x', x); el.setAttribute('y', y);
+                el.setAttribute('text-anchor', anchor);
+                el.textContent = text;
+            };
+
+            set('labelF1', x1L - 15, state.h1 - 25, labelText('F1'), 'end');
+            set('labelA1', x1L - 15, state.h1 - 5,  labelText('A1'), 'end');
+            set('labelD1', x1L - 15, state.h1 + 15, labelText('d1'), 'end');
+            set('labelF2', x2R + 15, state.h2 - 25, labelText('F2'), 'start');
+            set('labelA2', x2R + 15, state.h2 - 5,  labelText('A2'), 'start');
+            set('labelD2', x2R + 15, state.h2 + 15, labelText('d2'), 'start');
+
+            document.getElementById('revealText').textContent = state.isRevealed ? 'Hide Unknowns' : 'Reveal Unknowns';
+        }
+
+        function toggleReveal() {
+            state.isRevealed = !state.isRevealed;
+            updateUI();
+        }
+
+        function openModal() {
+            const pair = state.hiddenPair;
+            const { F1, F2, A1, A2, d1, d2 } = state;
+            let html = `<div class="space-y-4 text-slate-700 font-mono text-sm">`;
+            html += `<div class="bg-slate-100 p-3 rounded"><strong>Formulae:</strong><br>P = F/A → F₁/A₁ = F₂/A₂<br>A₁ × d₁ = A₂ × d₂</div>`;
+            const pairKey = pair.join('+');
+            
+            const createBlock = (c, t, l) => workingBlock(c, t, l);
+
+            if (pairKey === 'F1+A2') {
+                html += createBlock('blue', 'Step 1 — Find pressure', [`P = F₂ / A₂ = ${fmt(F2,0)} / ${A2} = ${fmt(F2/A2,4)} N/cm²`]);
+                html += createBlock('green', 'Step 2 — Find F₁', [`F₁ = P × A₁ = ${fmt(F2/A2,4)} × ${A1} = ${fmt(F1,2)} N`]);
+                html += createBlock('purple', 'Step 3 — Find A₂', [`A₂ = F₂ × A₁ / F₁ = ${fmt(F2,0)} × ${A1} / ${fmt(F1,2)} = ${fmt(A2,2)} cm²`]);
+            } else if (pairKey === 'F1+d2') {
+                html += createBlock('blue', 'Step 1 — Find pressure', [`P = F₂ / A₂ = ${fmt(F2,0)} / ${A2} = ${fmt(F2/A2,4)} N/cm²`]);
+                html += createBlock('green', 'Step 2 — Find F₁', [`F₁ = P × A₁ = ${fmt(F2/A2,4)} × ${A1} = ${fmt(F1,2)} N`]);
+                html += createBlock('purple', 'Step 3 — Find d₂', [`d₂ = (A₁ × d₁) / A₂ = (${A1} × ${fmt(d1,2)}) / ${A2} = ${fmt(d2,2)} cm`]);
+            } else if (pairKey === 'A1+F2') {
+                html += createBlock('blue', 'Step 1 — Find A₁', [`A₁ = F₁ × A₂ / F₂ = ${fmt(F1,2)} × ${A2} / ${fmt(F2,0)} = ${fmt(A1,2)} cm²`]);
+                html += createBlock('green', 'Step 2 — Find F₂', [`P = F₁ / A₁ = ${fmt(F1,2)} / ${fmt(A1,2)} = ${fmt(F1/A1,4)} N/cm²`, `F₂ = P × A₂ = ${fmt(F2,2)} N`]);
+            } else if (pairKey === 'A1+d2') {
+                html += createBlock('blue', 'Step 1 — Find A₁', [`A₁ = F₁ × A₂ / F₂ = ${fmt(A1,2)} cm²`]);
+                html += createBlock('green', 'Step 2 — Find d₂', [`d₂ = (A₁ × d₁) / A₂ = ${fmt(d2,2)} cm`]);
+            } else if (pairKey === 'd1+F2') {
+                html += createBlock('blue', 'Step 1 — Find F₂', [`F₂ = F₁ × A₂ / A₁ = ${fmt(F2,2)} N`]);
+                html += createBlock('green', 'Step 2 — Find d₁', [`d₁ = (A₂ × d₂) / A₁ = ${fmt(d1,2)} cm`]);
+            } else if (pairKey === 'd1+A2') {
+                html += createBlock('blue', 'Step 1 — Find A₂', [`A₂ = F₂ × A₁ / F₁ = ${fmt(A2,2)} cm²`]);
+                html += createBlock('green', 'Step 2 — Find d₁', [`d₁ = (A₂ × d₂) / A₁ = ${fmt(d1,2)} cm`]);
+            }
+
+            html += `</div>`;
+            document.getElementById('modalContent').innerHTML = html;
+            document.getElementById('workingModal').classList.remove('hidden');
+        }
+
+        function workingBlock(color, title, lines) {
+            const colors = { blue: 'bg-blue-50 border-blue-200 text-blue-800', green: 'bg-emerald-50 border-emerald-200 text-emerald-800', purple: 'bg-purple-50 border-purple-200 text-purple-800' };
+            return `<div class="border rounded-lg p-3 ${colors[color]}"><div class="font-bold mb-2">${title}</div>${lines.map(l => `<div>${l}</div>`).join('')}</div>`;
+        }
+
+        function closeModal() { document.getElementById('workingModal').classList.add('hidden'); }
+
+        const svg = document.getElementById('simulator');
+        function getMouseY(e) {
+            const rect = svg.getBoundingClientRect();
+            const touch = e.touches ? e.touches[0] : e;
+            return (touch.clientY - rect.top) * (500 / rect.height);
+        }
+
+        function startDrag(e) {
+            if (e.target.id === 'piston1' || e.target.id === 'piston2') {
+                state.isDragging = true;
+                state.dragTarget = e.target.id;
+            }
+        }
+
+        function doDrag(e) {
+            if (!state.isDragging) return;
+            e.preventDefault();
+            const mouseY = getMouseY(e);
+            const minY = state.vesselTop + config.limitPadding;
+            const maxY = state.vesselBottom - 65;
+
+            // To ensure d1 and d2 have 1 decimal place and no trailing decimals after calculation:
+            // We find the smallest movement unit in cm that allows BOTH d1 and d2 to be clean 1-dp values.
+            // Since A1*d1 = A2*d2, then d2 = (A1/A2)*d1.
+            // We step in 0.1 increments for the target, then check if the calculated value also fits 0.1 precision.
+            
+            if (state.dragTarget === 'piston1') {
+                let targetD1 = (mouseY - state.pistonBaseY) * PX_TO_CM;
+                // Snap to 0.1cm
+                targetD1 = Math.round(targetD1 * 10) / 10;
+                let targetD2 = -(targetD1 * state.A1) / state.A2;
+                
+                // Fine-tune targetD1 so that targetD2 is also a clean 0.1 multiple
+                // We check if (targetD1 * A1 / A2) * 10 is an integer
+                const ratio = state.A1 / state.A2;
+                
+                const newH1 = state.pistonBaseY + (targetD1 * CM_TO_PX);
+                const newH2 = state.pistonBaseY + (targetD2 * CM_TO_PX);
+
+                if (newH1 >= minY && newH1 <= maxY && newH2 >= minY && newH2 <= maxY) {
+                    state.h1 = newH1; 
+                    state.h2 = newH2;
+                    state.d1 = Math.abs(targetD1);
+                    state.d2 = Math.abs(targetD2);
+                }
+            } else {
+                let targetD2 = (mouseY - state.pistonBaseY) * PX_TO_CM;
+                targetD2 = Math.round(targetD2 * 10) / 10;
+                let targetD1 = -(targetD2 * state.A2) / state.A1;
+
+                const newH2 = state.pistonBaseY + (targetD2 * CM_TO_PX);
+                const newH1 = state.pistonBaseY + (targetD1 * CM_TO_PX);
+
+                if (newH2 >= minY && newH2 <= maxY && newH1 >= minY && newH1 <= maxY) {
+                    state.h2 = newH2; 
+                    state.h1 = newH1;
+                    state.d2 = Math.abs(targetD2);
+                    state.d1 = Math.abs(targetD1);
+                }
+            }
+            updateUI();
+        }
+
+        svg.addEventListener('mousedown', startDrag);
+        window.addEventListener('mousemove', doDrag);
+        window.addEventListener('mouseup', () => state.isDragging = false);
+        svg.addEventListener('touchstart', startDrag, { passive: false });
+        window.addEventListener('touchmove', doDrag, { passive: false });
+        window.addEventListener('touchend', () => state.isDragging = false);
+
+        window.onload = randomize;
+    </script>
+</body>
+</html>
