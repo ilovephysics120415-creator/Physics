@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conservation of Energy — Singapore O-Level Physics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Global Accent Blur Orbs -->
+  <div class="blur-orb orb-1"></div>
+  <div class="blur-orb orb-2"></div>
+
+  <div class="app-container">
+    <header class="app-header">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <div class="logo-text">
+          <h1>Conservation of Energy</h1>
+          <p class="syllabus-tag">Singapore O-Level Physics Syllabus</p>
+        </div>
+      </div>
+      <nav class="main-nav">
+        <button class="nav-btn active" data-tab="concept" id="btn-tab-concept">📖 Concept</button>
+        <button class="nav-btn" data-tab="simulations" id="btn-tab-simulations">🧪 Simulations</button>
+        <button class="nav-btn" data-tab="flashcards" id="btn-tab-flashcards">🎴 Flashcards</button>
+        <button class="nav-btn" data-tab="quiz" id="btn-tab-quiz">📝 Practice Quiz</button>
+      </nav>
+    </header>
+
+    <main class="app-content">
+      <!-- SECTION 1: CONCEPT INTRODUCTION -->
+      <section id="tab-concept" class="tab-content active-content">
+        <div class="concept-layout animate-fade-in">
+          <!-- Prominent Principle Card -->
+          <div class="card principle-card">
+            <div class="card-badge">Key Principle</div>
+            <h2>Principle of Conservation of Energy</h2>
+            <p class="principle-text">
+              Energy cannot be created or destroyed. It can only be transferred from one store to another. The total energy in all stores always remains constant.
+            </p>
+          </div>
+
+          <div class="comparison-grid">
+            <!-- Ideal Situation Card -->
+            <div class="card situation-card ideal">
+              <div class="situation-header">
+                <h3>Ideal Situation</h3>
+                <span class="badge ideal-badge">Frictionless</span>
+              </div>
+              <p class="situation-desc">Energy transfers only between the gravitational potential store and the kinetic store.</p>
+              
+              <div class="pathway-diagram">
+                <div class="store-box gpe">
+                  <span class="store-icon">🏔️</span>
+                  <span class="store-label">Gravitational Potential Store</span>
+                </div>
+                <div class="transfer-arrow-container">
+                  <div class="arrow-double"></div>
+                  <span class="transfer-caption">Energy Transfer</span>
+                </div>
+                <div class="store-box kinetic">
+                  <span class="store-icon">🏃</span>
+                  <span class="store-label">Kinetic Store</span>
+                </div>
+              </div>
+              <div class="total-energy-bar">
+                <span>Total Energy</span>
+                <span class="total-status constant">Constant (100%)</span>
+              </div>
+            </div>
+
+            <!-- Real Situation Card -->
+            <div class="card situation-card real">
+              <div class="situation-header">
+                <h3>Real Situation</h3>
+                <span class="badge real-badge">With Friction & Air Resistance</span>
+              </div>
+              <p class="situation-desc">Some energy is also transferred to the internal store due to friction or air resistance.</p>
+              
+              <div class="pathway-diagram real-pathway">
+                <div class="store-box gpe">
+                  <span class="store-icon">🏔️</span>
+                  <span class="store-label">Gravitational Potential Store</span>
+                </div>
+                <div class="transfer-arrows-real">
+                  <div class="main-arrow-flow">
+                    <div class="arrow-double"></div>
+                  </div>
+                  <div class="branch-arrow-container">
+                    <div class="arrow-branch"></div>
+                    <div class="store-box internal-store-small">
+                      <span class="store-icon">🔥</span>
+                      <span class="store-label">Internal Store</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="store-box kinetic">
+                  <span class="store-icon">🏃</span>
+                  <span class="store-label">Kinetic Store</span>
+                </div>
+              </div>
+              <div class="total-energy-bar">
+                <span>Total Energy (All Stores Combined)</span>
+                <span class="total-status constant">Constant (100%)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: INTERACTIVE SIMULATIONS -->
+      <section id="tab-simulations" class="tab-content">
+        <div class="sim-layout">
+          <!-- Simulation Mode Switcher -->
+          <div class="sim-selector">
+            <button class="sim-toggle-btn active" data-sim="pendulum" id="btn-sim-pendulum">🎢 Pendulum Simulation</button>
+            <button class="sim-toggle-btn" data-sim="rollercoaster" id="btn-sim-rollercoaster">🎢 Roller Coaster Simulation</button>
+          </div>
+
+          <!-- Pendulum Simulation Area -->
+          <div id="sim-pendulum-content" class="sim-view active-view">
+            <div class="sim-grid">
+              <div class="sim-canvas-container card">
+                <div class="canvas-header">
+                  <h3>Interactive Pendulum</h3>
+                  <div class="canvas-btn-group">
+                    <button class="btn-control btn-play" id="btn-pendulum-play">Play</button>
+                    <button class="btn-control btn-pause" id="btn-pendulum-pause">Pause</button>
+                    <button class="btn-control btn-reset" id="btn-pendulum-reset">Reset</button>
+                  </div>
+                </div>
+                <div class="canvas-wrapper">
+                  <canvas id="canvas-pendulum" width="600" height="400"></canvas>
+                  <div class="canvas-annotations">
+                    <span class="annotation peak-left">Max Gravitational Potential Store</span>
+                    <span class="annotation bottom-center">Max Kinetic Store</span>
+                    <span class="annotation peak-right">Max Gravitational Potential Store</span>
+                  </div>
+                </div>
+                <!-- Control Panel -->
+                <div class="controls-panel">
+                  <div class="control-group">
+                    <label for="param-pendulum-mass">Mass (m): <span id="val-pendulum-mass">5</span> kg</label>
+                    <input type="range" id="param-pendulum-mass" min="1" max="10" step="1" value="5">
+                  </div>
+                  <div class="control-group">
+                    <label for="param-pendulum-height">Release Height (h): <span id="val-pendulum-height">2.0</span> m</label>
+                    <input type="range" id="param-pendulum-height" min="0.5" max="3" step="0.1" value="2.0">
+                  </div>
+                  <div class="control-group toggle-group">
+                    <span class="toggle-label">Environment Mode:</span>
+                    <div class="toggle-switch-container">
+                      <label class="switch">
+                        <input type="checkbox" id="toggle-pendulum-real">
+                        <span class="slider"></span>
+                      </label>
+                      <span id="label-pendulum-mode" class="mode-text">Ideal (Frictionless)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Live Energy Store Bars (Pendulum) -->
+              <div class="sim-data card">
+                <h3>Energy Distribution in Stores</h3>
+                <p class="data-caption">Live updates at key positions (Left Peak, Bottom Center, Right Peak)</p>
+                
+                <div class="bars-container">
+                  <!-- Gravitational Potential -->
+                  <div class="energy-bar-row">
+                    <div class="bar-info">
+                      <span class="bar-title">Gravitational Potential Store (E<sub>p</sub>)</span>
+                      <span class="bar-val" id="val-pendulum-ep">0 J</span>
+                    </div>
+                    <div class="bar-track">
+                      <div class="bar-fill ep-fill" id="fill-pendulum-ep" style="width: 0%;"></div>
+                    </div>
+                  </div>
+
+                  <!-- Kinetic -->
+                  <div class="energy-bar-row">
+                    <div class="bar-info">
+                      <span class="bar-title">Kinetic Store (E<sub>k</sub>)</span>
+                      <span class="bar-val" id="val-pendulum-ek">0 J</span>
+                    </div>
+                    <div class="bar-track">
+                      <div class="bar-fill ek-fill" id="fill-pendulum-ek" style="width: 0%;"></div>
+                    </div>
+                  </div>
+
+                  <!-- Internal -->
+                  <div class="energy-bar-row" id="row-pendulum-internal" style="display: none;">
+                    <div class="bar-info">
+                      <span class="bar-title">Internal Store (E<sub>int</sub>)</span>
+                      <span class="bar-val" id="val-pendulum-eint">0 J</span>
+                    </div>
+                    <div class="bar-track">
+                      <div class="bar-fill eint-fill" id="fill-pendulum-eint" style="width: 0%;"></div>
+                    </div>
+                  </div>
+
+                  <!-- Total -->
+                  <div class="energy-bar-row total-row">
+                    <div class="bar-info">
+                      <span class="bar-title">Total Energy</span>
+                      <span class="bar-val" id="val-pendulum-etotal">0 J</span>
+                    </div>
+                    <div class="bar-track">
+                      <div class="bar-fill etotal-fill" id="fill-pendulum-etotal" style="width: 100%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Roller Coaster Simulation Area -->
+          <div id="sim-rollercoaster-content" class="sim-view">
+            <div class="sim-grid">
+              <div class="sim-canvas-container card">
+                <div class="canvas-header">
+                  <h3>Interactive Roller Coaster</h3>
+                  <div class="canvas-btn-group">
+                    <button class="btn-control btn-play" id="btn-coaster-play">Play</button>
+                    <button class="btn-control btn-pause" id="btn-coaster-pause">Pause</button>
+                    <button class="btn-control btn-reset" id="btn-coaster-reset">Reset</button>
+                  </div>
+                </div>
+                <div class="canvas-wrapper">
+                  <canvas id="canvas-coaster" width="600" height="400"></canvas>
+                  <div class="canvas-annotations">
+                    <span class="annotation peak-coaster-1">Max Gravitational Store</span>
+                    <span class="annotation trough-coaster-1">Max Kinetic Store</span>
+                  </div>
+                </div>
+                <!-- Control Panel -->
+                <div class="controls-panel">
+                  <div class="control-group">
+                    <label for="param-coaster-mass">Cart Mass (m): <span id="val-coaster-mass">1000</span> kg</label>
+                    <input type="range" id="param-coaster-mass" min="500" max="2000" step="100" value="1000">
+                  </div>
+                  <div class="control-group">
+                    <label for="param-coaster-height">Starting Hill Height (h): <span id="val-coaster-height">40</span> m</label>
+                    <input type="range" id="param-coaster-height" min="10" max="50" step="2" value="40">
+                  </div>
+                  <div class="control-group toggle-group">
+                    <span class="toggle-label">Environment Mode:</span>
+                    <div class="toggle-switch-container">
+                      <label class="switch">
+                        <input type="checkbox" id="toggle-coaster-real">
+                        <span class="slider"></span>
+                      </label>
+                      <span id="label-coaster-mode" class="mode-text">Ideal (Frictionless)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Live Energy Store Bars (Roller Coaster) -->
+              <div class="sim-data card">
+                <h3>Cart Energy Distribution</h3>
+                <p class="data-caption">Live updates as cart travels across hills and valleys</p>
+                
+                <div class="bars-container">
+                  <!-- Gravitational Potential -->
+                  <div class="energy-bar-row">
+                    <div class="bar-info">
+                      <span class="bar-title">Gravitational Potential Store (E<sub>p</sub>)</span>
+                      <span class="bar-val" id="val-coaster-ep">0 J</span>
+                    </div>
+                    <div class="bar-track">
+                      <div class="bar-fill ep-fill" id="fill-coaster-ep" style="width: 0%;"></div>
+                    </div>
+                  </div>
+
+                  <!-- Kinetic -->
+                  <div class="energy-bar-row">
+                    <div class="bar-info">
+                      <span class="bar-title">Kinetic Store (E<sub>k</sub>)</span>
+                      <span class="bar-val" id="val-coaster-ek">0 J</span>
+                    </div>
+                    <div class="bar-track">
+                      <div class="bar-fill ek-fill" id="fill-coaster-ek" style="width: 0%;"></div>
+                    </div>
+                  </div>
+
+                  <!-- Internal -->
+                  <div class="energy-bar-row" id="row-coaster-internal" style="display: none;">
+                    <div class="bar-info">
+                      <span class="bar-title">Internal Store (E<sub>int</sub>)</span>
+                      <span class="bar-val" id="val-coaster-eint">0 J</span>
+                    </div>
+                    <div class="bar-track">
+                      <div class="bar-fill eint-fill" id="fill-coaster-eint" style="width: 0%;"></div>
+                    </div>
+                  </div>
+
+                  <!-- Total -->
+                  <div class="energy-bar-row total-row">
+                    <div class="bar-info">
+                      <span class="bar-title">Total Energy</span>
+                      <span class="bar-val" id="val-coaster-etotal">0 J</span>
+                    </div>
+                    <div class="bar-track">
+                      <div class="bar-fill etotal-fill" id="fill-coaster-etotal" style="width: 100%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5: FLASHCARD REVISION MODE -->
+      <section id="tab-flashcards" class="tab-content">
+        <div class="flashcards-layout animate-fade-in">
+          <div class="flashcard-header-controls">
+            <div class="reviewed-badge">Cards Reviewed: <span id="val-cards-reviewed">0</span> / 15</div>
+            <button class="btn-control" id="btn-shuffle-cards">🔀 Shuffle Deck</button>
+          </div>
+
+          <!-- The Flashcard Arena -->
+          <div class="flashcard-container">
+            <div class="flashcard" id="flashcard-element">
+              <div class="flashcard-inner">
+                <!-- Front Side -->
+                <div class="flashcard-front">
+                  <div class="card-side-label">Question / Scenario</div>
+                  <p class="flashcard-question-text" id="card-front-text">Flashcard front text</p>
+                  <span class="tap-hint">Tap to flip card 🔁</span>
+                </div>
+                <!-- Back Side -->
+                <div class="flashcard-back">
+                  <div class="card-side-label">Answer & Worked Solution</div>
+                  <div class="flashcard-answer-body" id="card-back-text">Flashcard back text</div>
+                  <span class="tap-hint">Tap to flip back 🔁</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Navigation Controls -->
+          <div class="flashcard-nav">
+            <button class="btn-nav-card" id="btn-prev-card">◀ Previous</button>
+            <span class="card-index" id="val-card-index">Card 1 of 15</span>
+            <button class="btn-nav-card" id="btn-next-card-rev">Next ▶</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: PRACTICE QUIZ -->
+      <section id="tab-quiz" class="tab-content">
+        <div class="quiz-container animate-fade-in">
+          
+          <!-- Quiz Setup/Start Panel -->
+          <div id="quiz-start-panel" class="card quiz-intro">
+            <h2>Test Your Understanding</h2>
+            <p>Ready to challenge yourself? We will draw 15 randomized questions from our O-Level Physics pool. All questions use correct Singapore syllabus terminology and g = 10 N/kg.</p>
+            <button class="btn-primary" id="btn-start-quiz">Start Quiz Session</button>
+          </div>
+
+          <!-- Active Quiz Panel -->
+          <div id="quiz-active-panel" class="card quiz-card-active" style="display: none;">
+            <div class="quiz-progress-header">
+              <span class="quiz-step" id="quiz-progress-text">Question 1 of 15</span>
+              <div class="progress-bar-track">
+                <div class="progress-bar-fill" id="quiz-progress-bar" style="width: 6.6%;"></div>
+              </div>
+            </div>
+            
+            <div class="quiz-question-body">
+              <p class="question-text" id="question-text">Question content goes here...</p>
+              
+              <!-- Option selector container -->
+              <div class="options-container" id="options-container">
+                <!-- Buttons or inputs dynamically populated -->
+              </div>
+
+              <!-- Numerical Input Container (for direct input if any, or just multiple choice options with randomised values) -->
+              <div class="numerical-input-container" id="numerical-input-container" style="display: none;">
+                <input type="number" id="numerical-answer" placeholder="Enter your answer in Joules or meters..." step="any">
+                <button class="btn-primary" id="btn-submit-numerical">Submit Answer</button>
+              </div>
+            </div>
+
+            <!-- Quiz Explanations / Feedback for current question -->
+            <div class="question-feedback-box" id="question-feedback-box" style="display: none;">
+              <div class="feedback-indicator" id="feedback-indicator">Correct!</div>
+              <div class="worked-solution" id="worked-solution">
+                <h4>Worked Solution:</h4>
+                <p id="solution-text">Step by step math...</p>
+              </div>
+              <button class="btn-primary" id="btn-next-question">Next Question</button>
+            </div>
+          </div>
+
+          <!-- Quiz Results Panel -->
+          <div id="quiz-results-panel" class="card results-card" style="display: none;">
+            <div class="celebration-container" id="celebration-container"></div>
+            <h2 id="results-title">Quiz Completed!</h2>
+            <div class="results-score-badge">
+              <span id="results-score">0</span> / 15
+            </div>
+            <p class="results-feedback" id="results-feedback-text">Feedback text based on performance...</p>
+            
+            <button class="btn-primary" id="btn-restart-quiz">Try Another Attempt</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>
