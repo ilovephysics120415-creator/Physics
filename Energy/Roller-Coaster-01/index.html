@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conservation of Energy – Roller Coaster</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:        #0f172a;
+            --panel:     rgba(30,41,59,0.85);
+            --border:    rgba(255,255,255,0.08);
+            --accent:    #38bdf8;
+            --glow:      rgba(56,189,248,0.45);
+            --pe:        #10b981;
+            --ke:        #f59e0b;
+            --te:        #8b5cf6;
+            --ghost:     rgba(251,191,36,0.55);
+            --capture-btn: #f59e0b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--bg);
+            color: #f8fafc;
+            font-family: 'Inter', system-ui, sans-serif;
+            display: flex; flex-direction: column;
+            height: 100vh; overflow: hidden;
+        }
+        header {
+            padding: .75rem 2rem;
+            background: rgba(15,23,42,.95);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 1rem;
+        }
+        header h1 {
+            font-size: 1.3rem; font-weight: 700;
+            text-shadow: 0 0 12px var(--glow);
+        }
+        .main { display: flex; flex: 1; overflow: hidden; }
+        .canvas-wrap { flex: 1; position: relative; }
+        canvas { width: 100%; height: 100%; display: block; }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: 330px;
+            background: var(--panel);
+            backdrop-filter: blur(12px);
+            border-left: 1px solid var(--border);
+            padding: 1.2rem;
+            display: flex; flex-direction: column; gap: 1.1rem;
+            overflow-y: auto;
+        }
+        .ctrl { display: flex; flex-direction: column; gap: .4rem; }
+        .ctrl label {
+            font-size: .8rem; font-weight: 600; color: #94a3b8;
+            display: flex; justify-content: space-between;
+        }
+        .ctrl label span:last-child { color: #f8fafc; }
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%; height: 5px;
+            background: #1e293b; border-radius: 3px; outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px; height: 15px; border-radius: 50%;
+            background: var(--accent); cursor: pointer;
+            box-shadow: 0 0 8px var(--glow);
+        }
+        select {
+            width: 100%; padding: .45rem .6rem;
+            background: #1e293b; color: #f8fafc;
+            border: 1px solid var(--border); border-radius: 6px;
+            outline: none; cursor: pointer;
+            font-family: inherit; font-size: .85rem;
+        }
+        .hint { font-size: .72rem; color: #64748b; margin-top: 2px; }
+
+        /* ── Button row ── */
+        .btn-row { display: flex; gap: .6rem; }
+        button {
+            flex: 1; padding: .6rem;
+            border: none; border-radius: 8px;
+            font-weight: 700; font-size: .8rem;
+            cursor: pointer; transition: all .15s;
+            background: #1e293b; color: #f8fafc;
+        }
+        button:hover { filter: brightness(1.15); transform: translateY(-1px); }
+        #btn-play  { background: var(--accent); color: #0f172a; }
+        #btn-capture { background: var(--capture-btn); color: #0f172a; }
+        #btn-clear-ghosts { background: #334155; }
+
+        /* ── Divider ── */
+        .divider { border: none; border-top: 1px solid var(--border); }
+
+        /* ── Energy meters ── */
+        .meters { display: flex; flex-direction: column; gap: .9rem; }
+        .meter { display: flex; flex-direction: column; gap: .25rem; }
+        .meter-head {
+            display: flex; justify-content: space-between;
+            font-size: .72rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .05em;
+        }
+        .bar-bg {
+            width: 100%; height: 11px;
+            background: #1e293b; border-radius: 5px; overflow: hidden;
+        }
+        .bar { height: 100%; width: 0%; transition: width .08s linear; }
+        #pe-bar { background: var(--pe); box-shadow: 0 0 6px var(--pe); }
+        #ke-bar { background: var(--ke); box-shadow: 0 0 6px var(--ke); }
+        #te-bar { background: var(--te); box-shadow: 0 0 6px var(--te); }
+
+        /* ── Ghost log table ── */
+        .ghost-section { display: flex; flex-direction: column; gap: .5rem; }
+        .ghost-section h3 { font-size: .8rem; color: #94a3b8; font-weight: 600; }
+        #ghost-table {
+            width: 100%; border-collapse: collapse;
+            font-size: .75rem;
+        }
+        #ghost-table th {
+            text-align: left; padding: .3rem .5rem;
+            color: #64748b; border-bottom: 1px solid var(--border);
+        }
+        #ghost-table td {
+            padding: .3rem .5rem;
+            border-bottom: 1px solid rgba(255,255,255,.04);
+        }
+        #ghost-table tr:last-child td { border-bottom: none; }
+        .ghost-dot {
+            display: inline-block; width: 8px; height: 8px;
+            border-radius: 50%; margin-right: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>⚡ Energy Conservation Roller Coaster</h1>
+    <span style="font-size:.8rem;color:#64748b;margin-left:auto;">Sec 3 Physics</span>
+</header>
+
+<div class="main">
+    <div class="canvas-wrap">
+        <canvas id="simCanvas"></canvas>
+    </div>
+
+    <div class="sidebar">
+
+        <!-- Playback -->
+        <div class="btn-row">
+            <button id="btn-play">▶ Play</button>
+            <button id="btn-reset">↺ Reset</button>
+        </div>
+        <div class="btn-row">
+            <button id="btn-capture">📷 Capture</button>
+            <button id="btn-clear-ghosts">✕ Clear</button>
+        </div>
+        <p class="hint">Capture = photograph: freezes a ghost cart at the current position. Real cart keeps moving.</p>
+
+        <hr class="divider">
+
+        <!-- Controls -->
+        <div class="ctrl">
+            <label><span>Initial Height</span><span id="lbl-height">25.0 m</span></label>
+            <input type="range" id="init-height" min="0" max="35" step="0.5" value="25">
+        </div>
+
+        <div class="ctrl">
+            <label><span>Initial Speed</span><span id="lbl-init-speed">0.0 m/s</span></label>
+            <input type="range" id="init-speed" min="0" max="40" step="0.5" value="0">
+            <p class="hint">0 – 40 m/s (world's fastest coasters ≈ 38 m/s). Cart launches rightward.</p>
+        </div>
+
+        <div class="ctrl">
+            <label><span>Cart Mass (m)</span><span id="lbl-mass">1.0 kg</span></label>
+            <input type="range" id="mass" min="0.1" max="10" step="0.1" value="1.0">
+        </div>
+
+        <div class="ctrl">
+            <label><span>Gravity (g)</span></label>
+            <select id="gravity">
+                <option value="10"  selected>Earth  (10 m/s²)</option>
+                <option value="1.6">Moon   (1.6 m/s²)</option>
+                <option value="3.7">Mercury (3.7 m/s²)</option>
+                <option value="8.87">Venus  (8.87 m/s²)</option>
+                <option value="3.7">Mars   (3.7 m/s²)</option>
+                <option value="8.7">Uranus (8.7 m/s²)</option>
+                <option value="0.6">Pluto  (0.6 m/s²)</option>
+            </select>
+        </div>
+
+        <div class="ctrl">
+            <label><span>Control Points</span></label>
+            <select id="num-points">
+                <option value="2">2 Points</option>
+                <option value="3">3 Points</option>
+                <option value="4">4 Points</option>
+                <option value="5" selected>5 Points</option>
+                <option value="6">6 Points</option>
+                <option value="7">7 Points</option>
+                <option value="8">8 Points</option>
+            </select>
+            <p class="hint">Pause simulation, then drag the glowing dots to reshape the track.</p>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Energy bars -->
+        <div class="meters">
+            <div class="meter">
+                <div class="meter-head">
+                    <span style="color:var(--pe)">Potential Energy (PE)</span>
+                    <span id="pe-val">0 J</span>
+                </div>
+                <div class="bar-bg"><div class="bar" id="pe-bar"></div></div>
+            </div>
+            <div class="meter">
+                <div class="meter-head">
+                    <span style="color:var(--ke)">Kinetic Energy (KE)</span>
+                    <span id="ke-val">0 J</span>
+                </div>
+                <div class="bar-bg"><div class="bar" id="ke-bar"></div></div>
+            </div>
+            <div class="meter">
+                <div class="meter-head">
+                    <span style="color:var(--te)">Total Energy (TE)</span>
+                    <span id="te-val">0 J</span>
+                </div>
+                <div class="bar-bg"><div class="bar" id="te-bar"></div></div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Ghost log -->
+        <div class="ghost-section">
+            <h3>📷 Captured Snapshots</h3>
+            <table id="ghost-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Height (m)</th>
+                        <th>Speed (m/s)</th>
+                    </tr>
+                </thead>
+                <tbody id="ghost-tbody">
+                    <tr><td colspan="3" style="color:#475569;font-style:italic">No captures yet.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// ─── Canvas setup ───────────────────────────────────────────────────────────
+const canvas = document.getElementById('simCanvas');
+const ctx    = canvas.getContext('2d');
+let W = 0, H = 0;
+const dpr = window.devicePixelRatio || 1;
+
+// ─── World constants ─────────────────────────────────────────────────────────
+const MIN_X = -20, MAX_X = 20, TRACK_W = 40;
+
+// ─── Physics parameters ──────────────────────────────────────────────────────
+let mass = 1.0;
+let g    = 10;
+
+// ─── Track spline ────────────────────────────────────────────────────────────
+let numPts    = 5;
+let ctrlPts   = [25, 10, 20, 5, 25];   // world-Y values at evenly spaced X
+const INITIAL_CTRL = [...ctrlPts];
+
+function splineY(x) {
+    let u  = (x - MIN_X) / TRACK_W;
+    u = Math.max(0, Math.min(1, u));
+    let fi = u * (numPts - 1);
+    let i  = Math.min(Math.floor(fi), numPts - 2);
+    let t  = fi - i;
+    let p0 = i > 0           ? ctrlPts[i-1] : ctrlPts[0];
+    let p1 = ctrlPts[i];
+    let p2 = ctrlPts[i+1];
+    let p3 = i+2 < numPts   ? ctrlPts[i+2] : ctrlPts[numPts-1];
+    let c0 = 2*p1, c1 = p2-p0, c2 = 2*p0-5*p1+4*p2-p3, c3 = -p0+3*p1-3*p2+p3;
+    return Math.max(0, 0.5*(c0 + c1*t + c2*t*t + c3*t*t*t));
+}
+
+function splineDY(x) {
+    let u  = (x - MIN_X) / TRACK_W;
+    u = Math.max(0, Math.min(1, u));
+    let fi = u * (numPts - 1);
+    let i  = Math.min(Math.floor(fi), numPts - 2);
+    let t  = fi - i;
+    let p0 = i > 0           ? ctrlPts[i-1] : ctrlPts[0];
+    let p1 = ctrlPts[i];
+    let p2 = ctrlPts[i+1];
+    let p3 = i+2 < numPts   ? ctrlPts[i+2] : ctrlPts[numPts-1];
+    let c1 = p2-p0, c2 = 2*p0-5*p1+4*p2-p3, c3 = -p0+3*p1-3*p2+p3;
+    let dy_dt = 0.5*(c1 + 2*c2*t + 3*c3*t*t);
+    return dy_dt * (numPts-1) / TRACK_W;
+}
+
+// ─── Simulation state ─────────────────────────────────────────────────────────
+// On-track: { x, v }   Flying: { wx, wy, vx, vy }
+let onTrack  = true;
+let trackState  = { x: MIN_X, v: 0 };
+let flyState    = { wx: 0, wy: 0, vx: 0, vy: 0 };
+let landed      = false;   // hit the ground after flying
+
+let initialSpeed = 0;   // m/s — applied at start in the track direction
+
+let isPlaying = false;
+let lastTime  = 0;
+
+function resetSim() {
+    onTrack    = true;
+    landed     = false;
+    trackState = { x: MIN_X, v: initialSpeed };
+    flyState   = { wx: 0, wy: 0, vx: 0, vy: 0 };
+}
+
+// ─── Ghost / Capture list ─────────────────────────────────────────────────────
+// Each ghost: { wx, wy, angle, height, speed, color }
+const GHOST_COLORS = [
+    '#fbbf24','#fb923c','#f472b6','#a78bfa','#34d399','#60a5fa','#f87171','#e879f9'
+];
+let ghosts = [];
+let ghostCount = 0;
+
+// ─── World ↔ Screen ───────────────────────────────────────────────────────────
+function scale() { return Math.min(W/40, H/36); }
+function w2s(wx, wy) {
+    const s = scale(), cx = W/2, cy = H - 50;
+    return { x: cx + wx*s, y: cy - wy*s };
+}
+function s2w(sx, sy) {
+    const s = scale(), cx = W/2, cy = H - 50;
+    return { x: (sx-cx)/s, y: (cy-sy)/s };
+}
+
+// ─── Physics ─────────────────────────────────────────────────────────────────
+function deriv(x, v) {
+    const dtx = splineDY(x);
+    const den = Math.sqrt(1 + dtx*dtx);
+    return { dx: v/den, dv: -g*(dtx/den) };
+}
+
+function stepRK4(x, v, dt) {
+    let k1 = deriv(x, v);
+    let k2 = deriv(x + k1.dx*dt/2, v + k1.dv*dt/2);
+    let k3 = deriv(x + k2.dx*dt/2, v + k2.dv*dt/2);
+    let k4 = deriv(x + k3.dx*dt,   v + k3.dv*dt);
+    return {
+        x: x + (dt/6)*(k1.dx + 2*k2.dx + 2*k3.dx + k4.dx),
+        v: v + (dt/6)*(k1.dv + 2*k2.dv + 2*k3.dv + k4.dv)
+    };
+}
+
+function updatePhysics(dt) {
+    if (landed) return;
+
+    const SUB = 0.016;
+    let rem = dt;
+    while (rem > 0) {
+        let step = Math.min(rem, SUB);
+
+        if (onTrack) {
+            let {x, v} = trackState;
+            let nxt = stepRK4(x, v, step);
+
+            if (nxt.x > MAX_X) {
+                // Launch off right end
+                let slope = splineDY(MAX_X);
+                let den   = Math.sqrt(1 + slope*slope);
+                let wx = MAX_X, wy = splineY(MAX_X);
+                let speed = nxt.v;
+                flyState = {
+                    wx, wy,
+                    vx:  speed / den,
+                    vy: -speed * slope / den
+                };
+                onTrack = false;
+            } else if (nxt.x < MIN_X) {
+                // Launch off left end
+                let slope = splineDY(MIN_X);
+                let den   = Math.sqrt(1 + slope*slope);
+                let wx = MIN_X, wy = splineY(MIN_X);
+                let speed = nxt.v;
+                flyState = {
+                    wx, wy,
+                    vx:  speed / den,
+                    vy: -speed * slope / den
+                };
+                onTrack = false;
+            } else {
+                trackState = nxt;
+            }
+
+        } else {
+            // 2D projectile
+            flyState.vx += 0;
+            flyState.vy -= g * step;
+            flyState.wx += flyState.vx * step;
+            flyState.wy += flyState.vy * step;
+
+            if (flyState.wy <= 0) {
+                flyState.wy = 0;
+                flyState.vx = 0;
+                flyState.vy = 0;
+                landed = true;
+            }
+        }
+        rem -= step;
+    }
+}
+
+// ─── Current position & speed (world coords) ─────────────────────────────────
+function currentPos() {
+    if (onTrack) {
+        return { wx: trackState.x, wy: splineY(trackState.x) };
+    } else {
+        return { wx: flyState.wx, wy: flyState.wy };
+    }
+}
+function currentSpeed() {
+    if (onTrack) return Math.abs(trackState.v);
+    return Math.sqrt(flyState.vx**2 + flyState.vy**2);
+}
+function currentAngle() {
+    if (onTrack) return Math.atan(-splineDY(trackState.x));
+    return Math.atan2(flyState.vy, flyState.vx);
+}
+
+// ─── Drawing helpers ──────────────────────────────────────────────────────────
+function drawCart(px, py, angle, fillColor, alpha) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.translate(px, py);
+    ctx.rotate(angle);
+
+    ctx.shadowBlur  = 18;
+    ctx.shadowColor = fillColor;
+    ctx.fillStyle   = fillColor;
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(-13, -20, 26, 16, 4);
+    else ctx.rect(-13, -20, 26, 16);
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+    ctx.fillStyle  = '#e2e8f0';
+    ctx.beginPath();
+    ctx.arc(-8, -4, 4, 0, Math.PI*2);
+    ctx.arc( 8, -4, 4, 0, Math.PI*2);
+    ctx.fill();
+
+    ctx.restore();
+}
+
+function drawCartHUD(px, py, height, speed, color, alpha, label) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.font = 'bold 12px Inter';
+    ctx.textAlign   = 'center';
+    ctx.textBaseline = 'bottom';
+
+    const h   = height.toFixed(1) + ' m';
+    const spd = speed.toFixed(2)  + ' m/s';
+    const line1 = (label ? label + '  ' : '') + 'h = ' + h;
+    const line2 = 'v = ' + spd;
+
+    const pad = 6, lh = 16;
+    const bw  = Math.max(ctx.measureText(line1).width, ctx.measureText(line2).width) + pad*2;
+    const bh  = lh*2 + pad*2;
+    const bx  = px - bw/2;
+    const by  = py - 30 - bh;
+
+    // Bubble
+    ctx.fillStyle   = 'rgba(15,23,42,.85)';
+    ctx.strokeStyle = color;
+    ctx.lineWidth   = 1.5;
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(bx, by, bw, bh, 6);
+    else ctx.rect(bx, by, bw, bh);
+    ctx.fill();
+    ctx.stroke();
+
+    // Pointer
+    ctx.beginPath();
+    ctx.moveTo(px-6, by+bh);
+    ctx.lineTo(px,   by+bh+8);
+    ctx.lineTo(px+6, by+bh);
+    ctx.fillStyle = 'rgba(15,23,42,.85)';
+    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.stroke();
+
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillText(line1, px, by + pad + lh);
+    ctx.fillText(line2, px, by + pad + lh*2);
+
+    ctx.restore();
+}
+
+// ─── Main draw ───────────────────────────────────────────────────────────────
+let dragIdx = -1;
+
+function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Ground line (y = 0)
+    const gnd = w2s(MIN_X, 0);
+    ctx.beginPath();
+    ctx.setLineDash([10,8]);
+    ctx.strokeStyle = '#10b981';
+    ctx.lineWidth   = 1.5;
+    ctx.moveTo(0, gnd.y); ctx.lineTo(W, gnd.y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle   = '#10b981';
+    ctx.font        = '500 12px Inter';
+    ctx.textAlign   = 'right';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText('0 m  (Ground)', W - 16, gnd.y - 4);
+
+    // Ruler
+    const rx = 52;
+    ctx.strokeStyle = 'rgba(255,255,255,.35)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(rx, 0); ctx.lineTo(rx, H); ctx.stroke();
+
+    ctx.textAlign    = 'right';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle    = 'rgba(255,255,255,.7)';
+    ctx.font         = '11px Inter';
+    for (let m = 0; m <= 35; m++) {
+        const p = w2s(MIN_X, m);
+        const big = (m % 5 === 0);
+        ctx.beginPath();
+        ctx.moveTo(rx - (big ? 9 : 4), p.y);
+        ctx.lineTo(rx + (big ? 9 : 4), p.y);
+        ctx.stroke();
+        if (big && m > 0) ctx.fillText(m + ' m', rx - 13, p.y);
+    }
+
+    // Faint grid
+    const sc = scale(), cx = W/2, cy = H - 50;
+    ctx.strokeStyle = 'rgba(255,255,255,.04)';
+    ctx.beginPath();
+    for (let i = -20; i <= 20; i += 2) { const x = cx+i*sc; ctx.moveTo(x,0); ctx.lineTo(x,H); }
+    for (let i =   0; i <= 35; i += 2) { const y = cy-i*sc; ctx.moveTo(0,y); ctx.lineTo(W,y); }
+    ctx.stroke();
+
+    // Track
+    ctx.beginPath();
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth   = 4;
+    ctx.lineCap = ctx.lineJoin = 'round';
+    for (let wx = MIN_X; wx <= MAX_X; wx += 0.15) {
+        const p = w2s(wx, splineY(wx));
+        wx === MIN_X ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 14; ctx.shadowColor = '#38bdf8';
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Control-point handles (only when paused)
+    if (!isPlaying) {
+        for (let i = 0; i < numPts; i++) {
+            const wx = MIN_X + i * TRACK_W / (numPts - 1);
+            const p  = w2s(wx, ctrlPts[i]);
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, dragIdx === i ? 9 : 6, 0, Math.PI*2);
+            ctx.fillStyle   = dragIdx === i ? '#ffffff' : '#38bdf8';
+            ctx.shadowBlur  = dragIdx === i ? 16 : 0;
+            ctx.shadowColor = '#38bdf8';
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5;
+            ctx.stroke();
+        }
+    }
+
+    // Ghost carts
+    for (const gh of ghosts) {
+        const p = w2s(gh.wx, gh.wy);
+        drawCart(p.x, p.y, gh.angle, gh.color, 0.55);
+        drawCartHUD(p.x, p.y - 22, gh.height, gh.speed, gh.color, 0.9, '#' + gh.id);
+    }
+
+    // Active cart
+    const pos   = currentPos();
+    const spd   = currentSpeed();
+    const ang   = currentAngle();
+    const sp    = w2s(pos.wx, pos.wy);
+    drawCart(sp.x, sp.y, ang, '#f43f5e', 1);
+    drawCartHUD(sp.x, sp.y - 22, pos.wy, spd, '#f43f5e', 1, null);
+
+    updateHUD(pos.wy, spd);
+}
+
+// ─── HUD sidebar ─────────────────────────────────────────────────────────────
+function updateHUD(h, spd) {
+    const PE = mass * g * h;
+    const KE = 0.5 * mass * spd * spd;
+    const TE = PE + KE;
+
+    const maxH = Math.max(...ctrlPts);
+    const scl  = Math.max(mass * g * maxH, TE, 1);
+
+    document.getElementById('pe-val').textContent = PE.toFixed(1) + ' J';
+    document.getElementById('ke-val').textContent = KE.toFixed(1) + ' J';
+    document.getElementById('te-val').textContent = TE.toFixed(1) + ' J';
+    document.getElementById('pe-bar').style.width = Math.min(100, PE/scl*100) + '%';
+    document.getElementById('ke-bar').style.width = Math.min(100, KE/scl*100) + '%';
+    document.getElementById('te-bar').style.width = Math.min(100, TE/scl*100) + '%';
+}
+
+// ─── Animation loop ───────────────────────────────────────────────────────────
+function loop(ts) {
+    if (isPlaying) {
+        let dt = Math.min((ts - lastTime) / 1000, 0.1);
+        updatePhysics(dt);
+    }
+    lastTime = ts;
+    draw();
+    requestAnimationFrame(loop);
+}
+
+// ─── Capture (ghost photograph) ───────────────────────────────────────────────
+function capture() {
+    ghostCount++;
+    const pos   = currentPos();
+    const spd   = currentSpeed();
+    const ang   = currentAngle();
+    const color = GHOST_COLORS[(ghostCount - 1) % GHOST_COLORS.length];
+
+    ghosts.push({
+        id: ghostCount,
+        wx: pos.wx, wy: pos.wy,
+        angle: ang,
+        height: pos.wy,
+        speed:  spd,
+        color
+    });
+
+    // Update table
+    const tbody = document.getElementById('ghost-tbody');
+    if (ghostCount === 1) tbody.innerHTML = '';
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td><span class="ghost-dot" style="background:${color}"></span>${ghostCount}</td>
+        <td>${pos.wy.toFixed(2)}</td>
+        <td>${spd.toFixed(3)}</td>`;
+    tbody.appendChild(tr);
+}
+
+function clearGhosts() {
+    ghosts = [];
+    ghostCount = 0;
+    document.getElementById('ghost-tbody').innerHTML =
+        '<tr><td colspan="3" style="color:#475569;font-style:italic">No captures yet.</td></tr>';
+}
+
+// ─── Resize ───────────────────────────────────────────────────────────────────
+function resize() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width  = rect.width  * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    W = rect.width;
+    H = rect.height;
+    draw();
+}
+window.addEventListener('resize', resize);
+
+// ─── Drag control points ─────────────────────────────────────────────────────
+canvas.addEventListener('mousedown', e => {
+    if (isPlaying) return;
+    const r = canvas.getBoundingClientRect();
+    const mx = e.clientX - r.left, my = e.clientY - r.top;
+    for (let i = 0; i < numPts; i++) {
+        const wx = MIN_X + i * TRACK_W / (numPts - 1);
+        const p  = w2s(wx, ctrlPts[i]);
+        if (Math.hypot(mx - p.x, my - p.y) < 22) {
+            dragIdx = i; canvas.style.cursor = 'grabbing'; return;
+        }
+    }
+});
+
+canvas.addEventListener('mousemove', e => {
+    if (isPlaying) return;
+    const r = canvas.getBoundingClientRect();
+    const mx = e.clientX - r.left, my = e.clientY - r.top;
+
+    if (dragIdx !== -1) {
+        const wy = Math.max(0, Math.min(35, s2w(mx, my).y));
+        ctrlPts[dragIdx] = wy;
+        if (dragIdx === 0) {
+            document.getElementById('init-height').value = wy;
+            document.getElementById('lbl-height').textContent = wy.toFixed(1) + ' m';
+        }
+        draw();
+        return;
+    }
+
+    let hover = false;
+    for (let i = 0; i < numPts; i++) {
+        const wx = MIN_X + i * TRACK_W / (numPts - 1);
+        const p  = w2s(wx, ctrlPts[i]);
+        if (Math.hypot(mx - p.x, my - p.y) < 22) { hover = true; break; }
+    }
+    canvas.style.cursor = hover ? 'grab' : 'default';
+});
+
+window.addEventListener('mouseup', () => {
+    if (dragIdx !== -1) { dragIdx = -1; canvas.style.cursor = 'default'; }
+});
+
+// ─── UI event listeners ───────────────────────────────────────────────────────
+document.getElementById('btn-play').addEventListener('click', () => {
+    isPlaying = !isPlaying;
+    const btn = document.getElementById('btn-play');
+    btn.textContent = isPlaying ? '⏸ Pause' : '▶ Play';
+    btn.style.background = isPlaying ? '#334155' : 'var(--accent)';
+    btn.style.color = isPlaying ? '#f8fafc' : '#0f172a';
+    lastTime = performance.now();
+});
+
+document.getElementById('btn-reset').addEventListener('click', () => {
+    isPlaying = false;
+    const btn = document.getElementById('btn-play');
+    btn.textContent = '▶ Play';
+    btn.style.background = 'var(--accent)';
+    btn.style.color = '#0f172a';
+    resetSim();
+    draw();
+});
+
+document.getElementById('btn-capture').addEventListener('click', capture);
+document.getElementById('btn-clear-ghosts').addEventListener('click', clearGhosts);
+
+document.getElementById('init-height').addEventListener('input', e => {
+    const h = parseFloat(e.target.value);
+    ctrlPts[0] = h;
+    document.getElementById('lbl-height').textContent = h.toFixed(1) + ' m';
+    if (!isPlaying) { resetSim(); draw(); }
+});
+
+document.getElementById('init-speed').addEventListener('input', e => {
+    initialSpeed = parseFloat(e.target.value);
+    document.getElementById('lbl-init-speed').textContent = initialSpeed.toFixed(1) + ' m/s';
+    if (!isPlaying) { resetSim(); draw(); }
+});
+
+document.getElementById('mass').addEventListener('input', e => {
+    mass = parseFloat(e.target.value);
+    document.getElementById('lbl-mass').textContent = mass.toFixed(1) + ' kg';
+});
+
+document.getElementById('gravity').addEventListener('change', e => {
+    g = parseFloat(e.target.value);
+});
+
+document.getElementById('num-points').addEventListener('change', e => {
+    const n = parseInt(e.target.value);
+    const newPts = [];
+    for (let i = 0; i < n; i++) {
+        newPts.push(splineY(MIN_X + i * TRACK_W / (n - 1)));
+    }
+    numPts = n; ctrlPts = newPts;
+    if (!isPlaying) draw();
+});
+
+// ─── Boot ─────────────────────────────────────────────────────────────────────
+setTimeout(() => {
+    resize();
+    lastTime = performance.now();
+    requestAnimationFrame(loop);
+}, 80);
+</script>
+</body>
+</html>
