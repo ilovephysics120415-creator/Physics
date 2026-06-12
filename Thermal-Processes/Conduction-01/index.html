@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conduction in Solids — O-Level Physics (6091)</title>
+  <meta name="description" content="Interactive learning app on conduction in solids for O-Level Physics students. Microscopic visualization of lattice vibrations and free electrons.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Celebration Canvas for Neon Particle Bursts -->
+  <canvas id="celebration-canvas"></canvas>
+
+  <!-- Header Section -->
+  <header>
+    <h1>CONDUCTION IN SOLIDS</h1>
+    <div class="subtitle">O-Level Physics 6091</div>
+  </header>
+
+  <!-- Main Navigation Tabs -->
+  <div class="nav-tabs">
+    <button class="tab-btn active" id="tab-cond" onclick="switchSection('cond')">Conductor</button>
+    <button class="tab-btn" id="tab-ins" onclick="switchSection('ins')">Insulator</button>
+    <button class="tab-btn" id="tab-compare" onclick="switchSection('compare')">Compare</button>
+    <button class="tab-btn" id="tab-cards" onclick="switchSection('cards')">Flashcards</button>
+    <button class="tab-btn" id="tab-quiz" onclick="switchSection('quiz')">Quiz</button>
+  </div>
+
+  <!-- Main View Area -->
+  <main>
+    
+    <!-- Section 2A: Conductor Only Simulation -->
+    <section id="section-cond" class="app-section active">
+      <div class="panel">
+        <div class="sim-title conductor" style="font-size: 1.1rem; margin-bottom: 15px;">Conductor (Metal)</div>
+        
+        <div class="simulation-canvas-wrapper" style="height: 80px;">
+          <canvas id="cond-only-block-canvas" class="sim-canvas" onclick="handleSingleBlockClick('cond', event)"></canvas>
+          <div id="cond-canvas-hint" class="canvas-hint">Tap Left or Right End to Heat</div>
+        </div>
+
+        <div class="closeup-header">Microscopic View (Zoomed)</div>
+        <div class="closeup-canvas-wrapper" style="height: 140px;">
+          <canvas id="cond-only-closeup-canvas" class="closeup-canvas"></canvas>
+        </div>
+        
+        <div class="toggle-label" style="margin-top: 15px; font-size: 0.8rem; text-align: center;">
+          Conductor: heat spreads via atom vibration AND free electron movement (rapid transfer).
+        </div>
+
+        <button class="btn-primary" onclick="resetSingleSimulation('cond')" style="margin-top: 20px;">Reset Simulation</button>
+      </div>
+    </section>
+
+    <!-- Section 2B: Insulator Only Simulation -->
+    <section id="section-ins" class="app-section">
+      <div class="panel">
+        <div class="sim-title insulator" style="font-size: 1.1rem; margin-bottom: 15px;">Insulator (Non-Metal)</div>
+        
+        <div class="simulation-canvas-wrapper" style="height: 80px;">
+          <canvas id="ins-only-block-canvas" class="sim-canvas" onclick="handleSingleBlockClick('ins', event)"></canvas>
+          <div id="ins-canvas-hint" class="canvas-hint">Tap Left or Right End to Heat</div>
+        </div>
+
+        <div class="closeup-header">Microscopic View (Zoomed)</div>
+        <div class="closeup-canvas-wrapper" style="height: 140px;">
+          <canvas id="ins-only-closeup-canvas" class="closeup-canvas"></canvas>
+        </div>
+        
+        <div class="toggle-label" style="margin-top: 15px; font-size: 0.8rem; text-align: center;">
+          Insulator: heat spreads via atom vibration only (slow transfer).
+        </div>
+
+        <button class="btn-primary" onclick="resetSingleSimulation('ins')" style="margin-top: 20px;">Reset Simulation</button>
+      </div>
+    </section>
+
+    <!-- Section 2C: Compare Simulation -->
+    <section id="section-compare" class="app-section">
+      <div class="panel">
+        
+        <!-- Side-by-side simulations grid -->
+        <div class="simulations-grid">
+          <!-- Conductor Column -->
+          <div class="sim-column">
+            <div class="sim-title conductor">Conductor (Metal)</div>
+            
+            <div class="simulation-canvas-wrapper" style="height: 60px;">
+              <canvas id="conductor-block-canvas" class="sim-canvas"></canvas>
+            </div>
+
+            <div class="closeup-header">Microscopic View</div>
+            <div class="closeup-canvas-wrapper" style="height: 110px;">
+              <canvas id="conductor-closeup-canvas" class="closeup-canvas"></canvas>
+            </div>
+            
+            <div class="toggle-label" style="margin-top: 10px; font-size: 0.75rem; text-align: left;">
+              Conductor: heat spreads via atom vibration AND free electron movement (rapid transfer).
+            </div>
+          </div>
+
+          <!-- Insulator Column -->
+          <div class="sim-column">
+            <div class="sim-title insulator">Insulator (Non-Metal)</div>
+            
+            <div class="simulation-canvas-wrapper" style="height: 60px;">
+              <canvas id="insulator-block-canvas" class="sim-canvas"></canvas>
+            </div>
+
+            <div class="closeup-header">Microscopic View</div>
+            <div class="closeup-canvas-wrapper" style="height: 110px;">
+              <canvas id="insulator-closeup-canvas" class="closeup-canvas"></canvas>
+            </div>
+            
+            <div class="toggle-label" style="margin-top: 10px; font-size: 0.75rem; text-align: left;">
+              Insulator: heat spreads via atom vibration only (slow transfer).
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="startSimultaneousHeating()" style="margin-top: 20px;">Apply Heat (Left End)</button>
+        <button class="btn-secondary" onclick="resetSimulation()" style="margin-top: 10px;">Reset Simulation</button>
+
+      </div>
+    </section>
+
+    <!-- Section 3: Flashcard Revision Mode -->
+    <section id="section-cards" class="app-section">
+      <div class="panel" style="display: flex; flex-direction: column; align-items: center;">
+        
+        <div class="flashcard-container">
+          <div class="flashcard" id="revision-card" onclick="flipCard()">
+            <!-- Front Face -->
+            <div class="card-face card-front">
+              <div class="card-category">Question <span id="card-index-display">1/8</span></div>
+              <div class="card-text" id="card-question-text">Definition of conduction?</div>
+              <div class="card-hint">Tap to flip</div>
+            </div>
+            <!-- Back Face -->
+            <div class="card-face card-back">
+              <div class="card-category">Answer</div>
+              <div class="card-text" id="card-answer-text">Conduction is the transfer of thermal energy through a medium without any flow of the medium.</div>
+              <div class="card-hint">Tap to return</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flashcard-controls" style="width: 100%; max-width: 360px;">
+          <button class="btn-secondary" onclick="prevCard()">Previous</button>
+          <button class="btn-secondary" onclick="nextCard()">Next</button>
+        </div>
+        <button class="btn-primary" onclick="shuffleCards()" style="margin-top: 15px; width: 100%; max-width: 360px;">Shuffle Deck</button>
+
+      </div>
+    </section>
+
+    <!-- Section 4: Quiz Mode -->
+    <section id="section-quiz" class="app-section">
+      <div class="panel" id="quiz-question-container">
+        
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+        </div>
+
+        <div class="quiz-meta">
+          <span>Question <span id="quiz-q-num">1</span> of 10</span>
+          <span>Score: <span id="quiz-score-num">0</span></span>
+        </div>
+
+        <div class="quiz-question-box">
+          <div class="quiz-question-text" id="quiz-question-text">Question loading...</div>
+        </div>
+
+        <div class="quiz-options" id="quiz-options">
+          <!-- Populated dynamically via app.js -->
+        </div>
+
+        <div class="quiz-feedback" id="quiz-feedback">
+          <!-- Feedback shown here -->
+        </div>
+
+        <button class="btn-primary" id="quiz-next-btn" onclick="handleQuizNext()" style="display: none; margin-top: 20px;">Next Question</button>
+
+      </div>
+
+      <!-- Section 5: Score Screen (Nested inside quiz navigation) -->
+      <div class="panel score-box" id="quiz-score-container" style="display: none;">
+        <div class="score-circle" id="score-circle">8/10</div>
+        <div class="score-title" id="score-title">Excellent!</div>
+        <div class="score-desc" id="score-desc">You understand conduction at the microscopic level.</div>
+        
+        <button class="btn-primary" onclick="restartQuiz()" style="width: 100%;">Retry Quiz</button>
+        <button class="btn-secondary" onclick="switchSection('sim')" style="width: 100%;">Back to Simulation</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
