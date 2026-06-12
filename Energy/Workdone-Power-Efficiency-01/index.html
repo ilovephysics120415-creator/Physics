@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Work, Power & Efficiency Trainer - O-Level Physics 6091</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <h1>
+        <svg style="width: 24px; height: 24px; stroke: var(--accent-cyan); stroke-width: 2; fill: none;" viewBox="0 0 24 24">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+        Work, Power & Efficiency
+      </h1>
+      <span class="badge">Syllabus 6091</span>
+    </div>
+  </header>
+
+  <!-- Bottom Navigation (Moved to Top) -->
+  <nav>
+    <div class="nav-container">
+      <button class="nav-item active" onclick="switchNavSection('concept')">
+        <svg viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        <span>Formulae</span>
+      </button>
+      <button class="nav-item" onclick="switchNavSection('explore')">
+        <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        <span>Explore</span>
+      </button>
+      <button class="nav-item" onclick="switchNavSection('flashcards')">
+        <svg viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+        <span>Flashcards</span>
+      </button>
+      <button class="nav-item" onclick="switchNavSection('quiz')">
+        <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+        <span>Quiz</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Section 1: Concept Introduction -->
+    <div id="section-concept" class="section-view active">
+      <div class="card" style="padding: 1rem; border-color: rgba(0, 240, 255, 0.1); margin-bottom: 1.5rem; text-align: center;">
+        <p style="font-size: 0.85rem; color: var(--text-secondary);">
+          Swipe or tap indicators to browse core formula cards.
+        </p>
+      </div>
+
+      <div class="carousel-container">
+        <div class="carousel-track" id="formula-track">
+          <!-- Work Done Card -->
+          <div class="carousel-slide">
+            <div class="formula-card">
+              <div class="formula-header">
+                <div>
+                  <span class="step-badge current" style="margin-bottom: 0.5rem; display: inline-block;">Concept 1</span>
+                  <div class="formula-title">Work Done</div>
+                </div>
+                <div class="formula-icon">
+                  <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                </div>
+              </div>
+              <div class="formula-math">W = Fd</div>
+              <div class="formula-details">
+                <ul>
+                  <li><span>W</span> = work done (in joules, <strong>J</strong>)</li>
+                  <li><span>F</span> = constant force applied (in newtons, <strong>N</strong>)</li>
+                  <li><span>d</span> = distance moved <strong>in the direction of the force</strong> (in metres, <strong>m</strong>)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Power Card -->
+          <div class="carousel-slide">
+            <div class="formula-card">
+              <div class="formula-header">
+                <div>
+                  <span class="step-badge current" style="margin-bottom: 0.5rem; display: inline-block;">Concept 2</span>
+                  <div class="formula-title">Power</div>
+                </div>
+                <div class="formula-icon">
+                  <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                </div>
+              </div>
+              <div class="formula-math">P = E / t</div>
+              <div class="formula-details">
+                <ul>
+                  <li><span>P</span> = power (in watts, <strong>W</strong>)</li>
+                  <li><span>E</span> = energy transferred (in joules, <strong>J</strong>)</li>
+                  <li><span>t</span> = time taken (in seconds, <strong>s</strong>)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Efficiency Card -->
+          <div class="carousel-slide">
+            <div class="formula-card">
+              <div class="formula-header">
+                <div>
+                  <span class="step-badge current" style="margin-bottom: 0.5rem; display: inline-block;">Concept 3</span>
+                  <div class="formula-title">Efficiency</div>
+                </div>
+                <div class="formula-icon">
+                  <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8m-16-4l8-4 8 4m-8-4v12"/></svg>
+                </div>
+              </div>
+              <div class="formula-math">Eff = <sup>useful output</sup>&frasl;<sub>total input</sub> &times; 100%</div>
+              <div class="formula-details">
+                <ul>
+                  <li><span>efficiency</span> = ratio of useful output to total input</li>
+                  <li>expressed as a percentage (<strong>%</strong>)</li>
+                  <li>applies to both energy (J) and power (W)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-indicators">
+        <div class="indicator active" onclick="jumpToSlide(0)"></div>
+        <div class="indicator" onclick="jumpToSlide(1)"></div>
+        <div class="indicator" onclick="jumpToSlide(2)"></div>
+      </div>
+    </div>
+
+    <!-- Section 2: Interactive Exploration -->
+    <div id="section-explore" class="section-view">
+      <!-- Tabs Selector -->
+      <div class="tabs-header">
+        <button class="tab-btn active" onclick="switchExploreTab('work')">Work Done</button>
+        <button class="tab-btn" onclick="switchExploreTab('power')">Power</button>
+        <button class="tab-btn" onclick="switchExploreTab('efficiency')">Efficiency</button>
+        <button class="tab-btn" onclick="switchExploreTab('combined')">Combined</button>
+      </div>
+
+      <!-- Tab A: Work Done -->
+      <div id="tab-work" class="tab-content active">
+        <div class="card">
+          <h2 class="scenario-title">Pushing a Box</h2>
+          <p class="scenario-desc">Investigate how applying a constant force on a box over a distance transfers energy to other stores.</p>
+          
+          <div class="sim-container">
+            <div class="canvas-wrapper">
+              <canvas id="canvas-work" width="360" height="180"></canvas>
+            </div>
+            
+            <div class="sim-controls">
+              <div class="control-group">
+                <div class="control-label">
+                  <span>Applied Force (F)</span>
+                  <span class="control-value" id="val-work-force">250 N</span>
+                </div>
+                <input type="range" id="slider-work-force" min="10" max="500" value="250" oninput="updateWorkSim()">
+              </div>
+
+              <div class="control-group">
+                <div class="control-label">
+                  <span>Distance Moved (d)</span>
+                  <span class="control-value" id="val-work-distance">10 m</span>
+                </div>
+                <input type="range" id="slider-work-distance" min="1" max="20" value="10" oninput="updateWorkSim()">
+              </div>
+
+              <div class="control-group" style="flex-direction: row; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.85rem; font-weight: 500; color: var(--text-secondary);">Enable Friction Force</span>
+                <label class="switch">
+                  <input type="checkbox" id="toggle-work-friction" onchange="updateWorkSim()">
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <button class="input-btn" id="btn-play-work" onclick="playWorkSim()">Animate Push</button>
+            </div>
+          </div>
+
+          <div class="sim-output">
+            <div class="output-row">
+              <span class="output-label">Work Done by Applied Force</span>
+              <span class="output-val highlight" id="out-work-applied">2500 J</span>
+            </div>
+            <div id="row-work-friction" class="output-row" style="display: none;">
+              <span class="output-label">Work Done against Friction (to Energy in Internal Store)</span>
+              <span class="output-val" id="out-work-friction" style="color: var(--accent-red);">- 1200 J</span>
+            </div>
+            <div id="row-work-net" class="output-row" style="display: none;">
+              <span class="output-label">Net Work Done (to Kinetic Store)</span>
+              <span class="output-val" id="out-work-net" style="color: var(--accent-green);">1300 J</span>
+            </div>
+          </div>
+
+          <div class="annotation">
+            <svg viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            <span>Work is only done when the force moves the object in the direction of the force.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab B: Power -->
+      <div id="tab-power" class="tab-content">
+        <div class="card">
+          <h2 class="scenario-title">Lifting a Load vertically</h2>
+          <p class="scenario-desc">See how lifting a load transfers energy to the gravitational potential store, and how fast the motor operates.</p>
+          
+          <div class="sim-container">
+            <div class="canvas-wrapper tall">
+              <canvas id="canvas-power" width="360" height="280"></canvas>
+            </div>
+            
+            <div class="sim-controls">
+              <div class="control-group">
+                <div class="control-label">
+                  <span>Mass of Load (m)</span>
+                  <span class="control-value" id="val-power-mass">50 kg</span>
+                </div>
+                <input type="range" id="slider-power-mass" min="1" max="100" value="50" oninput="updatePowerSim()">
+              </div>
+
+              <div class="control-group">
+                <div class="control-label">
+                  <span>Height Lifted (h)</span>
+                  <span class="control-value" id="val-power-height">10 m</span>
+                </div>
+                <input type="range" id="slider-power-height" min="1" max="20" value="10" oninput="updatePowerSim()">
+              </div>
+
+              <div class="control-group">
+                <div class="control-label">
+                  <span>Time Taken (t)</span>
+                  <span class="control-value" id="val-power-time">10 s</span>
+                </div>
+                <input type="range" id="slider-power-time" min="1" max="60" value="10" oninput="updatePowerSim()">
+              </div>
+
+              <button class="input-btn" id="btn-play-power" onclick="playPowerSim()">Animate Lift</button>
+            </div>
+          </div>
+
+          <div class="sim-output">
+            <div class="output-row">
+              <span class="output-label">Energy in Gravitational Potential Store (mgh)</span>
+              <span class="output-val" id="out-power-energy">5000 J</span>
+            </div>
+            <div class="output-row">
+              <span class="output-label">Power Output of Motor (E/t)</span>
+              <span class="output-val highlight" id="out-power-power">500 W</span>
+            </div>
+          </div>
+
+          <div class="annotation">
+            <svg viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            <span>Power is the rate of energy transfer. (g = 10 N/kg)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab C: Efficiency -->
+      <div id="tab-efficiency" class="tab-content">
+        <div class="card">
+          <h2 class="scenario-title">Electric Motor</h2>
+          <p class="scenario-desc">Adjust the inputs to see how much energy is transferred to the useful store vs. the internal store.</p>
+          
+          <div class="sim-container">
+            <div class="canvas-wrapper">
+              <canvas id="canvas-efficiency" width="360" height="180"></canvas>
+            </div>
+            
+            <div class="sim-controls">
+              <div class="control-group">
+                <div class="control-label">
+                  <span>Total Energy Input</span>
+                  <span class="control-value" id="val-eff-input">500 J</span>
+                </div>
+                <input type="range" id="slider-eff-input" min="100" max="1000" step="10" value="500" oninput="updateEffSim('input')">
+              </div>
+
+              <div class="control-group">
+                <div class="control-label">
+                  <span>Useful Energy Output</span>
+                  <span class="control-value" id="val-eff-output">300 J</span>
+                </div>
+                <input type="range" id="slider-eff-output" min="50" max="900" step="10" value="300" oninput="updateEffSim('output')">
+              </div>
+              <button class="input-btn" id="btn-play-eff" onclick="playEffSim()">Animate Conveyor</button>
+            </div>
+          </div>
+
+          <div class="sankey-container">
+            <div id="sankey-useful" class="sankey-bar sankey-useful" style="width: 60%;"></div>
+            <div id="sankey-internal" class="sankey-bar sankey-internal" style="width: 40%;"></div>
+          </div>
+
+          <div class="sankey-labels">
+            <div class="sankey-label-item">
+              <div class="sankey-dot dot-useful"></div>
+              <span>Useful Output: <span id="label-sankey-useful">300 J</span></span>
+            </div>
+            <div class="sankey-label-item">
+              <div class="sankey-dot dot-internal"></div>
+              <span>Energy in Internal Store: <span id="label-sankey-internal">200 J</span></span>
+            </div>
+          </div>
+
+          <div class="sim-output" style="margin-top: 1rem;">
+            <div class="output-row">
+              <span class="output-label">Efficiency</span>
+              <span class="output-val highlight" id="out-eff-percentage">60.00%</span>
+            </div>
+          </div>
+
+          <div class="annotation">
+            <svg viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            <span>No energy transfer is 100% efficient in a real situation.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab D: Combined Scenarios -->
+      <div id="tab-combined" class="tab-content">
+        <div class="scenario-box">
+          <div class="d-flex justify-between align-center mb-2">
+            <span class="badge" id="comb-scenario-number">Scenario 1 of 4</span>
+            <button class="btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;" onclick="nextCombinedScenario()">Next Scenario</button>
+          </div>
+          <h2 class="scenario-title" id="comb-title">Motor lifting a roller coaster cart</h2>
+          <p class="scenario-desc" id="comb-desc">A motor pulls a cart loaded with riders up the steep track to prepare for the descent...</p>
+          
+          <div class="canvas-wrapper" style="height: 140px; margin-bottom: 1rem;">
+            <canvas id="canvas-combined" width="360" height="140"></canvas>
+          </div>
+
+          <div class="combined-steps">
+            <!-- Step 1 -->
+            <div class="step-card active" id="comb-step-1-card">
+              <div class="step-header">
+                <span class="step-number">Step 1: Work Done</span>
+                <span class="step-badge current" id="comb-step-1-badge">Current</span>
+              </div>
+              <p style="font-size: 0.85rem;" id="comb-step-1-prompt">Calculate the work done by the motor to lift the load.</p>
+              
+              <div class="input-wrapper" id="comb-step-1-input-area">
+                <input type="text" class="input-box" id="comb-step-1-input" placeholder="e.g. 5000 J">
+                <button class="input-btn" id="comb-step-1-btn" onclick="submitCombinedStep(1)">Check</button>
+              </div>
+              <div class="solution-box" id="comb-step-1-sol" style="display: none;"></div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-card" id="comb-step-2-card">
+              <div class="step-header">
+                <span class="step-number">Step 2: Power</span>
+                <span class="step-badge pending" id="comb-step-2-badge">Pending</span>
+              </div>
+              <p style="font-size: 0.85rem;" id="comb-step-2-prompt">Calculate the power developed by the motor.</p>
+              
+              <div class="input-wrapper" id="comb-step-2-input-area" style="display: none;">
+                <input type="text" class="input-box" id="comb-step-2-input" placeholder="e.g. 250 W">
+                <button class="input-btn" id="comb-step-2-btn" onclick="submitCombinedStep(2)">Check</button>
+              </div>
+              <div class="solution-box" id="comb-step-2-sol" style="display: none;"></div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step-card" id="comb-step-3-card">
+              <div class="step-header">
+                <span class="step-number">Step 3: Efficiency</span>
+                <span class="step-badge pending" id="comb-step-3-badge">Pending</span>
+              </div>
+              <p style="font-size: 0.85rem;" id="comb-step-3-prompt">Calculate the percentage efficiency of the motor.</p>
+              
+              <div class="input-wrapper" id="comb-step-3-input-area" style="display: none;">
+                <input type="text" class="input-box" id="comb-step-3-input" placeholder="e.g. 80%">
+                <button class="input-btn" id="comb-step-3-btn" onclick="submitCombinedStep(3)">Check</button>
+              </div>
+              <div class="solution-box" id="comb-step-3-sol" style="display: none;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Quiz Pool -->
+    <div id="section-quiz" class="section-view">
+      <div class="card" id="quiz-intro-card">
+        <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Interactive Assessment</h2>
+        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+          Test your knowledge of the syllabus calculations. You will be served 15 randomised questions. Remember, the unit is matched case-sensitively together with your numerical answer!
+        </p>
+        <button class="input-btn" style="width: 100%;" onclick="startQuiz()">Start Quiz Session</button>
+      </div>
+
+      <!-- Active Question -->
+      <div id="quiz-question-card" style="display: none;">
+        <div class="quiz-header">
+          <span class="quiz-progress" id="quiz-progress-text">Question 1 of 15</span>
+          <span class="badge" id="quiz-question-type">Work Done</span>
+        </div>
+        
+        <div class="progress-bar-outer">
+          <div class="progress-bar-inner" id="quiz-progress-bar"></div>
+        </div>
+
+        <div class="card">
+          <div class="question-text" id="quiz-question-text">
+            A constant force of 15 N pushes an object a distance of 4.5 m. Find the work done on the object.
+          </div>
+
+          <div class="reminder-box">
+            <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+            <span>Unit reminder: J (joules), W (watts), s (seconds), % (efficiency) must be typed directly inside the box. Case-sensitive.</span>
+          </div>
+
+          <!-- Fill in Blank Input -->
+          <div id="quiz-input-container">
+            <div class="input-wrapper">
+              <input type="text" class="input-box" id="quiz-text-input" placeholder="e.g. 67.5 J" onkeydown="handleQuizEnter(event)">
+              <button class="input-btn" id="quiz-submit-btn" onclick="submitQuizAnswer()">Submit</button>
+            </div>
+            <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem;">
+              Round calculations as needed (0 to 4 decimal places are accepted).
+            </p>
+          </div>
+
+          <!-- MCQ Options (if question is conceptual MCQ) -->
+          <div id="quiz-mcq-container" class="mcq-container" style="display: none;">
+            <!-- Options dynamically loaded -->
+          </div>
+
+          <!-- Solved/Feedback Box -->
+          <div class="solution-box" id="quiz-solution-box" style="display: none;">
+            <div class="solution-title" id="quiz-feedback-title">
+              <span id="quiz-feedback-icon"></span>
+              <span id="quiz-feedback-status">Correct!</span>
+            </div>
+            <div class="solution-content" id="quiz-solution-text">
+              Worked working here.
+            </div>
+            <button class="btn-secondary" style="margin-top: 1rem; width: 100%;" id="quiz-next-btn" onclick="nextQuizQuestion()">
+              Next Question
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 4: Scoring & Feedback -->
+    <div id="section-score" class="section-view">
+      <div class="card score-screen">
+        <div class="score-circle">
+          <div class="score-num" id="score-num">14</div>
+          <div class="score-total">/ 15</div>
+        </div>
+        <h2 class="score-title" id="score-headline">Power Player! ⚡</h2>
+        <p class="score-feedback" id="score-feedback-text">
+          Excellent job! You have mastered Work, Power and Efficiency formulas.
+        </p>
+        <button class="input-btn" style="width: 100%; margin-bottom: 0.75rem;" onclick="startQuiz()">Try Quiz Again</button>
+        <button class="btn-secondary" style="width: 100%;" onclick="viewDetailedFeedback()">Review Detailed Questions</button>
+      </div>
+
+      <!-- Detailed Question Feedback Container -->
+      <div id="detailed-feedback-container" style="display: none;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--accent-cyan);">Question Review</h3>
+        <div id="detailed-feedback-list">
+          <!-- Populated in JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 5: Flashcard Revision Mode -->
+    <div id="section-flashcards" class="section-view">
+      <div class="card" style="padding: 1rem; margin-bottom: 1.5rem; text-align: center;">
+        <div class="card-index-info" id="flash-progress">Card 1 of 20 • Reviewed: 0</div>
+      </div>
+
+      <div class="flashcard-wrapper">
+        <div class="flashcard" id="flashcard" onclick="flipFlashcard()">
+          <div class="card-face card-front">
+            <p id="flashcard-front-text">Front of card</p>
+          </div>
+          <div class="card-face card-back">
+            <p id="flashcard-back-text">Back of card text</p>
+            <div class="formula-working" id="flashcard-back-math">W = Fd = ...</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard-controls">
+        <button class="btn-secondary" onclick="prevFlashcard()">
+          <svg style="width: 16px; height: 16px; transform: rotate(180deg); stroke: currentColor; fill: none; stroke-width: 2;" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        
+        <button class="btn-secondary" onclick="shuffleFlashcards()">
+          <svg style="width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2;" viewBox="0 0 24 24"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+          Shuffle
+        </button>
+
+        <button class="btn-secondary" onclick="nextFlashcard()">
+          <svg style="width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2;" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
