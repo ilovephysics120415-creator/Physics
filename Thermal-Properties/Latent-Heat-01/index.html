@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Latent Heat & Phase Curves - O-Level Physics</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Canvas for celebration/confetti particles -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- Top Nav Bar -->
+  <nav class="top-nav">
+    <button class="nav-item active" onclick="switchSection('concepts')">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+      Concepts
+    </button>
+    <button class="nav-item" onclick="switchSection('simulate')">
+      <svg viewBox="0 0 24 24"><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/></svg>
+      Simulate
+    </button>
+    <button class="nav-item" onclick="switchSection('curves')">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+      Curves
+    </button>
+    <button class="nav-item" onclick="switchSection('flashcards')">
+      <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+      Cards
+    </button>
+    <button class="nav-item" onclick="switchSection('quiz')">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+      Quiz
+    </button>
+  </nav>
+
+  <div class="app-container">
+    <header>
+      <h1>Latent <span>Heat</span></h1>
+      <p>O-Level Physics (Syllabus 6091)</p>
+    </header>
+
+    <!-- SECTION 0: Concept Introduction -->
+    <section id="section-concepts" class="app-section active">
+      <div class="concept-grid">
+        <div class="glass-card concept-card" style="animation-delay: 0.1s">
+          <h3>Phase Changes</h3>
+          <p>Melting, solidification, boiling, and condensation are processes where thermal energy is transferred without any change in temperature.</p>
+        </div>
+        
+        <div class="glass-card concept-card" style="animation-delay: 0.2s">
+          <h3>Latent Heat</h3>
+          <p>Latent heat is the energy absorbed or released during a change of state at a constant temperature.</p>
+        </div>
+
+        <div class="glass-card concept-card" style="animation-delay: 0.3s">
+          <h3>Specific Latent Heat <span>L</span></h3>
+          <p>The thermal energy required to change the state of 1 kg of a substance without any change in temperature.</p>
+          <div class="formula-box">
+            Formula: <span>Q = mL</span>
+          </div>
+          <p style="margin-top: 10px; font-size: 0.85rem; text-align: center;">
+            Q = thermal energy (J) &bull; m = mass (kg) &bull; L = specific latent heat (J/kg)
+          </p>
+        </div>
+
+        <div class="glass-card concept-card" style="animation-delay: 0.4s">
+          <h3>Fusion vs. Vaporisation</h3>
+          <p><strong>Specific Latent Heat of Fusion (L<sub>f</sub>):</strong> Solid &harr; Liquid transition.</p>
+          <p style="margin-top: 6px;"><strong>Specific Latent Heat of Vaporisation (L<sub>v</sub>):</strong> Liquid &harr; Gas transition.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1: Latent Heat Simulation -->
+    <section id="section-simulate" class="app-section">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <h2 style="font-size: 1.4rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; text-shadow: 0 0 8px var(--accent-glow);">Lab Simulator</h2>
+      </div>
+
+      <!-- Simulator Tab Toggle -->
+      <div class="tab-header">
+        <button class="tab-btn active" id="sim-btn-fusion" onclick="switchSimTab('fusion')">Specific Latent Heat of Fusion (L<sub>f</sub>)</button>
+        <button class="tab-btn" id="sim-btn-vapor" onclick="switchSimTab('vapor')">Specific Latent Heat of Vaporisation (L<sub>v</sub>)</button>
+      </div>
+
+      <!-- Controls Panel -->
+      <div class="glass-card">
+        <div style="margin-bottom: 16px;">
+          <label class="sim-label-title" style="display:block; font-size:0.8rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Select Substance</label>
+          <div class="custom-select-wrapper">
+            <select id="sim-substance" onchange="updateSimValues()">
+              <!-- Value populated dynamically in JS -->
+            </select>
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <label style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:0.95rem;">
+            <span>MASS (m):</span>
+            <span style="color:var(--accent); font-weight:600;"><span id="sim-mass-val">1.0</span> kg</span>
+          </label>
+          <input type="range" class="sim-slider" id="sim-mass" min="0.1" max="5.0" step="0.1" value="1.0" oninput="updateSimValues()">
+        </div>
+      </div>
+
+      <!-- Beaker Animation Panel -->
+      <div class="glass-card" style="display:flex; justify-content:center; align-items:center; min-height:180px; background:#101116;">
+        <div id="beaker-animation-container" style="width: 100%; max-width: 180px; height: 180px; position:relative; display:flex; justify-content:center; align-items:center;">
+          <!-- Dynamic Beaker SVG loads here -->
+        </div>
+      </div>
+
+      <!-- Calculate / Show Answer Card -->
+      <div class="glass-card" style="border-left: 4px solid var(--accent);">
+        <h3 id="sim-calc-title" style="font-size: 1rem; color: #ffffff; margin-bottom: 12px; font-weight:500; line-height:1.4;">Calculate the energy needed to melt/solidify this mass of water.</h3>
+        <button class="btn btn-accent" id="sim-show-answer-btn" onclick="toggleSimAnswer()">Show Answer</button>
+        
+        <div id="sim-answer-box" style="display: none; margin-top: 16px;">
+          <div style="font-family: monospace; font-size: 0.95rem; line-height: 1.6; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+            <div style="color: var(--accent); font-weight: 600; margin-bottom: 6px;">Formula: Q = m × L</div>
+            <div id="sim-calc-steps">Q = 1.0 kg × 334,000 J/kg</div>
+            <div id="sim-calc-result" style="color: var(--success); font-weight: 700; font-size: 1.1rem; margin-top: 8px;">Q = 334,000 J (334.0 kJ)</div>
+          </div>
+          <p id="sim-calc-note" style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 10px; font-style: italic;">
+            Note: Vaporisation requires significantly more energy than fusion for the same mass.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: Interactive Curve Viewer -->
+    <section id="section-curves" class="app-section">
+      <div class="tab-header">
+        <button class="tab-btn active" onclick="switchCurveTab('heating')">Heating</button>
+        <button class="tab-btn" onclick="switchCurveTab('cooling')">Cooling</button>
+      </div>
+
+      <div class="glass-card curve-container" id="curve-viewer">
+        <!-- SVGs are generated dynamically to support animations and clicks -->
+        <div id="svg-placeholder" style="width:100%;"></div>
+      </div>
+
+      <div class="glass-card curve-info-panel" id="curve-info-panel">
+        <h4 id="info-title">Tap a region on the curve</h4>
+        <p id="info-desc">Select any segment of the graph to analyze energy changes and particle behavior.</p>
+        <div id="info-badge-container"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: Flashcard Revision Mode -->
+    <section id="section-flashcards" class="app-section">
+      <div class="flashcard-area">
+        <div class="flashcard-wrapper" id="flashcard-wrapper" onclick="flipCard()">
+          <!-- Card Front -->
+          <div class="flashcard-side flashcard-front">
+            <div class="flashcard-indicator" id="card-index-indicator">Card 1 of 9</div>
+            <div class="flashcard-text" id="card-front-text">Definition of Latent Heat</div>
+            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 20px; text-transform: uppercase;">Tap to reveal answer</div>
+          </div>
+          <!-- Card Back -->
+          <div class="flashcard-side flashcard-back">
+            <div class="flashcard-indicator">Answer</div>
+            <div class="flashcard-text" id="card-back-text">Thermal energy absorbed or released during a change of state at a constant temperature.</div>
+            <div style="font-size: 0.8rem; color: #a9ffe5; margin-top: 20px; text-transform: uppercase;">Tap to flip back</div>
+          </div>
+        </div>
+
+        <div class="flashcard-controls">
+          <button class="btn" onclick="prevCard()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Prev
+          </button>
+          <button class="btn" onclick="shuffleCards()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            Shuffle
+          </button>
+          <button class="btn" onclick="nextCard()">
+            Next
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: Quiz Mode -->
+    <section id="section-quiz" class="app-section">
+      <div id="quiz-intro" class="glass-card text-center" style="text-align: center;">
+        <h3 style="margin-bottom:10px; font-size:1.4rem;">Test Your Understanding</h3>
+        <p style="color:var(--text-secondary); margin-bottom:20px; font-size:0.95rem;">
+          Complete a randomized 10-question quiz testing curve reading, energy concepts, and Q = mL calculations.
+        </p>
+        <button class="btn btn-accent" style="margin: 0 auto;" onclick="startQuiz()">Start Quiz</button>
+      </div>
+
+      <div id="quiz-play" style="display: none;">
+        <div class="quiz-progress">
+          <div class="progress-bar-outer">
+            <div class="progress-bar-inner" id="quiz-progress-bar"></div>
+          </div>
+          <span id="quiz-q-num">Question 1/10</span>
+        </div>
+
+        <div class="glass-card quiz-question-card">
+          <div id="quiz-diagram-container" class="quiz-diagram-box" style="display: none;"></div>
+          <div class="quiz-question-text" id="quiz-question-text">Question loading...</div>
+          
+          <!-- MCQ options container -->
+          <div class="mcq-options" id="quiz-mcq-options"></div>
+
+          <!-- Numeric calculation container -->
+          <div class="calc-input-box" id="quiz-calc-box" style="display: none;">
+            <input type="text" class="calc-input" id="quiz-numeric-input" placeholder="e.g. 1.5 kg, 334000 J, 2260000 J/kg">
+            <button class="btn btn-accent" style="justify-content: center;" onclick="submitNumericAnswer()">Submit Answer</button>
+          </div>
+        </div>
+
+        <div class="feedback-box" id="quiz-feedback-box">
+          <h5 id="feedback-title">Correct!</h5>
+          <p id="feedback-desc"></p>
+          <div class="working-steps" id="feedback-steps"></div>
+          <button class="btn btn-accent" id="feedback-next-btn" style="margin-top: 15px; width: 100%; justify-content: center;" onclick="nextQuizQuestion()">Next Question</button>
+        </div>
+      </div>
+
+      <!-- SECTION 5: Scoring & Feedback -->
+      <div id="quiz-results" class="glass-card results-card" style="display: none;">
+        <h3>Quiz Finished!</h3>
+        <div class="results-score" id="results-score">8/10</div>
+        <div class="results-grade" id="results-grade">Excellent!</div>
+        <p class="results-message" id="results-message">You have a strong understanding of latent heat properties.</p>
+        
+        <button class="btn btn-accent" style="margin: 0 auto 20px auto;" onclick="restartQuiz()">Try Again</button>
+
+        <div class="wrong-answers-list" id="wrong-answers-section" style="display: none;">
+          <h4>Review Mistakes</h4>
+          <div id="wrong-answers-container"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
