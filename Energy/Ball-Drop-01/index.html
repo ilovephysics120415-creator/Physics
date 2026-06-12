@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Principle of Conservation of Energy: Ball drop (no air resistance)</title>
+  <meta name="description" content="An interactive 2D ball drop physics simulation demonstrating the Principle of Conservation of Energy. Designed for Singapore O-Level Physics 6091 syllabus.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Principle of Conservation of Energy: Ball drop (no air resistance)</h1>
+      <p class="tagline">Singapore O-Level Physics (6091) — Real-time <span>GPE & KE Conservation</span></p>
+    </header>
+
+    <!-- Sliders Panel -->
+    <div class="panel">
+      <div class="sliders-grid">
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Gravitational Field Strength (g)</span>
+            <span class="slider-value" id="g-display-wrapper"><span id="g-val">9.8</span> N/kg</span>
+          </div>
+          <input type="range" id="g-input" min="0.8" max="25" step="0.1" value="9.8">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Initial Height (h₀)</span>
+            <span class="slider-value" id="h0-display-wrapper"><span id="h0-val">100</span> m</span>
+          </div>
+          <input type="range" id="h0-input" min="10" max="200" step="1" value="100">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Mass (m)</span>
+            <span class="slider-value" id="m-display-wrapper"><span id="m-val">2</span> kg</span>
+          </div>
+          <input type="range" id="m-input" min="1" max="50" step="1" value="2">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Initial Speed (v₀)</span>
+            <span class="slider-value" id="v0-display-wrapper"><span id="v0-val">0.0</span> m/s</span>
+          </div>
+          <input type="range" id="v0-input" min="0" max="5" step="0.1" value="0">
+        </div>
+      </div>
+
+      <!-- Action Buttons Row -->
+      <div class="controls-row">
+        <button id="btn-start" class="btn btn-primary">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Start
+        </button>
+        <button id="btn-capture" class="btn btn-secondary" disabled>
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+          Capture
+        </button>
+        <button id="btn-test" class="btn btn-test">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Test Mode
+        </button>
+        <button id="btn-reset" class="btn btn-secondary">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          Reset
+        </button>
+      </div>
+    </div>
+
+    <!-- Dual Canvases Grid -->
+    <div class="simulation-grid">
+      <!-- Left Panel: Ball Drop Animation -->
+      <div class="canvas-container" id="animation-container">
+        <div class="canvas-title">
+          <span>Ball Drop Animation</span>
+          <div class="legend">
+            <span class="legend-item"><span class="color-dot dot-gpe"></span>GPE</span>
+            <span class="legend-item"><span class="color-dot dot-ke"></span>KE</span>
+          </div>
+        </div>
+        <canvas id="animation-canvas"></canvas>
+      </div>
+
+      <!-- Right Panel: Energy-Time Graph -->
+      <div class="canvas-container" id="graph-container">
+        <div class="canvas-title">
+          <span>Energy-Time Graph</span>
+          <div class="legend">
+            <span class="legend-item"><span class="color-dot dot-gpe"></span>GPE</span>
+            <span class="legend-item"><span class="color-dot dot-ke"></span>KE</span>
+            <span class="legend-item"><span class="color-dot dot-total"></span>Total</span>
+          </div>
+        </div>
+        <canvas id="graph-canvas"></canvas>
+      </div>
+    </div>
+
+    <!-- Live Data Dashboard -->
+    <div class="panel">
+      <div class="data-panel">
+        <div class="data-card">
+          <div class="data-card-label">Current Height (h)</div>
+          <div class="data-card-value" id="live-h-wrapper"><span id="live-h">100.00</span> m</div>
+        </div>
+        <div class="data-card">
+          <div class="data-card-label">Current Velocity (v)</div>
+          <div class="data-card-value" id="live-v-wrapper"><span id="live-v">0.00</span> m/s</div>
+        </div>
+        <div class="data-card">
+          <div class="data-card-label">Initial Height (h₀)</div>
+          <div class="data-card-value" id="live-h0-wrapper"><span id="live-h0">100.00</span> m</div>
+        </div>
+        <div class="data-card">
+          <div class="data-card-label">Speed Before Impact (v_final)</div>
+          <div class="data-card-value" id="live-vfinal-wrapper"><span id="live-vfinal">0.00</span> m/s</div>
+        </div>
+      </div>
+
+      <!-- Capture Details List -->
+      <div id="captured-list-container" class="captured-list" style="display: none;">
+        <!-- Filled dynamically by JavaScript when Capture is clicked -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Worked Solution Popup Modal -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-content">
+      <button class="close-modal" id="btn-close-modal">×</button>
+      <h2 class="modal-title" id="modal-solution-title">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Conservation of Energy worked solution
+      </h2>
+      <div class="worked-solution" id="solution-content">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
