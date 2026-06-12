@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EM Exposure Laboratory - Hazards & Safety Case Studies</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="stars-backdrop"></div>
+    <div class="glowing-orb orb-1"></div>
+    <div class="glowing-orb orb-2"></div>
+
+    <div class="container">
+        <!-- HEADER -->
+        <header class="app-header">
+            <div class="logo-area">
+                <div class="pulse-ring">
+                    <i data-lucide="shield-alert" class="icon-danger"></i>
+                </div>
+                <div>
+                    <h1>EM HAZARDS</h1>
+                    <p class="subtitle">BIOLOGICAL EXPOSURE LABORATORY</p>
+                </div>
+            </div>
+            
+            <nav class="nav-tabs">
+                <button class="nav-btn active" id="tab-quiz" onclick="switchTab('quiz')">
+                    <i data-lucide="award"></i> Case Studies & Quiz
+                </button>
+                <button class="nav-btn" id="tab-sim" onclick="switchTab('sim')">
+                    <i data-lucide="sliders"></i> Live Lab Simulator
+                </button>
+                <button class="nav-btn" id="tab-guide" onclick="switchTab('guide')">
+                    <i data-lucide="book-open"></i> Safety Protocol Guide
+                </button>
+            </nav>
+        </header>
+
+        <!-- MAIN LAB AREA -->
+        <div class="lab-grid">
+            
+            <!-- LEFT PANEL: BIOLOGICAL EXPOSURE CHAMBER -->
+            <section class="lab-panel glass-panel exposure-chamber">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i data-lucide="radiation"></i>
+                        <h2>Biological Exposure Chamber</h2>
+                    </div>
+                    <span class="status-badge status-safe" id="chamber-status-badge">Safe</span>
+                </div>
+
+                <div class="chamber-visualizer">
+                    <!-- Scanner Lines -->
+                    <div class="scanner-sweep" id="scanner-line"></div>
+                    
+                    <!-- Wave Visualizer (Canvas) -->
+                    <canvas id="wave-canvas"></canvas>
+                    
+                    <!-- Biological Specimen Model -->
+                    <div class="specimen-container">
+                        <div class="specimen" id="specimen-skin">
+                            <!-- Cells or Molecular Structure -->
+                            <div class="cell-grid" id="cell-grid">
+                                <!-- Generated programmatically to show vibrations or DNA breaks -->
+                            </div>
+                        </div>
+                        <div class="radiation-alert-overlay" id="danger-overlay"></div>
+                    </div>
+
+                    <!-- HUD Overlay readings -->
+                    <div class="hud-readings">
+                        <div class="hud-stat">
+                            <span class="label">FREQUENCY</span>
+                            <span class="value" id="hud-freq">---</span>
+                        </div>
+                        <div class="hud-stat">
+                            <span class="label">WAVELENGTH</span>
+                            <span class="value" id="hud-wave">---</span>
+                        </div>
+                        <div class="hud-stat">
+                            <span class="label">PHOTON ENERGY</span>
+                            <span class="value" id="hud-energy">---</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chamber-stats">
+                    <div class="stat-bar-group">
+                        <div class="stat-bar-label">
+                            <span>Thermal Agitation (Cellular Heating)</span>
+                            <span class="stat-value text-thermal" id="val-thermal">0°C</span>
+                        </div>
+                        <div class="progress-bg">
+                            <div class="progress-bar bar-thermal" id="bar-thermal" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="stat-bar-group">
+                        <div class="stat-bar-label">
+                            <span>Ionisation Rate (DNA Damage Risk)</span>
+                            <span class="stat-value text-ionising" id="val-ionising">0%</span>
+                        </div>
+                        <div class="progress-bg">
+                            <div class="progress-bar bar-ionising" id="bar-ionising" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RIGHT PANEL: INTERACTIVE INTERFACE -->
+            <section class="lab-panel glass-panel interactive-controls">
+                
+                <!-- TAB 1: CASE STUDIES & QUIZ -->
+                <div class="tab-content active" id="content-quiz">
+                    <div class="panel-header border-b">
+                        <div class="panel-title">
+                            <i data-lucide="clipboard-list"></i>
+                            <h2>Exposure Scenario Assessment</h2>
+                        </div>
+                        <div class="quiz-progress">
+                            <span class="score-pill">Score: <strong id="score-val">0</strong></span>
+                            <span class="progress-fraction" id="quiz-count">Case 1/5</span>
+                        </div>
+                    </div>
+
+                    <div class="scenario-card" id="scenario-card">
+                        <div class="scenario-meta">
+                            <span class="scenario-tag" id="scenario-location">Home Environment</span>
+                            <span class="scenario-difficulty" id="scenario-level">Level: Standard</span>
+                        </div>
+                        <h3 class="scenario-title" id="scenario-title">Loading case study...</h3>
+                        <p class="scenario-desc" id="scenario-desc">Please wait while the scenario initializes.</p>
+                    </div>
+
+                    <form id="quiz-form" onsubmit="handleQuizSubmit(event)">
+                        <!-- Step 1: Identify Wave -->
+                        <div class="quiz-question-group">
+                            <label class="question-label">1. Identify the EM Wave Involved:</label>
+                            <div class="option-grid" id="wave-options">
+                                <!-- Dynamic options -->
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Main Hazard Type -->
+                        <div class="quiz-question-group">
+                            <label class="question-label">2. Primary Biological Hazard Classification:</label>
+                            <div class="option-grid options-three" id="hazard-options">
+                                <button type="button" class="option-card hazard-card" data-val="heating" onclick="selectOption('hazard', this)">
+                                    <div class="icon-circle text-thermal-bg">
+                                        <i data-lucide="flame"></i>
+                                    </div>
+                                    <div class="card-info">
+                                        <div class="card-title">Thermal/Heating</div>
+                                        <p class="card-desc">Molecular excitation increases kinetic energy</p>
+                                    </div>
+                                </button>
+                                <button type="button" class="option-card hazard-card" data-val="ionisation" onclick="selectOption('hazard', this)">
+                                    <div class="icon-circle text-ionising-bg">
+                                        <i data-lucide="zap"></i>
+                                    </div>
+                                    <div class="card-info">
+                                        <div class="card-title">Ionising Radiation</div>
+                                        <p class="card-desc">Removes electrons, breaks DNA bonds</p>
+                                    </div>
+                                </button>
+                                <button type="button" class="option-card hazard-card" data-val="none" onclick="selectOption('hazard', this)">
+                                    <div class="icon-circle text-safe-bg">
+                                        <i data-lucide="shield-check"></i>
+                                    </div>
+                                    <div class="card-info">
+                                        <div class="card-title">Low/No Hazard</div>
+                                        <p class="card-desc">Insufficient energy to excite or ionise cells</p>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Recommend Safety Measure -->
+                        <div class="quiz-question-group">
+                            <label class="question-label">3. Recommended Safety Precaution:</label>
+                            <div class="option-list" id="safety-options">
+                                <!-- Dynamic options -->
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-glow" id="submit-btn">
+                                <i data-lucide="check-circle2"></i> Submit Assessment
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="next-btn" onclick="nextScenario()" style="display: none;">
+                                Next Case Study <i data-lucide="arrow-right"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Feedback Panel -->
+                    <div class="feedback-panel" id="feedback-panel" style="display: none;">
+                        <div class="feedback-header" id="feedback-header">
+                            <i data-lucide="alert-triangle"></i>
+                            <h4 id="feedback-title">Assessment Report</h4>
+                        </div>
+                        <div class="feedback-content" id="feedback-content">
+                            <!-- Inserted dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: LIVE LAB SIMULATOR -->
+                <div class="tab-content" id="content-sim">
+                    <div class="panel-header border-b">
+                        <div class="panel-title">
+                            <i data-lucide="flask-conical"></i>
+                            <h2>Interactive Exposure Sandbox</h2>
+                        </div>
+                    </div>
+                    
+                    <p class="section-intro">Manually adjust EM source parameters to observe cumulative cellular effects under a virtual microscope.</p>
+
+                    <div class="sim-controls">
+                        <!-- Wave selector slider -->
+                        <div class="control-group">
+                            <div class="slider-header">
+                                <span class="control-label">EM Spectrum Source</span>
+                                <span class="control-readout font-orbitron" id="sim-wave-name">Microwave</span>
+                            </div>
+                            <input type="range" min="0" max="6" value="3" class="slider" id="sim-wave-slider" oninput="updateSimWave()">
+                            <div class="slider-ticks">
+                                <span>Radio</span>
+                                <span>Micro</span>
+                                <span>IR</span>
+                                <span>Visible</span>
+                                <span>UV</span>
+                                <span>X-Ray</span>
+                                <span>Gamma</span>
+                            </div>
+                        </div>
+
+                        <!-- Intensity/Power slider -->
+                        <div class="control-group">
+                            <div class="slider-header">
+                                <span class="control-label">Intensity / Power Level</span>
+                                <span class="control-readout" id="sim-intensity-readout">50%</span>
+                            </div>
+                            <input type="range" min="1" max="100" value="50" class="slider" id="sim-intensity-slider" oninput="updateSimReadouts()">
+                        </div>
+
+                        <!-- Exposure Time slider -->
+                        <div class="control-group">
+                            <div class="slider-header">
+                                <span class="control-label">Exposure Duration</span>
+                                <span class="control-readout" id="sim-duration-readout">10s</span>
+                            </div>
+                            <input type="range" min="1" max="120" value="10" class="slider" id="sim-duration-slider" oninput="updateSimReadouts()">
+                        </div>
+                    </div>
+
+                    <!-- Safety Shields & Gear -->
+                    <div class="shield-section">
+                        <span class="control-label">Deployable Safety Shields:</span>
+                        <div class="shield-grid">
+                            <button class="shield-btn" id="shield-eyewear" onclick="toggleShield('eyewear')">
+                                <i data-lucide="eye"></i> UV Eyewear
+                            </button>
+                            <button class="shield-btn" id="shield-lead" onclick="toggleShield('lead')">
+                                <i data-lucide="shield"></i> Lead Apron
+                            </button>
+                            <button class="shield-btn" id="shield-distance" onclick="toggleShield('distance')">
+                                <i data-lucide="move-right"></i> Maximize Distance
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Live Simulation Results summary card -->
+                    <div class="summary-results-card">
+                        <div class="results-grid">
+                            <div class="result-tile">
+                                <span class="label">Tissue Status</span>
+                                <span class="value font-orbitron text-safe" id="sim-tissue-status">Healthy</span>
+                            </div>
+                            <div class="result-tile">
+                                <span class="label">Cell Temp</span>
+                                <span class="value font-orbitron" id="sim-temp-display">37.0 °C</span>
+                            </div>
+                            <div class="result-tile">
+                                <span class="label">DNA Mutation Risk</span>
+                                <span class="value font-orbitron text-safe" id="sim-mutation-display">0.0%</span>
+                            </div>
+                        </div>
+                        <div class="simulation-feedback" id="sim-feedback-box">
+                            No radiation detected. Specimen tissue is completely stable.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: SAFETY PROTOCOL GUIDE -->
+                <div class="tab-content" id="content-guide">
+                    <div class="panel-header border-b">
+                        <div class="panel-title">
+                            <i data-lucide="book-open"></i>
+                            <h2>Radiation Hazards & Safety Protocols Reference</h2>
+                        </div>
+                    </div>
+
+                    <div class="guide-scrollable">
+                        <div class="guide-card">
+                            <div class="guide-badge ionising-badge">IONISING RADIATION</div>
+                            <h3>UV, X-rays & Gamma Rays</h3>
+                            <p class="guide-p">These high-frequency waves carry enough energy per photon to remove tightly bound electrons from atoms, creating ions. In biological tissues, this directly damages DNA molecules or creates reactive free radicals, potentially triggering mutations or cellular death.</p>
+                            <ul class="guide-ul">
+                                <li><strong>Hazards:</strong> Severe sunburns, cell mutation, tissue destruction, cancer.</li>
+                                <li><strong>Safety Protocols:</strong> Lead shielding, minimize exposure time, protective clothing/goggles, maximizing distance (inverse-square law).</li>
+                            </ul>
+                        </div>
+
+                        <div class="guide-card">
+                            <div class="guide-badge thermal-badge">THERMAL RADIATION</div>
+                            <h3>Infrared & Microwaves</h3>
+                            <p class="guide-p">These waves do not have enough energy to ionise molecules, but their frequencies match the vibrational or rotational modes of chemical bonds (especially water molecules in microwaves). The absorbed energy is converted into kinetic thermal energy, heating the tissue.</p>
+                            <ul class="guide-ul">
+                                <li><strong>Hazards:</strong> Internal tissue heating, skin burns, cataracts (due to heating of the eye lens).</li>
+                                <li><strong>Safety Protocols:</strong> Shielding enclosures (e.g., metal mesh in microwave doors), remote operation, limiting continuous exposure.</li>
+                            </ul>
+                        </div>
+
+                        <div class="guide-card">
+                            <div class="guide-badge safe-badge">LOW RISK RADIATION</div>
+                            <h3>Radio & Visible Waves</h3>
+                            <p class="guide-p">Visible light is generally low risk under normal levels but can cause thermal eye damage under high intensity (like lasers). Radio waves are extremely low energy and present minimal hazard under standard domestic exposure limits.</p>
+                            <ul class="guide-ul">
+                                <li><strong>Hazards:</strong> Minimal hazard; high intensity laser beams can cause localized burns or retinal damage.</li>
+                                <li><strong>Safety Protocols:</strong> Avoid looking directly at high-power light sources; laser safety goggles.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- App Logic -->
+    <script src="app.js"></script>
+</body>
+</html>
