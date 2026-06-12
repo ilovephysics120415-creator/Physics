@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Charge Sorter — Static Electricity (O-Level Physics 6091)</title>
+  <meta name="description" content="Master Static Electricity for O-Level Physics with the Charge Sorter interactive web app. Play sorting games, predict forces, and ace the MCQ quiz!">
+  <!-- Google Fonts: Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Header / Navigation -->
+    <header class="app-header">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <h1 class="logo-text">Charge Sorter</h1>
+      </div>
+      <nav class="nav-bar" id="main-nav">
+        <button class="nav-btn active" data-target="section-intro" id="btn-nav-intro">Learn</button>
+        <button class="nav-btn" data-target="section-games" id="btn-nav-games">Play</button>
+        <button class="nav-btn" data-target="section-quiz" id="btn-nav-quiz">Quiz</button>
+        <button class="nav-btn" data-target="section-cards" id="btn-nav-cards">Cards</button>
+      </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="app-content">
+      
+      <!-- SECTION 1: CONCEPT INTRODUCTION -->
+      <section id="section-intro" class="app-section active-section">
+        <div class="card intro-card">
+          <h2 class="section-title">Static Electricity Basics</h2>
+          
+          <div class="intro-grid">
+            <!-- Point 1: Two types of charges -->
+            <div class="intro-item">
+              <div class="intro-visual">
+                <div class="charge-sphere positive pulse-glow">+</div>
+                <div class="charge-sphere negative pulse-glow">−</div>
+              </div>
+              <div class="intro-text">
+                <h3>Two Types of Charges</h3>
+                <p>Objects become charged when they <strong>gain or lose electrons</strong>. Protons are bound in the nucleus and do not move during charging!</p>
+              </div>
+            </div>
+
+            <!-- Point 2: Unit of Charge -->
+            <div class="intro-item">
+              <div class="intro-visual unit-visual">
+                <span class="unit-coulomb">1 C</span>
+              </div>
+              <div class="intro-text">
+                <h3>S.I. Unit</h3>
+                <p>Electric charge is measured in <strong>coulombs (C)</strong>. One electron has a charge of approx. <span class="math">-1.6 &times; 10^{-19}</span> C.</p>
+              </div>
+            </div>
+
+            <!-- Point 3: Law of Electrostatics -->
+            <div class="intro-item law-item">
+              <div class="intro-text-center">
+                <h3>Law of Electrostatics</h3>
+                <p class="subtitle">Like charges repel, unlike charges attract.</p>
+              </div>
+              
+              <div class="interactive-law-demo">
+                <div class="demo-controls">
+                  <button class="demo-toggle-btn active" id="demo-unlike">Unlike (Attract)</button>
+                  <button class="demo-toggle-btn" id="demo-like">Like (Repel)</button>
+                </div>
+                <div class="demo-viewport">
+                  <div class="demo-charge positive" id="demo-charge-left">+</div>
+                  <div class="demo-force-arrows" id="demo-arrows">
+                    <span class="arrow left-arrow">➔</span>
+                    <span class="arrow right-arrow">➔</span>
+                  </div>
+                  <div class="demo-charge negative" id="demo-charge-right">−</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <button class="btn btn-primary start-journey-btn" data-target="section-games">
+            Go to Interactive Games <span>➔</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- SECTIONS SELECTOR (GAME DASHBOARD) -->
+      <section id="section-games" class="app-section">
+        <h2 class="section-title">Interactive Exploration</h2>
+        <p class="section-desc">Put your physics knowledge to the test. Complete both modules to ace the quiz!</p>
+        
+        <div class="games-grid">
+          <!-- Game 1 Card -->
+          <div class="game-select-card" id="card-game-sorter">
+            <div class="game-card-icon">📥</div>
+            <h3>Part A: Charge Sorter</h3>
+            <p>Sort items based on whether they gained or lost electrons. Drag them into the correct bin!</p>
+            <button class="btn btn-accent btn-play-game" id="btn-start-sorter">Play Sorter</button>
+          </div>
+
+          <!-- Game 2 Card -->
+          <div class="game-select-card" id="card-game-attract">
+            <div class="game-card-icon">↔️</div>
+            <h3>Part B: Attract or Repel?</h3>
+            <p>Look at the pairs of charges and instantly predict if they will pull together or push apart.</p>
+            <button class="btn btn-accent btn-play-game" id="btn-start-attract">Play Attract/Repel</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- GAME MODES -->
+      <!-- GAME A: CHARGE SORTER -->
+      <section id="game-sorter-mode" class="app-section">
+        <div class="game-header">
+          <button class="btn-back" id="back-to-games-a">⬅ Back</button>
+          <div class="game-progress">Item <span id="sorter-current">1</span> of 5</div>
+          <div class="game-score">Score: <span id="sorter-score">0</span></div>
+        </div>
+
+        <div class="sorter-game-container">
+          <h2 class="game-prompt">Where does this object belong?</h2>
+          
+          <!-- Draggable Object Area -->
+          <div class="drag-source-container">
+            <div class="draggable-object" id="sorter-object" draggable="true">
+              <div class="object-inner">
+                <span class="object-icon">📦</span>
+                <span class="object-text" id="sorter-object-text">Object A has lost electrons</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Helper instructions for mobile -->
+          <div class="drag-hint">Drag the object or tap a bin below to sort it!</div>
+
+          <!-- Drop Targets (Bins) -->
+          <div class="bins-container">
+            <div class="bin positive-bin" id="bin-positive" data-charge="positive">
+              <div class="bin-glow"></div>
+              <div class="bin-label">
+                <span class="bin-sign">+</span>
+                <span class="bin-name">Positive Bin</span>
+              </div>
+            </div>
+            
+            <div class="bin negative-bin" id="bin-negative" data-charge="negative">
+              <div class="bin-glow"></div>
+              <div class="bin-label">
+                <span class="bin-sign">−</span>
+                <span class="bin-name">Negative Bin</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feedback Overlay -->
+        <div class="feedback-toast hide" id="sorter-feedback">
+          <div class="feedback-content">
+            <span class="feedback-icon" id="sorter-feedback-icon">🎉</span>
+            <div class="feedback-text-wrap">
+              <h4 id="sorter-feedback-title">Correct!</h4>
+              <p id="sorter-feedback-desc">Lost electrons means there is a deficit of negative charge, leaving it positive.</p>
+            </div>
+            <button class="btn btn-sm btn-accent" id="btn-next-sorter">Next ➔</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- GAME B: ATTRACT OR REPEL -->
+      <section id="game-attract-mode" class="app-section">
+        <div class="game-header">
+          <button class="btn-back" id="back-to-games-b">⬅ Back</button>
+          <div class="game-progress">Round <span id="attract-current">1</span> of 5</div>
+          <div class="game-score">Score: <span id="attract-score">0</span></div>
+        </div>
+
+        <div class="attract-game-container">
+          <h2 class="game-prompt">What force acts between these two charges?</h2>
+          
+          <div class="charges-display-sandbox">
+            <div class="charge-node positive" id="node-left">+</div>
+            <div class="charge-node negative" id="node-right">−</div>
+          </div>
+
+          <div class="game-actions-container">
+            <button class="btn btn-action-attract" id="btn-choose-attract">ATTRACT</button>
+            <button class="btn btn-action-repel" id="btn-choose-repel">REPEL</button>
+          </div>
+        </div>
+
+        <!-- Feedback Overlay -->
+        <div class="feedback-toast hide" id="attract-feedback">
+          <div class="feedback-content">
+            <span class="feedback-icon" id="attract-feedback-icon">🎉</span>
+            <div class="feedback-text-wrap">
+              <h4 id="attract-feedback-title">Correct!</h4>
+              <p id="attract-feedback-desc">Unlike charges pull together.</p>
+            </div>
+            <button class="btn btn-sm btn-accent" id="btn-next-attract">Next ➔</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: QUIZ (MCQ) -->
+      <section id="section-quiz" class="app-section">
+        <div class="quiz-start-screen card" id="quiz-start-container">
+          <div class="quiz-badge">📝 O-Level Prep</div>
+          <h2>Static Electricity MCQ Challenge</h2>
+          <p>Test your conceptual understanding with 10 randomly selected O-Level questions (Syllabus 6091). You need 80% to earn a distinction!</p>
+          
+          <div class="quiz-meta">
+            <div class="meta-pill">📋 10 Questions</div>
+            <div class="meta-pill">⚡ Dynamic Pool</div>
+            <div class="meta-pill">🏆 Instant Feedback</div>
+          </div>
+
+          <button class="btn btn-primary start-quiz-btn" id="btn-start-quiz">Start MCQ Quiz</button>
+        </div>
+
+        <div class="quiz-active-container card hide" id="quiz-active-container">
+          <div class="quiz-header">
+            <div class="quiz-progress">Question <span id="quiz-question-index">1</span> of 10</div>
+            <div class="quiz-timer-pill"><span id="quiz-score-indicator">Score: 0/0</span></div>
+          </div>
+
+          <!-- Question Content -->
+          <div class="quiz-body">
+            <h3 class="quiz-question" id="quiz-question-text">Sample O-level Physics static electricity question?</h3>
+            <div class="options-grid" id="quiz-options-container">
+              <!-- Dynamically populated options -->
+              <button class="option-btn">Option A</button>
+              <button class="option-btn">Option B</button>
+              <button class="option-btn">Option C</button>
+              <button class="option-btn">Option D</button>
+            </div>
+          </div>
+
+          <!-- Immediate Feedback Explanation Box -->
+          <div class="quiz-feedback-box hide" id="quiz-feedback-box">
+            <div class="quiz-feedback-header">
+              <span class="quiz-feedback-status-icon">❌</span>
+              <span class="quiz-feedback-status-text">Incorrect</span>
+            </div>
+            <p class="quiz-feedback-explanation" id="quiz-feedback-explanation">Explanation here.</p>
+            <button class="btn btn-accent btn-sm next-q-btn" id="btn-quiz-next">Next Question ➔</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: SCORING & FEEDBACK -->
+      <section id="section-scoring" class="app-section">
+        <div class="card scoring-card">
+          <div class="trophy-container">
+            <div class="trophy-neon" id="scoring-trophy">🏆</div>
+          </div>
+          <h2 class="score-title">Your Performance Profile</h2>
+          
+          <div class="scores-list">
+            <div class="score-row">
+              <span class="score-label">📥 Part A: Charge Sorter</span>
+              <span class="score-value" id="score-val-sorter">0 / 5</span>
+            </div>
+            <div class="score-row">
+              <span class="score-label">↔️ Part B: Attract/Repel</span>
+              <span class="score-value" id="score-val-attract">0 / 5</span>
+            </div>
+            <div class="score-row">
+              <span class="score-label">📝 Static Electricity MCQ</span>
+              <span class="score-value" id="score-val-quiz">0 / 10</span>
+            </div>
+            <div class="score-divider"></div>
+            <div class="score-row total-row">
+              <span class="score-label">Total Accuracy</span>
+              <span class="score-value highlight" id="score-val-total">0%</span>
+            </div>
+          </div>
+
+          <!-- Scoring Tier Card -->
+          <div class="tier-message-box" id="tier-box">
+            <h3 id="tier-title">Excellent Job!</h3>
+            <p id="tier-desc">You have a strong grasp of static electricity charges. Keep up the amazing work for your O-Levels!</p>
+          </div>
+
+          <!-- Actions -->
+          <div class="scoring-actions">
+            <button class="btn btn-primary" id="btn-retry-all">Try Again</button>
+            <button class="btn btn-outline" id="btn-goto-revision">Review Flashcards</button>
+            <button class="btn btn-outline hide" id="btn-goto-intro-redo">Review Concepts</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5: FLASHCARD REVISION MODE -->
+      <section id="section-cards" class="app-section">
+        <div class="flashcards-layout">
+          <h2 class="section-title">Flashcard Revision</h2>
+          <p class="section-desc">Tap the card to flip and test your quick recall on 6091 Static Electricity Syllabus.</p>
+
+          <!-- Progress Indicator -->
+          <div class="flashcard-progress-bar">
+            <div class="progress-fill" id="card-progress-fill" style="width: 10%;"></div>
+          </div>
+          <div class="flashcard-status">Card <span id="card-current-idx">1</span> of <span id="card-total-count">12</span></div>
+
+          <!-- Flashcard Deck Area -->
+          <div class="flashcard-container">
+            <div class="flashcard" id="interactive-flashcard">
+              <!-- Front Side -->
+              <div class="card-face card-front">
+                <span class="card-category" id="card-front-category">Concept</span>
+                <div class="card-question-text" id="card-front-text">Question goes here?</div>
+                <div class="flip-hint">Tap card to show answer</div>
+              </div>
+              <!-- Back Side -->
+              <div class="card-face card-back">
+                <span class="card-category">Answer</span>
+                <div class="card-answer-text" id="card-back-text">Answer goes here. Includes key formulas or diagrams.</div>
+                <div class="flip-hint">Tap card to show question</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div class="flashcard-controls">
+            <button class="btn btn-secondary-icon" id="btn-prev-card">◀ Prev</button>
+            <button class="btn btn-accent" id="btn-shuffle-cards">Shuffle</button>
+            <button class="btn btn-secondary-icon" id="btn-next-card">Next ▶</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Canvas for Confetti -->
+    <canvas id="confetti-canvas"></canvas>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
