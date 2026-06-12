@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vector Resultant | O-Level Physics Vector Addition</title>
+    <meta name="description" content="Master vector addition using the triangle method. Explore and test your skills for Singapore O-Level Physics (Syllabus 6091).">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- App Container -->
+    <div class="app-container">
+        
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <i data-lucide="activity" class="neon-icon-yellow"></i>
+                <h1>Vector Resultant</h1>
+            </div>
+            <span class="syllabus-tag">Syllabus 6091</span>
+        </header>
+
+        <!-- Main Landing / Menu Screen -->
+        <section id="menu-screen" class="screen active">
+            <div class="hero-section">
+                <div class="hero-glow"></div>
+                <div class="vector-logo-animation">
+                    <svg viewBox="-15 -15 30 30" class="animated-svg">
+                        <!-- Neon Grid background -->
+                        <line x1="-15" y1="0" x2="15" y2="0" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
+                        <line x1="0" y1="-15" x2="0" y2="15" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
+                        
+                        <!-- Vector A (split at midpoint) -->
+                        <line x1="-8" y1="5" x2="-4" y2="5" stroke="#00f3ff" stroke-width="0.8" marker-end="url(#arrow-cyan)"/>
+                        <line x1="-4" y1="5" x2="0" y2="5" stroke="#00f3ff" stroke-width="0.8"/>
+                        
+                        <!-- Vector B (split at midpoint) -->
+                        <line x1="0" y1="5" x2="3" y2="1" stroke="#ff007f" stroke-width="0.8" marker-end="url(#arrow-magenta)"/>
+                        <line x1="3" y1="1" x2="6" y2="-3" stroke="#ff007f" stroke-width="0.8"/>
+                        
+                        <!-- Resultant R (split at midpoint) -->
+                        <line x1="-8" y1="5" x2="-1" y2="1" stroke="#ffdd00" stroke-width="1.0" stroke-dasharray="1 0.5" marker-end="url(#arrow-yellow-double)"/>
+                        <line x1="-1" y1="1" x2="6" y2="-3" stroke="#ffdd00" stroke-width="1.0" stroke-dasharray="1 0.5"/>
+                        
+                        <defs>
+                            <marker id="arrow-cyan" viewBox="0 0 10 10" refX="4" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+                                <path d="M 0 2 L 8 5 L 0 8 z" fill="#00f3ff"/>
+                            </marker>
+                            <marker id="arrow-magenta" viewBox="0 0 10 10" refX="4" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+                                <path d="M 0 2 L 8 5 L 0 8 z" fill="#ff007f"/>
+                            </marker>
+                            <marker id="arrow-yellow-double" viewBox="0 0 16 10" refX="5.5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+                                <path d="M 0 2 L 6 5 L 0 8 z" fill="#ffdd00"/>
+                                <path d="M 5 2 L 11 5 L 5 8 z" fill="#ffdd00"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                </div>
+                <h2>Master Vector Addition Graphical Method</h2>
+                <p class="subtitle">Learn the nose-to-tail triangle method for Singapore O-Level Physics.</p>
+            </div>
+
+            <div class="menu-actions">
+                <button id="btn-goto-explore" class="neon-btn btn-cyan">
+                    <i data-lucide="compass"></i>
+                    <span>Explore Mode</span>
+                    <small>Interactive Real-Time Builder</small>
+                </button>
+                <button id="btn-goto-quiz" class="neon-btn btn-magenta">
+                    <i data-lucide="help-circle"></i>
+                    <span>Quiz Mode</span>
+                    <small>Test Your Vector Skills (30 Qs)</small>
+                </button>
+            </div>
+        </section>
+
+        <!-- Explore Mode Screen -->
+        <section id="explore-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-btn btn-back">
+                    <i data-lucide="arrow-left"></i>
+                </button>
+                <h2>Explore Vectors</h2>
+                <div class="header-spacer"></div>
+            </div>
+
+            <div class="visualization-card">
+                <div id="explore-canvas-container" class="canvas-container">
+                    <!-- SVG Vector Grid will be injected here by JS -->
+                </div>
+            </div>
+
+            <!-- Dashboard Stats -->
+            <div class="stats-panel">
+                <div class="stat-card cyan-border">
+                    <span class="stat-label">Vector A</span>
+                    <span class="stat-value" id="exp-val-a">10.0 N @ 30°</span>
+                </div>
+                <div class="stat-card magenta-border">
+                    <span class="stat-label">Vector B</span>
+                    <span class="stat-value" id="exp-val-b">10.0 N @ 120°</span>
+                </div>
+                <div class="stat-card yellow-border highlight">
+                    <span class="stat-label">Resultant R</span>
+                    <span class="stat-value" id="exp-val-r">14.1 N @ 75°</span>
+                </div>
+                <div class="stat-card zoom-card">
+                    <span class="stat-label">Zoom</span>
+                    <div class="zoom-actions-row">
+                        <button id="btn-zoom-in" class="zoom-btn-small" title="Zoom In">
+                            <i data-lucide="plus"></i>
+                        </button>
+                        <button id="btn-zoom-out" class="zoom-btn-small" title="Zoom Out">
+                            <i data-lucide="minus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls Panel -->
+            <div class="controls-panel">
+                <div class="vector-control">
+                    <div class="control-header">
+                        <span class="label cyan-text">Vector A Magnitude</span>
+                        <span class="value" id="lbl-mag-a">10</span>
+                    </div>
+                    <input type="range" id="slide-mag-a" min="1" max="20" value="10" class="slider slider-cyan">
+                </div>
+
+                <div class="vector-control">
+                    <div class="control-header">
+                        <span class="label cyan-text">Vector A Direction (θ₁)</span>
+                        <span class="value" id="lbl-dir-a">30°</span>
+                    </div>
+                    <input type="range" id="slide-dir-a" min="0" max="360" value="30" class="slider slider-cyan">
+                </div>
+
+                <div class="vector-control">
+                    <div class="control-header">
+                        <span class="label magenta-text">Vector B Magnitude</span>
+                        <span class="value" id="lbl-mag-b">10</span>
+                    </div>
+                    <input type="range" id="slide-mag-b" min="1" max="20" value="10" class="slider slider-magenta">
+                </div>
+
+                <div class="vector-control">
+                    <div class="control-header">
+                        <span class="label magenta-text">Vector B Direction (θ₂)</span>
+                        <span class="value" id="lbl-dir-b">120°</span>
+                    </div>
+                    <input type="range" id="slide-dir-b" min="0" max="360" value="120" class="slider slider-magenta">
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Mode Screen -->
+        <section id="quiz-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-btn btn-back">
+                    <i data-lucide="arrow-left"></i>
+                </button>
+                <h2>Vector Quiz</h2>
+                <div class="quiz-progress">
+                    <span id="quiz-q-num">1</span>/30
+                </div>
+            </div>
+
+            <!-- Score board -->
+            <div class="quiz-score-row">
+                <div class="score-pill">
+                    <i data-lucide="award"></i> Score: <span id="quiz-score">0</span>
+                </div>
+            </div>
+
+            <div class="visualization-card">
+                <div id="quiz-canvas-container" class="canvas-container">
+                    <!-- Quiz SVG Vector Grid -->
+                </div>
+            </div>
+
+            <!-- Quiz Vector Info -->
+            <div id="quiz-vector-info" class="quiz-vector-info">
+                <!-- Injected dynamically by JS -->
+            </div>
+
+            <p class="quiz-prompt">Determine the magnitude of the resultant vector:</p>
+
+            <!-- 4 Options Grid -->
+            <div id="quiz-options-container" class="quiz-options">
+                <!-- Buttons will be injected here -->
+            </div>
+
+            <!-- Inline explanation and feedback screen -->
+            <div id="quiz-feedback-panel" class="feedback-panel hidden">
+                <div class="feedback-status">
+                    <i id="feedback-icon" data-lucide="check-circle-2"></i>
+                    <span id="feedback-message">Correct!</span>
+                </div>
+                <p id="feedback-explanation" class="feedback-explanation">Vector R = A + B has magnitude 14.1 units.</p>
+                <button id="btn-next-question" class="neon-btn btn-cyan">
+                    <span>Next Question</span>
+                    <i data-lucide="arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Quiz Completion Screen -->
+        <section id="completion-screen" class="screen">
+            <div class="completion-card">
+                <div class="trophy-glow"></div>
+                <div class="trophy-container">
+                    <i data-lucide="trophy" class="trophy-icon"></i>
+                </div>
+                <h2>Quiz Completed!</h2>
+                <p class="final-score-text">Your Final Score</p>
+                <div class="score-display">
+                    <span id="final-score">24</span> <small>/ 30</small>
+                </div>
+                <p id="completion-feedback" class="completion-feedback">Great job! You have a solid grasp of vector addition.</p>
+                
+                <button id="btn-retry-quiz" class="neon-btn btn-magenta">
+                    <i data-lucide="refresh-cw"></i>
+                    <span>Try Again</span>
+                </button>
+                <button id="btn-menu-from-complete" class="neon-btn btn-cyan outline">
+                    <i data-lucide="home"></i>
+                    <span>Main Menu</span>
+                </button>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Success Celebration Overlay -->
+    <div id="celebration-overlay" class="celebration-overlay"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
