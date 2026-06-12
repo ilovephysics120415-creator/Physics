@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instrument Inspector - O-Level Physics</title>
+  <!-- Google Fonts for premium typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Canvas for celebration effect -->
+  <canvas id="celebration-canvas"></canvas>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-container">
+        <span class="logo-icon"><i data-lucide="compass"></i></span>
+        <div class="logo-text">
+          <h1>INSTRUMENT INSPECTOR</h1>
+          <p>O-Level Physics (6091) Precision Trainer</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Start / Mode Selection Screen -->
+    <section id="screen-start" class="screen active">
+      <div class="welcome-box">
+        <div class="badge">SYLLABUS 6091</div>
+        <h2>Master Your Precisions & Units</h2>
+        <p class="tagline">Hone your decimal place accuracy for Singapore O-level practical and theory exams.</p>
+      </div>
+
+      <div class="mode-select-grid">
+        <button id="btn-mode-flashcards" class="mode-card">
+          <div class="mode-icon neon-cyan"><i data-lucide="book-open"></i></div>
+          <h3>Mode 1: Flashcard Revision</h3>
+          <p>Flip, read, and shuffle through all 12 key measuring instruments to memorize their units and precision rules.</p>
+          <span class="action-hint">Tap to Start <i data-lucide="arrow-right"></i></span>
+        </button>
+
+        <button id="btn-mode-quiz" class="mode-card">
+          <div class="mode-icon neon-pink"><i data-lucide="award"></i></div>
+          <h3>Mode 2: Precision Quiz</h3>
+          <p>Test your knowledge with 30 syllabus-aligned scenarios. Identify the reading with the correct decimal places.</p>
+          <span class="action-hint">Play Quiz <i data-lucide="arrow-right"></i></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Flashcard Mode Screen -->
+    <section id="screen-flashcards" class="screen">
+      <div class="mode-bar">
+        <button class="btn-icon-back btn-back-to-start" title="Back to menu"><i data-lucide="arrow-left"></i></button>
+        <span class="mode-title">Flashcard Deck</span>
+        <button id="btn-shuffle-deck" class="btn-secondary" title="Shuffle cards"><i data-lucide="shuffle"></i> Shuffle</button>
+      </div>
+
+      <div class="card-viewer-container">
+        <!-- Interactive Card -->
+        <div class="flashcard-container">
+          <div class="flashcard" id="flashcard">
+            <!-- Front Face -->
+            <div class="card-face card-front">
+              <div class="card-top">
+                <span class="card-category">MEASURING INSTRUMENT</span>
+                <span class="card-index-indicator" id="fc-indicator">1 / 12</span>
+              </div>
+              <div class="card-main">
+                <div class="instrument-glyph"><i data-lucide="help-circle" id="fc-glyph"></i></div>
+                <h2 id="fc-name">Digital Caliper</h2>
+              </div>
+              <div class="card-footer">
+                <span class="tap-instruction"><i data-lucide="refresh-cw"></i> Tap to flip & reveal precision</span>
+              </div>
+            </div>
+            <!-- Back Face -->
+            <div class="card-face card-back">
+              <div class="card-top">
+                <span class="card-category">SYLLABUS PRECISION</span>
+                <span class="card-index-indicator" id="fc-indicator-back">1 / 12</span>
+              </div>
+              <div class="card-main">
+                <div class="data-row">
+                  <span class="data-label">PRECISION</span>
+                  <span class="data-value highlight-cyan" id="fc-precision">0.001 cm</span>
+                </div>
+                <div class="data-row">
+                  <span class="data-label">DECIMAL PLACES</span>
+                  <span class="data-value highlight-pink" id="fc-dp">3 d.p. (in cm)</span>
+                </div>
+                <div class="data-row">
+                  <span class="data-label">TYPICAL USE</span>
+                  <span class="data-value" id="fc-use">Diameter of a beaker, internal depth of test tube</span>
+                </div>
+              </div>
+              <div class="card-footer">
+                <span class="tap-instruction"><i data-lucide="refresh-cw"></i> Tap to flip back</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Controls -->
+        <div class="card-nav">
+          <button id="btn-prev-card" class="btn-nav"><i data-lucide="chevron-left"></i> Prev</button>
+          <button id="btn-next-card" class="btn-nav">Next <i data-lucide="chevron-right"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz Mode Screen -->
+    <section id="screen-quiz" class="screen">
+      <div class="mode-bar">
+        <button class="btn-icon-back btn-back-to-start" title="Quit quiz"><i data-lucide="x"></i></button>
+        <span class="mode-title">Precision Quiz</span>
+        <div class="quiz-score-indicator">
+          Score: <span id="quiz-score-val" class="highlight-cyan">0</span> / <span id="quiz-total-val">30</span>
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="quiz-progress-fill"></div>
+      </div>
+
+      <div class="quiz-container">
+        <!-- Question display -->
+        <div class="question-card">
+          <div class="question-header">
+            <span class="question-number" id="quiz-q-num">Question 1 of 30</span>
+          </div>
+          <div class="question-body">
+            <p id="quiz-question-text">Loading question...</p>
+          </div>
+        </div>
+
+        <!-- Answer Options -->
+        <div class="options-grid" id="quiz-options">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Explanation card (hidden until answered) -->
+        <div class="feedback-card hidden" id="quiz-feedback">
+          <div class="feedback-status-row">
+            <span class="feedback-status" id="feedback-title">Correct!</span>
+            <span class="feedback-correct-val" id="feedback-val">0.005 cm</span>
+          </div>
+          <p class="feedback-explanation" id="feedback-explanation-text">Explanation goes here.</p>
+          <button id="btn-next-question" class="btn-primary">Next Question <i data-lucide="arrow-right"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz Result Screen -->
+    <section id="screen-result" class="screen">
+      <div class="result-card">
+        <div class="badge highlight-yellow" id="result-grade-badge">A1 EXCELLENT</div>
+        <h2>Round Completed!</h2>
+        
+        <div class="score-display">
+          <div class="score-circle">
+            <span class="score-num" id="result-score">28</span>
+            <span class="score-denominator">/ 30</span>
+          </div>
+        </div>
+
+        <p class="result-feedback-text" id="result-message">Fantastic accuracy! You are fully prepared for the O-level physical measurement questions.</p>
+
+        <div class="result-actions">
+          <button id="btn-retry-quiz" class="btn-primary"><i data-lucide="refresh-cw"></i> Try Again</button>
+          <button id="btn-result-home" class="btn-secondary"><i data-lucide="home"></i> Main Menu</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // Initialize lucide icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>
