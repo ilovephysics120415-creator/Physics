@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Principle of Moments — Masterclass</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Navigation Dashboard Header -->
+  <header class="app-header">
+    <div class="header-logo">
+      <span class="logo-glow"></span>
+      <h1>PRINCIPLE OF MOMENTS</h1>
+      <span class="badge">O-LEVEL PHYSICS</span>
+    </div>
+    <nav class="app-nav">
+      <button class="nav-btn active" data-section="section-intro" id="nav-intro">
+        <span class="icon">📖</span>
+        <span class="text">Introduction</span>
+      </button>
+      <button class="nav-btn" data-section="section-lab" id="nav-lab">
+        <span class="icon">🔬</span>
+        <span class="text">Beam Lab</span>
+      </button>
+      <button class="nav-btn" data-section="section-walkthrough" id="nav-walkthrough">
+        <span class="icon">💡</span>
+        <span class="text">Walkthroughs</span>
+      </button>
+      <button class="nav-btn" data-section="section-flashcards" id="nav-flashcards">
+        <span class="icon">🎴</span>
+        <span class="text">Flashcards</span>
+      </button>
+      <button class="nav-btn" data-section="section-quiz" id="nav-quiz">
+        <span class="icon">📝</span>
+        <span class="text">Quiz Run</span>
+      </button>
+    </nav>
+  </header>
+
+  <main class="app-container">
+
+    <!-- SECTION 1 — Concept Introduction -->
+    <section id="section-intro" class="section-panel active">
+      <div class="panel-header">
+        <h2>SECTION 1: CONCEPT INTRODUCTION</h2>
+        <p class="subtitle">Master the basics of turning effects and balance</p>
+      </div>
+
+      <div class="intro-stepper-container">
+        <!-- Visualization Area -->
+        <div class="intro-visual-card">
+          <!-- Live Interactive/Animated Beam Diagram -->
+          <div class="beam-visual-box">
+            <svg id="intro-svg" viewBox="0 0 600 350" width="100%" height="100%">
+              <!-- Grid background -->
+              <defs>
+                <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+                  <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255, 255, 255, 0.03)" stroke-width="1"/>
+                </pattern>
+                <filter id="neon-glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="6" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <filter id="neon-glow-pink" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="6" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <filter id="neon-glow-green" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="6" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grid)" />
+
+              <!-- Ground / Base -->
+              <line x1="150" y1="280" x2="450" y2="280" stroke="#2a303c" stroke-width="6" stroke-linecap="round" />
+
+              <!-- Pivot Group (stationary) -->
+              <g id="intro-pivot-group">
+                <!-- Anchor/Pivot structure -->
+                <polygon points="280,280 320,280 300,220" fill="#2a303c" stroke="#3d4454" stroke-width="2" />
+                <circle cx="300" cy="220" r="6" fill="#00ffff" filter="url(#neon-glow-cyan)" />
+              </g>
+
+              <!-- Rotating Beam Group -->
+              <g id="intro-rotating-beam">
+                <!-- The Beam itself -->
+                <rect x="100" y="212" width="400" height="16" rx="8" fill="#1e2330" stroke="#3d4454" stroke-width="2" />
+                <!-- Center point line for calibration -->
+                <line x1="300" y1="212" x2="300" y2="228" stroke="rgba(255, 255, 255, 0.2)" stroke-width="2" />
+
+                <!-- Left Mass & Force Arrow (Anticlockwise) -->
+                <g id="intro-left-mass-group" class="anim-element">
+                  <rect x="180" y="228" width="40" height="30" rx="4" fill="#0f172a" stroke="#00ffff" stroke-width="2" filter="url(#neon-glow-cyan)" />
+                  <text x="200" y="248" fill="#00ffff" font-family="Orbitron" font-size="12" text-anchor="middle" font-weight="bold">F₁</text>
+                  <!-- Downward Force arrow -->
+                  <path d="M 200 258 L 200 300" stroke="#00ffff" stroke-width="3" stroke-dasharray="none" marker-end="url(#arrow-cyan)" fill="none" filter="url(#neon-glow-cyan)" />
+                  <!-- Distance Line & Label -->
+                  <line x1="200" y1="200" x2="300" y2="200" stroke="#00ffff" stroke-width="1.5" stroke-dasharray="3,3" />
+                  <text x="250" y="192" fill="#00ffff" font-family="Plus Jakarta Sans" font-size="11" text-anchor="middle">Distance d₁</text>
+                </g>
+
+                <!-- Right Mass & Force Arrow (Clockwise) -->
+                <g id="intro-right-mass-group" class="anim-element">
+                  <rect x="380" y="228" width="40" height="30" rx="4" fill="#0f172a" stroke="#ff007f" stroke-width="2" filter="url(#neon-glow-pink)" />
+                  <text x="400" y="248" fill="#ff007f" font-family="Orbitron" font-size="12" text-anchor="middle" font-weight="bold">F₂</text>
+                  <!-- Downward Force arrow -->
+                  <path d="M 400 258 L 400 300" stroke="#ff007f" stroke-width="3" stroke-dasharray="none" fill="none" filter="url(#neon-glow-pink)" />
+                  <!-- Distance Line & Label -->
+                  <line x1="300" y1="200" x2="400" y2="200" stroke="#ff007f" stroke-width="1.5" stroke-dasharray="3,3" />
+                  <text x="350" y="192" fill="#ff007f" font-family="Plus Jakarta Sans" font-size="11" text-anchor="middle">Distance d₂</text>
+                </g>
+
+                <!-- Pivot Reaction Force R (Hidden or Visible depending on stage) -->
+                <g id="intro-reaction-group" class="anim-element" style="opacity: 0;">
+                  <!-- Upward reaction arrow -->
+                  <path d="M 300 220 L 300 130" stroke="#39ff14" stroke-width="4" fill="none" filter="url(#neon-glow-green)" />
+                  <text x="315" y="145" fill="#39ff14" font-family="Orbitron" font-size="16" font-weight="bold" filter="url(#neon-glow-green)">R</text>
+                </g>
+              </g>
+
+              <!-- SVG Markers -->
+              <defs>
+                <marker id="arrow-cyan" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#00ffff" />
+                </marker>
+                <marker id="arrow-pink" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#ff007f" />
+                </marker>
+                <marker id="arrow-green" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#39ff14" />
+                </marker>
+              </defs>
+
+              <!-- Render force arrowheads via paths directly inside groups to avoid marker issues under scaling -->
+              <path id="left-arrowhead" d="M 195 292 L 200 300 L 205 292 Z" fill="#00ffff" filter="url(#neon-glow-cyan)" />
+              <path id="right-arrowhead" d="M 395 292 L 400 300 L 405 292 Z" fill="#ff007f" filter="url(#neon-glow-pink)" />
+              <path id="reaction-arrowhead" d="M 294 138 L 300 130 L 306 138 Z" fill="#39ff14" style="opacity: 0;" filter="url(#neon-glow-green)" />
+
+              <!-- Overlay Turning Direction Indicators -->
+              <path id="anticlockwise-curve" d="M 290 110 A 90 90 0 0 0 220 160" fill="none" stroke="#00ffff" stroke-width="3" stroke-dasharray="4,4" filter="url(#neon-glow-cyan)" />
+              <text id="anticlockwise-label" x="200" y="140" fill="#00ffff" font-family="Orbitron" font-size="11" font-weight="bold">ANTICLOCKWISE</text>
+
+              <path id="clockwise-curve" d="M 310 110 A 90 90 0 0 1 380 160" fill="none" stroke="#ff007f" stroke-width="3" stroke-dasharray="4,4" filter="url(#neon-glow-pink)" />
+              <text id="clockwise-label" x="400" y="140" fill="#ff007f" font-family="Orbitron" font-size="11" font-weight="bold" text-anchor="end">CLOCKWISE</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Dynamic Control Details -->
+        <div class="intro-info-card">
+          <div class="intro-steps-progress">
+            <div class="step-dot active" data-step="0"></div>
+            <div class="step-dot" data-step="1"></div>
+            <div class="step-dot" data-step="2"></div>
+          </div>
+
+          <div class="step-content-wrapper">
+            <!-- Dynamic text injected by JS based on step -->
+            <div id="intro-text-panel">
+              <!-- Content loaded dynamically -->
+            </div>
+          </div>
+
+          <div class="intro-actions">
+            <button id="intro-prev-btn" class="control-btn secondary" disabled>Back</button>
+            <button id="intro-next-btn" class="control-btn primary">Next</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 2 — Interactive Beam Lab -->
+    <section id="section-lab" class="section-panel">
+      <div class="panel-header">
+        <h2>SECTION 2: INTERACTIVE BEAM LAB</h2>
+        <p class="subtitle">Add masses, adjust positions, and balance the beam in real-time</p>
+      </div>
+
+      <div class="lab-layout">
+        <!-- Interactive Canvas / Beam Area -->
+        <div class="lab-workspace">
+          <div class="lab-canvas-container">
+            <svg id="lab-svg" viewBox="0 0 800 400" width="100%" height="100%">
+              <!-- Grids & Markers -->
+              <rect width="100%" height="100%" fill="url(#grid)" />
+              
+              <!-- Pivot structure (stationary) -->
+              <polygon points="375,310 425,310 400,250" fill="#2d3748" stroke="#4a5568" stroke-width="2" />
+              <!-- Reaction force arrow at pivot (dynamic) -->
+              <g id="lab-reaction-arrow" filter="url(#neon-glow-green)">
+                <line x1="400" y1="250" x2="400" y2="170" stroke="#39ff14" stroke-width="4" />
+                <polygon points="400,162 393,172 407,172" fill="#39ff14" />
+                <text x="415" y="185" fill="#39ff14" font-family="Orbitron" font-weight="bold" font-size="14">R</text>
+              </g>
+
+              <!-- Rotating elements group -->
+              <g id="lab-rotating-group">
+                <!-- The physical beam -->
+                <rect x="100" y="240" width="600" height="20" rx="10" fill="#1a202c" stroke="#4a5568" stroke-width="3" />
+                <!-- Ruler markings along the beam -->
+                <!-- Center is 400, represents 0.0m. Left goes to 100 (1.0m), Right goes to 700 (1.0m) -->
+                <!-- Every 0.1m is 30px -->
+                <!-- Mark lines -->
+                <g stroke="#718096" stroke-width="1.5" opacity="0.6" id="ruler-markers"></g>
+
+                <!-- Dynamic Hanging mass nodes are rendered dynamically here by JS -->
+                <g id="lab-hanging-masses"></g>
+              </g>
+            </svg>
+          </div>
+
+          <!-- Add weight click panels -->
+          <div class="add-mass-bar">
+            <button id="add-left-mass" class="add-btn cyan-glow">+ Add Left Mass (Anticlockwise)</button>
+            <button id="add-right-mass" class="add-btn pink-glow">+ Add Right Mass (Clockwise)</button>
+          </div>
+        </div>
+
+        <!-- Calculations & Controls -->
+        <div class="lab-sidebar">
+          <!-- Live Balance Indicator -->
+          <div class="balance-card" id="lab-balance-card">
+            <div class="indicator-title">BEAM STATE</div>
+            <div class="indicator-value" id="lab-balance-status">BALANCED</div>
+            <div class="reaction-display">
+              Reaction Force at Pivot, <span class="highlight-green">R = <span id="lab-reaction-val">0.0</span> N</span>
+            </div>
+          </div>
+
+          <!-- Working & Equation details -->
+          <div class="working-panel">
+            <h3>LIVE EQUILIBRIUM EQUATIONS</h3>
+            <div class="equation-split">
+              <!-- Left Side -->
+              <div class="equation-column cyan-theme">
+                <h4>Anticlockwise Moments (Left)</h4>
+                <div class="masses-list" id="lab-left-list">
+                  <!-- Injected dynamically -->
+                </div>
+                <div class="total-row">
+                  Total: <span id="lab-total-acw">0.00</span> N·m
+                </div>
+              </div>
+
+              <!-- Right Side -->
+              <div class="equation-column pink-theme">
+                <h4>Clockwise Moments (Right)</h4>
+                <div class="masses-list" id="lab-right-list">
+                  <!-- Injected dynamically -->
+                </div>
+                <div class="total-row">
+                  Total: <span id="lab-total-cw">0.00</span> N·m
+                </div>
+              </div>
+            </div>
+
+            <!-- Balanced/Unbalanced live comparison -->
+            <div class="math-comparison-box" id="lab-comparison-box">
+              <span class="acw-math">0.00 N·m</span>
+              <span class="relation-symbol">=</span>
+              <span class="cw-math">0.00 N·m</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 3 — Worked Example Walkthrough -->
+    <section id="section-walkthrough" class="section-panel">
+      <div class="panel-header">
+        <h2>SECTION 3: WORKED EXAMPLES</h2>
+        <p class="subtitle">Step-by-step animated problem solving</p>
+      </div>
+
+      <div class="walkthrough-nav">
+        <button class="walk-tab active" id="tab-example1">Example 1: Find Unknown Mass</button>
+        <button class="walk-tab" id="tab-example2">Example 2: Find Unknown Distance</button>
+      </div>
+
+      <div class="walkthrough-container">
+        <!-- Visualization Card -->
+        <div class="walk-visual-panel">
+          <svg id="walkthrough-svg" viewBox="0 0 600 300" width="100%" height="100%">
+            <rect width="100%" height="100%" fill="url(#grid)" />
+            <!-- Base & Pivot -->
+            <line x1="150" y1="260" x2="450" y2="260" stroke="#2d3748" stroke-width="4" />
+            <polygon points="285,260 315,260 300,210" fill="#2d3748" stroke="#4a5568" stroke-width="1.5" />
+            
+            <!-- Rotating group -->
+            <g id="walk-beam-group">
+              <rect x="100" y="202" width="400" height="16" rx="8" fill="#1a202c" stroke="#4a5568" stroke-width="2" />
+              <!-- Elements render dynamically per example -->
+              <g id="walk-dynamic-elements"></g>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Explanation Card with stepper -->
+        <div class="walk-step-panel">
+          <div class="step-badge">STEP <span id="walk-step-num">1</span> OF <span id="walk-step-total">4</span></div>
+          <h3 id="walk-step-title">Identify Forces and Distances</h3>
+          <div class="step-explanation" id="walk-step-desc">
+            <!-- Text injected dynamically -->
+          </div>
+          
+          <div class="walk-actions">
+            <button class="control-btn secondary" id="walk-prev-btn" disabled>Back</button>
+            <button class="control-btn primary" id="walk-next-btn">Next Step</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 5 — Flashcard Revision Mode -->
+    <section id="section-flashcards" class="section-panel">
+      <div class="panel-header">
+        <h2>SECTION 5: FLASHCARD REVISION</h2>
+        <p class="subtitle">Quick-fire concept checks to solidify your knowledge before exams</p>
+      </div>
+
+      <div class="flashcards-wrapper">
+        <div class="flashcards-control-bar">
+          <button class="control-btn secondary" id="flashcard-shuffle-btn">🔀 Shuffle Deck</button>
+          <span class="card-counter">Card <span id="card-index-val">1</span> of 10</span>
+        </div>
+
+        <div class="card-stage">
+          <div class="flashcard-container" id="flashcard-flip-container">
+            <div class="flashcard-front">
+              <div class="card-indicator">QUESTION</div>
+              <p class="card-text" id="card-question-text">What is the formula for the moment of a force?</p>
+              <div class="tap-hint">Tap / Click card to flip</div>
+            </div>
+            <div class="flashcard-back">
+              <div class="card-indicator">ANSWER</div>
+              <p class="card-text" id="card-answer-text">Moment = Force &times; Perpendicular Distance from the pivot</p>
+              <div class="tap-hint">Tap / Click card to flip back</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flashcard-navigation">
+          <button class="nav-arrow" id="card-prev-btn" aria-label="Previous card">&larr;</button>
+          <button class="nav-arrow" id="card-next-btn" aria-label="Next card">&rarr;</button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 4 — Randomised Quiz -->
+    <section id="section-quiz" class="section-panel">
+      <div class="panel-header">
+        <h2>SECTION 4: PRINCIPLE OF MOMENTS QUIZ</h2>
+        <p class="subtitle">Challenge yourself with 30 randomized questions across 3 difficulty types</p>
+      </div>
+
+      <!-- Start Screen -->
+      <div id="quiz-start-screen" class="quiz-card-container active">
+        <div class="quiz-welcome">
+          <div class="welcome-icon">🏆</div>
+          <h3>Are you ready to test your skills?</h3>
+          <p>This quiz consists of 30 randomized physics problems. You will work through:</p>
+          <ul class="quiz-stats-list">
+            <li><strong>Type A:</strong> Two forces (10 questions)</li>
+            <li><strong>Type B:</strong> Three forces, balanced unknown (10 questions)</li>
+            <li><strong>Type C:</strong> Three forces with unequal distributions (10 questions)</li>
+          </ul>
+          <p class="disclaimer">Input your answers to 1 decimal place. We accept values within 2% tolerance.</p>
+          <button id="start-quiz-btn" class="control-btn primary lg-btn">Start Quiz Run</button>
+        </div>
+      </div>
+
+      <!-- Active Quiz Screen -->
+      <div id="quiz-active-screen" class="quiz-card-container">
+        <!-- Quiz Header Info -->
+        <div class="quiz-status-header">
+          <span class="question-tracker">Question <span id="quiz-q-num">1</span> of 30</span>
+          <span class="quiz-score-badge">Score: <span id="quiz-current-score">0</span></span>
+        </div>
+
+        <!-- SVG Diagram -->
+        <div class="quiz-diagram-box">
+          <svg id="quiz-svg" viewBox="0 0 800 300" width="100%" height="100%">
+            <rect width="100%" height="100%" fill="url(#grid)" />
+            <!-- Static Pivot -->
+            <polygon points="385,250 415,250 400,195" fill="#2d3748" stroke="#4a5568" stroke-width="1.5" />
+            <g id="quiz-beam-group">
+              <rect x="100" y="187" width="600" height="16" rx="8" fill="#1a202c" stroke="#4a5568" stroke-width="2" />
+              <!-- Dynamically placed masses -->
+              <g id="quiz-dynamic-elements"></g>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Interaction Area -->
+        <div class="quiz-input-layout">
+          <div class="quiz-prompt" id="quiz-question-text">
+            Solve for the unknown mass, <strong>m</strong>.
+          </div>
+
+          <div class="quiz-form">
+            <input type="text" id="quiz-student-input" placeholder="e.g. 300g or 0.45m" required />
+            <button id="quiz-submit-btn" class="control-btn primary">Submit Answer</button>
+            <button id="quiz-continue-btn" class="control-btn green-glow" style="display: none;">Continue</button>
+          </div>
+        </div>
+
+        <!-- Solution Breakdown panel -->
+        <div class="quiz-solution-panel" id="quiz-solution-box" style="display: none;">
+          <h4 id="solution-outcome">Correct!</h4>
+          <div class="solution-details" id="solution-steps">
+            <!-- Dynamically populated steps -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Screen -->
+      <div id="quiz-result-screen" class="quiz-card-container">
+        <div class="quiz-welcome">
+          <div class="welcome-icon" id="result-icon">🏆</div>
+          <h3 id="result-heading">Congratulations!</h3>
+          <div class="final-score-circle">
+            <span id="final-score-val">28</span><span class="total-possible">/30</span>
+          </div>
+          <p class="grade-message" id="final-grade-text">Excellent — you have mastered the principle of moments!</p>
+          <button id="restart-quiz-btn" class="control-btn primary">Try Quiz Again</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
