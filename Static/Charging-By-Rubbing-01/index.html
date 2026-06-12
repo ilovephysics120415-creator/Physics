@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Static Electricity: Charging by Rubbing Simulator (O-Level Physics 6091)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Canvas for celebratory confetti -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="app-container">
+    <!-- Header Area -->
+    <header class="app-header">
+      <div class="logo-area">
+        <span class="logo-icon">⚡</span>
+        <div>
+          <h1>Static Electricity</h1>
+          <span class="syllabus-badge">O-Level Physics 6091</span>
+        </div>
+      </div>
+      <div class="theme-glow-line"></div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+      
+      <!-- SECTION 1: CONCEPT INTRODUCTION -->
+      <section id="section-concept" class="app-section active">
+        <div class="section-card">
+          <span class="section-tag">Section 1</span>
+          <h2>Concept Introduction</h2>
+          <p class="section-subtitle">How does charging by rubbing actually work?</p>
+          
+          <div class="interactive-intro-container">
+            <!-- Animation Stage -->
+            <div class="animation-stage-box">
+              <div class="concept-stage" id="concept-stage">
+                <!-- SVG elements will be animated here -->
+                <div class="charge-objects-row">
+                  <div class="charge-object-wrapper" id="concept-obj1-wrap">
+                    <span class="object-label" id="concept-obj1-label">Neutral Object A</span>
+                    <div class="svg-container object-rod">
+                      <!-- Rod SVG -->
+                      <svg viewBox="0 0 160 50" width="100%" height="100%">
+                        <rect x="5" y="10" width="150" height="30" rx="15" class="material-rod-bg" />
+                        <g class="charge-group" id="concept-rod-charges"></g>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="charge-object-wrapper" id="concept-obj2-wrap">
+                    <span class="object-label" id="concept-obj2-label">Neutral Object B</span>
+                    <div class="svg-container object-cloth">
+                      <!-- Cloth SVG -->
+                      <svg viewBox="0 0 100 80" width="100%" height="100%">
+                        <path d="M 10 20 C 10 10, 30 10, 40 20 C 50 10, 70 10, 80 20 C 90 20, 90 40, 80 50 C 90 60, 70 70, 60 60 C 50 70, 30 70, 20 60 C 10 60, 10 40, 20 30 C 10 30, 10 20, 10 20 Z" class="material-cloth-bg" />
+                        <g class="charge-group" id="concept-cloth-charges"></g>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <!-- Friction glowing effects -->
+                <div class="friction-sparkles" id="concept-sparkles"></div>
+              </div>
+            </div>
+
+            <!-- Steps Details -->
+            <div class="concept-description-card">
+              <div class="step-progress-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </div>
+              <div class="step-content">
+                <h3 id="concept-step-title">1. Matter and Charges</h3>
+                <p id="concept-step-text">All matter contains positive charges (protons) and negative charges (electrons). In a neutral object, the positive and negative charges are equal.</p>
+              </div>
+              <div class="concept-controls">
+                <button class="btn btn-secondary" id="btn-concept-prev" disabled>Previous</button>
+                <button class="btn btn-accent" id="btn-concept-next">Next Step</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: INTERACTIVE EXPLORATION -->
+      <section id="section-exploration" class="app-section">
+        <div class="section-card">
+          <span class="section-tag">Section 2</span>
+          <h2>Interactive Exploration</h2>
+          
+          <!-- Inner Tabs -->
+          <div class="tab-header">
+            <button class="tab-btn active" data-tab="tab-simulator">Part A: Simulator</button>
+            <button class="tab-btn" data-tab="tab-practice">Part B: Practice Game</button>
+          </div>
+
+          <div class="tab-content">
+            <!-- PART A: SIMULATOR -->
+            <div id="tab-simulator" class="tab-pane active">
+              <p class="tab-instruction">Hold or tap the <strong>RUB</strong> button to simulate charging a polythene rod with a wool cloth.</p>
+              
+              <div class="simulator-stage">
+                <div class="stage-labels">
+                  <span class="sim-label wool-label">Wool Cloth (Neutral)</span>
+                  <span class="sim-label polythene-label">Polythene Rod (Neutral)</span>
+                </div>
+                
+                <div class="simulator-objects">
+                  <!-- Wool Cloth -->
+                  <div class="sim-object-container" id="sim-wool-container">
+                    <svg viewBox="0 0 120 100" class="sim-svg">
+                      <path d="M 15 30 C 15 15, 40 15, 50 30 C 65 15, 90 15, 100 30 C 115 30, 115 55, 100 70 C 115 85, 90 95, 75 80 C 60 95, 35 95, 20 80 C 5 80, 5 55, 20 40 C 5 40, 5 30, 15 30 Z" class="material-cloth-bg wool-bg" />
+                      <g id="sim-wool-charges"></g>
+                    </svg>
+                    <div class="charge-status-badge badge-neutral" id="wool-status">Neutral</div>
+                  </div>
+                  
+                  <!-- Polythene Rod -->
+                  <div class="sim-object-container" id="sim-rod-container">
+                    <svg viewBox="0 0 200 60" class="sim-svg">
+                      <rect x="5" y="15" width="190" height="30" rx="15" class="material-rod-bg polythene-bg" />
+                      <g id="sim-rod-charges"></g>
+                    </svg>
+                    <div class="charge-status-badge badge-neutral" id="rod-status">Neutral</div>
+                  </div>
+                </div>
+
+                <!-- Friction and migrating electron overlay -->
+                <div class="sim-migration-overlay" id="sim-migration-overlay"></div>
+              </div>
+
+              <!-- Simulator Panel -->
+              <div class="simulator-panel">
+                <div class="counter-display">
+                  <span class="counter-label">Electrons Transferred</span>
+                  <span class="counter-value" id="electrons-counter">0</span>
+                </div>
+                <div class="sim-controls">
+                  <button class="btn btn-primary btn-lg" id="btn-rub">⚡ RUB OBJECTS</button>
+                  <button class="btn btn-secondary" id="btn-sim-reset">Reset</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- PART B: PRACTICE GAME -->
+            <div id="tab-practice" class="tab-pane">
+              <p class="tab-instruction">Read the scenario below and select the resulting charges of both materials.</p>
+              
+              <div class="practice-card">
+                <div class="scenario-box">
+                  <span class="scenario-tag">Scenario</span>
+                  <p id="practice-scenario-text">Loading scenario...</p>
+                </div>
+
+                <div class="practice-objects-container">
+                  <!-- Material 1 Card -->
+                  <div class="practice-object-card" id="practice-card-left">
+                    <h4 id="practice-m1-name">Material A</h4>
+                    <div class="practice-visual-box">
+                      <svg viewBox="0 0 100 60" id="practice-svg-left" class="practice-svg"></svg>
+                    </div>
+                    <div class="charge-selector">
+                      <span class="selector-label">Select Charge:</span>
+                      <div class="btn-group">
+                        <button class="btn-charge btn-pos" data-obj="left" data-charge="positive">+</button>
+                        <button class="btn-charge btn-neg" data-obj="left" data-charge="negative">−</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Material 2 Card -->
+                  <div class="practice-object-card" id="practice-card-right">
+                    <h4 id="practice-m2-name">Material B</h4>
+                    <div class="practice-visual-box">
+                      <svg viewBox="0 0 100 60" id="practice-svg-right" class="practice-svg"></svg>
+                    </div>
+                    <div class="charge-selector">
+                      <span class="selector-label">Select Charge:</span>
+                      <div class="btn-group">
+                        <button class="btn-charge btn-pos" data-obj="right" data-charge="positive">+</button>
+                        <button class="btn-charge btn-neg" data-obj="right" data-charge="negative">−</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="practice-feedback hidden" id="practice-feedback">
+                  <div class="feedback-icon" id="practice-feedback-icon">✓</div>
+                  <div class="feedback-text-content">
+                    <h4 id="practice-feedback-title">Correct!</h4>
+                    <p id="practice-feedback-explanation">Explanation goes here.</p>
+                  </div>
+                </div>
+
+                <div class="practice-controls">
+                  <button class="btn btn-accent btn-lg" id="btn-practice-submit">Check Answer</button>
+                  <button class="btn btn-secondary hidden" id="btn-practice-next">Next Round</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: QUIZ (MCQ) -->
+      <section id="section-quiz" class="app-section">
+        <div class="section-card">
+          <div class="quiz-header-row">
+            <div>
+              <span class="section-tag">Section 3</span>
+              <h2>Syllabus 6091 Quiz</h2>
+            </div>
+            <div class="quiz-progress-badge" id="quiz-progress-text">Q1 / 10</div>
+          </div>
+          
+          <div class="quiz-progress-container">
+            <div class="quiz-progress-bar" id="quiz-progress-bar" style="width: 10%;"></div>
+          </div>
+
+          <div class="quiz-container">
+            <!-- Question Card -->
+            <div class="question-card">
+              <p class="question-text" id="quiz-question-text">Loading question...</p>
+            </div>
+
+            <!-- Options Grid -->
+            <div class="options-grid" id="quiz-options-container">
+              <!-- Dynamically populated MCQ choices -->
+            </div>
+
+            <!-- Explanation Box -->
+            <div class="explanation-box hidden" id="quiz-explanation-box">
+              <h4 id="quiz-explanation-title">Explanation</h4>
+              <p id="quiz-explanation-text">Explanation content.</p>
+            </div>
+
+            <!-- Quiz Controls -->
+            <div class="quiz-controls-row">
+              <button class="btn btn-accent btn-lg hidden" id="btn-quiz-next">Next Question</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: SCORING & FEEDBACK -->
+      <section id="section-scoring" class="app-section">
+        <div class="section-card scoring-card">
+          <span class="section-tag">Section 4</span>
+          <h2>Scoring & Feedback</h2>
+          <p class="section-subtitle">Here is a breakdown of your static electricity performance.</p>
+
+          <div class="results-dashboard">
+            <!-- Radial Score Container -->
+            <div class="radial-score-container">
+              <div class="score-circle">
+                <svg viewBox="0 0 120 120" width="150" height="150">
+                  <circle cx="60" cy="60" r="50" class="circle-bg"></circle>
+                  <circle cx="60" cy="60" r="50" class="circle-progress" id="score-ring-progress" stroke-dasharray="314.16" stroke-dashoffset="314.16"></circle>
+                </svg>
+                <div class="score-text">
+                  <span class="score-percentage" id="score-percentage">0%</span>
+                  <span class="score-label" id="score-fraction">0 / 10 MCQ</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Score breakdown details -->
+            <div class="score-breakdown-details">
+              <h3>Interaction Summary</h3>
+              <div class="breakdown-list">
+                <div class="breakdown-item">
+                  <span class="breakdown-name">⚡ Part A: Simulator Interactions</span>
+                  <span class="breakdown-score" id="score-sim-count">0 rubs</span>
+                </div>
+                <div class="breakdown-item">
+                  <span class="breakdown-name">🎯 Part B: Charge the Object</span>
+                  <span class="breakdown-score" id="score-practice-value">0 / 0 correct</span>
+                </div>
+                <div class="breakdown-item">
+                  <span class="breakdown-name">📝 Section 3: MCQ Quiz Score</span>
+                  <span class="breakdown-score" id="score-quiz-value">0 / 10 correct</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feedback Tier Card -->
+          <div class="feedback-tier-card" id="feedback-tier-card">
+            <h3 id="feedback-tier-title">Loading feedback...</h3>
+            <p id="feedback-tier-desc">...</p>
+          </div>
+
+          <div class="scoring-controls">
+            <button class="btn btn-accent btn-lg" id="btn-restart-quiz">Retake MCQ Quiz</button>
+            <button class="btn btn-secondary" id="btn-reset-all">Restart Simulator</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5: FLASHCARD REVISION -->
+      <section id="section-flashcards" class="app-section">
+        <div class="section-card flashcard-section-card">
+          <div class="flashcard-header">
+            <div>
+              <span class="section-tag">Section 5</span>
+              <h2>Flashcard Revision</h2>
+            </div>
+            <div class="flashcard-progress" id="flashcard-progress-text">Card 1 of 10</div>
+          </div>
+
+          <div class="flashcards-deck-container">
+            <!-- 3D Flipping Card -->
+            <div class="flashcard-wrapper" id="flashcard-wrapper">
+              <div class="flashcard" id="flashcard-element">
+                <!-- Front Side -->
+                <div class="flashcard-face flashcard-front">
+                  <div class="card-glow-bg"></div>
+                  <span class="card-tip">⚡ TAP TO REVEAL ANSWER</span>
+                  <div class="card-question-box">
+                    <p id="flashcard-front-text">Concept Question?</p>
+                  </div>
+                </div>
+                <!-- Back Side -->
+                <div class="flashcard-face flashcard-back">
+                  <div class="card-glow-bg"></div>
+                  <span class="card-tip">🔍 TAP TO FLIP BACK</span>
+                  <div class="card-answer-box">
+                    <p id="flashcard-back-text">Detailed explanation and answer details for O-Level Physics syllabus.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Flashcard controls -->
+            <div class="flashcard-controls">
+              <button class="btn btn-secondary" id="btn-card-prev" disabled>Previous</button>
+              <button class="btn btn-primary" id="btn-card-shuffle">Shuffle Deck</button>
+              <button class="btn btn-secondary" id="btn-card-next">Next Card</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar (Mobile-first layout) -->
+    <nav class="app-navigation">
+      <button class="nav-item active" data-target="section-concept">
+        <span class="nav-icon">📖</span>
+        <span class="nav-label">Intro</span>
+      </button>
+      <button class="nav-item" data-target="section-exploration">
+        <span class="nav-icon">🔬</span>
+        <span class="nav-label">Explore</span>
+      </button>
+      <button class="nav-item" data-target="section-quiz">
+        <span class="nav-icon">📝</span>
+        <span class="nav-label">Quiz</span>
+      </button>
+      <button class="nav-item" data-target="section-scoring">
+        <span class="nav-icon">🏆</span>
+        <span class="nav-label">Results</span>
+      </button>
+      <button class="nav-item" data-target="section-flashcards">
+        <span class="nav-icon">🃏</span>
+        <span class="nav-label">Revision</span>
+      </button>
+    </nav>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
