@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Static Electricity Hazards | O-Level Physics</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Canvas for Celebratory Confetti -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="app-container">
+    <!-- Header Navigation -->
+    <header class="app-header">
+      <div class="logo">
+        <span class="hazard-glow">⚡</span>
+        <h1>ElectroStatic <span class="accent-text">Hazards</span></h1>
+      </div>
+      <nav class="nav-tabs">
+        <button class="nav-btn active" data-target="concept">1. Learn</button>
+        <button class="nav-btn" data-target="exploration">2. Explore</button>
+        <button class="nav-btn" data-target="flashcard">3. Flashcards</button>
+        <button class="nav-btn" data-target="quiz">4. Quiz</button>
+      </nav>
+    </header>
+
+    <!-- Main Views -->
+    <main class="app-main">
+      
+      <!-- SECTION 1: CONCEPT INTRODUCTION -->
+      <section id="view-concept" class="view-section active">
+        <div class="section-card">
+          <h2 class="neon-title-cyan">Understanding Electrostatic Hazards</h2>
+          <p class="section-intro">Static electricity builds up when electric charges accumulate on an <strong>insulating surface</strong> under <strong>dry conditions</strong>, preventing charges from flowing away. When these charges suddenly discharge, a spark is created. Near flammable materials, this spark can cause fires or explosions!</p>
+          
+          <div class="simulation-showcase">
+            <div class="sim-sidebar">
+              <button class="sim-selector active" data-scenario="aircraft">
+                <span class="icon">✈️</span> Aircraft Refuelling
+              </button>
+              <button class="sim-selector" data-scenario="tanker">
+                <span class="icon">⛽</span> Fuel Tanker Filling
+              </button>
+              <button class="sim-selector" data-scenario="theatre">
+                <span class="icon">🏥</span> Operating Theatre
+              </button>
+              <button class="sim-selector" data-scenario="electronics">
+                <span class="icon">💻</span> Electronic Components
+              </button>
+            </div>
+
+            <div class="sim-viewport">
+              <div class="animation-container">
+                <!-- SVG Animations will be dynamically injected or modified here -->
+                <div id="sim-visual" class="sim-visual"></div>
+                <div class="spark-effect" id="spark-effect"></div>
+              </div>
+              <div class="sim-controls">
+                <button id="btn-trigger-charge" class="btn btn-secondary">Simulate Charge Buildup</button>
+                <button id="btn-trigger-spark" class="btn btn-primary" disabled>Trigger Discharge Spark</button>
+                <button id="btn-apply-safety" class="btn btn-accent">Apply Safety Measure</button>
+              </div>
+              <div class="sim-explanation" id="sim-explanation">
+                Select a scenario to begin. Tap "Simulate Charge Buildup" to see static charge accumulate.
+              </div>
+            </div>
+          </div>
+
+          <div class="quick-summary-box">
+            <h3>Summary of Hazard Reductions:</h3>
+            <ul class="summary-list">
+              <li><strong>Earthing:</strong> Provides a low-resistance path for charges to flow safely to the ground.</li>
+              <li><strong>Conducting Materials:</strong> Replaces insulating components to allow constant discharge.</li>
+              <li><strong>Increasing Humidity:</strong> Makes air more conductive so charge leaks away continuously.</li>
+              <li><strong>Anti-Static Tools:</strong> Prevents charge accumulation on surfaces (e.g., wrist straps).</li>
+            </ul>
+          </div>
+
+          <div class="section-nav">
+            <span></span>
+            <button class="btn btn-next" onclick="switchTab('exploration')">Next: Explore Hazards ➔</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: INTERACTIVE EXPLORATION -->
+      <section id="view-exploration" class="view-section">
+        <!-- PART A: HAZARD OR NO HAZARD -->
+        <div id="explore-part-a" class="section-card">
+          <div class="progress-bar-container">
+            <div class="progress-label">Part A: Hazard or Safe? <span id="part-a-progress">1 / 10</span></div>
+            <div class="progress-bar"><div class="progress-fill" id="part-a-progress-fill"></div></div>
+          </div>
+
+          <div class="scenario-card-container">
+            <div class="scenario-card" id="scenario-card">
+              <div class="scenario-image-container">
+                <div id="scenario-svg" class="scenario-svg-area"></div>
+                <div id="scenario-charge-overlay" class="charge-overlay"></div>
+              </div>
+              <div class="scenario-details">
+                <h3 id="scenario-title">Aircraft Refuelling</h3>
+                <p id="scenario-description">An aircraft is being refuelled. Friction between the fuel and the pipe causes static charge buildup.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="explore-actions" id="part-a-actions">
+            <button class="btn btn-danger btn-large" onclick="handlePartAAnswer(true)">⚠️ HAZARD</button>
+            <button class="btn btn-success btn-large" onclick="handlePartAAnswer(false)">✅ SAFE</button>
+          </div>
+
+          <div class="explore-feedback-panel hidden" id="part-a-feedback">
+            <div class="feedback-status-header">
+              <span id="part-a-result-badge" class="badge">Correct!</span>
+            </div>
+            <p id="part-a-explanation" class="feedback-text"></p>
+            <button id="btn-part-a-next" class="btn btn-primary">Proceed</button>
+          </div>
+        </div>
+
+        <!-- PART B: HOW DO WE STAY SAFE? -->
+        <div id="explore-part-b" class="section-card hidden">
+          <div class="progress-bar-container">
+            <div class="progress-label">Part B: Staying Safe <span id="part-b-progress">1 / 5</span></div>
+            <div class="progress-bar"><div class="progress-fill" id="part-b-progress-fill"></div></div>
+          </div>
+
+          <div class="safety-question-container">
+            <h3 class="safety-header">Safety Follow-Up</h3>
+            <div class="safety-context-box">
+              <span class="hazard-indicator">HAZARD IDENTIFIED:</span>
+              <p id="safety-scenario-title" class="safety-scen-title">Aircraft Refuelling</p>
+              <p id="safety-scenario-desc">Friction builds up electrostatic charge on the plane's body, which could cause a spark and ignite fuel vapour.</p>
+            </div>
+            <p class="question-prompt">How can this hazard be minimized?</p>
+            
+            <div class="options-grid" id="safety-options">
+              <!-- Dynamically populated options -->
+            </div>
+          </div>
+
+          <div class="explore-feedback-panel hidden" id="part-b-feedback">
+            <div class="feedback-status-header">
+              <span id="part-b-result-badge" class="badge">Correct!</span>
+            </div>
+            <p id="part-b-explanation" class="feedback-text"></p>
+            <button id="btn-part-b-next" class="btn btn-primary">Next Scenario</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5: FLASHCARD REVISION MODE -->
+      <section id="view-flashcard" class="view-section">
+        <div class="section-card">
+          <div class="progress-bar-container">
+            <div class="progress-label">Flashcard Review <span id="flashcard-progress">1 / 12</span></div>
+            <div class="progress-bar"><div class="progress-fill" id="flashcard-progress-fill"></div></div>
+          </div>
+
+          <div class="flashcard-stage">
+            <div class="flashcard" id="revision-flashcard" onclick="flipFlashcard()">
+              <div class="flashcard-front">
+                <span class="card-side-label">QUESTION</span>
+                <div class="card-content-wrap">
+                  <p id="flashcard-front-text">What conditions cause electrostatic charge buildup?</p>
+                </div>
+                <span class="tap-hint">👆 Tap to flip card</span>
+              </div>
+              <div class="flashcard-back">
+                <span class="card-side-label">EXPLANATION & SYLLABUS FACT</span>
+                <div class="card-content-wrap">
+                  <p id="flashcard-back-text">Friction between insulating materials, especially in dry air, causes charges to build up since they cannot flow away.</p>
+                </div>
+                <span class="tap-hint">👆 Tap to flip card</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flashcard-controls">
+            <button class="btn btn-secondary" id="btn-flash-prev" onclick="changeFlashcard(-1)">➔ Previous</button>
+            <button class="btn btn-accent" id="btn-flash-shuffle" onclick="shuffleFlashcards()">🔀 Shuffle</button>
+            <button class="btn btn-primary" id="btn-flash-next" onclick="changeFlashcard(1)">Next ➔</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: QUIZ (MCQ) -->
+      <section id="view-quiz" class="view-section">
+        <div class="section-card">
+          <div class="progress-bar-container">
+            <div class="progress-label">Syllabus 6091 Challenge <span id="quiz-progress">1 / 10</span></div>
+            <div class="progress-bar"><div class="progress-fill" id="quiz-progress-fill"></div></div>
+          </div>
+
+          <div class="quiz-question-container">
+            <div class="quiz-q-num">Question <span id="quiz-q-index">1</span> of 10</div>
+            <p id="quiz-question-text" class="quiz-question-text">Loading question...</p>
+            
+            <div class="options-grid" id="quiz-options">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <div class="quiz-feedback-panel hidden" id="quiz-feedback">
+            <div class="feedback-status-header">
+              <span id="quiz-result-badge" class="badge">Correct!</span>
+            </div>
+            <p id="quiz-explanation" class="feedback-text"></p>
+            <button id="btn-quiz-next" class="btn btn-primary">Next Question</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: SCORING & FEEDBACK -->
+      <section id="view-score" class="view-section">
+        <div class="section-card text-center">
+          <h2 class="neon-title-pink">Performance Summary</h2>
+          <p class="summary-subtitle">Here is how you did on the Electrostatic Hazards module:</p>
+
+          <div class="scores-display-grid">
+            <div class="score-card shadow-cyan">
+              <span class="score-card-title">Hazard/Safe Quiz (Part A)</span>
+              <span class="score-card-val" id="score-val-part-a">0/10</span>
+            </div>
+            <div class="score-card shadow-amber">
+              <span class="score-card-title">Safety Solutions (Part B)</span>
+              <span class="score-card-val" id="score-val-part-b">0/5</span>
+            </div>
+            <div class="score-card shadow-pink">
+              <span class="score-card-title">Physics MCQ Exam (Sec 3)</span>
+              <span class="score-card-val" id="score-val-quiz">0/10</span>
+            </div>
+          </div>
+
+          <div class="total-score-showcase">
+            <span class="total-label">OVERALL SCORE</span>
+            <span class="total-percent-val" id="score-val-total">0%</span>
+          </div>
+
+          <div class="grade-feedback-box" id="grade-feedback-box">
+            <h3 id="grade-title">Excellent Work!</h3>
+            <p id="grade-description">You have demonstrated high competence in static safety principles.</p>
+          </div>
+
+          <div class="score-actions">
+            <button class="btn btn-primary btn-large" onclick="restartSession()">Restart Module</button>
+            <button class="btn btn-accent btn-large" onclick="switchTab('flashcard')">Go to Flashcards</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
