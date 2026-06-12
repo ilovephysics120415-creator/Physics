@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Thermal Processes — Convection Currents</title>
+  <meta name="description" content="An interactive physics simulation and revision helper exploring convection currents for O-Level students.">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div id="app-container">
+    <!-- Header with logo and simple active navigation -->
+    <header>
+      <h1 id="app-title">Convection Currents</h1>
+    </header>
+    
+    <nav class="nav-tabs" id="app-nav" style="display: flex;">
+      <button class="tab-btn active" id="tab-sim" onclick="switchView('sim-view')">Simulation</button>
+      <button class="tab-btn" id="tab-cards" onclick="switchView('cards-view')">Flashcards</button>
+      <button class="tab-btn" id="tab-quiz" onclick="switchView('quiz-view')">Quiz</button>
+    </nav>
+
+    <!-- SECTION 2: INTERACTIVE SIMULATION -->
+    <section id="sim-view" class="view active">
+      <div class="sim-controls">
+        <div class="toggle-container">
+          <button class="toggle-btn active" id="mode-particles" onclick="setSimMode('particles')">Particles</button>
+          <button class="toggle-btn" id="mode-streamlines" onclick="setSimMode('streamlines')">Streamlines</button>
+        </div>
+        <div class="slider-container" style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px; padding: 0 5px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
+            <span>Particle Count</span>
+            <span id="particle-count-label" style="color: var(--neon-blue);">70</span>
+          </div>
+          <input type="range" id="particle-slider" min="40" max="200" value="70" step="5" oninput="changeParticleCount(this.value)" style="width: 100%; accent-color: var(--neon-blue); cursor: pointer; height: 6px; border-radius: 3px; background: rgba(0,229,255,0.1); outline: none;">
+        </div>
+      </div>
+
+      <div class="sim-container-wrapper">
+        <canvas id="sim-canvas"></canvas>
+        <!-- Real-time dynamic labels floating on top of canvas -->
+        <div id="label-hot" class="density-label hot" style="display: none;">Lower density — rises</div>
+        <div id="label-cool" class="density-label cool" style="display: none;">Higher density — sinks</div>
+        <div id="label-explanation" class="density-label yellow-info" style="display: none;"></div>
+      </div>
+
+      <div class="heat-placement">
+        <button class="heat-btn active" id="heat-bottom" onclick="setHeatSource('bottom')">Bottom</button>
+        <button class="heat-btn" id="heat-top" onclick="setHeatSource('top')">Top</button>
+      </div>
+
+      <button class="reset-btn" onclick="resetSim()">Reset Fluid</button>
+    </section>
+
+    <!-- SECTION 3: FLASHCARD REVISION -->
+    <section id="cards-view" class="view">
+      <div class="flashcards-header">
+        <span class="cards-counter" id="cards-counter-text">Card 1 of 10</span>
+        <button class="shuffle-btn" onclick="shuffleCards()">Shuffle</button>
+      </div>
+      
+      <div class="deck-container" id="deck-container-element">
+        <div class="card-outer" id="flashcard-element" onclick="flipCard()">
+          <div class="card-face card-front">
+            <span class="card-question-title" id="card-front-title">Question</span>
+            <p class="card-text" id="card-front-text">Loading card...</p>
+          </div>
+          <div class="card-face card-back">
+            <span class="card-question-title">Explanation</span>
+            <p class="card-text" id="card-back-text">Loading explanation...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: QUIZ -->
+    <section id="quiz-view" class="view">
+      <div class="quiz-header">
+        <span class="quiz-progress" id="quiz-progress-text">Question 1/10</span>
+        <span class="quiz-score-live" id="quiz-score-text">Score: 0</span>
+      </div>
+
+      <div class="question-card">
+        <p class="question-text" id="quiz-question-el" style="margin-bottom: 20px;">Question text goes here?</p>
+        <div class="options-container" id="quiz-options-container">
+          <!-- Dynamically populated options buttons -->
+        </div>
+      </div>
+
+      <div class="feedback-container" id="quiz-feedback">
+        Feedback explanation.
+      </div>
+
+      <div class="quiz-footer">
+        <button class="next-btn" id="quiz-next-btn" onclick="nextQuestion()" disabled>Next</button>
+      </div>
+    </section>
+
+    <!-- SECTION 5: SCORE SCREEN -->
+    <section id="score-view" class="view">
+      <canvas id="celebration-canvas"></canvas>
+      <div class="score-container">
+        <div class="score-circle" id="score-circle-el">0/10</div>
+        <p class="score-text" id="score-rating-el">Score Evaluation</p>
+        <p class="score-feedback" id="score-feedback-el">Detailed feedback comment goes here.</p>
+        <button class="retry-quiz-btn" onclick="restartQuiz()">Try Again</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
