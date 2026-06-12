@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prefix Blitz - O-Level Physics SI Prefixes (6091)</title>
+  <!-- Google Fonts: Outfit & Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #070913;
+      --card-bg: rgba(15, 20, 38, 0.7);
+      --border-color: rgba(0, 242, 254, 0.2);
+      
+      --cyan: #00F2FE;
+      --cyan-glow: 0 0 12px rgba(0, 242, 254, 0.6);
+      --purple: #9B51E0;
+      --purple-glow: 0 0 12px rgba(155, 81, 224, 0.6);
+      --green: #39FF14;
+      --green-glow: 0 0 12px rgba(57, 255, 20, 0.6);
+      --red: #FF073A;
+      --red-glow: 0 0 12px rgba(255, 7, 58, 0.6);
+      
+      --text: #F3F4F6;
+      --text-muted: #9CA3AF;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(155, 81, 224, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(0, 242, 254, 0.15) 0%, transparent 40%);
+      padding: 1rem;
+    }
+
+    /* Outer App Container */
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      min-height: 620px;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), 0 0 20px rgba(0, 242, 254, 0.05);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Screen Transitions */
+    .screen {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      padding: 1.5rem;
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Header / Tabs */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .logo-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+      letter-spacing: -0.5px;
+    }
+
+    .syllabus-code {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .tabs {
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 3px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 0.5rem 1rem;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--cyan);
+      color: #000;
+      box-shadow: var(--cyan-glow);
+      font-weight: 700;
+    }
+
+    /* Common UI Elements */
+    .glow-btn {
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      border: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 1rem;
+      border-radius: 14px;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+    }
+
+    .glow-btn:hover, .glow-btn:active {
+      transform: translateY(-2px);
+      box-shadow: var(--cyan-glow), 0 4px 20px rgba(155, 81, 224, 0.4);
+    }
+
+    /* MODE 1: CONVERTER */
+    .converter-body {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      justify-content: center;
+      flex: 1;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .num-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .unit-input-select {
+      position: absolute;
+      right: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      padding: 0.35rem 0.6rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .large-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 1rem 4.5rem 1rem 1rem;
+      font-size: 1.35rem;
+      color: #fff;
+      font-weight: 600;
+      outline: none;
+      transition: all 0.3s ease;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .large-input:focus {
+      border-color: var(--cyan);
+      box-shadow: var(--cyan-glow), inset 0 0 8px rgba(0, 242, 254, 0.1);
+    }
+
+    .prefix-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.6rem;
+    }
+
+    .prefix-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 0.75rem 0.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .prefix-card:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .prefix-card.selected {
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.1), rgba(155, 81, 224, 0.15));
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.15);
+    }
+
+    .prefix-card .symbol {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--cyan);
+      margin-bottom: 0.15rem;
+    }
+
+    .prefix-card.selected .symbol {
+      text-shadow: var(--cyan-glow);
+    }
+
+    .prefix-card .name {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: capitalize;
+    }
+
+    .prefix-card .power {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--purple);
+      margin-top: 0.15rem;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* Output Section */
+    .converter-output {
+      background: rgba(0, 242, 254, 0.03);
+      border: 1px dashed rgba(0, 242, 254, 0.2);
+      border-radius: 16px;
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 120px;
+      text-align: center;
+      position: relative;
+    }
+
+    .output-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+
+    .output-val {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--cyan);
+      text-shadow: var(--cyan-glow);
+      word-break: break-all;
+      line-height: 1.2;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .output-working {
+      font-size: 1.45rem;
+      color: var(--purple);
+      margin-top: 0.4rem;
+      font-weight: 600;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+
+    /* MODE 2: QUIZ */
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .timer-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .timer-icon {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--purple);
+      box-shadow: var(--purple-glow);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
+
+    .timer-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #fff;
+    }
+
+    .timer-text.danger {
+      color: var(--red);
+      text-shadow: var(--red-glow);
+    }
+
+    .progress-dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    .dot.active {
+      background: var(--cyan);
+      box-shadow: var(--cyan-glow);
+    }
+
+    .dot.correct {
+      background: var(--green);
+      box-shadow: var(--green-glow);
+    }
+
+    .dot.incorrect {
+      background: var(--red);
+      box-shadow: var(--red-glow);
+    }
+
+    /* Question Box */
+    .question-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 2.2rem 1.5rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .question-prompt {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 0.75rem;
+    }
+
+    .question-text {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #fff;
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: -0.5px;
+    }
+
+    .quiz-input-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* Feedback Display */
+    .feedback-box {
+      min-height: 70px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .feedback-text {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 0.25rem;
+      display: none;
+    }
+
+    .feedback-text.correct {
+      color: var(--green);
+      text-shadow: var(--green-glow);
+      display: block;
+      animation: popOpen 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .feedback-text.incorrect {
+      color: var(--red);
+      text-shadow: var(--red-glow);
+      display: block;
+      animation: popOpen 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .feedback-working {
+      font-size: 1.55rem;
+      color: var(--text-muted);
+      font-family: 'Space Grotesk', sans-serif;
+      display: none;
+    }
+
+    .feedback-working.active {
+      display: block;
+    }
+
+    @keyframes popOpen {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* RESULTS SCREEN */
+    .results-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      text-align: center;
+      gap: 1.5rem;
+    }
+
+    .score-circle {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 4px solid var(--purple);
+      box-shadow: var(--purple-glow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(155, 81, 224, 0.05);
+      animation: pulseBorder 2s infinite alternate;
+    }
+
+    @keyframes pulseBorder {
+      0% { box-shadow: 0 0 10px rgba(155, 81, 224, 0.3); border-color: rgba(155, 81, 224, 0.6); }
+      100% { box-shadow: 0 0 25px rgba(155, 81, 224, 0.8); border-color: var(--purple); }
+    }
+
+    .score-num {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #fff;
+      font-family: 'Space Grotesk', sans-serif;
+      line-height: 1;
+    }
+
+    .score-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+
+    .grade-badge {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--cyan);
+      text-shadow: var(--cyan-glow);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .results-details {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .results-details strong {
+      color: #fff;
+    }
+
+    /* Animations & Transitions */
+    .incorrect-shake {
+      animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    .correct-celebration {
+      animation: pulseGreen 0.5s ease-in-out;
+    }
+
+    @keyframes pulseGreen {
+      0% { border-color: var(--border-color); box-shadow: 0 0 20px rgba(0, 242, 254, 0.05); }
+      50% { border-color: var(--green); box-shadow: var(--green-glow), 0 0 30px rgba(57, 255, 20, 0.3); }
+      100% { border-color: var(--border-color); box-shadow: 0 0 20px rgba(0, 242, 254, 0.05); }
+    }
+
+    /* Confetti Canvas for celebration */
+    #confetti-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Mobile keyboards custom styling helper */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container" id="app">
+    <canvas id="confetti-canvas"></canvas>
+    
+    <header>
+      <div class="logo-container">
+        <h1>Prefix Blitz</h1>
+        <span class="syllabus-code">Physics 6091</span>
+      </div>
+      <div class="tabs">
+        <button class="tab-btn active" id="tab-converter" onclick="switchMode('converter')">Converter</button>
+        <button class="tab-btn" id="tab-quiz" onclick="switchMode('quiz')">Quiz</button>
+      </div>
+    </header>
+
+    <!-- MODE 1: CONVERTER -->
+    <div id="screen-converter" class="screen active">
+      <div class="converter-body">
+        <div class="input-group">
+          <label for="conv-num">Enter Value</label>
+          <div class="num-input-wrapper">
+            <input type="number" id="conv-num" class="large-input" value="1" step="any" placeholder="e.g. 5" inputmode="decimal">
+            <select id="conv-unit" class="unit-input-select" onchange="convert()">
+              <option value="m">m</option>
+              <option value="A">A</option>
+              <option value="W">W</option>
+              <option value="J">J</option>
+              <option value="Hz">Hz</option>
+              <option value="Pa">Pa</option>
+              <option value="C">C</option>
+              <option value="g">g</option>
+              <option value="s">s</option>
+              <option value="V">V</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Select Prefix</label>
+          <div class="prefix-grid" id="prefix-grid-container">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <div class="converter-output">
+          <div class="output-label">SI Standard Value</div>
+          <div class="output-val" id="conv-output-val">1 m</div>
+          <div class="output-working" id="conv-output-working">milli (m) = 10⁻³</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODE 2: QUIZ START / SETUP SCREEN -->
+    <div id="screen-quiz-start" class="screen">
+      <div class="results-box" style="justify-content: center; gap: 2rem;">
+        <div style="font-size: 4rem; text-shadow: var(--cyan-glow);">⚡</div>
+        <div>
+          <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem; font-weight: 800;">Are you ready?</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 280px; margin: 0 auto;">
+            10 Prefix questions.<br>No time limit.<br>Test your speed and accuracy!
+          </p>
+        </div>
+        <button class="glow-btn" onclick="startQuiz()">Start Quiz Blitz</button>
+      </div>
+    </div>
+
+    <!-- MODE 2: QUIZ PLAY SCREEN -->
+    <div id="screen-quiz-play" class="screen">
+      <div class="quiz-header">
+        <div class="progress-dots" id="quiz-dots">
+          <!-- 10 dots populated dynamically -->
+        </div>
+      </div>
+
+      <div class="question-box">
+        <div class="question-prompt" id="quiz-prompt">Convert standard to prefix</div>
+        <div class="question-text" id="quiz-question">5 km = ? m</div>
+      </div>
+
+      <div class="quiz-input-section">
+        <div class="num-input-wrapper">
+          <input type="text" id="quiz-input" class="large-input" placeholder="Type answer..." inputmode="decimal" autocomplete="off" autofocus>
+        </div>
+        
+        <button class="glow-btn" id="quiz-submit-btn" onclick="submitAnswer()">Submit Answer</button>
+
+        <div class="feedback-box">
+          <div class="feedback-text" id="quiz-feedback-text">Correct!</div>
+          <div class="feedback-working" id="quiz-feedback-working">5 × 10³ = 5000 m</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODE 2: QUIZ RESULTS SCREEN -->
+    <div id="screen-quiz-results" class="screen">
+      <div class="results-box">
+        <div class="score-circle">
+          <div class="score-num" id="results-score">8/10</div>
+          <div class="score-label">Score</div>
+        </div>
+        
+        <div class="grade-badge" id="results-grade">Distinction!</div>
+        
+        <div class="results-details" id="results-details">
+          Accuracy: <strong>80%</strong><br>
+          Time Remaining: <strong>12s</strong>
+        </div>
+
+        <button class="glow-btn" onclick="switchMode('quiz-start')">Try Again</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Prefixes definition
+    const prefixes = [
+      { name: 'nano', symbol: 'n', powerText: '10⁻⁹', factor: 1e-9 },
+      { name: 'micro', symbol: 'μ', powerText: '10⁻⁶', factor: 1e-6 },
+      { name: 'milli', symbol: 'm', powerText: '10⁻³', factor: 1e-3 },
+      { name: 'centi', symbol: 'c', powerText: '10⁻²', factor: 1e-2 },
+      { name: 'deci', symbol: 'd', powerText: '10⁻¹', factor: 1e-1 },
+      { name: 'kilo', symbol: 'k', powerText: '10³', factor: 1e3 },
+      { name: 'mega', symbol: 'M', powerText: '10⁶', factor: 1e6 },
+      { name: 'giga', symbol: 'G', powerText: '10⁹', factor: 1e9 },
+      { name: 'tera', symbol: 'T', powerText: '10¹²', factor: 1e12 }
+    ];
+
+    // Global App States
+    let currentMode = 'converter';
+    let selectedPrefix = prefixes.find(p => p.name === 'milli'); // Default selected prefix
+
+    // Quiz States
+    let quizQuestions = [];
+    let currentQuestionIndex = 0;
+    let quizScore = 0;
+    let quizTimerInterval = null;
+    let quizTimeLeft = 45;
+    let quizAnswerHistory = []; // list of booleans: true/false for progress dots
+    let isWaitingForNext = false;
+
+    // Confetti canvas particles helper
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    let confetti = [];
+    
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.offsetWidth;
+      canvas.height = canvas.parentElement.offsetHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function spawnConfetti() {
+      confetti = [];
+      const colors = ['#00F2FE', '#9B51E0', '#39FF14', '#FFE600'];
+      for (let i = 0; i < 60; i++) {
+        confetti.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * -20 - 10,
+          size: Math.random() * 6 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          speedY: Math.random() * 3 + 2,
+          speedX: Math.random() * 4 - 2,
+          rotation: Math.random() * 360,
+          rotationSpeed: Math.random() * 4 - 2
+        });
+      }
+      
+      function animate() {
+        if (confetti.length === 0) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        let alive = false;
+        confetti.forEach(p => {
+          p.y += p.speedY;
+          p.x += p.speedX;
+          p.rotation += p.rotationSpeed;
+          
+          if (p.y < canvas.height) {
+            alive = true;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rotation * Math.PI / 180);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+            ctx.restore();
+          }
+        });
+        
+        if (alive) {
+          requestAnimationFrame(animate);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          confetti = [];
+        }
+      }
+      animate();
+    }
+
+    // Initialize Converter Grid
+    function initConverterGrid() {
+      const container = document.getElementById('prefix-grid-container');
+      container.innerHTML = '';
+      prefixes.forEach(p => {
+        const card = document.createElement('div');
+        card.className = `prefix-card ${p.name === selectedPrefix.name ? 'selected' : ''}`;
+        card.innerHTML = `
+          <span class="symbol">${p.symbol}</span>
+          <span class="name">${p.name}</span>
+          <span class="power">${p.powerText}</span>
+        `;
+        card.onclick = () => {
+          document.querySelectorAll('.prefix-card').forEach(el => el.classList.remove('selected'));
+          card.classList.add('selected');
+          selectedPrefix = p;
+          convert();
+        };
+        container.appendChild(card);
+      });
+    }
+
+    // Real-time conversion formatter helper (handles float issues nicely)
+    function formatScientific(num) {
+      if (num === 0) return '0';
+      const abs = Math.abs(num);
+      if (abs >= 1e6 || abs < 1e-4) {
+        return num.toExponential(4).replace(/e\+?(-?\d+)/, ' × 10<sup>$1</sup>');
+      }
+      // Trim ending zeros
+      return parseFloat(num.toFixed(10)).toString();
+    }
+
+    // Convert function
+    function convert() {
+      const numInput = document.getElementById('conv-num');
+      const unit = document.getElementById('conv-unit').value;
+      const outputVal = document.getElementById('conv-output-val');
+      const outputWorking = document.getElementById('conv-output-working');
+      
+      let val = parseFloat(numInput.value);
+      if (isNaN(val)) {
+        outputVal.textContent = '-';
+        outputWorking.textContent = 'Please enter a valid number';
+        return;
+      }
+      
+      const convertedVal = val * selectedPrefix.factor;
+      
+      // Format output nicely
+      let formattedVal = formatScientific(convertedVal);
+      outputVal.innerHTML = `${formattedVal} ${unit}`;
+      
+      // Highlight prefix details
+      outputWorking.innerHTML = `${selectedPrefix.name} (${selectedPrefix.symbol}) = 10<sup>${selectedPrefix.powerText.replace('10', '')}</sup> &nbsp;|&nbsp; Working: ${val} × 10<sup>${selectedPrefix.powerText.replace('10', '')}</sup>`;
+    }
+
+    // Listeners for input change
+    document.getElementById('conv-num').addEventListener('input', convert);
+
+    // SWITCH SCREEN MODE
+    function switchMode(mode) {
+      // Clear timers if leaving active quiz
+      if (quizTimerInterval) {
+        clearInterval(quizTimerInterval);
+        quizTimerInterval = null;
+      }
+      
+      currentMode = mode;
+      
+      // Update Tab active indicator
+      document.getElementById('tab-converter').classList.remove('active');
+      document.getElementById('tab-quiz').classList.remove('active');
+      
+      if (mode === 'converter') {
+        document.getElementById('tab-converter').classList.add('active');
+      } else if (mode.startsWith('quiz')) {
+        document.getElementById('tab-quiz').classList.add('active');
+      }
+
+      // Hide all screens
+      document.getElementById('screen-converter').classList.remove('active');
+      document.getElementById('screen-quiz-start').classList.remove('active');
+      document.getElementById('screen-quiz-play').classList.remove('active');
+      document.getElementById('screen-quiz-results').classList.remove('active');
+
+      // Show targeted screen
+      if (mode === 'converter') {
+        document.getElementById('screen-converter').classList.add('active');
+        convert();
+      } else if (mode === 'quiz') {
+        document.getElementById('screen-quiz-start').classList.add('active');
+      } else if (mode === 'quiz-start') {
+        document.getElementById('screen-quiz-start').classList.add('active');
+      } else if (mode === 'quiz-play') {
+        document.getElementById('screen-quiz-play').classList.add('active');
+      } else if (mode === 'quiz-results') {
+        document.getElementById('screen-quiz-results').classList.add('active');
+      }
+    }
+
+    // QUIZ GENERATION & SYSTEM
+    const quizUnits = ['m', 'A', 'W', 'J', 'Hz', 'Pa', 'C', 'g', 's', 'V'];
+    
+    // Choose simple integer numbers for quiz questions so students can do simple mental math
+    const quizValues = [1, 2, 3, 5, 8, 10, 20, 50, 100, 200, 500];
+
+    function generateQuizQuestion() {
+      const isPrefixToBase = Math.random() < 0.5;
+      const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+      const unit = quizUnits[Math.floor(Math.random() * quizUnits.length)];
+      const value = quizValues[Math.floor(Math.random() * quizValues.length)];
+
+      if (isPrefixToBase) {
+        // e.g. "5 km = ? m"
+        const finalVal = value * prefix.factor;
+        
+        // formats to support user answers like: 5000, 0.005, 5e-3 etc.
+        const answersList = [
+          finalVal.toString(),
+          parseFloat(finalVal.toFixed(12)).toString(),
+          finalVal.toExponential()
+        ];
+        
+        // Clean symbols representation
+        const powerClean = prefix.powerText.replace('10', '10^').replace('⁻', '-').replace('¹', '1').replace('²', '2').replace('³', '3').replace('⁴', '4').replace('⁵', '5').replace('⁶', '6').replace('⁷', '7').replace('⁸', '8').replace('⁹', '9');
+        
+        return {
+          questionText: `${value} ${prefix.symbol}${unit} = ? ${unit}`,
+          answers: answersList,
+          working: `${value} × ${prefix.powerText} = ${answersList[1]} ${unit}`,
+          rawCorrect: answersList[1]
+        };
+      } else {
+        // e.g. "? km = 5000 m" -> or "5000 m = ? km"
+        const finalVal = value * prefix.factor; // base value is finalVal. We display finalVal and ask for prefix value
+        // "5000 m = ? km" -> answer should be 5
+        const displayVal = parseFloat(finalVal.toFixed(12)).toString();
+        
+        const answersList = [
+          value.toString()
+        ];
+
+        return {
+          questionText: `${displayVal} ${unit} = ? ${prefix.symbol}${unit}`,
+          answers: answersList,
+          working: `${displayVal} ÷ ${prefix.powerText} = ${value} ${prefix.symbol}${unit}`,
+          rawCorrect: value.toString()
+        };
+      }
+    }
+
+    function startQuiz() {
+      quizQuestions = [];
+      quizAnswerHistory = [];
+      quizScore = 0;
+      currentQuestionIndex = 0;
+      quizTimeLeft = 45;
+      isWaitingForNext = false;
+      
+      for (let i = 0; i < 10; i++) {
+        quizQuestions.push(generateQuizQuestion());
+      }
+      
+      // Draw progress dots
+      const dotsContainer = document.getElementById('quiz-dots');
+      dotsContainer.innerHTML = '';
+      for (let i = 0; i < 10; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        dotsContainer.appendChild(dot);
+      }
+      
+      switchMode('quiz-play');
+      updateProgressDots();
+      nextQuestion();
+      
+      // Timer setup omitted (no time limit)
+    }
+
+    function updateProgressDots() {
+      const dots = document.querySelectorAll('#quiz-dots .dot');
+      dots.forEach((dot, idx) => {
+        dot.className = 'dot';
+        if (idx === currentQuestionIndex) {
+          dot.classList.add('active');
+        }
+        if (quizAnswerHistory[idx] === true) {
+          dot.classList.add('correct');
+        } else if (quizAnswerHistory[idx] === false) {
+          dot.classList.add('incorrect');
+        }
+      });
+    }
+
+    function nextQuestion() {
+      if (currentQuestionIndex >= 10) {
+        endQuiz();
+        return;
+      }
+      
+      isWaitingForNext = false;
+      updateProgressDots();
+      
+      const q = quizQuestions[currentQuestionIndex];
+      document.getElementById('quiz-question').innerHTML = q.questionText;
+      
+      // Setup text input
+      const input = document.getElementById('quiz-input');
+      input.value = '';
+      input.disabled = false;
+      input.focus();
+      
+      // Hide feedback
+      document.getElementById('quiz-feedback-text').className = 'feedback-text';
+      document.getElementById('quiz-feedback-working').className = 'feedback-working';
+      
+      // Setup submit button text
+      document.getElementById('quiz-submit-btn').textContent = 'Submit Answer';
+    }
+
+    function submitAnswer() {
+      const input = document.getElementById('quiz-input');
+      const submitBtn = document.getElementById('quiz-submit-btn');
+      
+      if (isWaitingForNext) {
+        currentQuestionIndex++;
+        nextQuestion();
+        return;
+      }
+      
+      const answerVal = input.value.trim().toLowerCase();
+      if (!answerVal) return;
+      
+      const q = quizQuestions[currentQuestionIndex];
+      
+      // Check correct
+      // parse exponential representations and compare float values to be robust
+      let isCorrect = false;
+      
+      // clean answer comparison
+      const normalizedAns = parseFloat(answerVal);
+      const possibleAnswers = q.answers.map(a => parseFloat(a));
+      
+      if (!isNaN(normalizedAns)) {
+        isCorrect = possibleAnswers.some(ans => Math.abs(ans - normalizedAns) < 1e-12);
+      }
+      
+      const appEl = document.getElementById('app');
+      const feedbackText = document.getElementById('quiz-feedback-text');
+      const feedbackWorking = document.getElementById('quiz-feedback-working');
+      
+      input.disabled = true;
+      isWaitingForNext = true;
+      submitBtn.textContent = 'Next Question';
+      
+      if (isCorrect) {
+        quizScore++;
+        quizAnswerHistory.push(true);
+        feedbackText.textContent = 'Correct!';
+        feedbackText.className = 'feedback-text correct';
+        
+        // Trigger neon success animation and confetti
+        appEl.classList.add('correct-celebration');
+        setTimeout(() => appEl.classList.remove('correct-celebration'), 500);
+        spawnConfetti();
+      } else {
+        quizAnswerHistory.push(false);
+        feedbackText.textContent = 'Incorrect';
+        feedbackText.className = 'feedback-text incorrect';
+        
+        // Trigger neon shake animation
+        appEl.classList.add('incorrect-shake');
+        setTimeout(() => appEl.classList.remove('incorrect-shake'), 400);
+      }
+      
+      feedbackWorking.innerHTML = q.working;
+      feedbackWorking.className = 'feedback-working active';
+      
+      updateProgressDots();
+    }
+
+    // Listen for Enter key on input
+    document.getElementById('quiz-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        submitAnswer();
+      }
+    });
+
+    function endQuiz() {
+      if (quizTimerInterval) {
+        clearInterval(quizTimerInterval);
+        quizTimerInterval = null;
+      }
+      
+      switchMode('quiz-results');
+      
+      const scoreText = document.getElementById('results-score');
+      scoreText.textContent = `${quizScore}/10`;
+      
+      const gradeText = document.getElementById('results-grade');
+      const detailsText = document.getElementById('results-details');
+      
+      let grade = 'Keep Practising';
+      if (quizScore >= 8) {
+        grade = 'Distinction!';
+      } else if (quizScore >= 6) {
+        grade = 'Merit';
+      } else if (quizScore >= 5) {
+        grade = 'Pass';
+      }
+      
+      gradeText.textContent = grade;
+      
+      const percentage = (quizScore / 10) * 100;
+      detailsText.innerHTML = `
+        Accuracy: <strong>${percentage}%</strong>
+      `;
+    }
+
+    // App Startup
+    initConverterGrid();
+    convert();
+  </script>
+</body>
+</html>
