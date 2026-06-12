@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Turning Effect of Forces: Stability & Centre of Gravity</title>
+  <!-- SEO Tags -->
+  <meta name="description" content="An interactive learning tool for 16-year-old O-Level Physics students covering Stability, Centre of Gravity, and types of Equilibrium.">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar-nav">
+      <div class="brand">
+        <svg class="brand-icon" viewBox="0 0 24 24" width="24" height="24">
+          <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+          <circle cx="12" cy="8" r="2" fill="currentColor"/>
+          <line x1="12" y1="8" x2="12" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="8" y1="18" x2="16" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span>Physics Lab</span>
+      </div>
+      <div class="nav-links">
+        <button class="nav-btn active" data-section="concept-intro" id="nav-btn-concept">
+          <span class="icon">📖</span>
+          <span class="text">Concept Intro</span>
+        </button>
+        <button class="nav-btn" data-section="stability-explorer" id="nav-btn-explorer">
+          <span class="icon">🔬</span>
+          <span class="text">Stability Explorer</span>
+        </button>
+        <button class="nav-btn" data-section="comparative-analysis" id="nav-btn-analysis">
+          <span class="icon">📊</span>
+          <span class="text">Comparative Panel</span>
+        </button>
+        <button class="nav-btn" data-section="quiz-mode" id="nav-btn-quiz">
+          <span class="icon">📝</span>
+          <span class="text">Practice Quiz</span>
+        </button>
+        <button class="nav-btn" data-section="flashcards-mode" id="nav-btn-flashcards">
+          <span class="icon">⚡</span>
+          <span class="text">Flashcards</span>
+        </button>
+      </div>
+      <div class="nav-footer">
+        O-Level Physics
+      </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Section 1: Concept Introduction -->
+      <section id="concept-intro" class="content-section active">
+        <header class="section-header">
+          <h1>Stability & Centre of Gravity</h1>
+          <p>Understand the science of balancing and what makes objects stable.</p>
+        </header>
+
+        <div class="intro-steps">
+          <div class="step-nav">
+            <button class="step-tab-btn active" data-step="part-a" id="tab-step-a">Part A: Factors</button>
+            <button class="step-tab-btn" data-step="part-b" id="tab-step-b">Part B: Tipping Rule</button>
+            <button class="step-tab-btn" data-step="part-c" id="tab-step-c">Part C: Equilibrium</button>
+          </div>
+
+          <div class="step-content active" id="part-a">
+            <div class="grid-2col">
+              <div class="card info-card">
+                <h3>What Determines Stability?</h3>
+                <p>An object's stability describes how difficult it is to topple. It depends on two primary design factors:</p>
+                <ul class="neon-list">
+                  <li><strong>Height of the Centre of Gravity (CG):</strong> The lower the CG, the more stable the object.</li>
+                  <li><strong>Width of the Base:</strong> The wider the base, the more stable the object.</li>
+                </ul>
+                <div class="controls-row">
+                  <button class="btn btn-primary" id="btn-animate-part-a">Tilt Objects</button>
+                  <button class="btn btn-secondary" id="btn-reset-part-a">Reset</button>
+                </div>
+              </div>
+              <div class="card visual-card">
+                <div class="canvas-container">
+                  <svg id="svg-part-a" viewBox="0 0 400 250" class="physics-svg"></svg>
+                </div>
+                <div class="caption">A slight tilt causes the tall thin box to topple, while the wide low box returns upright.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-content" id="part-b">
+            <div class="grid-2col">
+              <div class="card info-card">
+                <h3>The Tipping Rule</h3>
+                <p>When an object is tilted, its base is lifted off the ground, pivoting about its bottom edge.</p>
+                <div class="interactive-alert">
+                  <strong>The Rule:</strong>
+                  <ul>
+                    <li>If the vertical line from the CG falls <strong>within the base</strong>, gravity creates a restoring moment that returns it to upright.</li>
+                    <li>If the vertical line falls <strong>outside the base</strong>, gravity creates a toppling moment that causes it to fall.</li>
+                  </ul>
+                </div>
+                <div class="controls-row">
+                  <button class="btn btn-primary" id="btn-animate-part-b">Animate Tilt Sequence</button>
+                  <button class="btn btn-secondary" id="btn-reset-part-b">Reset</button>
+                </div>
+              </div>
+              <div class="card visual-card">
+                <div class="canvas-container">
+                  <svg id="svg-part-b" viewBox="0 0 400 250" class="physics-svg"></svg>
+                </div>
+                <div class="caption">The critical tipping point occurs when the vertical line from CG is exactly on the edge pivot.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-content" id="part-c">
+            <div class="card info-card text-center" style="margin-bottom: 20px;">
+              <h3>Three Types of Equilibrium</h3>
+              <p>When an object is in equilibrium, it can react to a displacement in three distinct ways:</p>
+            </div>
+            <div class="grid-3col">
+              <div class="card visual-card-sm">
+                <h4>Stable</h4>
+                <div class="canvas-container-sm">
+                  <svg id="svg-stable-eq" viewBox="0 0 130 130" class="physics-svg"></svg>
+                </div>
+                <p class="micro-text">Returns to its original position after a slight displacement.</p>
+              </div>
+              <div class="card visual-card-sm">
+                <h4>Unstable</h4>
+                <div class="canvas-container-sm">
+                  <svg id="svg-unstable-eq" viewBox="0 0 130 130" class="physics-svg"></svg>
+                </div>
+                <p class="micro-text">Topples and moves away from its original position after a slight displacement.</p>
+              </div>
+              <div class="card visual-card-sm">
+                <h4>Neutral</h4>
+                <div class="canvas-container-sm">
+                  <svg id="svg-neutral-eq" viewBox="0 0 130 130" class="physics-svg"></svg>
+                </div>
+                <p class="micro-text">Remains in its new position when displaced. Its CG height does not change.</p>
+              </div>
+            </div>
+            <div class="text-center" style="margin-top: 20px;">
+              <button class="btn btn-primary" id="btn-animate-part-c">Animate All Three</button>
+              <button class="btn btn-secondary" id="btn-reset-part-c">Reset</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Stability Explorer -->
+      <section id="stability-explorer" class="content-section">
+        <header class="section-header">
+          <h1>Interactive Stability Explorer</h1>
+          <p>Select an object, slide the tilt control, and observe the path of its Centre of Gravity.</p>
+        </header>
+
+        <div class="explorer-container">
+          <div class="tab-bar">
+            <button class="explorer-tab active" data-object="box-tall" id="tab-exp-tall">
+              <span>Tall Thin Box</span>
+            </button>
+            <button class="explorer-tab" data-object="box-wide" id="tab-exp-wide">
+              <span>Wide Low Box</span>
+            </button>
+            <button class="explorer-tab" data-object="cone" id="tab-exp-cone">
+              <span>Cone</span>
+            </button>
+            <button class="explorer-tab" data-object="racing-car" id="tab-exp-car">
+              <span>Racing Car</span>
+            </button>
+          </div>
+
+          <div class="explorer-layout">
+            <div class="explorer-sidebar">
+              <div class="card status-card">
+                <h3>Live Status</h3>
+                <div class="status-indicator" id="exp-status">Stable</div>
+                
+                <div class="metrics-grid">
+                  <div class="metric-item">
+                    <span class="label">Tilt Angle</span>
+                    <span class="value" id="exp-angle-val">0°</span>
+                  </div>
+                  <div class="metric-item">
+                    <span class="label">Base Width</span>
+                    <span class="value" id="exp-base-val">50 mm</span>
+                  </div>
+                  <div class="metric-item">
+                    <span class="label">CG Height</span>
+                    <span class="value" id="exp-cg-val">75 mm</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card control-card">
+                <h3>Controls</h3>
+                <div class="slider-group">
+                  <label for="tilt-slider">Tilt Object Angle</label>
+                  <input type="range" id="tilt-slider" min="0" max="90" value="0">
+                  <div class="slider-labels">
+                    <span>0°</span>
+                    <span>Critical</span>
+                    <span>90°</span>
+                  </div>
+                </div>
+                <button class="btn btn-secondary btn-full" id="btn-reset-explorer">Reset Object</button>
+              </div>
+            </div>
+
+            <div class="explorer-visual">
+              <div class="card canvas-card">
+                <div class="canvas-container-lg">
+                  <svg id="svg-explorer" viewBox="0 0 500 350" class="physics-svg"></svg>
+                </div>
+                <div id="explorer-message" class="explorer-toast hide">The CG has passed the base edge — the object topples!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Comparative Analysis Panel -->
+      <section id="comparative-analysis" class="content-section">
+        <header class="section-header">
+          <h1>Comparative Analysis Panel</h1>
+          <p>Compare the geometric characteristics and relative stability of different structures side by side.</p>
+        </header>
+
+        <div class="grid-4col" id="comparative-grid">
+          <!-- Dynamically populated, or static templates for pixel-perfect design -->
+          <div class="card comp-card" data-obj-id="racing-car" id="comp-card-car">
+            <div class="comp-badge rating-high">High Stability</div>
+            <div class="comp-icon-container">
+              <svg viewBox="0 0 180 100" class="comp-svg" id="comp-svg-car"></svg>
+            </div>
+            <h3>Racing Car</h3>
+            <div class="comp-stats">
+              <div class="comp-stat"><span>Base Width</span><strong>150 mm</strong></div>
+              <div class="comp-stat"><span>CG Height</span><strong>15 mm</strong></div>
+            </div>
+            <button class="btn btn-secondary btn-sm btn-full comp-reveal-btn">Explain Stability</button>
+            <div class="comp-expl-overlay hide">
+              <p>Racing car: Wide base and very low CG — extremely stable.</p>
+            </div>
+          </div>
+
+          <div class="card comp-card" data-obj-id="box-wide" id="comp-card-wide">
+            <div class="comp-badge rating-high">High Stability</div>
+            <div class="comp-icon-container">
+              <svg viewBox="0 0 180 100" class="comp-svg" id="comp-svg-wide"></svg>
+            </div>
+            <h3>Wide Low Box</h3>
+            <div class="comp-stats">
+              <div class="comp-stat"><span>Base Width</span><strong>120 mm</strong></div>
+              <div class="comp-stat"><span>CG Height</span><strong>30 mm</strong></div>
+            </div>
+            <button class="btn btn-secondary btn-sm btn-full comp-reveal-btn">Explain Stability</button>
+            <div class="comp-expl-overlay hide">
+              <p>Wide low box: Wide base and low CG — very stable.</p>
+            </div>
+          </div>
+
+          <div class="card comp-card" data-obj-id="cone" id="comp-card-cone">
+            <div class="comp-badge rating-med">Medium Stability</div>
+            <div class="comp-icon-container">
+              <svg viewBox="0 0 180 100" class="comp-svg" id="comp-svg-cone"></svg>
+            </div>
+            <h3>Cone (on Base)</h3>
+            <div class="comp-stats">
+              <div class="comp-stat"><span>Base Width</span><strong>100 mm</strong></div>
+              <div class="comp-stat"><span>CG Height</span><strong>30 mm</strong></div>
+            </div>
+            <button class="btn btn-secondary btn-sm btn-full comp-reveal-btn">Explain Stability</button>
+            <div class="comp-expl-overlay hide">
+              <p>Cone: Wide base but CG is at one-third height — moderately stable.</p>
+            </div>
+          </div>
+
+          <div class="card comp-card" data-obj-id="box-tall" id="comp-card-tall">
+            <div class="comp-badge rating-low">Low Stability</div>
+            <div class="comp-icon-container">
+              <svg viewBox="0 0 180 100" class="comp-svg" id="comp-svg-tall"></svg>
+            </div>
+            <h3>Tall Thin Box</h3>
+            <div class="comp-stats">
+              <div class="comp-stat"><span>Base Width</span><strong>50 mm</strong></div>
+              <div class="comp-stat"><span>CG Height</span><strong>75 mm</strong></div>
+            </div>
+            <button class="btn btn-secondary btn-sm btn-full comp-reveal-btn">Explain Stability</button>
+            <div class="comp-expl-overlay hide">
+              <p>Tall thin box: Narrow base and high CG — tips over easily.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Practice Quiz -->
+      <section id="quiz-mode" class="content-section">
+        <header class="section-header">
+          <h1>Practice & Evaluation Quiz</h1>
+          <p>Test your knowledge with 30 syllabus-focused questions including predictions, comparisons, and structured answers.</p>
+        </header>
+
+        <!-- Quiz Landing Page -->
+        <div id="quiz-intro-card" class="card text-center quiz-card-container">
+          <div class="quiz-badge">30 Questions</div>
+          <h2>Are you ready to test your skills?</h2>
+          <p class="quiz-desc">This quiz generates questions from a pool covering prediction diagrams, comparative reasoning, and structured explanation questions.</p>
+          <div class="quiz-details">
+            <div class="detail-item"><strong>10</strong> Type A (Predict Stability)</div>
+            <div class="detail-item"><strong>10</strong> Type B (Compare Objects)</div>
+            <div class="detail-item"><strong>10</strong> Type C (Structured Explanation)</div>
+          </div>
+          <button class="btn btn-primary btn-lg" id="btn-start-quiz">Start Quiz Now</button>
+        </div>
+
+        <!-- Quiz Gameplay Panel -->
+        <div id="quiz-game-panel" class="card quiz-card-container hide">
+          <div class="quiz-progress-bar-container">
+            <div class="quiz-progress-text">
+              <span id="quiz-q-num">Question 1 of 30</span>
+              <span id="quiz-score-indicator" class="hide">Score: 0</span>
+            </div>
+            <div class="quiz-progress-track">
+              <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+            </div>
+          </div>
+
+          <!-- Question Content Layout -->
+          <div class="quiz-q-layout">
+            <div class="quiz-q-visual" id="quiz-visual-box">
+              <!-- Inline Canvas or SVG container for dynamic diagrams -->
+              <svg id="svg-quiz" viewBox="0 0 350 250" class="physics-svg"></svg>
+            </div>
+            <div class="quiz-q-content">
+              <div class="badge" id="quiz-q-type-badge">Type A</div>
+              <h3 id="quiz-q-text">Will this object topple or return to upright?</h3>
+              
+              <!-- Input Area (Swapped dynamically based on Type A, B, C) -->
+              <div id="quiz-input-area" class="quiz-input-area">
+                <!-- Buttons, Text inputs, or checkboxes will inject here -->
+              </div>
+
+              <!-- Question Action Buttons -->
+              <div class="quiz-actions">
+                <button class="btn btn-primary" id="btn-submit-answer" disabled>Submit Answer</button>
+                <button class="btn btn-primary hide" id="btn-next-question">Next Question &rarr;</button>
+              </div>
+
+              <!-- Feedback Panel -->
+              <div id="quiz-feedback" class="quiz-feedback-box hide">
+                <div class="feedback-title" id="feedback-title">Correct!</div>
+                <p class="feedback-desc" id="feedback-desc">Explanation text goes here.</p>
+                
+                <!-- Model checklist for Type C -->
+                <div id="type-c-checklist" class="type-c-checklist-box hide">
+                  <div class="checklist-title">Self-Assessment Checklist</div>
+                  <p>Check the boxes if your answer contains these key points:</p>
+                  <div id="checklist-items"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quiz Results Panel -->
+        <div id="quiz-results-card" class="card text-center quiz-card-container hide">
+          <div class="results-glowing-ring">
+            <span class="score-fraction" id="results-score">0 / 20</span>
+          </div>
+          <h2 id="results-headline">Quiz Completed!</h2>
+          <div class="results-feedback-box">
+            <p id="results-grade-msg">Good effort - review the explanations and try again.</p>
+          </div>
+          <button class="btn btn-primary btn-lg" id="btn-restart-quiz">Try Again</button>
+        </div>
+      </section>
+
+      <!-- Section 5: Flashcards Mode -->
+      <section id="flashcards-mode" class="content-section">
+        <header class="section-header">
+          <h1>Flashcard Revision Mode</h1>
+          <p>Flashcards covering key O-Level Stability & Centre of Gravity definitions and concepts. Tap to flip.</p>
+        </header>
+
+        <div class="flashcard-container">
+          <div class="flashcard-wrapper">
+            <div class="flashcard" id="flashcard-element">
+              <div class="flashcard-side flashcard-front">
+                <div class="card-glow"></div>
+                <div class="card-category">Definition</div>
+                <div class="card-question" id="flashcard-q">Loading Question...</div>
+                <div class="card-action-tip">Tap to reveal answer</div>
+              </div>
+              <div class="flashcard-side flashcard-back">
+                <div class="card-glow"></div>
+                <div class="card-category">Answer</div>
+                <div class="card-answer" id="flashcard-a">Loading Answer...</div>
+                <div class="card-action-tip">Tap to view question again</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flashcard-controls">
+            <button class="btn btn-secondary" id="btn-prev-card">&larr; Previous</button>
+            <span class="card-indicator" id="card-counter">1 / 10</span>
+            <button class="btn btn-secondary" id="btn-next-card">Next &rarr;</button>
+          </div>
+          <div class="text-center" style="margin-top: 15px;">
+            <button class="btn btn-primary" id="btn-shuffle-cards">
+              <span class="icon">🔀</span> Shuffle Deck
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Celebratory particles canvas -->
+  <canvas id="particles-overlay" class="particles-canvas"></canvas>
+
+  <script src="app.js"></script>
+</body>
+</html>
