@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thermal Processes — Radiation Factors</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- HEADER -->
+        <header class="main-header">
+            <div class="header-logo">
+                <span class="logo-accent">Thermal Physics</span>
+                <h1>Radiation Factors</h1>
+            </div>
+            <nav class="nav-tabs">
+                <button class="nav-btn active" id="tab-sim" data-target="section-sim">
+                    <svg viewBox="0 0 24 24" class="nav-icon"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                    Simulation
+                </button>
+                <button class="nav-btn" id="tab-cards" data-target="section-cards">
+                    <svg viewBox="0 0 24 24" class="nav-icon"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0-2-.9-2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+                    Flashcards
+                </button>
+                <button class="nav-btn" id="tab-quiz" data-target="section-quiz">
+                    <svg viewBox="0 0 24 24" class="nav-icon"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
+                    Quiz
+                </button>
+            </nav>
+        </header>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="content-viewport">
+            
+            <!-- SECTION 2: INTERACTIVE SIMULATION -->
+            <section id="section-sim" class="app-section active">
+                <div class="sim-subtabs">
+                    <button class="subtab-btn active" id="subtab-emission">Emission</button>
+                    <button class="subtab-btn" id="subtab-absorption">Absorption</button>
+                </div>
+
+                <!-- Simulation Canvas & Workspace -->
+                <div class="sim-workspace">
+                    <!-- Banner for Best vs Worst comparison (neon yellow) -->
+                    <div class="comparison-banner" id="comparison-banner">
+                        <span>Compare: Best vs Worst Emitter</span>
+                    </div>
+
+                    <div class="surfaces-container">
+                        <!-- Left Surface Column -->
+                        <div class="surface-column" id="surface-left">
+                            <div class="surface-header">Left Surface</div>
+                            
+                            <div class="canvas-wrapper">
+                                <canvas id="canvas-left"></canvas>
+                            </div>
+
+                             <div class="emitter-status" id="label-left">Good emitter</div>
+
+                            <!-- Controls container -->
+                            <div class="control-panel">
+                                <!-- Color Toggle -->
+                                <div class="control-group">
+                                    <label>Colour</label>
+                                    <div class="toggle-buttons color-toggle">
+                                        <button class="toggle-btn active" data-val="black">Black</button>
+                                        <button class="toggle-btn" data-val="white">White</button>
+                                    </div>
+                                </div>
+                                <!-- Texture Toggle -->
+                                <div class="control-group">
+                                    <label>Texture</label>
+                                    <div class="toggle-buttons texture-toggle">
+                                        <button class="toggle-btn active" data-val="dull">Dull</button>
+                                        <button class="toggle-btn" data-val="shiny">Shiny</button>
+                                    </div>
+                                </div>
+                                <!-- Temperature Slider (Emission Only) -->
+                                <div class="control-group temp-control">
+                                    <div class="slider-header">
+                                        <label>Temperature</label>
+                                        <span class="slider-value" id="temp-val-left">100°C</span>
+                                    </div>
+                                    <input type="range" class="temp-slider" id="temp-slider-left" min="20" max="200" value="100">
+                                </div>
+                                <!-- Area Toggle (Emission Only) -->
+                                <div class="control-group area-control">
+                                    <label>Surface Area</label>
+                                    <div class="toggle-buttons area-toggle">
+                                        <button class="toggle-btn" data-val="small">Small</button>
+                                        <button class="toggle-btn active" data-val="large">Large</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Surface Column -->
+                        <div class="surface-column" id="surface-right">
+                            <div class="surface-header">Right Surface</div>
+                            
+                            <div class="canvas-wrapper">
+                                <canvas id="canvas-right"></canvas>
+                            </div>
+
+                            <div class="emitter-status" id="label-right">Weak emitter</div>
+
+                            <!-- Controls container -->
+                            <div class="control-panel">
+                                <!-- Color Toggle -->
+                                <div class="control-group">
+                                    <label>Colour</label>
+                                    <div class="toggle-buttons color-toggle">
+                                        <button class="toggle-btn" data-val="black">Black</button>
+                                        <button class="toggle-btn active" data-val="white">White</button>
+                                    </div>
+                                </div>
+                                <!-- Texture Toggle -->
+                                <div class="control-group">
+                                    <label>Texture</label>
+                                    <div class="toggle-buttons texture-toggle">
+                                        <button class="toggle-btn" data-val="dull">Dull</button>
+                                        <button class="toggle-btn active" data-val="shiny">Shiny</button>
+                                    </div>
+                                </div>
+                                <!-- Temperature Slider (Emission Only) -->
+                                <div class="control-group temp-control">
+                                    <div class="slider-header">
+                                        <label>Temperature</label>
+                                        <span class="slider-value" id="temp-val-right">40°C</span>
+                                    </div>
+                                    <input type="range" class="temp-slider" id="temp-slider-right" min="20" max="200" value="40">
+                                </div>
+                                <!-- Area Toggle (Emission Only) -->
+                                <div class="control-group area-control">
+                                    <label>Surface Area</label>
+                                    <div class="toggle-buttons area-toggle">
+                                        <button class="toggle-btn active" data-val="small">Small</button>
+                                        <button class="toggle-btn" data-val="large">Large</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Persistent link banner at the bottom (neon green) -->
+                <div class="link-banner">
+                    "Good emitters are also good absorbers. Poor emitters are also poor absorbers."
+                </div>
+            </section>
+
+            <!-- SECTION 3: FLASHCARDS -->
+            <section id="section-cards" class="app-section">
+                <div class="cards-header">
+                    <h2>Revision Flashcards</h2>
+                    <button class="btn-primary" id="btn-shuffle-cards">
+                        <svg viewBox="0 0 24 24" class="btn-icon"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+                        Shuffle Deck
+                    </button>
+                </div>
+
+                <div class="flashcard-deck-container">
+                    <div class="flashcard-container" id="flashcard-container">
+                        <!-- Flashcard (dynamic) -->
+                        <div class="flashcard" id="current-card">
+                            <div class="card-face card-front">
+                                <div class="card-count" id="card-index-display">Card 1 of 11</div>
+                                <div class="card-question" id="card-q-text">What is the definition of thermal radiation?</div>
+                                <div class="card-hint">Tap card to reveal answer</div>
+                            </div>
+                            <div class="card-face card-reverse">
+                                <div class="card-answer" id="card-a-text">Thermal radiation is the transfer of thermal energy by electromagnetic waves (mainly infrared radiation) without requiring a medium.</div>
+                                <div class="card-hint">Tap to flip back</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide Navigation -->
+                    <div class="card-navigation">
+                        <button class="nav-arrow" id="card-prev">
+                            <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                        </button>
+                        <div class="indicator-dots" id="dots-container">
+                            <!-- JS will inject dots -->
+                        </div>
+                        <button class="nav-arrow" id="card-next">
+                            <svg viewBox="0 0 24 24"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: QUIZ -->
+            <section id="section-quiz" class="app-section">
+                <!-- Quiz Screen: Start -->
+                <div class="quiz-container active" id="quiz-start-screen">
+                    <div class="quiz-badge">O-LEVEL PHYSICS</div>
+                    <h2>Radiation Factors Quiz</h2>
+                    <p class="quiz-desc">Test your understanding with 10 random conceptual questions selected from our question pool. Perfect score wins a particle celebration!</p>
+                    <button class="btn-primary btn-large" id="btn-start-quiz">
+                        Start Challenge
+                    </button>
+                </div>
+
+                <!-- Quiz Screen: Question Panel -->
+                <div class="quiz-container" id="quiz-question-screen">
+                    <div class="quiz-progress-bar">
+                        <div class="quiz-progress-fill" id="quiz-progress"></div>
+                    </div>
+                    <div class="quiz-status-header">
+                        <span id="quiz-question-number">Question 1 of 10</span>
+                        <span id="quiz-score-indicator">Score: 0</span>
+                    </div>
+
+                    <div class="quiz-q-box">
+                        <h3 id="quiz-q-text-content">Question content goes here?</h3>
+                    </div>
+
+                    <div class="quiz-options-list" id="quiz-options">
+                        <!-- Dynamic Buttons -->
+                    </div>
+
+                    <div class="quiz-explanation-box" id="quiz-explanation">
+                        <!-- Correct/wrong banner and description -->
+                    </div>
+
+                    <div class="quiz-actions">
+                        <button class="btn-primary" id="quiz-btn-next" style="display: none;">
+                            Next Question
+                            <svg viewBox="0 0 24 24" class="btn-icon-right"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SECTION 5: SCORE SCREEN -->
+                <div class="quiz-container" id="quiz-score-screen">
+                    <div class="score-ring-wrapper">
+                        <svg class="score-ring-svg" viewBox="0 0 100 100">
+                            <circle class="score-ring-bg" cx="50" cy="50" r="45"></circle>
+                            <circle class="score-ring-fill" id="score-ring-fill" cx="50" cy="50" r="45"></circle>
+                        </svg>
+                        <div class="score-numeric" id="score-text">8/10</div>
+                    </div>
+
+                    <h2 id="score-headline">Excellent!</h2>
+                    <p id="score-feedback">You understand radiation and surface properties well.</p>
+
+                    <!-- Score-specific rewards/actions -->
+                    <div class="score-actions">
+                        <button class="btn-primary" id="btn-retry-quiz">
+                            Retry Quiz
+                        </button>
+                        <button class="btn-secondary" id="btn-back-to-sim">
+                            Back to Simulator
+                            <svg viewBox="0 0 24 24" class="btn-icon-right" id="prompt-arrow"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <!-- Particles canvas for celebrations -->
+        <canvas id="canvas-particles" class="particles-canvas"></canvas>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
