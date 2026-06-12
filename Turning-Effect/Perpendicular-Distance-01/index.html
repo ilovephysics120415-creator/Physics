@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perpendicular Distance in Moments — O-Level Physics</title>
+  <meta name="description" content="Master the concept of perpendicular distance in moments. Interactive diagrams, real-time explorers, randomized quiz, and flashcards for O-Level Physics.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme">
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo">
+        <span class="logo-accent">Physics</span>Moments
+      </div>
+      <p class="tagline">O-Level Physics Masterclass: Perpendicular Distance</p>
+    </div>
+    <nav class="app-nav">
+      <button class="nav-btn active" data-section="section1">1. Concept</button>
+      <button class="nav-btn" data-section="section2">2. Angle Explorer</button>
+      <button class="nav-btn" data-section="section3">3. Interactive Builder</button>
+      <button class="nav-btn" data-section="section5">4. Revision Cards</button>
+      <button class="nav-btn" data-section="section4">5. Quiz Challenge</button>
+    </nav>
+  </header>
+
+  <main class="app-container">
+    
+    <!-- SECTION 1: Concept Introduction -->
+    <section id="section1" class="section-pane active">
+      <div class="section-info">
+        <h2>Perpendicular Distance vs. Arm Length</h2>
+        <p class="lead-text">
+          In physics, the moment of a force is not just <em>Force &times; Distance</em>. The distance <strong>must</strong> be the <strong>perpendicular distance</strong> from the pivot to the force's line of action.
+        </p>
+      </div>
+
+      <div class="concept-showcase">
+        <div class="diagram-card">
+          <h3>Diagram A: Direct Case (90&deg;)</h3>
+          <p class="card-desc">Force is applied perpendicular to the lever arm. Here, perpendicular distance matches the arm length exactly.</p>
+          <div class="svg-wrapper">
+            <svg id="diagram-a-svg" viewBox="0 0 400 300">
+              <!-- Grid Background -->
+              <defs>
+                <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255, 255, 255, 0.03)" stroke-width="1"/>
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grid)" />
+              
+              <!-- Ground Line -->
+              <line x1="50" y1="220" x2="350" y2="220" stroke="rgba(255,255,255,0.1)" stroke-width="2" stroke-dasharray="4 4" />
+              
+              <!-- Pivot -->
+              <polygon points="90,200 80,220 100,220" class="pivot-element" />
+              <circle cx="90" cy="200" r="4" class="pivot-dot" />
+              <text x="90" y="240" class="svg-label pivot-lbl" text-anchor="middle">Pivot</text>
+
+              <!-- Lever Arm -->
+              <line x1="90" y1="200" x2="290" y2="200" class="lever-arm" />
+              
+              <!-- Distance Dimension Line -->
+              <path d="M 90,165 L 290,165" class="dim-line" />
+              <path d="M 90,160 L 90,170 M 290,160 L 290,170" stroke="var(--cyan)" stroke-width="2" />
+              <text x="190" y="150" class="svg-label accent-cyan" text-anchor="middle">Perpendicular Distance (d) = Arm Length (1.0m)</text>
+
+              <!-- Force Vector -->
+              <path d="M 290,200 L 290,100" class="force-arrow" />
+              <polygon points="290,100 282,118 298,118" class="force-head" />
+              <text x="310" y="120" class="svg-label accent-magenta" text-anchor="start">Force (F)</text>
+              
+              <!-- Right Angle Indicator -->
+              <rect x="275" y="185" width="15" height="15" class="right-angle" />
+              <circle cx="282.5" cy="192.5" r="1.5" fill="var(--cyan)" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="diagram-card">
+          <h3>Diagram B: Angled Case (&lt; 90&deg;)</h3>
+          <p class="card-desc">Force is applied at an angle. The perpendicular distance is the shortest line from pivot to the dashed line of action.</p>
+          <div class="svg-wrapper">
+            <svg id="diagram-b-svg" viewBox="0 0 400 300">
+              <rect width="100%" height="100%" fill="url(#grid)" />
+              
+              <!-- Pivot -->
+              <polygon points="90,200 80,220 100,220" class="pivot-element" />
+              <circle cx="90" cy="200" r="4" class="pivot-dot" />
+              <text x="90" y="240" class="svg-label pivot-lbl" text-anchor="middle">Pivot</text>
+
+              <!-- Lever Arm -->
+              <line x1="90" y1="200" x2="290" y2="200" class="lever-arm" />
+              
+              <!-- Arm length label showing cross -->
+              <path d="M 90,215 L 290,215" class="dim-line-wrong" />
+              <path d="M 90,210 L 90,220 M 290,210 L 290,220" stroke="var(--danger)" stroke-width="2" />
+              <g class="cross-marker-group">
+                <text x="190" y="235" class="svg-label accent-danger" text-anchor="middle">Arm Length (NOT Perpendicular!)</text>
+                <!-- Animated Red Cross -->
+                <line x1="180" y1="225" x2="200" y2="245" class="red-cross-line" />
+                <line x1="200" y1="225" x2="180" y2="245" class="red-cross-line" />
+              </g>
+
+              <!-- Line of Action of Force -->
+              <!-- The force acts at (290,200) pointing at 60 deg relative to horizontal.
+                   Angle from horizontal = 120 deg (up & left).
+                   x = 290 + r*cos(120), y = 200 - r*sin(120).
+                   Let's draw the line of action extending forward and backward. -->
+              <line x1="340" y1="286.6" x2="200" y2="44.1" class="line-of-action" />
+              <text x="230" y="70" class="svg-label action-line-lbl" text-anchor="end">Line of Action</text>
+
+              <!-- Force Vector -->
+              <!-- Starts at 290,200 and ends at 240, 113.4 (len = 100, angle = 120deg) -->
+              <path d="M 290,200 L 240,113.4" class="force-arrow" />
+              <polygon points="0,0 -8,18 8,18" class="force-head" transform="translate(240, 113.4) rotate(-30)" />
+              <text x="230" y="105" class="svg-label accent-magenta" text-anchor="middle">Force (F)</text>
+
+              <!-- Angle theta -->
+              <path d="M 260,200 A 30,30 0 0,0 275,174" fill="none" stroke="var(--amber)" stroke-width="2" />
+              <text x="270" y="195" class="svg-label accent-amber">&theta;</text>
+
+              <!-- Perpendicular Distance d -->
+              <!-- Projecting pivot (90,200) onto line of action y - 200 = tan(120)*(x - 290) => y - 200 = -1.732*(x-290)
+                   Shortest path from (90,200) is at 90deg to line of action (i.e. angle of 30deg from (90,200))
+                   Intersect at (140, 286.6 - 1.732*(140-340) = 140, 140*tan(60)... wait, let's keep math simple:
+                   Vector of line: u = (cos(120), -sin(120)) = (-0.5, -0.866)
+                   Line passes through P = (290, 200). Pivot Q = (90, 200).
+                   Vector PQ = (-200, 0).
+                   Projection of PQ on line u is PQ.u = 100.
+                   Proj point = P + 100*u = (290-50, 200-86.6) = (240, 113.4).
+                   Wait, shortest distance line goes from (90, 200) to (240, 113.4) at angle of 30 deg.
+                   Length = sqrt(150^2 + 86.6^2) = 173.2 (which is 200 * sin(60) = 200 * 0.866 = 173.2).
+                   Perfect! Let's draw this perpendicular distance line. -->
+              <line x1="90" y1="200" x2="240" y2="113.4" class="perp-dist-line" />
+              <text x="145" y="140" class="svg-label accent-cyan" text-anchor="middle" transform="rotate(-30 165 156.7)">d = L &times; sin(&theta;)</text>
+
+              <!-- Right angle at (240, 113.4) -->
+              <path d="M 227,121 L 234.4,133.8 L 247.4,126.3" fill="none" stroke="var(--cyan)" stroke-width="2" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: Angle Explorer -->
+    <section id="section2" class="section-pane">
+      <div class="section-info">
+        <h2>Angle Explorer</h2>
+        <p class="lead-text">
+          Keep Force (<span class="accent-magenta">20 N</span>) and Arm Length (<span class="accent-cyan">1.0 m</span>) constant, and observe how tilting the force changes the perpendicular distance and the resulting moment.
+        </p>
+        <p class="notice-text">
+          Notice the dotted line is the line of action of the force and the blue line is the distance that is perpendicular to the line of action of the force F.
+        </p>
+      </div>
+
+      <div class="explorer-grid">
+        <div class="interactive-card">
+          <div class="svg-wrapper">
+            <svg id="explorer-svg" viewBox="0 0 500 350">
+              <rect width="100%" height="100%" fill="url(#grid)" />
+              
+              <!-- Pivot -->
+              <polygon points="100,250 90,270 110,270" class="pivot-element" />
+              <circle cx="100" cy="250" r="4" class="pivot-dot" />
+              <text x="100" y="290" class="svg-label pivot-lbl" text-anchor="middle">Pivot</text>
+
+              <!-- Lever Arm -->
+              <line x1="100" y1="250" x2="350" y2="250" class="lever-arm" />
+              <text x="225" y="270" class="svg-label accent-cyan" text-anchor="middle">Arm Length (L) = 1.0 m</text>
+
+              <!-- Line of action (dynamic) -->
+              <line id="exp-line-action" x1="0" y1="0" x2="0" y2="0" class="line-of-action" />
+
+              <!-- Perpendicular Distance Line (dynamic) -->
+              <line id="exp-perp-line" x1="0" y1="0" x2="0" y2="0" class="perp-dist-line" />
+              
+              <!-- Dynamic Right angle indicator -->
+              <path id="exp-right-angle" d="" fill="none" stroke="var(--cyan)" stroke-width="2" />
+
+              <!-- Force Vector (dynamic) -->
+              <g id="exp-force-group">
+                <path d="" class="force-arrow" />
+                <polygon points="0,0 -8,18 8,18" class="force-head" />
+              </g>
+
+              <!-- Dynamic Labels -->
+              <text id="exp-lbl-perp" x="0" y="0" class="svg-label accent-cyan" text-anchor="middle">d = ?</text>
+              <text id="exp-lbl-force" x="0" y="0" class="svg-label accent-magenta">F = 20 N</text>
+              <text id="exp-lbl-angle" x="0" y="0" class="svg-label accent-amber">&theta;</text>
+              
+              <!-- Angle arc -->
+              <path id="exp-angle-arc" d="" fill="none" stroke="var(--amber)" stroke-width="2" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="control-card">
+          <div class="control-group">
+            <label for="explorer-angle-slider" class="control-label">
+              Force Angle (&theta;): <span id="explorer-angle-val" class="accent-amber">90&deg;</span>
+            </label>
+            <input type="range" id="explorer-angle-slider" min="10" max="90" step="10" value="90" class="neon-slider">
+            <div class="slider-ticks">
+              <span>10&deg;</span>
+              <span>30&deg;</span>
+              <span>50&deg;</span>
+              <span>70&deg;</span>
+              <span>90&deg;</span>
+            </div>
+          </div>
+
+          <div class="math-card">
+            <h3>Live Calculations</h3>
+            <div class="math-step">
+              <span class="math-label">Perpendicular Distance (d):</span>
+              <span class="math-expr">d = L &times; sin(&theta;)</span>
+              <span class="math-calc" id="exp-calc-d">1.0m &times; sin(90&deg;) = 1.00 m</span>
+            </div>
+            <div class="math-step">
+              <span class="math-label">Moment (M):</span>
+              <span class="math-expr">M = F &times; d</span>
+              <span class="math-calc" id="exp-calc-m">20 N &times; 1.00 m = 20.0 Nm</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: Interactive Diagram Builder -->
+    <section id="section3" class="section-pane">
+      <div class="section-info">
+        <h2>Interactive Diagram Builder</h2>
+        <p class="lead-text">
+          Customize all parameters yourself to build physics scenarios. Drag the force arrow angle directly or use the precision sliders below.
+        </p>
+      </div>
+
+      <div class="explorer-grid">
+        <div class="interactive-card">
+          <div class="svg-wrapper">
+            <svg id="builder-svg" viewBox="0 0 500 350">
+              <rect width="100%" height="100%" fill="url(#grid)" />
+              
+              <!-- Pivot -->
+              <polygon points="100,250 90,270 110,270" class="pivot-element" />
+              <circle cx="100" cy="250" r="4" class="pivot-dot" />
+              <text x="100" y="290" class="svg-label pivot-lbl" text-anchor="middle">Pivot</text>
+
+              <!-- Lever Arm (dynamic length) -->
+              <line id="build-arm" x1="100" y1="250" x2="350" y2="250" class="lever-arm" />
+              <text id="build-lbl-arm" x="225" y="270" class="svg-label accent-cyan" text-anchor="middle">L = 1.0 m</text>
+
+              <!-- Line of action (dynamic) -->
+              <line id="build-line-action" x1="0" y1="0" x2="0" y2="0" class="line-of-action" />
+
+              <!-- Perpendicular Distance Line (dynamic) -->
+              <line id="build-perp-line" x1="0" y1="0" x2="0" y2="0" class="perp-dist-line" />
+              
+              <!-- Dynamic Right angle indicator -->
+              <path id="build-right-angle" d="" fill="none" stroke="var(--cyan)" stroke-width="2" />
+
+              <!-- Force Vector Group (with drag target) -->
+              <g id="build-force-group">
+                <path d="" class="force-arrow" />
+                <polygon points="0,0 -8,18 8,18" class="force-head" />
+                <!-- Invisible oversized circle for easier dragging of angle -->
+                <circle id="build-drag-handle" cx="0" cy="0" r="25" fill="rgba(255,0,255,0.01)" style="cursor: grab;" />
+              </g>
+
+              <!-- Dynamic Labels -->
+              <text id="build-lbl-perp" x="0" y="0" class="svg-label accent-cyan" text-anchor="middle">d = ?</text>
+              <text id="build-lbl-force" x="0" y="0" class="svg-label accent-magenta">F = ?</text>
+              <text id="build-lbl-angle" x="0" y="0" class="svg-label accent-amber">&theta;</text>
+              
+              <!-- Angle arc -->
+              <path id="build-angle-arc" d="" fill="none" stroke="var(--amber)" stroke-width="2" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="control-card">
+          <div class="control-group">
+            <label for="build-force-slider" class="control-label">
+              Force (F): <span id="build-force-val" class="accent-magenta">25 N</span>
+            </label>
+            <input type="range" id="build-force-slider" min="1" max="50" step="1" value="25" class="neon-slider slider-magenta">
+          </div>
+
+          <div class="control-group">
+            <label for="build-arm-slider" class="control-label">
+              Arm Length (L): <span id="build-arm-val" class="accent-cyan">1.0 m</span>
+            </label>
+            <input type="range" id="build-arm-slider" min="0.1" max="2.0" stroke-width="2" step="0.1" value="1.0" class="neon-slider slider-cyan">
+          </div>
+
+          <div class="control-group">
+            <label for="build-angle-slider" class="control-label">
+              Force Angle (&theta;): <span id="build-angle-val" class="accent-amber">45&deg;</span>
+            </label>
+            <input type="range" id="build-angle-slider" min="10" max="90" step="1" value="45" class="neon-slider slider-amber">
+          </div>
+
+          <div class="math-card">
+            <h3>Live Calculations</h3>
+            <div class="math-step">
+              <span class="math-label">Perpendicular Distance (d):</span>
+              <span class="math-calc" id="build-calc-d">1.0m &times; sin(45&deg;) = 0.71 m</span>
+            </div>
+            <div class="math-step">
+              <span class="math-label">Moment (M):</span>
+              <span class="math-calc" id="build-calc-m">25 N &times; 0.71 m = 17.7 Nm</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: Flashcard Revision Mode -->
+    <section id="section5" class="section-pane">
+      <div class="section-info">
+        <h2>Revision Flashcards</h2>
+        <p class="lead-text">
+          Interactive study cards summarizing critical Perpendicular Distance formulas and standard exam questions. Tap to flip!
+        </p>
+      </div>
+
+      <div class="flashcard-container">
+        <div class="flashcard-controls">
+          <button id="shuffle-cards-btn" class="secondary-btn">Shuffle Cards</button>
+          <span class="card-tracker">Card <span id="card-current-num">1</span> of 10</span>
+        </div>
+
+        <div class="flashcard-wrapper">
+          <div class="flashcard" id="flashcard">
+            <div class="card-face card-front">
+              <div class="card-badge">Question</div>
+              <div class="card-text" id="card-front-text">What is the moment formula in GCE O-Level Physics?</div>
+              <div class="tap-hint">Click / Tap to flip card</div>
+            </div>
+            <div class="card-face card-back">
+              <div class="card-badge">Answer</div>
+              <div class="card-text" id="card-back-text">Moment = Force &times; Perpendicular Distance from the pivot.</div>
+              <div class="tap-hint">Click / Tap to flip back</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flashcard-nav">
+          <button id="prev-card-btn" class="card-nav-btn">&larr; Prev</button>
+          <button id="next-card-btn" class="card-nav-btn">Next &rarr;</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: Randomised Quiz Challenge -->
+    <section id="section4" class="section-pane">
+      <div class="section-info">
+        <h2>Quiz Challenge</h2>
+        <p class="lead-text">
+          Solve 30 randomized questions. Calculate the unknown value (marked with <span class="accent-magenta">?</span>) using perpendicular distance guidelines.
+        </p>
+      </div>
+
+      <div class="quiz-container">
+        <!-- Start Screen -->
+        <div id="quiz-start-screen" class="quiz-subpane active">
+          <div class="start-card">
+            <div class="badge">O-Level Prep</div>
+            <h3>Perpendicular Distance Assessment</h3>
+            <p>This test consists of 30 randomized questions of three categories:</p>
+            <ul class="quiz-bullets">
+              <li><strong>Type A:</strong> Calculate Moment given Force and Perpendicular Distance.</li>
+              <li><strong>Type B:</strong> Calculate Perpendicular Distance given Moment and Force.</li>
+              <li><strong>Type C:</strong> Calculate Force given Moment and Perpendicular Distance.</li>
+            </ul>
+            <p>All values are randomized. Answers within &plusmn;2% tolerance are accepted.</p>
+            <button id="start-quiz-btn" class="primary-btn glow-btn">Start Quiz</button>
+          </div>
+        </div>
+
+        <!-- Question Screen -->
+        <div id="quiz-question-screen" class="quiz-subpane">
+          <div class="quiz-header">
+            <span class="question-tracker">Question <span id="quiz-q-num">1</span> of 30</span>
+            <span class="score-tracker">Score: <span id="quiz-score-val">0</span></span>
+          </div>
+
+          <div class="quiz-grid">
+            <div class="quiz-diagram-card">
+              <div class="svg-wrapper">
+                <svg id="quiz-svg" viewBox="60 70 350 240">
+                  <rect width="100%" height="100%" fill="url(#grid)" />
+                  <!-- Pivot -->
+                  <polygon points="100,250 90,270 110,270" class="pivot-element" />
+                  <circle cx="100" cy="250" r="4" class="pivot-dot" />
+                  <text x="100" y="290" class="svg-label pivot-lbl" text-anchor="middle">Pivot</text>
+
+                  <!-- Dynamic SVG elements populated via JS -->
+                  <line id="quiz-arm" x1="100" y1="250" x2="350" y2="250" class="lever-arm" />
+                  <text id="quiz-lbl-arm" x="225" y="270" class="svg-label accent-cyan" text-anchor="middle">L = ?</text>
+
+                  <line id="quiz-line-action" x1="0" y1="0" x2="0" y2="0" class="line-of-action" />
+                  <line id="quiz-perp-line" x1="0" y1="0" x2="0" y2="0" class="perp-dist-line" />
+                  <path id="quiz-right-angle" d="" fill="none" stroke="var(--cyan)" stroke-width="2" />
+
+                  <g id="quiz-force-group">
+                    <path d="" class="force-arrow" />
+                    <polygon points="0,0 -8,18 8,18" class="force-head" />
+                  </g>
+
+                  <text id="quiz-lbl-force" x="0" y="0" class="svg-label accent-magenta">F = ?</text>
+                  <text id="quiz-lbl-perp" x="0" y="0" class="svg-label accent-cyan" text-anchor="middle">d = ?</text>
+                </svg>
+              </div>
+            </div>
+
+            <div class="quiz-interaction-card">
+              <div class="question-prompt" id="quiz-prompt-text">
+                Calculate the resulting Moment of the force shown.
+              </div>
+
+              <div class="given-stats">
+                <div class="stat-row" id="stat-perp">Perpendicular Distance (d): <span class="val">0.8 m</span></div>
+                <div class="stat-row" id="stat-force">Force (F): <span class="val">20 N</span></div>
+                <div class="stat-row" id="stat-moment">Moment (M): <span class="val">?</span></div>
+              </div>
+
+              <form id="quiz-submit-form" class="answer-form" autocomplete="off">
+                <div class="input-container">
+                  <input type="text" id="quiz-answer-input" placeholder="e.g. 24 Nm, 1.2 m, 15 N" required>
+                </div>
+                <button type="submit" id="quiz-action-btn" class="primary-btn glow-btn">Submit Answer</button>
+              </form>
+
+              <!-- Feedback / Worked Solution Box -->
+              <div id="quiz-feedback-box" class="feedback-box hidden">
+                <div class="feedback-header">
+                  <span id="feedback-icon"></span>
+                  <h4 id="feedback-title">Correct!</h4>
+                </div>
+                <div class="worked-solution" id="worked-solution-content">
+                  <!-- JS inserts HTML steps here -->
+                </div>
+                <button id="quiz-next-btn" class="secondary-btn">Next Question &rarr;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- End Screen -->
+        <div id="quiz-end-screen" class="quiz-subpane">
+          <div class="end-card">
+            <h3>Assessment Complete</h3>
+            <div class="score-radial">
+              <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" class="radial-bg" />
+                <circle cx="50" cy="50" r="45" class="radial-progress" id="quiz-radial-progress" />
+              </svg>
+              <div class="radial-text">
+                <span id="quiz-final-score">24</span>
+                <span class="radial-total">/ 30</span>
+              </div>
+            </div>
+
+            <h4 id="quiz-grade-title">Good Effort!</h4>
+            <p id="quiz-grade-msg">Review the worked solutions and try again to improve your score.</p>
+            
+            <button id="quiz-restart-btn" class="primary-btn glow-btn">Try Again</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <p>&copy; 2026 Turning Effect of Forces Study Suite. Perfect for GCE O-Level Physics.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
