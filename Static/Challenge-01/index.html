@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Static Electricity Challenge - O-Level Physics Revision</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <div id="app-container">
+    
+    <header>
+      <h1>STATIC PHYSICS</h1>
+      <div class="subtitle" id="current-section-subtitle">Topic Overview</div>
+    </header>
+
+    <!-- SECTION 1: TOPIC OVERVIEW -->
+    <section id="section-overview" class="view-section active">
+      <div style="margin-bottom: 20px; text-align: center;">
+        <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.4;">
+          Welcome to the ultimate Static Electricity Revision Challenge. Tap any area to study its flashcard deck, or choose a challenge below.
+        </p>
+      </div>
+      
+      <div class="topic-grid" id="topic-grid-container">
+        <!-- Javascript will populate this with 6 tiles -->
+      </div>
+    </section>
+
+    <!-- SECTION 2: INTERACTIVE EXPLORATION -->
+    <section id="section-explore" class="view-section">
+      <div class="sub-nav">
+        <button class="sub-btn active" onclick="switchExploreTab('matcher')">Concept Match</button>
+        <button class="sub-btn" onclick="switchExploreTab('sorter')">Scenario Sort</button>
+        <button class="sub-btn" onclick="switchExploreTab('rapid')">Rapid Fire</button>
+      </div>
+
+      <!-- Part A: Concept Matcher -->
+      <div id="explore-matcher" class="explore-container">
+        <div class="rapid-score">Concept Challenge</div>
+        <div id="matcher-game-area" style="display: flex; flex-direction: column; flex: 1;">
+          <div style="text-align: center; margin: 15px 0;">
+            <span class="prompt-badge" style="background: rgba(0, 242, 254, 0.15); color: var(--neon-cyan); border: 1px solid rgba(0,242,254,0.3)">Term Definition</span>
+            <div class="game-prompt" id="matcher-term">Loading...</div>
+          </div>
+          <div class="options-list" id="matcher-options">
+            <!-- 4 options will render here -->
+          </div>
+          <div id="matcher-feedback" class="feedback-panel"></div>
+          <button id="matcher-next" class="next-action-btn" style="display: none;" onclick="loadConceptMatcher()">Next Concept <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+      </div>
+
+      <!-- Part B: Scenario Sorter -->
+      <div id="explore-sorter" class="explore-container" style="display: none;">
+        <div class="rapid-score">Scenario Analysis</div>
+        <div id="sorter-game-area" style="display: flex; flex-direction: column; flex: 1;">
+          
+          <!-- Phase 1: Sort Scenario -->
+          <div id="sorter-phase-1" style="display: flex; flex-direction: column; flex: 1;">
+            <div style="text-align: center; margin: 10px 0;">
+              <span class="prompt-badge" style="background: rgba(255, 94, 0, 0.15); color: var(--neon-orange); border: 1px solid rgba(255, 94, 0, 0.3)">Classify Scenario</span>
+            </div>
+            <div class="scenario-box" id="sorter-scenario-text">Loading...</div>
+            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px; text-align: center;">Identify the topic area this belongs to:</div>
+            <div class="options-list" id="sorter-topic-options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <!-- 6 topic tiles representation -->
+            </div>
+          </div>
+
+          <!-- Phase 2: Follow-up Question -->
+          <div id="sorter-phase-2" style="display: none; flex-direction: column; flex: 1;">
+            <div style="text-align: center; margin: 10px 0;">
+              <span class="prompt-badge" style="background: rgba(255, 0, 127, 0.15); color: var(--neon-magenta); border: 1px solid rgba(255,0,127,0.3)">Follow-up Detail</span>
+            </div>
+            <div class="game-prompt" id="sorter-question-text">Loading question...</div>
+            <div class="options-list" id="sorter-detail-options">
+              <!-- 4 multiple choice details -->
+            </div>
+          </div>
+
+          <div id="sorter-feedback" class="feedback-panel"></div>
+          <button id="sorter-next" class="next-action-btn" style="display: none;" onclick="loadScenarioSorter()">Next Scenario <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+      </div>
+
+      <!-- Part C: True/False Rapid Fire -->
+      <div id="explore-rapid" class="explore-container" style="display: none;">
+        <!-- Start screen -->
+        <div id="rapid-start-screen" class="start-overlay">
+          <i class="fa-solid fa-bolt-lightning"></i>
+          <h2>Rapid Fire Challenge</h2>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; max-width: 280px; margin: 0 auto;">
+            Answer as many True or False statements as you can in 60 seconds. Brief explanation shown after each click.
+          </p>
+          <button class="next-action-btn" style="margin-top: 10px; width: 200px;" onclick="startRapidFire()">Start Timer <i class="fa-solid fa-play"></i></button>
+        </div>
+
+        <!-- Gameplay screen -->
+        <div id="rapid-gameplay-screen" style="display: none; flex-direction: column; flex: 1;">
+          <div class="rapid-header">
+            <div class="timer-ring" id="rapid-timer"><i class="fa-regular fa-clock"></i> 60s</div>
+            <div class="rapid-score">Score: <span id="rapid-score-val">0</span></div>
+          </div>
+
+          <div class="rapid-statement-box" id="rapid-statement">
+            <!-- Statement goes here -->
+          </div>
+
+          <div id="rapid-feedback" class="feedback-panel" style="margin-bottom: 16px;"></div>
+
+          <div class="tf-buttons" id="rapid-tf-btns">
+            <button class="tf-btn true" onclick="submitRapidAnswer(true)">TRUE</button>
+            <button class="tf-btn false" onclick="submitRapidAnswer(false)">FALSE</button>
+          </div>
+          
+          <button id="rapid-next" class="next-action-btn" style="display: none; margin-top: 10px;" onclick="nextRapidStatement()">Next Statement <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+
+        <!-- Result screen -->
+        <div id="rapid-result-screen" class="start-overlay" style="display: none;">
+          <i class="fa-solid fa-trophy" style="color: var(--neon-yellow);"></i>
+          <h2>Challenge Complete!</h2>
+          <div style="font-size: 1.5rem; font-weight: 800; margin: 10px 0;">
+            Score: <span style="color: var(--neon-green);" id="rapid-final-score">0</span> correct
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); max-width: 280px;" id="rapid-feedback-message">
+            Excellent speed! Keep training to improve accuracy.
+          </p>
+          <button class="next-action-btn" style="margin-top: 10px; width: 200px;" onclick="resetRapidFire()">Retry Challenge <i class="fa-solid fa-arrow-rotate-right"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: MIXED QUIZ -->
+    <section id="section-quiz" class="view-section">
+      <div id="quiz-start-screen" class="start-overlay">
+        <i class="fa-solid fa-clipboard-question" style="color: var(--neon-cyan);"></i>
+        <h2>15-Question Mixed Quiz</h2>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; max-width: 300px; margin: 0 auto;">
+          Take a comprehensive O-Level style challenge. 15 questions drawn from all 6 learning areas (guaranteed at least 2 per area).
+        </p>
+        <button class="next-action-btn" style="margin-top: 10px; width: 220px;" onclick="startQuiz()">Start Quiz <i class="fa-solid fa-play"></i></button>
+      </div>
+
+      <div id="quiz-gameplay-screen" style="display: none; flex-direction: column; flex: 1;">
+        <div class="quiz-header-info">
+          <div id="quiz-topic-badge">Topic Area</div>
+          <div>Question <span id="quiz-curr-q">1</span> of 15</div>
+        </div>
+        
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+        </div>
+
+        <div class="game-prompt" id="quiz-question-text" style="font-size: 1rem; text-align: left; margin-bottom: 20px;">
+          Question text goes here
+        </div>
+
+        <div class="options-list" id="quiz-options">
+          <!-- 4 choices -->
+        </div>
+
+        <div id="quiz-feedback" class="feedback-panel"></div>
+
+        <button id="quiz-next" class="next-action-btn" style="display: none;" onclick="nextQuizQuestion()">Next Question <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+    </section>
+
+    <!-- SECTION 4: SCORING & FEEDBACK -->
+    <section id="section-scoring" class="view-section">
+      <div class="score-badge-large">
+        <div class="score-num" id="final-score-pct">0%</div>
+        <div class="score-total" id="final-score-fraction">0/15 Correct</div>
+      </div>
+
+      <div class="feedback-tier-box">
+        <div class="tier-title" id="feedback-tier-title">Reviewing Results</div>
+        <p class="tier-text" id="feedback-tier-text">Analyzing performance across all components.</p>
+      </div>
+
+      <div class="breakdown-title">Score by Learning Area</div>
+      <div class="topic-breakdown-list" id="topic-breakdown-list">
+        <!-- 6 topic score rows populated dynamically -->
+      </div>
+
+      <button class="next-action-btn" onclick="startQuiz()">
+        Retake Quiz <i class="fa-solid fa-arrow-rotate-right"></i>
+      </button>
+    </section>
+
+    <!-- SECTION 5: FLASHCARD REVISION MODE -->
+    <section id="section-flashcards" class="view-section">
+      <div class="flashcard-selectors">
+        <div class="dropdown-container">
+          <label for="flashcard-filter">Choose Topic Area</label>
+          <select id="flashcard-filter" class="theme-select" onchange="filterFlashcards()">
+            <option value="all">Study All Categories</option>
+            <option value="0">Types of Charge & Coulombs</option>
+            <option value="1">Electric Fields & Field Lines</option>
+            <option value="2">Charging by Rubbing</option>
+            <option value="3">Charging by Induction</option>
+            <option value="4">Electrostatic Hazards</option>
+            <option value="5">Electrostatic Precipitator & Applications</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Deck Container -->
+      <div id="flashcard-deck" style="display: flex; flex-direction: column; flex: 1;">
+        <div class="flashcard-container" id="flashcard-container" onclick="flipFlashcard()">
+          <div class="flashcard-inner" id="card-inner">
+            
+            <!-- Front -->
+            <div class="card-face card-front">
+              <span class="card-topic-tag" id="card-front-tag" style="background: rgba(0, 242, 254, 0.15); color: var(--neon-cyan); border: 1px solid rgba(0,242,254,0.3)">Topic</span>
+              <div class="card-text" id="card-front-text">Question front text</div>
+              <div class="card-prompt-hint"><i class="fa-solid fa-rotate"></i> Tap to reveal answer</div>
+            </div>
+
+            <!-- Back -->
+            <div class="card-face card-back">
+              <span class="card-topic-tag" id="card-back-tag" style="background: rgba(0, 242, 254, 0.15); color: var(--neon-cyan); border: 1px solid rgba(0,242,254,0.3)">Topic</span>
+              <div class="card-text" id="card-back-text">Answer back text</div>
+              <div class="card-prompt-hint"><i class="fa-solid fa-rotate"></i> Tap to flip back</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="card-nav">
+          <button class="card-nav-btn" onclick="prevFlashcard()"><i class="fa-solid fa-chevron-left"></i></button>
+          <span class="card-progress-text" id="card-progress">Card 1 of 24</span>
+          <button class="card-nav-btn" onclick="nextFlashcard()"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+
+        <button class="next-action-btn" style="margin-top: 25px;" onclick="shuffleFlashcards()">
+          Shuffle Deck <i class="fa-solid fa-shuffle"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+      <button class="nav-btn active" id="nav-overview" onclick="switchSection('overview')">
+        <i class="fa-solid fa-map-location-dot"></i>
+        Overview
+      </button>
+      <button class="nav-btn" id="nav-explore" onclick="switchSection('explore')">
+        <i class="fa-solid fa-bolt"></i>
+        Explore
+      </button>
+      <button class="nav-btn" id="nav-quiz" onclick="switchSection('quiz')">
+        <i class="fa-solid fa-clipboard-question"></i>
+        Mixed Quiz
+      </button>
+      <button class="nav-btn" id="nav-flashcards" onclick="switchSection('flashcards')">
+        <i class="fa-solid fa-layer-group"></i>
+        Flashcards
+      </button>
+    </nav>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
