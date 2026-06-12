@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O-Level Physics: Interactive Longitudinal Sound Waves</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        physicsBlue: '#0f172a',
+                        physicsAccent: '#38bdf8',
+                        physicsGold: '#fbbf24',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for beautiful dashboard panels */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50 px-4 py-3 sm:px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-500/10 text-sky-400 border border-sky-500/20 mb-1">
+                    Singapore GCE O-Level Physics (Syllabus 6091/5076)
+                </span>
+                <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+                    <svg class="w-6 h-6 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"></path></svg>
+                    Interactive Longitudinal Sound Wave Simulator
+                </h1>
+            </div>
+            <!-- Quick stats bar -->
+            <div class="flex flex-wrap items-center gap-3 text-sm">
+                <div class="bg-slate-950/80 border border-slate-800 px-3 py-1.5 rounded-lg flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Wave Formula: <code class="text-amber-400 font-mono font-bold">v = f λ</code></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Column: Wave Simulator & Real-time Graphing -->
+        <div class="lg:col-span-8 flex flex-col gap-6">
+            
+            <!-- The main interactive simulation canvas container -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-2xl flex flex-col">
+                
+                <!-- Canvas Control Bar -->
+                <div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm font-semibold text-slate-300">Wave Visualizer</span>
+                        <div class="flex items-center gap-1.5">
+                            <span class="px-2 py-0.5 rounded text-xs bg-slate-800 text-slate-400 border border-slate-700" id="current-fps">60 FPS</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Visual indicators and Legend -->
+                    <div class="flex flex-wrap items-center gap-4 text-xs">
+                        <!-- C / R Explanation Legend -->
+                        <div class="flex items-center gap-2 border-r border-slate-800 pr-4">
+                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-950/50 text-emerald-400 border border-emerald-500/25">C</span>
+                            <span class="text-slate-400">compression</span>
+                            <span class="text-slate-600 font-mono">;</span>
+                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-950/50 text-rose-400 border border-rose-500/25">R</span>
+                            <span class="text-slate-400">rarefaction</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            <span class="text-slate-400">Tracer Particle</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <div class="w-3 h-1 bg-amber-500/80"></div>
+                            <span class="text-slate-400">Equilibrium Position</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Canvas Rendering Area -->
+                <div class="relative bg-slate-950 p-4 flex flex-col gap-4">
+                    <!-- Longitudinal Wave Canvas -->
+                    <div class="relative w-full rounded-lg bg-slate-900 border border-slate-800 overflow-hidden">
+                        <canvas id="waveCanvas" class="w-full block"></canvas>
+                    </div>
+
+                    <!-- Synchronized Graphs Canvas -->
+                    <div class="w-full rounded-lg bg-slate-900 border border-slate-800 overflow-hidden relative">
+                        <div class="absolute top-2 left-3 text-xs font-semibold text-slate-400 z-10 flex gap-4">
+                            <span class="text-cyan-400 flex items-center gap-1">
+                                <span class="inline-block w-2 h-0.5 bg-cyan-400"></span> Displacement-Distance (s - x)
+                            </span>
+                            <span class="text-rose-400 flex items-center gap-1">
+                                <span class="inline-block w-2 h-0.5 bg-rose-400"></span> Pressure-Distance (ΔP - x)
+                            </span>
+                        </div>
+                        <canvas id="graphCanvas" class="w-full block"></canvas>
+                    </div>
+                </div>
+
+                <!-- Simulation Playback & Animation Speed Controls -->
+                <div class="bg-slate-950 px-4 py-3.5 border-t border-slate-800 flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <button id="btn-play-pause" class="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white font-medium rounded-lg text-sm transition-all flex items-center gap-2 shadow-lg shadow-sky-600/10 active:scale-95">
+                            <svg id="svg-pause" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                            <svg id="svg-play" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <span id="txt-play-pause">Pause</span>
+                        </button>
+                        
+                        <button id="btn-step" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-sm transition-all flex items-center gap-1.5 active:scale-95" title="Step forward by 1 frame">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                            <span>Step</span>
+                        </button>
+
+                        <button id="btn-reset" class="px-3 py-2 bg-slate-850 hover:bg-slate-800 text-slate-400 hover:text-slate-200 rounded-lg text-sm border border-slate-800 hover:border-slate-700 transition-all active:scale-95">
+                            Reset Particles
+                        </button>
+
+                        <!-- Animation Speed Multiplier Slider -->
+                        <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg text-xs text-slate-300">
+                            <label for="slider-anim-speed" class="font-medium whitespace-nowrap text-slate-400">Animation Speed:</label>
+                            <input type="range" id="slider-anim-speed" min="0.01" max="2.0" step="0.01" value="1.0" class="w-20 sm:w-24 h-1 bg-slate-750 rounded-lg appearance-none cursor-pointer accent-sky-400">
+                            <span id="val-anim-speed" class="font-mono text-sky-400 w-12 text-right font-bold">1.0x</span>
+                        </div>
+                    </div>
+
+                    <!-- Overlay Toggles -->
+                    <div class="flex flex-wrap items-center gap-3">
+                        <label class="inline-flex items-center cursor-pointer select-none text-xs text-slate-300 gap-2">
+                            <input type="checkbox" id="toggle-displacement" class="sr-only peer" checked>
+                            <div class="w-8 h-4 bg-slate-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-cyan-500 relative"></div>
+                            <span>Show Displacement Graph</span>
+                        </label>
+
+                        <label class="inline-flex items-center cursor-pointer select-none text-xs text-slate-300 gap-2">
+                            <input type="checkbox" id="toggle-pressure" class="sr-only peer" checked>
+                            <div class="w-8 h-4 bg-slate-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-rose-500 relative"></div>
+                            <span>Show Pressure Graph</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Syllabus Insight Panel & Explanatory Guide -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg">
+                <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                    Understanding Longitudinal Waves (Syllabus Objectives)
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-300">
+                    <div class="space-y-2.5">
+                        <div class="p-3 bg-slate-950/60 rounded-lg border border-slate-850">
+                            <strong class="text-sky-400 block mb-0.5">What is a Longitudinal Wave?</strong>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                A wave in which the vibration of the medium's particles is <span class="text-white font-medium underline decoration-sky-500/50">parallel</span> to the direction of energy transfer (wave propagation).
+                            </p>
+                        </div>
+                        <div class="p-3 bg-slate-950/60 rounded-lg border border-slate-850">
+                            <strong class="text-sky-400 block mb-0.5">Compressions & Rarefactions</strong>
+                            <ul class="list-disc list-inside text-xs text-slate-300 space-y-1 mt-1">
+                                <li><strong>Compression (C):</strong> Particles are closest together; high pressure. Represents a displacement node.</li>
+                                <li><strong>Rarefaction (R):</strong> Particles are furthest apart; low pressure.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2.5">
+                        <div class="p-3 bg-slate-950/60 rounded-lg border border-slate-850">
+                            <strong class="text-amber-400 block mb-0.5">Medium and Wave Speed (O-Level Classic!)</strong>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Sound travels fastest in <strong class="text-white">solids</strong> and slowest in <strong class="text-white">gases</strong> due to differences in intermolecular spacing and elasticity. 
+                            </p>
+                            <p class="text-xs text-amber-500/90 mt-1 font-medium">
+                                Note: Frequency never changes when changing media. Thus, a faster speed in solids creates a longer wavelength!
+                            </p>
+                        </div>
+                        <div class="p-3 bg-slate-950/60 rounded-lg border border-slate-850">
+                            <strong class="text-sky-400 block mb-0.5">Wavelength (λ)</strong>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                The distance between the centers of two consecutive compressions or two consecutive rarefactions.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Interactive Controls & Real-time Dashboard -->
+        <div class="lg:col-span-4 flex flex-col gap-6">
+
+            <!-- Control & Dashboard Panel -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg flex flex-col gap-5">
+                <h3 class="text-lg font-bold text-white border-b border-slate-850 pb-2.5 flex items-center justify-between">
+                    <span>Simulation Controls</span>
+                    <span class="text-xs font-normal text-slate-400 bg-slate-950 px-2.5 py-1 rounded-full border border-slate-800" id="media-title">Air Medium</span>
+                </h3>
+
+                <!-- 1. Select Medium -->
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-400">1. Select Transmission Medium</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button id="btn-medium-gas" class="px-3 py-2.5 rounded-lg text-sm font-semibold transition-all flex flex-col items-center justify-center gap-1 border border-slate-700 bg-sky-950/40 text-sky-400 border-sky-500/50 shadow-inner">
+                            <span class="text-lg">💨</span>
+                            <span>Gas (Air)</span>
+                            <span class="text-[10px] text-slate-400 font-mono">~330 m/s</span>
+                        </button>
+                        <button id="btn-medium-liquid" class="px-3 py-2.5 rounded-lg text-sm font-semibold transition-all flex flex-col items-center justify-center gap-1 border border-slate-800 bg-slate-950 hover:bg-slate-800 text-slate-300">
+                            <span class="text-lg">💧</span>
+                            <span>Liquid (H₂O)</span>
+                            <span class="text-[10px] text-slate-400 font-mono">~1,500 m/s</span>
+                        </button>
+                        <button id="btn-medium-solid" class="px-3 py-2.5 rounded-lg text-sm font-semibold transition-all flex flex-col items-center justify-center gap-1 border border-slate-800 bg-slate-950 hover:bg-slate-800 text-slate-300">
+                            <span class="text-lg">🧱</span>
+                            <span>Solid (Iron)</span>
+                            <span class="text-[10px] text-slate-400 font-mono">~5,000 m/s</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. Interactive Wave Sliders & Sound Toggles -->
+                <div class="space-y-4 border-t border-slate-850 pt-3">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-400 block">2. Wave Parameters</label>
+                    
+                    <!-- Frequency of Source Slider -->
+                    <div class="flex flex-col gap-1.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-300">Frequency of Source (f)</span>
+                            <span id="val-freq" class="text-sm font-mono text-cyan-400 font-bold">330 Hz</span>
+                        </div>
+                        <input type="range" id="slider-freq" min="10" max="3000" step="10" value="330" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400">
+                        <p class="text-[10px] text-slate-500">Adjust physical frequency of sound wave (10 Hz - 3000 Hz). Animation uses log-scale mapping for perfect wave visibility.</p>
+                    </div>
+
+                    <!-- Amplitude Slider (Volume now changes proportionally to this value) -->
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-300">Amplitude / Loudness (A)</span>
+                            <span id="val-amp" class="text-sm font-mono text-emerald-400 font-bold">15.0 px</span>
+                        </div>
+                        <input type="range" id="slider-amp" min="5" max="25" step="1" value="15" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-400">
+                        <p class="text-[10px] text-slate-500">Alters the physical loudness of the sound wave tone and particle displacement simultaneously.</p>
+                    </div>
+
+                    <!-- Audio Playback Toggle -->
+                    <div class="flex items-center justify-between bg-slate-950 p-2.5 rounded-lg border border-slate-850 text-xs">
+                        <span class="font-semibold text-slate-300 flex items-center gap-1.5">
+                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+                            Play Audio Tone
+                        </span>
+                        <label class="inline-flex items-center cursor-pointer select-none">
+                            <input type="checkbox" id="toggle-sound" class="sr-only peer">
+                            <div class="w-8 h-4 bg-slate-850 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500 relative"></div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Real-time Wave Analytics Dashboard -->
+                <div class="bg-slate-950/80 border border-slate-850 rounded-xl p-4 space-y-3.5">
+                    <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Wave Parameters Dashboard</h4>
+                    <div class="grid grid-cols-2 gap-3 text-center">
+                        <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg flex flex-col justify-center">
+                            <span class="text-[10px] uppercase text-slate-400 font-semibold">Wave Speed (v)</span>
+                            <span id="dash-speed" class="text-lg font-bold font-mono text-white">330 m/s</span>
+                            <span class="text-[9px] text-slate-500">(Scaled for screen)</span>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg flex flex-col justify-center">
+                            <span class="text-[10px] uppercase text-slate-400 font-semibold">Frequency (f)</span>
+                            <span id="dash-freq" class="text-lg font-bold font-mono text-cyan-400">330 Hz</span>
+                            <span id="dash-period" class="text-[9px] text-slate-400">Period: 3.03 ms</span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-3 rounded-lg flex flex-col items-center justify-center">
+                        <span class="text-[10px] uppercase text-slate-400 font-semibold">Calculated Wavelength (λ = v / f)</span>
+                        <div class="flex items-baseline gap-1 mt-0.5">
+                            <span id="dash-lambda" class="text-xl font-black font-mono text-amber-400">1.00 m</span>
+                            <span class="text-xs text-slate-400"></span>
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-1 text-center">
+                            Notice how <span class="text-amber-400 font-medium">wavelength increases</span> if speed increases (e.g., solid) or frequency decreases.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Singapore O-Level Physics Challenge Quiz -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-lg flex flex-col gap-4">
+                <div class="flex items-center gap-2 border-b border-slate-850 pb-2.5">
+                    <span class="text-lg">🎯</span>
+                    <div>
+                        <h3 class="text-md font-bold text-white">O-Level Physics Trainer</h3>
+                        <p class="text-xs text-slate-400">Test your mastery of Syllabus Concepts</p>
+                    </div>
+                </div>
+
+                <!-- Quiz Interactive Box -->
+                <div id="quiz-container" class="space-y-3">
+                    <div class="flex items-center justify-between text-xs text-slate-400 font-medium">
+                        <span id="quiz-progress">Question 1 of 4</span>
+                        <span id="quiz-score" class="text-emerald-400">Score: 0 / 0</span>
+                    </div>
+
+                    <!-- Question text -->
+                    <div class="p-3 bg-slate-950 rounded-lg border border-slate-850">
+                        <p id="quiz-question" class="text-sm font-semibold text-slate-200 leading-relaxed">
+                            Loading quiz question...
+                        </p>
+                    </div>
+
+                    <!-- Choices container -->
+                    <div id="quiz-choices" class="flex flex-col gap-2">
+                        <!-- Filled by JavaScript -->
+                    </div>
+
+                    <!-- Feedback details -->
+                    <div id="quiz-feedback" class="hidden p-3 rounded-lg text-xs border leading-relaxed">
+                        <!-- Filled by JavaScript -->
+                    </div>
+
+                    <!-- Next button -->
+                    <button id="btn-next-quiz" class="hidden w-full py-2 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-lg text-xs transition-all active:scale-95 flex items-center justify-center gap-1.5">
+                        <span>Next Question</span>
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-slate-850 bg-slate-900/60 py-4 px-6 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p>© 2026 O-Level Physics Lab. Designed according to Singapore MOE syllabus specifications.</p>
+            <p>Formulas: <span class="font-mono text-slate-400">v = fλ</span> &nbsp;|&nbsp; <span class="font-mono text-slate-400">T = 1/f</span></p>
+        </div>
+    </footer>
+
+    <!-- Interactive Simulator JS Implementation -->
+    <script>
+        // Set up app variables & configuration options
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'longitudinal-soundwave-physics';
+        
+        // Physics and simulation state
+        let state = {
+            isRunning: true,
+            medium: 'gas', // 'gas', 'liquid', 'solid'
+            physicalFrequency: 330, // Real-world frequency in Hz (Default: A 330Hz tone)
+            frequency: 1.5, // Hz (Logarithmically mapped visual frequency representation)
+            amplitude: 15, // pixels
+            time: 0,
+            speed: 150, // Arbitrary pixel speed mapping (Gas: 150, Liquid: 450, Solid: 1200)
+            realSpeed: 330, // Physical value for labels (m/s)
+            particles: [],
+            numMolecules: 160,
+            tracerIndex: 45, // Index of the highlighted particle to show standard movement
+            showDisplacement: true,
+            showPressure: true,
+            animSpeed: 1.0, // Animation Speed Multiplier
+            soundEnabled: false // Web Audio tone playback state
+        };
+
+        // DOM elements
+        const waveCanvas = document.getElementById('waveCanvas');
+        const waveCtx = waveCanvas.getContext('2d');
+        const graphCanvas = document.getElementById('graphCanvas');
+        const graphCtx = graphCanvas.getContext('2d');
+
+        // Control DOM elements
+        const btnPlayPause = document.getElementById('btn-play-pause');
+        const svgPause = document.getElementById('svg-pause');
+        const svgPlay = document.getElementById('svg-play');
+        const txtPlayPause = document.getElementById('txt-play-pause');
+        const btnStep = document.getElementById('btn-step');
+        const btnReset = document.getElementById('btn-reset');
+        const sliderAnimSpeed = document.getElementById('slider-anim-speed');
+        const valAnimSpeed = document.getElementById('val-anim-speed');
+        const toggleSound = document.getElementById('toggle-sound');
+        
+        const btnGas = document.getElementById('btn-medium-gas');
+        const btnLiquid = document.getElementById('btn-medium-liquid');
+        const btnSolid = document.getElementById('btn-medium-solid');
+        
+        const sliderFreq = document.getElementById('slider-freq');
+        const valFreq = document.getElementById('val-freq');
+        const sliderAmp = document.getElementById('slider-amp');
+        const valAmp = document.getElementById('val-amp');
+        
+        const dashSpeed = document.getElementById('dash-speed');
+        const dashFreq = document.getElementById('dash-freq');
+        const dashPeriod = document.getElementById('dash-period');
+        const dashLambda = document.getElementById('dash-lambda');
+        const mediaTitleLabel = document.getElementById('media-title');
+
+        const toggleDisplacement = document.getElementById('toggle-displacement');
+        const togglePressure = document.getElementById('toggle-pressure');
+
+        // Web Audio API Synthesizer Context
+        let audioCtx = null;
+        let oscillator = null;
+        let gainNode = null;
+
+        function initAudio() {
+            if (audioCtx) return;
+            try {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                oscillator = audioCtx.createOscillator();
+                gainNode = audioCtx.createGain();
+
+                oscillator.type = 'sine';
+                oscillator.frequency.value = state.physicalFrequency;
+
+                // Configure safe initial gain
+                gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.start();
+            } catch(e) {
+                console.warn("Web Audio API not supported on this device/environment.", e);
+            }
+        }
+
+        function updateAudio() {
+            if (!audioCtx) return;
+            
+            if (state.soundEnabled && state.isRunning) {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                
+                // Map state.amplitude (range 5 to 25) linearly to a safe laptop speaker gain (range 0.01 to 0.12)
+                const minAmp = 5;
+                const maxAmp = 25;
+                const normalizedAmp = (state.amplitude - minAmp) / (maxAmp - minAmp);
+                // Safe gain ceilings: minimum of 0.01 (quiet) to maximum of 0.12 (comfortably audible and clean)
+                const targetGain = 0.01 + (normalizedAmp * 0.11);
+
+                oscillator.frequency.setTargetAtTime(state.physicalFrequency, audioCtx.currentTime, 0.05);
+                gainNode.gain.setTargetAtTime(targetGain, audioCtx.currentTime, 0.05);
+            } else {
+                // Fade tone out smoothly
+                gainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 0.05);
+            }
+        }
+
+        // Resize Handling for Canvas
+        function resizeCanvases() {
+            const dpr = window.devicePixelRatio || 1;
+            
+            // Adjust Wave Canvas size
+            const waveWidth = waveCanvas.parentElement.clientWidth;
+            waveCanvas.width = waveWidth * dpr;
+            waveCanvas.height = 180 * dpr;
+            waveCanvas.style.width = waveWidth + 'px';
+            waveCanvas.style.height = '180px';
+            waveCtx.scale(dpr, dpr);
+
+            // Adjust Graph Canvas size
+            const graphWidth = graphCanvas.parentElement.clientWidth;
+            graphCanvas.width = graphWidth * dpr;
+            graphCanvas.height = 120 * dpr;
+            graphCanvas.style.width = graphWidth + 'px';
+            graphCanvas.style.height = '120px';
+            graphCtx.scale(dpr, dpr);
+        }
+
+        // Initialize particles
+        function initParticles() {
+            state.particles = [];
+            const width = waveCanvas.parentElement.clientWidth;
+            const height = 180;
+            
+            if (state.medium === 'gas') {
+                state.numMolecules = 180;
+                for (let i = 0; i < state.numMolecules; i++) {
+                    const eqX = (i / state.numMolecules) * width;
+                    state.particles.push({
+                        eqX: eqX,
+                        x: eqX,
+                        y: 35 + Math.random() * (height - 70),
+                        r: 2.5 + Math.random() * 1.5,
+                        opacity: 0.4 + Math.random() * 0.5
+                    });
+                }
+                state.tracerIndex = Math.floor(state.numMolecules * 0.35);
+            } 
+            else if (state.medium === 'liquid') {
+                state.numMolecules = 260;
+                for (let i = 0; i < state.numMolecules; i++) {
+                    const eqX = (i / state.numMolecules) * width;
+                    state.particles.push({
+                        eqX: eqX,
+                        x: eqX,
+                        y: 30 + Math.random() * (height - 60),
+                        r: 2.2 + Math.random() * 1.0,
+                        opacity: 0.5 + Math.random() * 0.4
+                    });
+                }
+                state.tracerIndex = Math.floor(state.numMolecules * 0.35);
+            } 
+            else if (state.medium === 'solid') {
+                state.particles = [];
+                const rows = 8;
+                const cols = 45;
+                state.numMolecules = rows * cols;
+                
+                const colSpacing = width / (cols - 1);
+                const rowSpacing = (height - 60) / (rows - 1);
+                
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        const eqX = c * colSpacing;
+                        state.particles.push({
+                            eqX: eqX,
+                            x: eqX,
+                            y: 30 + r * rowSpacing,
+                            r: 3,
+                            opacity: 0.8,
+                            row: r,
+                            col: c
+                        });
+                    }
+                }
+                state.tracerIndex = Math.floor(rows / 2) * cols + Math.floor(cols * 0.35);
+            }
+        }
+
+        // Calculations & UI Updates
+        function updateDashboard() {
+            // Real physical speeds mapped: Gas -> 330 m/s, Liquid -> 1500 m/s, Solid -> 5000 m/s
+            if (state.medium === 'gas') {
+                state.speed = 150; // virtual canvas speed
+                state.realSpeed = 330;
+                mediaTitleLabel.innerText = "Air (Gas)";
+            } else if (state.medium === 'liquid') {
+                state.speed = 450;
+                state.realSpeed = 1500;
+                mediaTitleLabel.innerText = "Water (Liquid)";
+            } else if (state.medium === 'solid') {
+                state.speed = 1200;
+                state.realSpeed = 5000;
+                mediaTitleLabel.innerText = "Iron (Solid)";
+            }
+
+            // Map physical frequency logarithmically to visual frequency representation 
+            // range: physical 10 to 3000 -> visual 0.5 to 3.5
+            const logMin = Math.log10(10);
+            const logMax = Math.log10(3000);
+            const logVal = Math.log10(state.physicalFrequency);
+            const norm = (logVal - logMin) / (logMax - logMin);
+            state.frequency = 0.5 + norm * 3.0; // Keeps wave oscillation clear, proportional & visible
+
+            const wavelength = (state.realSpeed / state.physicalFrequency);
+            const wavelengthStr = wavelength >= 1 ? `${wavelength.toFixed(2)} m` : `${(wavelength * 100).toFixed(1)} cm`;
+            
+            const period = (1 / state.physicalFrequency);
+            const periodStr = period >= 0.01 ? `${(period * 1000).toFixed(1)} ms` : `${(period * 1000).toFixed(3)} ms`;
+
+            // Set dashboard outputs
+            dashSpeed.innerText = `${state.realSpeed.toLocaleString()} m/s`;
+            dashFreq.innerText = `${state.physicalFrequency} Hz`;
+            dashPeriod.innerText = `Period: ${periodStr}`;
+            dashLambda.innerText = wavelengthStr;
+
+            valFreq.innerText = `${state.physicalFrequency} Hz`;
+            valAmp.innerText = `${state.amplitude.toFixed(1)} px`;
+            
+            updateAudio();
+        }
+
+        // Helper to draw beautiful pill-shaped moving text tags on the canvas
+        function drawCanvasLabel(ctx, text, x, y, bgColor, textColor, borderColor) {
+            ctx.save();
+            ctx.font = 'bold 9px monospace';
+            const textWidth = ctx.measureText(text).width;
+            const padX = 7;
+            const padY = 3;
+            const w = textWidth + padX * 2;
+            const h = 13 + padY * 2;
+            const rx = x - w / 2;
+            const ry = y - h / 2;
+            
+            // Draw pill background
+            ctx.fillStyle = bgColor;
+            ctx.beginPath();
+            if (ctx.roundRect) {
+                ctx.roundRect(rx, ry, w, h, 4);
+            } else {
+                ctx.rect(rx, ry, w, h);
+            }
+            ctx.fill();
+            
+            // Draw pill border
+            ctx.strokeStyle = borderColor;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            
+            // Draw text
+            ctx.fillStyle = textColor;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, x, y + 1);
+            ctx.restore();
+        }
+
+        // Draw longitudinal sound wave
+        function drawSimulation() {
+            const width = waveCanvas.width / (window.devicePixelRatio || 1);
+            const height = 180;
+            
+            waveCtx.clearRect(0, 0, width, height);
+            
+            // Background grid lines
+            waveCtx.strokeStyle = 'rgba(30, 41, 59, 0.5)';
+            waveCtx.lineWidth = 1;
+            const gridCount = 10;
+            for (let i = 1; i < gridCount; i++) {
+                const gx = (i / gridCount) * width;
+                waveCtx.beginPath();
+                waveCtx.moveTo(gx, 0);
+                waveCtx.lineTo(gx, height);
+                waveCtx.stroke();
+            }
+
+            // Wave Equation parameters based on visual-mapped frequency
+            const omega = 2 * Math.PI * state.frequency;
+            const wavelengthPx = state.speed / state.frequency;
+            const k = (2 * Math.PI) / wavelengthPx;
+
+            // Draw connections for solid structures
+            if (state.medium === 'solid') {
+                waveCtx.strokeStyle = 'rgba(71, 85, 105, 0.25)';
+                waveCtx.lineWidth = 0.5;
+                const rows = 8;
+                const cols = 45;
+                
+                for (let r = 0; r < rows; r++) {
+                    waveCtx.beginPath();
+                    for (let c = 0; c < cols; c++) {
+                        const idx = r * cols + c;
+                        const p = state.particles[idx];
+                        if (!p) continue;
+                        
+                        const phase = omega * state.time - k * p.eqX;
+                        const displacement = state.amplitude * Math.sin(phase);
+                        p.x = p.eqX + displacement;
+
+                        if (c === 0) waveCtx.moveTo(p.x, p.y);
+                        else waveCtx.lineTo(p.x, p.y);
+                    }
+                    waveCtx.stroke();
+                }
+            }
+
+            // Draw individual molecule particles
+            for (let i = 0; i < state.particles.length; i++) {
+                const p = state.particles[i];
+                
+                const phase = omega * state.time - k * p.eqX;
+                const displacement = state.amplitude * Math.sin(phase);
+                p.x = p.eqX + displacement;
+
+                // Green Tracer Particle representation
+                if (i === state.tracerIndex) {
+                    waveCtx.strokeStyle = 'rgba(245, 158, 11, 0.5)';
+                    waveCtx.setLineDash([3, 3]);
+                    waveCtx.beginPath();
+                    waveCtx.moveTo(p.eqX, 15);
+                    waveCtx.lineTo(p.eqX, height - 15);
+                    waveCtx.stroke();
+                    waveCtx.setLineDash([]); // Reset
+
+                    // Equilibrium mark node
+                    waveCtx.fillStyle = '#f59e0b';
+                    waveCtx.beginPath();
+                    waveCtx.arc(p.eqX, height - 10, 3, 0, 2 * Math.PI);
+                    waveCtx.fill();
+
+                    // Green Tracer Particle
+                    waveCtx.fillStyle = '#22c55e';
+                    waveCtx.shadowColor = '#22c55e';
+                    waveCtx.shadowBlur = 8;
+                    waveCtx.beginPath();
+                    waveCtx.arc(p.x, p.y, p.r + 2.5, 0, 2 * Math.PI);
+                    waveCtx.fill();
+                    waveCtx.shadowBlur = 0; // Reset shadow
+
+                    // Connect moving particle to equilibrium line with green indicator line
+                    waveCtx.strokeStyle = 'rgba(34, 197, 94, 0.4)';
+                    waveCtx.lineWidth = 1;
+                    waveCtx.beginPath();
+                    waveCtx.moveTo(p.eqX, p.y);
+                    waveCtx.lineTo(p.x, p.y);
+                    waveCtx.stroke();
+                } else {
+                    // Normal particles
+                    waveCtx.fillStyle = state.medium === 'gas' ? 'rgba(56, 189, 248, ' + p.opacity + ')' :
+                                       state.medium === 'liquid' ? 'rgba(14, 165, 233, ' + p.opacity + ')' :
+                                       'rgba(148, 163, 184, ' + p.opacity + ')';
+                    waveCtx.beginPath();
+                    waveCtx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
+                    waveCtx.fill();
+                }
+            }
+
+            // Calculate moving coordinates of Compressions (C) and Rarefactions (R)
+            const cList = [];
+            const rList = [];
+            
+            // Dynamically calculate the integer bounds of cycles (n) currently on screen
+            // This prevents the label disappearing bug as time 't' grows towards infinity
+            const nMin = Math.floor(state.frequency * state.time - width / wavelengthPx) - 2;
+            const nMax = Math.ceil(state.frequency * state.time) + 2;
+            
+            for (let n = nMin; n <= nMax; n++) {
+                const cX = (omega * state.time - 2 * n * Math.PI) / k;
+                if (cX >= -50 && cX <= width + 50) {
+                    cList.push(cX);
+                }
+                const rX = cX + (wavelengthPx / 2);
+                if (rX >= -50 && rX <= width + 50) {
+                    rList.push(rX);
+                }
+            }
+
+            // Draw vertical compression guides & centerlines
+            cList.forEach(cx => {
+                // Subtle horizontal glow
+                waveCtx.fillStyle = 'rgba(34, 197, 94, 0.03)';
+                waveCtx.fillRect(cx - 20, 0, 40, height);
+                
+                // Fine alignment dotted guide
+                waveCtx.strokeStyle = 'rgba(74, 222, 128, 0.25)';
+                waveCtx.setLineDash([3, 4]);
+                waveCtx.lineWidth = 1;
+                waveCtx.beginPath();
+                waveCtx.moveTo(cx, 23);
+                waveCtx.lineTo(cx, height);
+                waveCtx.stroke();
+                waveCtx.setLineDash([]);
+            });
+
+            // Draw vertical rarefaction guides & centerlines
+            rList.forEach(rx => {
+                // Subtle horizontal glow
+                waveCtx.fillStyle = 'rgba(244, 63, 94, 0.02)';
+                waveCtx.fillRect(rx - 20, 0, 40, height);
+                
+                // Fine alignment dotted guide
+                waveCtx.strokeStyle = 'rgba(251, 113, 133, 0.25)';
+                waveCtx.setLineDash([3, 4]);
+                waveCtx.lineWidth = 1;
+                waveCtx.beginPath();
+                waveCtx.moveTo(rx, 23);
+                waveCtx.lineTo(rx, height);
+                waveCtx.stroke();
+                waveCtx.setLineDash([]);
+            });
+
+            // DRAW MOVING LABELS RIDING THE COMPRESSION AND RAREFACTION PEAKS
+            cList.forEach(cx => {
+                drawCanvasLabel(waveCtx, 'C', cx, 15, 'rgba(15, 23, 42, 0.95)', '#4ade80', 'rgba(74, 222, 128, 0.35)');
+            });
+
+            rList.forEach(rx => {
+                drawCanvasLabel(waveCtx, 'R', rx, 15, 'rgba(15, 23, 42, 0.95)', '#fb7185', 'rgba(251, 113, 133, 0.35)');
+            });
+        }
+
+        // Draw synced graphs
+        function drawGraphs() {
+            const width = graphCanvas.width / (window.devicePixelRatio || 1);
+            const height = 120;
+            
+            graphCtx.clearRect(0, 0, width, height);
+
+            const midY = height / 2;
+            graphCtx.strokeStyle = 'rgba(51, 65, 85, 0.6)';
+            graphCtx.lineWidth = 1;
+            graphCtx.beginPath();
+            graphCtx.moveTo(0, midY);
+            graphCtx.lineTo(width, midY);
+            graphCtx.stroke();
+
+            graphCtx.fillStyle = '#64748b';
+            graphCtx.font = '9px system-ui';
+            graphCtx.fillText('Equilibrium Distance (x)', width - 120, midY - 6);
+            graphCtx.fillText('+ (Right/High)', 5, 15);
+            graphCtx.fillText('- (Left/Low)', 5, height - 10);
+
+            const omega = 2 * Math.PI * state.frequency;
+            const wavelengthPx = state.speed / state.frequency;
+            const k = (2 * Math.PI) / wavelengthPx;
+
+            // DRAW DISPLACEMENT GRAPH (Cyan)
+            if (state.showDisplacement) {
+                graphCtx.strokeStyle = '#22d3ee';
+                graphCtx.lineWidth = 2;
+                graphCtx.beginPath();
+                for (let x = 0; x < width; x++) {
+                    const phase = omega * state.time - k * x;
+                    const disp = state.amplitude * Math.sin(phase);
+                    const y = midY - disp * 1.5;
+                    if (x === 0) graphCtx.moveTo(x, y);
+                    else graphCtx.lineTo(x, y);
+                }
+                graphCtx.stroke();
+            }
+
+            // DRAW PRESSURE DIFFERENCE GRAPH (Rose)
+            if (state.showPressure) {
+                graphCtx.strokeStyle = '#fb7185';
+                graphCtx.lineWidth = 1.5;
+                graphCtx.setLineDash([2, 1]);
+                graphCtx.beginPath();
+                for (let x = 0; x < width; x++) {
+                    const phase = omega * state.time - k * x;
+                    const pressureAmplitude = Math.min(22, state.amplitude * 1.2); 
+                    const press = pressureAmplitude * Math.cos(phase);
+                    const y = midY - press * 1.5;
+                    if (x === 0) graphCtx.moveTo(x, y);
+                    else graphCtx.lineTo(x, y);
+                }
+                graphCtx.stroke();
+                graphCtx.setLineDash([]); // Reset
+            }
+
+            // Sync graphs with green tracer particle indices
+            const tracerP = state.particles[state.tracerIndex];
+            if (tracerP) {
+                graphCtx.strokeStyle = 'rgba(245, 158, 11, 0.4)';
+                graphCtx.lineWidth = 1;
+                graphCtx.beginPath();
+                graphCtx.moveTo(tracerP.eqX, 0);
+                graphCtx.lineTo(tracerP.eqX, height);
+                graphCtx.stroke();
+                
+                const tracerPhase = omega * state.time - k * tracerP.eqX;
+                
+                if (state.showDisplacement) {
+                    const tracerDispVal = state.amplitude * Math.sin(tracerPhase);
+                    graphCtx.fillStyle = '#22c55e'; // Green Tracer indicator
+                    graphCtx.beginPath();
+                    graphCtx.arc(tracerP.eqX, midY - tracerDispVal * 1.5, 4, 0, 2 * Math.PI);
+                    graphCtx.fill();
+                }
+
+                if (state.showPressure) {
+                    const tracerPressVal = Math.min(22, state.amplitude * 1.2) * Math.cos(tracerPhase);
+                    graphCtx.fillStyle = '#22c55e'; // Green Tracer indicator
+                    graphCtx.beginPath();
+                    graphCtx.arc(tracerP.eqX, midY - tracerPressVal * 1.5, 4, 0, 2 * Math.PI);
+                    graphCtx.fill();
+                }
+            }
+        }
+
+        // Clock animation loop
+        let lastTime = 0;
+        let frameCounter = 0;
+        let fpsTimer = 0;
+        const fpsLabel = document.getElementById('current-fps');
+
+        function gameLoop(timestamp) {
+            if (!lastTime) lastTime = timestamp;
+            const dt = (timestamp - lastTime) / 1000;
+            lastTime = timestamp;
+
+            frameCounter++;
+            fpsTimer += dt;
+            if (fpsTimer >= 1.0) {
+                fpsLabel.innerText = `${frameCounter} FPS`;
+                frameCounter = 0;
+                fpsTimer = 0;
+            }
+
+            if (state.isRunning) {
+                state.time += dt * state.animSpeed;
+                drawSimulation();
+                drawGraphs();
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Toggle playback state
+        function togglePlayState() {
+            state.isRunning = !state.isRunning;
+            if (state.isRunning) {
+                svgPause.classList.remove('hidden');
+                svgPlay.classList.add('hidden');
+                txtPlayPause.innerText = "Pause";
+            } else {
+                svgPause.classList.add('hidden');
+                svgPlay.classList.remove('hidden');
+                txtPlayPause.innerText = "Resume";
+            }
+            updateAudio();
+        }
+
+        // Single step playback control
+        function stepSimulation() {
+            if (!state.isRunning) {
+                state.time += 0.05 * state.animSpeed;
+                drawSimulation();
+                drawGraphs();
+            }
+        }
+
+        // Handle changing transmission medium selection
+        function setMedium(med) {
+            state.medium = med;
+            
+            [btnGas, btnLiquid, btnSolid].forEach(btn => {
+                btn.classList.remove('bg-sky-950/40', 'text-sky-400', 'border-sky-500/50', 'shadow-inner');
+                btn.classList.add('bg-slate-950', 'hover:bg-slate-800', 'text-slate-300', 'border-slate-800');
+            });
+
+            let activeBtn;
+            if (med === 'gas') activeBtn = btnGas;
+            else if (med === 'liquid') activeBtn = btnLiquid;
+            else if (med === 'solid') activeBtn = btnSolid;
+
+            activeBtn.classList.add('bg-sky-950/40', 'text-sky-400', 'border-sky-500/50', 'shadow-inner');
+            activeBtn.classList.remove('bg-slate-950', 'hover:bg-slate-800', 'text-slate-300', 'border-slate-800');
+
+            updateDashboard();
+            initParticles();
+            drawSimulation();
+            drawGraphs();
+        }
+
+        // Initialize UI Control Listeners
+        function initListeners() {
+            btnPlayPause.addEventListener('click', togglePlayState);
+            btnStep.addEventListener('click', stepSimulation);
+            btnReset.addEventListener('click', () => {
+                initParticles();
+                if (!state.isRunning) {
+                    drawSimulation();
+                    drawGraphs();
+                }
+            });
+
+            // Animation speed slider (Configured with dynamic decimal precision formatting)
+            sliderAnimSpeed.addEventListener('input', (e) => {
+                state.animSpeed = parseFloat(e.target.value);
+                valAnimSpeed.innerText = state.animSpeed < 0.1 ? `${state.animSpeed.toFixed(2)}x` : `${state.animSpeed.toFixed(1)}x`;
+            });
+
+            // Audio tone toggle
+            toggleSound.addEventListener('change', (e) => {
+                state.soundEnabled = e.target.checked;
+                if (state.soundEnabled) {
+                    initAudio(); // Lazy load the Web Audio API Context 
+                }
+                updateAudio();
+            });
+
+            // Medium buttons
+            btnGas.addEventListener('click', () => setMedium('gas'));
+            btnLiquid.addEventListener('click', () => setMedium('liquid'));
+            btnSolid.addEventListener('click', () => setMedium('solid'));
+
+            // Graph visual selection Toggles
+            toggleDisplacement.addEventListener('change', (e) => {
+                state.showDisplacement = e.target.checked;
+                drawGraphs();
+            });
+            togglePressure.addEventListener('change', (e) => {
+                state.showPressure = e.target.checked;
+                drawGraphs();
+            });
+
+            // Frequency of Source Slider (10 Hz - 3000 Hz)
+            sliderFreq.addEventListener('input', (e) => {
+                state.physicalFrequency = parseInt(e.target.value);
+                updateDashboard();
+                if (!state.isRunning) {
+                    drawSimulation();
+                    drawGraphs();
+                }
+            });
+
+            // Wave Amplitude Slider (Triggers volume adjustment automatically inside updateDashboard)
+            sliderAmp.addEventListener('input', (e) => {
+                state.amplitude = parseFloat(e.target.value);
+                updateDashboard();
+                if (!state.isRunning) {
+                    drawSimulation();
+                    drawGraphs();
+                }
+            });
+
+            window.addEventListener('resize', () => {
+                resizeCanvases();
+                initParticles();
+                drawSimulation();
+                drawGraphs();
+            });
+        }
+
+
+        /* ==========================================
+           O-LEVEL PHYSICS MCQ CHALLENGE BANK
+           ========================================== */
+        const quizBank = [
+            {
+                q: "A sound wave is generated in air and travels into a concrete barrier. Which of the following changes correctly describes the speed, frequency, and wavelength of the wave as it crosses?",
+                a: [
+                    "Speed increases, Frequency is unchanged, Wavelength increases",
+                    "Speed increases, Frequency decreases, Wavelength is unchanged",
+                    "Speed decreases, Frequency is unchanged, Wavelength decreases",
+                    "Speed is unchanged, Frequency increases, Wavelength increases"
+                ],
+                correct: 0,
+                explain: "Under Singapore GCE O-Level Syllabus rules, frequency is determined strictly by the vibrating source producing the sound and never changes as it moves across boundaries. Because concrete (solid) is denser/stiffer, speed increases (v_solid > v_gas). According to v = fλ, when speed increases and frequency is constant, wavelength must increase!"
+            },
+            {
+                q: "Which of the following describes a 'rarefaction' in a longitudinal sound wave?",
+                a: [
+                    "A region of maximum wave amplitude where particles are tightly packed",
+                    "A region where the medium pressure is lower than normal atmospheric pressure",
+                    "A region where particles vibrate perpendicularly to the direction of energy transfer",
+                    "The distance between two consecutive peaks of the wave motion"
+                ],
+                correct: 1,
+                explain: "In rarefactions, medium particles are spaced furthest apart, which directly leads to localized expansion and pressure drop below ambient atmospheric pressure."
+            },
+            {
+                q: "A student doubling the frequency of a signal generator driving a speaker output. What happens to the wavelength and period of the sound wave in air?",
+                a: [
+                    "Wavelength is doubled; Period is halved",
+                    "Wavelength is halved; Period is doubled",
+                    "Wavelength is halved; Period is halved",
+                    "Wavelength is doubled; Period is doubled"
+                ],
+                correct: 2,
+                explain: "Since speed of sound in air is constant, doubling frequency (f) halves the wavelength (λ = v / f). Additionally, since period is the reciprocal of frequency (T = 1/f), doubling the frequency halves the period."
+            },
+            {
+                q: "If the green tracer particle is watched closely in the visualizer above, what is its motion over time?",
+                a: [
+                    "It continuously propagates from left to right across the screen with the wave energy",
+                    "It oscillates back and forth parallel to the direction of wave travel without transferring location",
+                    "It oscillates up and down perpendicular to the direction of wave travel",
+                    "It travels in a complete circular motion similar to deep ocean water particles"
+                ],
+                correct: 1,
+                explain: "In longitudinal waves, particles vibrate about fixed equilibrium positions parallel to wave travel. There is zero net transfer of mass or matter; only energy travels forward!"
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let score = 0;
+        let answeredQuestions = 0;
+
+        function renderQuizQuestion() {
+            const currentItem = quizBank[currentQuizIndex];
+            
+            document.getElementById('quiz-progress').innerText = `Question ${currentQuizIndex + 1} of ${quizBank.length}`;
+            document.getElementById('quiz-score').innerText = `Score: ${score} / ${answeredQuestions}`;
+            document.getElementById('quiz-question').innerText = currentItem.q;
+
+            const choicesBox = document.getElementById('quiz-choices');
+            choicesBox.innerHTML = '';
+
+            document.getElementById('quiz-feedback').className = 'hidden p-3 rounded-lg text-xs border leading-relaxed';
+            document.getElementById('btn-next-quiz').classList.add('hidden');
+
+            currentItem.a.forEach((choice, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-2.5 rounded-lg text-xs font-medium border border-slate-800 bg-slate-950 hover:bg-slate-800 text-slate-300 transition-all focus:outline-none flex items-center gap-2";
+                
+                const letters = ['A', 'B', 'C', 'D'];
+                btn.innerHTML = `<span class="bg-slate-800 px-1.5 py-0.5 rounded text-slate-400 font-mono">${letters[idx]}</span> <span>${choice}</span>`;
+                
+                btn.addEventListener('click', () => handleQuizSubmission(idx, btn));
+                choicesBox.appendChild(btn);
+            });
+        }
+
+        function handleQuizSubmission(selectedIdx, clickedButton) {
+            const currentItem = quizBank[currentQuizIndex];
+            const choicesBox = document.getElementById('quiz-choices');
+            const buttons = choicesBox.getElementsByTagName('button');
+            const feedbackBox = document.getElementById('quiz-feedback');
+
+            for (let btn of buttons) {
+                btn.disabled = true;
+            }
+
+            answeredQuestions++;
+            const isCorrect = (selectedIdx === currentItem.correct);
+            
+            if (isCorrect) {
+                score++;
+                clickedButton.className = "w-full text-left p-2.5 rounded-lg text-xs font-semibold border border-emerald-500/50 bg-emerald-950/40 text-emerald-400 flex items-center gap-2";
+                feedbackBox.className = "p-3 rounded-lg text-xs border border-emerald-500/20 bg-emerald-950/10 text-slate-300 block";
+                feedbackBox.innerHTML = `<strong class="text-emerald-400 block mb-0.5">Correct Answer!</strong> ${currentItem.explain}`;
+            } else {
+                clickedButton.className = "w-full text-left p-2.5 rounded-lg text-xs font-semibold border border-rose-500/50 bg-rose-950/40 text-rose-400 flex items-center gap-2";
+                buttons[currentItem.correct].className = "w-full text-left p-2.5 rounded-lg text-xs font-semibold border border-emerald-500/30 bg-emerald-950/20 text-emerald-400 flex items-center gap-2";
+                
+                feedbackBox.className = "p-3 rounded-lg text-xs border border-rose-500/20 bg-rose-950/10 text-slate-300 block";
+                feedbackBox.innerHTML = `<strong class="text-rose-400 block mb-0.5">Incorrect.</strong> ${currentItem.explain}`;
+            }
+
+            document.getElementById('quiz-score').innerText = `Score: ${score} / ${answeredQuestions}`;
+            document.getElementById('btn-next-quiz').classList.remove('hidden');
+        }
+
+        document.getElementById('btn-next-quiz').addEventListener('click', () => {
+            currentQuizIndex = (currentQuizIndex + 1) % quizBank.length;
+            renderQuizQuestion();
+        });
+
+        // Initialize execution
+        window.onload = function() {
+            resizeCanvases();
+            initListeners();
+            setMedium('gas'); // Defaults to gas (Air)
+            renderQuizQuestion();
+            
+            requestAnimationFrame(gameLoop);
+        };
+    </script>
+</body>
+</html>
