@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>P=F/A // Pressure foundations Instrument Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header / Status Bar -->
+    <header class="app-header">
+      <div class="panel-tag">SYS.STATUS: ACTIVE</div>
+      <h1 class="logo">P=F/A</h1>
+      <div class="panel-version">v1.0.0</div>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav class="app-nav">
+      <button class="nav-btn active" data-target="lab" onclick="switchSection('lab')">
+        <svg viewBox="0 0 24 24" class="nav-icon"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Lab</span>
+      </button>
+      <button class="nav-btn" data-target="flashcards" onclick="switchSection('flashcards')">
+        <svg viewBox="0 0 24 24" class="nav-icon"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2" fill="none"/><path d="M9 3v18M3 9h18" stroke="currentColor" stroke-width="2"/></svg>
+        <span>Flashcards</span>
+      </button>
+      <button class="nav-btn" data-target="quiz" onclick="switchSection('quiz')">
+        <svg viewBox="0 0 24 24" class="nav-icon"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Quiz</span>
+      </button>
+      <button class="nav-btn" data-target="score" onclick="switchSection('score')">
+        <svg viewBox="0 0 24 24" class="nav-icon"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/><path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>Score</span>
+      </button>
+    </nav>
+
+    <!-- MAIN SECTIONS -->
+    <main class="app-main">
+      
+      <!-- SECTION 1: LAB / CONCEPT INTRO -->
+      <section id="sec-lab" class="nav-section active">
+        <!-- Split Layout: Top is concept intro (formula + real world) / Bottom is interactive simulator -->
+        <div class="lab-layout">
+          
+          <!-- Concept Intro Panel -->
+          <div class="panel card concept-card">
+            <div class="card-header">
+              <span class="dot-indicator red"></span>
+              <h2>01. CONCEPT INTRODUCTION</h2>
+            </div>
+            
+            <div class="formula-container">
+              <div class="formula-display">P = F ÷ A</div>
+              <div class="formula-details">
+                <div class="formula-row"><span class="coral-text font-bold">F</span> = Force <span class="unit-text">(Newtons, N)</span></div>
+                <div class="formula-row"><span class="lime-text font-bold">A</span> = Area <span class="unit-text">(Square Metres, m²)</span></div>
+                <div class="formula-row"><span class="cyan-text font-bold">P</span> = Pressure <span class="unit-text">(Pascals, Pa or N/m²)</span></div>
+              </div>
+            </div>
+
+            <div class="real-world-sec">
+              <h3>REAL WORLD IN 3 SECONDS:</h3>
+              <div class="thumbnail-grid">
+                <div class="thumb-card" onclick="setPreset(600, 0.0005, 'Stiletto Heel')">
+                  <div class="thumb-img-placeholder thumb-thumbtack">
+                    <svg viewBox="0 0 64 64" class="thumb-icon">
+                      <path d="M32 10 L32 35 M16 35 L48 35 M24 35 L28 50 L32 58 L36 50 L40 35" stroke="#FF4D6D" stroke-width="3" fill="none" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="thumb-info">
+                    <span class="thumb-title">Thumbtack Tip</span>
+                    <span class="badge badge-high">HIGH PRESSURE</span>
+                    <span class="thumb-desc">Tiny area increases pressure</span>
+                  </div>
+                </div>
+
+                <div class="thumb-card" onclick="setPreset(700, 0.08, 'Ski Boot')">
+                  <div class="thumb-img-placeholder thumb-snowshoe">
+                    <svg viewBox="0 0 64 64" class="thumb-icon">
+                      <rect x="16" y="12" width="32" height="40" rx="16" stroke="#B5FF3C" stroke-width="3" fill="none"/>
+                      <path d="M16 32 H48 M32 12 V52 M20 22 L44 42 M20 42 L44 22" stroke="#B5FF3C" stroke-width="1.5"/>
+                    </svg>
+                  </div>
+                  <div class="thumb-info">
+                    <span class="thumb-title">Snowshoe</span>
+                    <span class="badge badge-low">LOW PRESSURE</span>
+                    <span class="thumb-desc">Large area spreads force</span>
+                  </div>
+                </div>
+
+                <div class="thumb-card" onclick="setPreset(12000, 0.06, 'Elephant Foot')">
+                  <div class="thumb-img-placeholder thumb-tyre">
+                    <svg viewBox="0 0 64 64" class="thumb-icon">
+                      <circle cx="32" cy="32" r="22" stroke="#00F5FF" stroke-width="4" fill="none"/>
+                      <circle cx="32" cy="32" r="14" stroke="#00F5FF" stroke-width="2" fill="none"/>
+                      <path d="M32 6 V10 M32 54 V58 M6 32 H10 M54 32 H58" stroke="#00F5FF" stroke-width="3"/>
+                    </svg>
+                  </div>
+                  <div class="thumb-info">
+                    <span class="thumb-title">Car Tyre</span>
+                    <span class="badge badge-medium">MODERATE</span>
+                    <span class="thumb-desc">Optimized area for grip</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Exploration Panel -->
+          <div class="panel card simulator-card">
+            <div class="card-header">
+              <span class="dot-indicator cyan"></span>
+              <h2>02. INTERACTIVE EXPLORATION</h2>
+            </div>
+
+            <!-- Visualizer Box -->
+            <div class="visualizer-box">
+              <div class="arrow-container">
+                <!-- Force Arrow scaling with Force -->
+                <svg id="force-arrow" class="animated-arrow" viewBox="0 0 50 150">
+                  <defs>
+                    <linearGradient id="arrow-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stop-color="#FF4D6D" />
+                      <stop offset="100%" stop-color="#FF99AC" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M25 10 V140 M15 125 L25 140 L35 125" stroke="url(#arrow-grad)" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div class="arrow-label">FORCE (F)</div>
+              </div>
+
+              <!-- Surface Pad that deforms -->
+              <div class="surface-container">
+                <div id="deformation-pad" class="deformation-pad">
+                  <span class="pad-label">CONTACT SURFACE</span>
+                </div>
+                <div class="base-ground"></div>
+              </div>
+
+              <!-- Live Readout Panel -->
+              <div class="readout-panel">
+                <div class="readout-label">CALCULATED PRESSURE (P)</div>
+                <div id="pressure-val" class="readout-value font-display">300.0 <span class="readout-unit">Pa</span></div>
+              </div>
+            </div>
+
+            <!-- Simulation Controls -->
+            <div class="sim-controls">
+              <div class="control-slider-group">
+                <div class="slider-header">
+                  <span class="slider-title coral-text">FORCE (F):</span>
+                  <span id="force-num" class="slider-val coral-text">150 N</span>
+                </div>
+                <input type="range" id="slider-force" min="10" max="1000" step="10" value="150" class="custom-slider slider-coral">
+              </div>
+
+              <div class="control-slider-group">
+                <div class="slider-header">
+                  <span class="slider-title lime-text">AREA (A):</span>
+                  <span id="area-num" class="slider-val lime-text">0.500 m²</span>
+                </div>
+                <input type="range" id="slider-area" min="0.001" max="2.000" step="0.001" value="0.500" class="custom-slider slider-lime">
+              </div>
+            </div>
+
+            <!-- Scenario Preset Shortcuts -->
+            <div class="preset-shortcuts">
+              <span class="preset-label">SCENARIO SHORTCUTS:</span>
+              <div class="preset-buttons">
+                <button class="btn btn-outline" onclick="setPreset(600, 0.0005, 'Stiletto Heel')">Stiletto Heel</button>
+                <button class="btn btn-outline" onclick="setPreset(12000, 0.06, 'Elephant Foot')">Elephant Foot</button>
+                <button class="btn btn-outline" onclick="setPreset(700, 0.08, 'Ski Boot')">Ski Boot</button>
+              </div>
+              <div id="preset-feedback" class="preset-feedback-text"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: FLASHCARD REVISION MODE -->
+      <section id="sec-flashcards" class="nav-section">
+        <div class="panel card flashcards-card">
+          <div class="card-header flex-between">
+            <div class="flex-align-center">
+              <span class="dot-indicator yellow"></span>
+              <h2>04. REVISION FLASHCARDS</h2>
+            </div>
+            <div class="card-count-badge">Cards Left: <span id="flashcard-remaining-count">10</span></div>
+          </div>
+
+          <div class="flashcard-arena">
+            <div class="flashcard-container">
+              <div id="flashcard" class="flashcard" onclick="flipFlashcard()">
+                <div class="flashcard-inner">
+                  <div class="flashcard-front">
+                    <div class="card-side-tag">QUESTION</div>
+                    <div id="flashcard-front-text" class="card-text">What is pressure?</div>
+                    <div class="tap-to-flip">Tap to Flip</div>
+                  </div>
+                  <div class="flashcard-back">
+                    <div class="card-side-tag">EXPLANATION</div>
+                    <div id="flashcard-back-text" class="card-text">Force acting per unit area</div>
+                    <div class="tap-to-flip">Tap to Flip</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flashcard-actions">
+            <button class="btn btn-danger btn-swipe" onclick="handleFlashcardAction('review')">
+              Review again ↩
+            </button>
+            <button class="btn btn-success btn-swipe" onclick="handleFlashcardAction('got-it')">
+              Got it ✓
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: RANDOMISED QUIZ -->
+      <section id="sec-quiz" class="nav-section">
+        <div class="panel card quiz-card">
+          <div class="quiz-header">
+            <div class="quiz-progress-info">
+              <span class="panel-tag">QUIZ ENGINE ACTIVE</span>
+              <span id="quiz-question-counter">Question 1 of 30</span>
+            </div>
+            <div class="progress-bar-container">
+              <div id="quiz-progress-bar" class="progress-bar"></div>
+            </div>
+          </div>
+
+          <div class="quiz-content">
+            <div id="quiz-question-text" class="question-text">Loading question...</div>
+            
+            <!-- Numerical Input Answer Container -->
+            <div id="quiz-numeric-container" class="answer-container numeric-input-container">
+              <div class="input-glow-wrapper">
+                <input type="text" id="quiz-numeric-input" placeholder="e.g. 15.4 Pa" autocomplete="off">
+                <span id="quiz-unit-indicator" class="input-unit" style="display: none;">Pa</span>
+              </div>
+              <p class="input-help-text" id="quiz-numeric-help">Round your answer to 1 decimal place.</p>
+            </div>
+
+            <!-- Multiple Choice Options Container -->
+            <div id="quiz-mcq-container" class="answer-container mcq-options-grid">
+              <!-- Dynamically populated buttons -->
+            </div>
+
+            <!-- Validation/Feedback Overlay/Panel -->
+            <div id="quiz-feedback-box" class="quiz-feedback-box hidden">
+              <div class="feedback-icon-row">
+                <span id="feedback-icon">✓</span>
+                <span id="feedback-title">Nice work!</span>
+              </div>
+              <div id="feedback-message" class="feedback-message">Details here...</div>
+            </div>
+
+            <div class="quiz-action-bar">
+              <button id="btn-quiz-check" class="btn btn-primary btn-glow">Check Answer</button>
+              <button id="btn-quiz-next" class="btn btn-success hidden">Next Question →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: SCORE AND FEEDBACK -->
+      <section id="sec-score" class="nav-section">
+        <div class="panel card score-card text-center">
+          <div class="card-header justify-center">
+            <span class="dot-indicator green"></span>
+            <h2>QUIZ COMPLETE</h2>
+          </div>
+
+          <div class="score-display-container">
+            <div class="score-ring">
+              <span id="score-text" class="font-display">25</span>
+              <span class="score-total">/ 30</span>
+            </div>
+            <div id="score-stars" class="star-rating">
+              <span class="star">★</span>
+              <span class="star">★</span>
+              <span class="star">★</span>
+            </div>
+          </div>
+
+          <div class="feedback-tier-box">
+            <h3 id="score-tier-title">Masterful!</h3>
+            <p id="score-tier-desc" class="score-desc">Excellent! You've mastered Pressure Foundations.</p>
+          </div>
+
+          <div class="score-action-buttons">
+            <button class="btn btn-primary" onclick="restartQuiz()">Try Again (New Quiz)</button>
+            <button class="btn btn-outline" onclick="switchSection('flashcards')">Go to Flashcards</button>
+          </div>
+        </div>
+      </section>
+      
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
