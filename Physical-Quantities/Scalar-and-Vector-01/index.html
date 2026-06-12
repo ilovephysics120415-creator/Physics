@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scalar or Vector? - O-Level Physics Revision</title>
+  <meta name="description" content="Master O-Level Physics Scalar & Vector quantities (Syllabus 6091) with revision flashcards and a game mode.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Confetti backdrop effect for correct answers -->
+  <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+
+  <div class="app-container">
+    
+    <!-- Header Title -->
+    <header>
+      <div class="logo-container">
+        <h1>Scalar or Vector?</h1>
+        <span>O-Level Physics 6091</span>
+      </div>
+    </header>
+
+    <!-- 1. Mode Selection View -->
+    <div id="menu-view" class="view active">
+      <div class="menu-intro">
+        <p>Master the difference between scalar and vector physical quantities with quick tools designed for O-Level success.</p>
+      </div>
+
+      <button class="mode-btn scalar-theme" onclick="startFlashcards()" id="btn-flashcard-mode">
+        <h2>Flashcard Revision</h2>
+        <p>Review and memorize physical quantities, definitions, and categories. Tap to flip cards.</p>
+      </button>
+
+      <button class="mode-btn vector-theme" onclick="startQuiz()" id="btn-sort-mode">
+        <h2>Sort It! Quiz</h2>
+        <p>Test your knowledge with 30 fast-paced questions, real-time feedback, and score tracking.</p>
+      </button>
+    </div>
+
+    <!-- 2. Flashcards Revision View -->
+    <div id="flashcards-view" class="view">
+      <div class="action-bar">
+        <button class="back-btn" onclick="switchView('menu')" id="btn-flashcard-back">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back
+        </button>
+        <button class="secondary-btn" onclick="shuffleFlashcards()" id="btn-shuffle">Shuffle Deck</button>
+      </div>
+
+      <div class="flashcard-area">
+        <div class="flashcard" id="card" onclick="flipCard()">
+          <!-- Card Front -->
+          <div class="card-face card-front">
+            <div class="quantity-name" id="card-qty-front">Distance</div>
+            <div class="tap-hint">Tap to Flip</div>
+          </div>
+          <!-- Card Back -->
+          <div class="card-face card-back" id="card-back">
+            <span class="card-type-badge" id="card-type-badge">Scalar</span>
+            <div class="quantity-def" id="card-def">Distance is the total length of path covered by a moving object, regardless of the direction of motion.</div>
+            <div class="tap-hint">Tap to Flip Back</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-controls">
+        <button class="circle-btn" onclick="prevCard()" id="btn-prev-card" aria-label="Previous quantity">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="card-counter" id="card-progress">1 / 15</div>
+        <button class="circle-btn" onclick="nextCard()" id="btn-next-card" aria-label="Next quantity">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- 3. Sort It! Quiz View -->
+    <div id="quiz-view" class="view">
+      <div class="action-bar">
+        <button class="back-btn" onclick="switchView('menu')" id="btn-quiz-back">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Quit
+        </button>
+        <div class="quiz-score" id="quiz-score-num">Score: 0</div>
+      </div>
+
+      <div class="quiz-header">
+        <div class="quiz-progress" id="quiz-progress-num">Question 1 of 30</div>
+      </div>
+
+      <div class="quiz-card-container">
+        <div class="quiz-card" id="quiz-card">
+          <div class="quiz-quantity" id="quiz-qty">Velocity</div>
+        </div>
+      </div>
+
+      <div class="quiz-choices">
+        <button class="quiz-btn btn-scalar" onclick="handleAnswer('Scalar')" id="btn-choose-scalar">
+          Scalar
+          <span>Magnitude only</span>
+        </button>
+        <button class="quiz-btn btn-vector" onclick="handleAnswer('Vector')" id="btn-choose-vector">
+          Vector
+          <span>Magnitude & Direction</span>
+        </button>
+      </div>
+
+      <!-- Slide Up Explanation Drawer Panel -->
+      <div class="explanation-panel" id="explanation-panel">
+        <div class="exp-status" id="exp-status">Correct!</div>
+        <div class="exp-text" id="exp-text">Speed is a scalar quantity because it has magnitude only.</div>
+        <button class="action-btn" onclick="nextQuizQuestion()" id="btn-next-question">Continue</button>
+      </div>
+    </div>
+
+    <!-- 4. End Game/Quiz View -->
+    <div id="end-view" class="view end-screen">
+      <h2 class="end-title">Round Complete!</h2>
+      
+      <div class="score-circle">
+        <span class="score-num" id="final-score">0</span>
+        <span class="score-total">/ 30 Correct</span>
+      </div>
+
+      <div>
+        <div class="grade-badge" id="final-grade">O-Level Grade: A1</div>
+      </div>
+
+      <p class="grade-comment" id="grade-comment">Outstanding! You have a perfect mastery of Physical Quantities for your O-levels!</p>
+
+      <button class="action-btn" onclick="startQuiz()" id="btn-retry">Play Again</button>
+      <button class="secondary-btn" onclick="switchView('menu')" id="btn-return-menu">Main Menu</button>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
