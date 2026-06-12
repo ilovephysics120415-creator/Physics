@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Base Quantities Blitz - A fast-paced physics SI units training quiz for Singapore O-level (6091) students.">
+  <title>Base Quantities Blitz - O-Level Physics 6091</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Canvas for Celebratory Confetti -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <main id="app-container">
+    <!-- START SCREEN -->
+    <section id="start-screen" class="screen active">
+      <div class="logo-container">
+        <h1 class="game-title">BASE QUANTITIES<br><span class="highlight">BLITZ</span></h1>
+        <p class="subtitle">O-Level Physics (6091) Unit Master</p>
+      </div>
+
+      <div class="glass-card instruction-card">
+        <p>Test your knowledge on the <strong>6 Base Quantities</strong> & their <strong>SI Units</strong>.</p>
+        <div class="rules-list">
+          <div class="rule-item">🔁 Play Until You Stop</div>
+          <div class="rule-item">🎯 Instant Explanations</div>
+          <div class="rule-item">🏆 High-Contrast Neon Controls</div>
+        </div>
+      </div>
+
+      <button id="start-btn" class="btn btn-primary btn-large ripple">START BLITZ</button>
+    </section>
+
+    <!-- GAME SCREEN -->
+    <section id="game-screen" class="screen">
+      <!-- Game Header: Score and Stop -->
+      <header class="game-header">
+        <div class="score-tracker">
+          <span class="label">SCORE</span>
+          <span id="score-val" class="value">0</span>
+        </div>
+        <button id="stop-btn" class="btn btn-stop">STOP</button>
+      </header>
+
+      <!-- Quiz Card Area -->
+      <div id="quiz-card-container">
+        <div id="quiz-card" class="glass-card">
+          <div class="card-glow"></div>
+          <div class="card-content">
+            <span class="card-meta">PHYSICAL QUANTITY</span>
+            <h2 id="quantity-display">Temperature</h2>
+          </div>
+        </div>
+      </div>
+
+      <!-- SI Unit Options -->
+      <div id="options-container" class="options-grid">
+        <button class="btn btn-option" data-index="0">Option 1</button>
+        <button class="btn btn-option" data-index="1">Option 2</button>
+        <button class="btn btn-option" data-index="2">Option 3</button>
+        <button class="btn btn-option" data-index="3">Option 4</button>
+      </div>
+
+      <!-- Explanation Panel -->
+      <div id="feedback-panel" class="feedback-panel hidden">
+        <p id="explanation-text"></p>
+        <button id="next-btn" class="btn btn-secondary">NEXT QUANTITY</button>
+      </div>
+    </section>
+
+    <!-- END SCREEN -->
+    <section id="end-screen" class="screen">
+      <div class="logo-container">
+        <h1 class="game-title">ROUND<br><span class="highlight">OVER</span></h1>
+      </div>
+
+      <div class="glass-card summary-card">
+        <div class="result-stats">
+          <div class="stat-box">
+            <span class="stat-val correct-color" id="final-correct">0</span>
+            <span class="stat-label">CORRECT</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-val wrong-color" id="final-total">0</span>
+            <span class="stat-label">TOTAL SHOTS</span>
+          </div>
+        </div>
+        
+        <div class="grade-container">
+          <h3 id="grade-title">EXCELLENT!</h3>
+          <p id="grade-desc">You're ready for the O-level exams.</p>
+        </div>
+      </div>
+
+      <button id="retry-btn" class="btn btn-primary btn-large ripple">PLAY AGAIN</button>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>Singapore O-Level Physics 6091 Syllabus</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
