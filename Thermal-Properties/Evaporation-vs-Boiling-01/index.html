@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O-Level Physics: Boiling vs Evaporation</title>
+  <meta name="description" content="Interactive learning app for O-Level Physics (6091) students covering Boiling and Evaporation. Learn concepts, explore animations, practice flashcards, and test yourself with a randomized quiz.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0b0f19;
+      --card-bg: rgba(20, 27, 45, 0.7);
+      --card-border: rgba(57, 255, 20, 0.15);
+      --card-border-active: rgba(57, 255, 20, 0.6);
+      --accent: #39FF14;
+      --accent-dim: rgba(57, 255, 20, 0.2);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --danger: #ff4136;
+      --success: #39FF14;
+      --glow-shadow: 0 0 20px rgba(57, 255, 20, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      padding-top: 80px; /* Space for top sticky nav */
+      padding-bottom: 20px;
+    }
+
+    h1, h2, h3, .brand {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+    }
+
+    /* Core Layout */
+    .container {
+      width: 100%;
+      max-width: 500px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .brand {
+      font-size: 1.6rem;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand span {
+      color: var(--accent);
+      text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+    }
+
+    .syllabus-badge {
+      font-size: 0.75rem;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-top: 6px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    /* Minimal Text Card styling */
+    .glass-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .glass-card:hover {
+      border-color: var(--card-border-active);
+    }
+
+    /* Sticky Top Navigation Menu */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 500px;
+      background: rgba(11, 15, 25, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 10px;
+      z-index: 100;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: color 0.3s;
+      flex: 1;
+    }
+
+    .nav-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      transition: transform 0.2s, stroke 0.3s;
+    }
+
+    .nav-btn:hover {
+      color: var(--text-main);
+    }
+
+    .nav-btn.active {
+      color: var(--accent);
+      text-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+    }
+
+    .nav-btn.active svg {
+      transform: scale(1.15);
+      stroke: var(--accent);
+      filter: drop-shadow(0 0 5px rgba(57, 255, 20, 0.5));
+    }
+
+    /* Sections rendering */
+    .app-section {
+      display: none;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .app-section.active {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Section 1: Intro Cards */
+    .intro-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .intro-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .intro-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    .intro-title {
+      font-size: 1.15rem;
+      color: var(--accent);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .intro-text {
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: var(--text-main);
+    }
+
+    /* Section 2: Explorer Tabs */
+    .tab-header {
+      display: flex;
+      background: rgba(20, 27, 45, 0.5);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 4px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.85rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #0b0f19;
+      font-weight: 600;
+    }
+
+    .tab-content {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .tab-content.active {
+      display: flex;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    /* Animations & Scenes */
+    .scene-container {
+      width: 100%;
+      height: 250px;
+      background: #060911;
+      border-radius: 12px;
+      border: 1px solid rgba(57, 255, 20, 0.1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .interactive-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* SVG Animation Keyframes */
+    @keyframes heatOscillate {
+      0%, 100% { transform: scaleY(0.9) translateY(2px); }
+      50% { transform: scaleY(1.1) translateY(-2px); }
+    }
+    @keyframes bubbleRise {
+      0% { transform: translateY(130px) translateX(0); opacity: 0; }
+      10% { opacity: 0.8; }
+      90% { opacity: 0.8; }
+      100% { transform: translateY(30px) translateX(var(--x-offset)); opacity: 0; }
+    }
+    @keyframes surfaceEscape {
+      0% { transform: translateY(80px) scale(1); opacity: 0; }
+      20% { opacity: 0.8; }
+      80% { opacity: 0.8; }
+      100% { transform: translateY(-30px) translateX(var(--x-offset)) scale(0.6); opacity: 0; }
+    }
+    @keyframes windBlow {
+      0% { transform: translateX(-50px) translateY(0); opacity: 0; }
+      20% { opacity: 0.5; }
+      80% { opacity: 0.5; }
+      100% { transform: translateX(250px) translateY(-10px); opacity: 0; }
+    }
+    @keyframes shrinkPuddle {
+      0% { transform: scaleX(1) scaleY(1); }
+      100% { transform: scaleX(0.2) scaleY(0.1); }
+    }
+
+    .fire-heat {
+      animation: heatOscillate 0.5s infinite ease-in-out;
+      transform-origin: bottom;
+    }
+    .bubble {
+      animation: bubbleRise 3s infinite linear;
+    }
+    .esc-particle {
+      animation: surfaceEscape 4s infinite ease-in;
+    }
+    .wind-line {
+      animation: windBlow 3s infinite linear;
+    }
+
+    .label-tag {
+      position: absolute;
+      background: rgba(11, 15, 25, 0.85);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 4px 8px;
+      font-size: 0.7rem;
+      border-radius: 4px;
+      pointer-events: none;
+      font-weight: 600;
+    }
+
+    .real-life-box {
+      background: rgba(57, 255, 20, 0.04);
+      border-left: 2px solid var(--accent);
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.85rem;
+    }
+
+    /* Comparison Table Row by Row Reveal */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .compare-table th, .compare-table td {
+      padding: 10px 8px;
+      text-align: left;
+      font-size: 0.8rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .compare-table th {
+      color: var(--accent);
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      border-bottom: 2px solid var(--accent-dim);
+    }
+
+    .compare-table tr {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    .compare-table.revealed tr {
+      animation: tableRowReveal 0.4s ease forwards;
+    }
+
+    @keyframes tableRowReveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Section 3: Flashcards */
+    .flashcard-container {
+      width: 100%;
+      height: 320px;
+      perspective: 1000px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .flashcard {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 16px;
+    }
+
+    .flashcard.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-front {
+      background: linear-gradient(135deg, rgba(20, 27, 45, 0.95), rgba(11, 15, 25, 0.95));
+      color: var(--text-main);
+    }
+
+    .card-back {
+      background: linear-gradient(135deg, rgba(11, 15, 25, 0.95), rgba(20, 27, 45, 0.95));
+      color: var(--accent);
+      transform: rotateY(180deg);
+      border-color: var(--accent);
+    }
+
+    .card-category {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .card-content {
+      font-size: 1.1rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .card-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 25px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 10px;
+      width: 80%;
+    }
+
+    .flashcard-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .control-btn {
+      background: rgba(20, 27, 45, 0.8);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 12px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .control-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: var(--glow-shadow);
+    }
+
+    .control-btn:active {
+      transform: scale(0.97);
+    }
+
+    .card-counter {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Section 4 & 5: Quiz Module */
+    .quiz-progress-bar {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .quiz-progress-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 0.3s ease;
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    .quiz-card {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .quiz-question {
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      background: rgba(20, 27, 45, 0.8);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 14px 16px;
+      border-radius: 12px;
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .option-btn:hover {
+      border-color: var(--card-border-active);
+      background: rgba(20, 27, 45, 0.95);
+    }
+
+    .option-btn.correct {
+      border-color: var(--success) !important;
+      background: rgba(57, 255, 20, 0.1) !important;
+      color: var(--success) !important;
+      font-weight: 600;
+    }
+
+    .option-btn.wrong {
+      border-color: var(--danger) !important;
+      background: rgba(255, 65, 54, 0.1) !important;
+      color: var(--danger) !important;
+    }
+
+    /* Quiz Celebratory Pop Animation */
+    .correct-pop {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(57, 255, 20, 0.2) 0%, rgba(57, 255, 20, 0) 70%);
+      pointer-events: none;
+      border-radius: 50%;
+      z-index: 10;
+      transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+      opacity: 0;
+    }
+
+    .correct-pop.active {
+      transform: translate(-50%, -50%) scale(1.5);
+      opacity: 1;
+    }
+
+    /* Result Panel */
+    .results-panel {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .score-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid var(--accent);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: var(--glow-shadow);
+      margin: 10px 0;
+    }
+
+    .score-value {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .score-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .feedback-grade {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.4;
+      padding: 0 10px;
+    }
+
+    .review-header {
+      font-size: 1rem;
+      color: var(--accent);
+      align-self: flex-start;
+      margin-top: 10px;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .wrong-answer-card {
+      background: rgba(255, 65, 54, 0.03);
+      border: 1px solid rgba(255, 65, 54, 0.2);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .wrong-q {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .wrong-explanation {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 8px;
+    }
+
+    .wrong-explanation span {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* Swipe animations */
+    .swipe-left {
+      animation: swipeLeft 0.35s ease forwards;
+    }
+    .swipe-right {
+      animation: swipeRight 0.35s ease forwards;
+    }
+
+    @keyframes swipeLeft {
+      0% { transform: rotate(0) translateX(0); opacity: 1; }
+      100% { transform: rotate(-12deg) translateX(-150%) translateY(30px); opacity: 0; }
+    }
+    @keyframes swipeRight {
+      0% { transform: rotate(0) translateX(0); opacity: 1; }
+      100% { transform: rotate(12deg) translateX(150%) translateY(30px); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- STICKY TOP NAV BAR -->
+  <nav class="top-nav">
+    <button class="nav-btn active" id="nav-intro" onclick="switchSection('intro')">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5v-15z"/></svg>
+      Intro
+    </button>
+    <button class="nav-btn" id="nav-explorer" onclick="switchSection('explorer')">
+      <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      Explorer
+    </button>
+    <button class="nav-btn" id="nav-flashcards" onclick="switchSection('flashcards')">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+      Flashcards
+    </button>
+    <button class="nav-btn" id="nav-quiz" onclick="switchSection('quiz')">
+      <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4m-2 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+      Quiz
+    </button>
+  </nav>
+
+  <div class="container">
+    <header>
+      <div class="brand">Evaporation <span>vs Boiling</span></div>
+    </header>
+
+    <!-- SECTION 1: CONCEPT INTRO -->
+    <div id="section-intro" class="app-section active">
+      <div class="intro-grid">
+        <div class="glass-card intro-card" style="animation: fadeIn 0.4s ease forwards;">
+          <h3 class="intro-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Boiling
+          </h3>
+          <p class="intro-text">Occurs <strong>throughout</strong> the liquid at a <strong>fixed temperature</strong> (boiling point). This process requires a continuous <strong>external heat source</strong> to overcome intermolecular forces of attraction.</p>
+        </div>
+
+        <div class="glass-card intro-card" style="animation: fadeIn 0.5s ease forwards;">
+          <h3 class="intro-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v2M4.93 4.93l1.41 1.41M20 12h-2M6.34 17.66l-1.41 1.41M2 12h2M14 22a10 10 0 0 0 10-10h-2A8 8 0 0 1 14 20Z"/></svg>
+            Evaporation
+          </h3>
+          <p class="intro-text">Occurs only at the <strong>surface</strong> of the liquid and at <strong>any temperature</strong> below the boiling point. The escaping energetic particles leave behind slower particles, causing <strong>cooling</strong> of the remaining liquid.</p>
+        </div>
+
+        <div class="glass-card intro-card" style="animation: fadeIn 0.6s ease forwards;">
+          <h3 class="intro-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            Phase Transition
+          </h3>
+          <p class="intro-text">Both represent a change in state from <strong>liquid to gas</strong>. However, their mechanisms, location of occurrence, temperature requirements, and thermodynamic effects are distinct.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: INTERACTIVE EXPLORER -->
+    <div id="section-explorer" class="app-section">
+      <div class="tab-header">
+        <button class="tab-btn active" onclick="switchExplorerTab('boiling')">Boiling</button>
+        <button class="tab-btn" onclick="switchExplorerTab('evaporation')">Evaporation</button>
+        <button class="tab-btn" onclick="switchExplorerTab('comparison')">Comparison</button>
+      </div>
+
+      <!-- Boiling Explorer Tab -->
+      <div id="tab-boiling" class="tab-content active">
+        <div class="scene-container">
+          <svg class="interactive-svg" viewBox="0 0 200 250">
+            <!-- Heat Source (Fire) -->
+            <path class="fire-heat" d="M80,220 C80,200 90,195 100,185 C110,195 120,200 120,220 Z" fill="#ff4136" opacity="0.8"/>
+            <path class="fire-heat" d="M90,220 C90,205 95,200 100,195 C105,200 110,205 110,220 Z" fill="#ff851b"/>
+            
+            <!-- Pot -->
+            <rect x="50" y="80" width="100" height="100" rx="5" fill="none" stroke="#9ca3af" stroke-width="3"/>
+            
+            <!-- Liquid Water Level -->
+            <rect x="52" y="100" width="96" height="78" fill="rgba(57, 255, 20, 0.08)"/>
+            <line x1="52" y1="100" x2="148" y2="100" stroke="var(--accent)" stroke-width="2"/>
+            
+            <!-- Bubbles forming throughout the liquid -->
+            <circle class="bubble" cx="70" cy="160" r="5" fill="none" stroke="var(--accent)" stroke-width="1.5" style="--x-offset: -5px; animation-delay: 0s;"/>
+            <circle class="bubble" cx="95" cy="140" r="7" fill="none" stroke="var(--accent)" stroke-width="1.5" style="--x-offset: 8px; animation-delay: 0.5s;"/>
+            <circle class="bubble" cx="120" cy="155" r="4" fill="none" stroke="var(--accent)" stroke-width="1.5" style="--x-offset: -2px; animation-delay: 1.2s;"/>
+            <circle class="bubble" cx="80" cy="120" r="6" fill="none" stroke="var(--accent)" stroke-width="1.5" style="--x-offset: 4px; animation-delay: 1.8s;"/>
+            <circle class="bubble" cx="130" cy="115" r="5" fill="none" stroke="var(--accent)" stroke-width="1.5" style="--x-offset: -6px; animation-delay: 2.3s;"/>
+          </svg>
+          
+          <div class="label-tag" style="top: 25px; left: 15px;">Fixed Temperature</div>
+          <div class="label-tag" style="top: 115px; right: 15px;">Bubbles form throughout</div>
+          <div class="label-tag" style="bottom: 45px; left: 15px;">Requires External Heat</div>
+        </div>
+
+        <div class="real-life-box">
+          <strong>Real-life Examples:</strong> Cooking pasta in boiling water, sterilising medical equipment in steam.
+        </div>
+      </div>
+
+      <!-- Evaporation Explorer Tab -->
+      <div id="tab-evaporation" class="tab-content">
+        <div class="scene-container">
+          <svg class="interactive-svg" viewBox="0 0 200 250">
+            <!-- Sun symbol representing ambient environment -->
+            <circle cx="160" cy="40" r="12" fill="none" stroke="var(--accent)" stroke-width="2"/>
+            <path d="M160,20 L160,15 M160,60 L160,65 M140,40 L135,40 M180,40 L185,40" stroke="var(--accent)" stroke-width="1.5"/>
+            
+            <!-- Puddle ground line -->
+            <line x1="20" y1="180" x2="180" y2="180" stroke="#9ca3af" stroke-width="2"/>
+            
+            <!-- Puddle (Shrinks/Evaporates animation) -->
+            <ellipse cx="100" cy="180" rx="60" ry="12" fill="rgba(57, 255, 20, 0.15)" stroke="var(--accent)" stroke-width="1.5"/>
+            
+            <!-- Evaporating particles escaping from surface -->
+            <circle class="esc-particle" cx="70" cy="170" r="3" fill="var(--accent)" style="--x-offset: -10px; animation-duration: 3s; animation-delay: 0s;"/>
+            <circle class="esc-particle" cx="100" cy="172" r="3" fill="var(--accent)" style="--x-offset: 15px; animation-duration: 3.5s; animation-delay: 1s;"/>
+            <circle class="esc-particle" cx="130" cy="170" r="3" fill="var(--accent)" style="--x-offset: -5px; animation-duration: 2.8s; animation-delay: 1.8s;"/>
+            
+            <!-- Wet clothes line -->
+            <line x1="30" y1="90" x2="140" y2="90" stroke="#9ca3af" stroke-width="1"/>
+            <!-- Hanging shirt -->
+            <path d="M65,90 L75,100 L75,130 L95,130 L95,100 L105,90 Z" fill="rgba(255,255,255,0.05)" stroke="var(--accent)" stroke-width="1.5"/>
+            
+            <!-- Escaping particles from shirt -->
+            <circle class="esc-particle" cx="85" cy="110" r="2.5" fill="var(--accent)" style="--x-offset: 12px; animation-duration: 4s; animation-delay: 0.5s;"/>
+          </svg>
+          
+          <div class="label-tag" style="top: 25px; left: 15px;">Occurs at Surface Only</div>
+          <div class="label-tag" style="top: 110px; right: 15px;">Any Temp (e.g. 25°C)</div>
+          <div class="label-tag" style="bottom: 30px; left: 15px;">Causes Cooling Effect</div>
+        </div>
+
+        <div class="real-life-box">
+          <strong>Real-life Examples:</strong> Sweating to cool down human body temperature, wet clothes line drying, rain puddles disappearing.
+        </div>
+      </div>
+
+      <!-- Comparison Table Tab -->
+      <div id="tab-comparison" class="tab-content">
+        <div class="glass-card">
+          <table class="compare-table" id="comparison-table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Boiling</th>
+                <th>Evaporation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="animation-delay: 0.1s;">
+                <td><strong>Location</strong></td>
+                <td>Throughout liquid</td>
+                <td>Surface only</td>
+              </tr>
+              <tr style="animation-delay: 0.2s;">
+                <td><strong>Temperature</strong></td>
+                <td>Fixed boiling point</td>
+                <td>Any temperature</td>
+              </tr>
+              <tr style="animation-delay: 0.3s;">
+                <td><strong>Speed</strong></td>
+                <td>Rapid process</td>
+                <td>Slow process</td>
+              </tr>
+              <tr style="animation-delay: 0.4s;">
+                <td><strong>Heat Source</strong></td>
+                <td>Requires external source</td>
+                <td>Draws from surroundings</td>
+              </tr>
+              <tr style="animation-delay: 0.5s;">
+                <td><strong>Liquid Temp</strong></td>
+                <td>Remains constant</td>
+                <td>Liquid temperature falls</td>
+              </tr>
+              <tr style="animation-delay: 0.6s;">
+                <td><strong>Bubbles</strong></td>
+                <td>Visible throughout</td>
+                <td>No bubbles formed</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: FLASHCARD REVISION MODE -->
+    <div id="section-flashcards" class="app-section">
+      <div class="flashcard-container" onclick="flipCard()">
+        <div class="flashcard" id="active-card">
+          <div class="card-face card-front">
+            <span class="card-category" id="card-category">Boiling vs Evaporation</span>
+            <p class="card-content" id="card-question">Tap to reveal the definition of boiling.</p>
+            <span class="card-hint">Tap Card to Flip</span>
+          </div>
+          <div class="card-face card-back">
+            <span class="card-category">Answer</span>
+            <p class="card-content" id="card-answer">Occurs throughout the liquid, at a fixed temperature, requiring an external heat source.</p>
+            <span class="card-hint">Tap to Flip Back</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard-controls">
+        <button class="control-btn" onclick="shuffleFlashcards()">
+          <svg viewBox="0 0 24 24"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M4 4l5 5"/></svg>
+          Shuffle
+        </button>
+        <span class="card-counter"><span id="current-card-idx">1</span> / <span id="total-cards-idx">9</span></span>
+        <button class="control-btn" onclick="nextCard()">
+          Next
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- SECTION 4: RANDOMIZED QUIZ -->
+    <div id="section-quiz" class="app-section">
+      <!-- Welcome/Intro Card -->
+      <div id="quiz-intro" class="glass-card" style="text-align: center; display: flex; flex-direction: column; gap: 16px;">
+        <h3 style="color: var(--accent);">Ready to Test Your Knowledge?</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">This quiz draws 10 randomized conceptual questions from a 30-question syllabus pool. Score distinctions and master latent heating!</p>
+        <button class="control-btn" style="margin: 10px auto 0 auto;" onclick="startQuiz()">
+          Start Quiz
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <!-- Play Container -->
+      <div id="quiz-play" class="glass-card quiz-card" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 0.8rem; color: var(--text-muted); font-family: 'Space Grotesk', sans-serif;">QUESTION <span id="quiz-q-num">1</span> OF 10</span>
+          <span id="quiz-timer" style="font-size: 0.8rem; color: var(--accent); font-family: 'Space Grotesk', sans-serif;"></span>
+        </div>
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="quiz-progress"></div>
+        </div>
+        <div class="quiz-question" id="quiz-question-text">Loading question...</div>
+        <div class="options-list" id="quiz-options">
+          <!-- Dynamically filled -->
+        </div>
+        <div class="correct-pop" id="correct-celebration"></div>
+      </div>
+
+      <!-- Result Container -->
+      <div id="quiz-result" class="glass-card results-panel" style="display: none;">
+        <h3 style="color: var(--accent);">Quiz Completed!</h3>
+        <div class="score-circle">
+          <span class="score-value" id="result-score-val">8</span>
+          <span class="score-label">Score</span>
+        </div>
+        <div class="feedback-grade" id="result-grade-msg">Passable Effort! You have the basics down, but watch out for the differences in mechanism.</div>
+        
+        <button class="control-btn" style="margin-top: 10px;" onclick="resetQuiz()">
+          Try Again
+          <svg viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+        </button>
+
+        <h4 class="review-header" id="wrong-summary-title">Review Incorrect Answers</h4>
+        <div id="wrong-answers-list" style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
+          <!-- Dynamically filled -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Navigation / State Management
+    function switchSection(sectionId) {
+      document.querySelectorAll('.app-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      const activeSection = document.getElementById(`section-${sectionId}`);
+      if (activeSection) {
+        activeSection.classList.add('active');
+      }
+
+      const activeBtn = document.getElementById(`nav-${sectionId}`);
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+      }
+
+      // Special action: Table trigger reveal animation
+      if (sectionId === 'explorer') {
+        const activeTab = document.querySelector('.tab-btn.active').innerText.toLowerCase();
+        if (activeTab === 'comparison') {
+          triggerTableReveal();
+        }
+      }
+    }
+
+    // Section 2: Explorer Tab Switcher
+    function switchExplorerTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('remove'); // Reset if class exists
+        btn.classList.remove('active');
+      });
+
+      const activeContent = document.getElementById(`tab-${tabId}`);
+      if (activeContent) {
+        activeContent.classList.add('active');
+      }
+
+      // Highlight active button
+      event.target.classList.add('active');
+
+      if (tabId === 'comparison') {
+        triggerTableReveal();
+      }
+    }
+
+    function triggerTableReveal() {
+      const table = document.getElementById('comparison-table');
+      table.classList.remove('revealed');
+      // trigger reflow
+      void table.offsetWidth;
+      table.classList.add('revealed');
+    }
+
+    // Section 3: Flashcards Dataset & Controller
+    const flashcardsDataset = [
+      {
+        category: "BOILING vs EVAPORATION",
+        question: "Where in the liquid does boiling occur compared to evaporation?",
+        answer: "Boiling occurs throughout the liquid (bubbles form inside), whereas evaporation occurs only at the surface of the liquid."
+      },
+      {
+        category: "BOILING vs EVAPORATION",
+        question: "How do temperature conditions differ between boiling and evaporation?",
+        answer: "Boiling occurs only at a fixed temperature (the boiling point), while evaporation occurs at any temperature below the boiling point."
+      },
+      {
+        category: "THERMODYNAMICS",
+        question: "Why does evaporation cause cooling of the remaining liquid?",
+        answer: "High-energy particles escape the surface, reducing the average kinetic energy of the remaining molecules. Since temperature is proportional to average kinetic energy, the temperature falls."
+      },
+      {
+        category: "ENERGY REQUIREMENTS",
+        question: "Why does boiling require a constant external heat source?",
+        answer: "Energy is continuously needed to overcome the intermolecular forces of attraction between molecules throughout the entire volume of liquid at the boiling point."
+      },
+      {
+        category: "PARTICLE KINETICS",
+        question: "Why can evaporation occur at any temperature?",
+        answer: "Molecules in a liquid have a distribution of speeds. Even at low temperatures, some surface molecules have enough kinetic energy to overcome intermolecular attractions and escape."
+      },
+      {
+        category: "REAL-LIFE BOILING",
+        question: "Give a common household example of boiling.",
+        answer: "Cooking food in boiling water (at 100°C) or water boiling rapidly inside a kettle with bubbles forming throughout."
+      },
+      {
+        category: "REAL-LIFE EVAPORATION",
+        question: "Give a biological/environmental example of evaporation.",
+        answer: "Sweating: sweat evaporates from human skin, absorbing latent heat of vaporisation from the body and cooling it down."
+      },
+      {
+        category: "PARTICLE KINETICS",
+        question: "Which molecules are able to escape during evaporation?",
+        answer: "Only the faster-moving (high kinetic energy) molecules located at the surface of the liquid."
+      },
+      {
+        category: "THERMODYNAMICS",
+        question: "What happens to the average kinetic energy of particles left behind during evaporation?",
+        answer: "The average kinetic energy of the remaining particles decreases, resulting in a temperature drop."
+      }
+    ];
+
+    let currentCardIndex = 0;
+    let randomizedCards = [...flashcardsDataset];
+
+    function updateCardUI() {
+      const card = document.getElementById('active-card');
+      card.classList.remove('flipped');
+      setTimeout(() => {
+        document.getElementById('card-category').innerText = randomizedCards[currentCardIndex].category;
+        document.getElementById('card-question').innerText = randomizedCards[currentCardIndex].question;
+        document.getElementById('card-answer').innerText = randomizedCards[currentCardIndex].answer;
+        document.getElementById('current-card-idx').innerText = currentCardIndex + 1;
+      }, 150);
+    }
+
+    function flipCard() {
+      document.getElementById('active-card').classList.toggle('flipped');
+    }
+
+    function nextCard() {
+      const card = document.getElementById('active-card');
+      card.style.animation = 'swipeRight 0.35s ease forwards';
+      setTimeout(() => {
+        currentCardIndex = (currentCardIndex + 1) % randomizedCards.length;
+        updateCardUI();
+        card.style.animation = 'fadeIn 0.3s ease forwards';
+        // Clear active keyframe styles so that transform properties (like flip) function normally
+        setTimeout(() => {
+          card.style.animation = '';
+        }, 300);
+      }, 350);
+    }
+
+    function shuffleFlashcards() {
+      const card = document.getElementById('active-card');
+      card.style.animation = 'swipeLeft 0.35s ease forwards';
+      setTimeout(() => {
+        randomizedCards.sort(() => Math.random() - 0.5);
+        currentCardIndex = 0;
+        updateCardUI();
+        card.style.animation = 'fadeIn 0.3s ease forwards';
+        // Clear active keyframe styles so that transform properties (like flip) function normally
+        setTimeout(() => {
+          card.style.animation = '';
+        }, 300);
+      }, 350);
+    }
+
+    // Section 4: Quiz Questions Pool (30 Syllabus 6091 conceptual MCQs)
+    const quizPool = [
+      {
+        question: "Which statement correctly describes a difference between boiling and evaporation?",
+        options: [
+          "Boiling occurs only at the surface, evaporation occurs throughout.",
+          "Boiling occurs at any temperature, evaporation at a fixed temperature.",
+          "Boiling requires an external heat source, evaporation does not.",
+          "Boiling causes cooling, while evaporation does not."
+        ],
+        correct: 2,
+        explanation: "Boiling needs active external heating to change phase, whereas evaporation uses thermal energy from surroundings."
+      },
+      {
+        question: "Why does evaporation of a liquid cause its temperature to drop?",
+        options: [
+          "Low-energy particles leave, increasing average kinetic energy.",
+          "High-energy particles leave, reducing average kinetic energy.",
+          "The volume of the liquid decreases.",
+          "The liquid reacts with the air to absorb coldness."
+        ],
+        correct: 1,
+        explanation: "As the fastest (most energetic) molecules escape the surface, the remaining molecules have a lower average kinetic energy, lowering the temperature."
+      },
+      {
+        question: "At which location does evaporation take place?",
+        options: [
+          "Throughout the entire liquid",
+          "Only at the surface of the liquid",
+          "At the boundary where liquid meets the bottom of the container",
+          "Only in the regions with highest temperature"
+        ],
+        correct: 1,
+        explanation: "Evaporation is strictly a surface phenomenon where surface molecules overcome attractive forces to escape."
+      },
+      {
+        question: "A beaker of water is left in a room at 25°C. Bubbles are NOT visible. Which process is occurring?",
+        options: [
+          "Boiling",
+          "Evaporation",
+          "Melting",
+          "Condensation"
+        ],
+        correct: 1,
+        explanation: "Since no bubbles are visible and the temperature is below boiling point, the water is evaporating."
+      },
+      {
+        question: "Which factor increases the rate of evaporation of a puddle of water?",
+        options: [
+          "Decreasing the surface area of the puddle",
+          "Lowering the temperature of the air",
+          "Increasing the humidity of the air",
+          "Increasing the wind speed over the puddle"
+        ],
+        correct: 3,
+        explanation: "Higher wind speed sweeps escaped vapour away, preventing them from returning, thereby increasing the rate of evaporation."
+      },
+      {
+        question: "During boiling, what happens to the temperature of a pure liquid?",
+        options: [
+          "It increases steadily.",
+          "It decreases steadily.",
+          "It remains constant.",
+          "It fluctuates up and down."
+        ],
+        correct: 2,
+        explanation: "For a pure substance, the temperature remains constant during boiling because all energy transferred into the substance is used to overcome forces of attraction between particles."
+      },
+      {
+        question: "Sweating cools our body. Which phase change process explains this cooling mechanism?",
+        options: [
+          "Boiling of sweat",
+          "Evaporation of sweat",
+          "Condensation of water vapour",
+          "Solidification of lipids"
+        ],
+        correct: 1,
+        explanation: "Sweat evaporates from the skin surface, absorbing latent heat of vaporisation from our body."
+      },
+      {
+        question: "Why are bubbles formed during boiling but not during evaporation?",
+        options: [
+          "Bubbles require high atmospheric pressure to form.",
+          "Boiling occurs throughout the liquid, allowing vapour bubbles to form inside.",
+          "Evaporation only happens when the liquid is completely pure.",
+          "Vapour pressure is too low during boiling."
+        ],
+        correct: 1,
+        explanation: "During boiling, the vapour pressure equals atmospheric pressure, allowing bubbles of gas to form and survive throughout the liquid."
+      },
+      {
+        question: "Which of the following describes the particle movement during liquid to gas transition?",
+        options: [
+          "Particles move closer together.",
+          "Particles lose kinetic energy.",
+          "Particles overcome forces of attraction between particles and move far apart.",
+          "Particles vibrate about fixed positions."
+        ],
+        correct: 2,
+        explanation: "Liquid to gas transition involves particles overcoming forces of attraction between particles to become very far apart."
+      },
+      {
+        question: "How does high humidity affect the rate of evaporation?",
+        options: [
+          "It increases the rate.",
+          "It decreases the rate.",
+          "It has no effect.",
+          "It stops boiling."
+        ],
+        correct: 1,
+        explanation: "High humidity means the air is already saturated with water vapour, making it harder for more molecules to escape."
+      },
+      {
+        question: "Which statement about the boiling point of water is correct?",
+        options: [
+          "It is always 100°C regardless of purity.",
+          "Purity of water does not affect it.",
+          "Adding salt increases the boiling point.",
+          "Adding salt decreases the boiling point."
+        ],
+        correct: 2,
+        explanation: "Impurities like salt raise the boiling point of water above 100°C."
+      },
+      {
+        question: "What is the primary heat source for evaporation in a natural puddle?",
+        options: [
+          "A Bunsen burner",
+          "An electrical heater",
+          "The surroundings and the sun",
+          "Internal chemical reactions"
+        ],
+        correct: 2,
+        explanation: "Natural evaporation relies on thermal energy absorbed from the sun and ambient surroundings."
+      },
+      {
+        question: "Which of the following occurs faster on a windy day?",
+        options: [
+          "Boiling of water in a pot",
+          "Evaporation of water from wet clothes",
+          "Melting of ice in a freezer",
+          "Condensation of steam"
+        ],
+        correct: 1,
+        explanation: "Wind increases air flow, carrying away vapor molecules and speeding up evaporation."
+      },
+      {
+        question: "Average kinetic energy of molecules is directly related to which physical quantity?",
+        options: [
+          "Pressure",
+          "Volume",
+          "Temperature",
+          "Density"
+        ],
+        correct: 2,
+        explanation: "Temperature is a direct measure of the average kinetic energy of the molecules in a substance."
+      },
+      {
+        question: "If the surface area of a liquid is doubled, what happens to the rate of evaporation?",
+        options: [
+          "It is halved.",
+          "It remains the same.",
+          "It is doubled.",
+          "It drops to zero."
+        ],
+        correct: 2,
+        explanation: "More surface area means more molecules are exposed at the surface to escape, doubling the rate of evaporation."
+      },
+      {
+        question: "What happens to the molecules of a liquid that have lower kinetic energy during evaporation?",
+        options: [
+          "They escape first.",
+          "They remain in the liquid.",
+          "They gain energy from space.",
+          "They turn into solids."
+        ],
+        correct: 1,
+        explanation: "Slower (low KE) molecules lack the energy to break surface attractions and remain behind."
+      },
+      {
+        question: "Why does water boil at 100°C at sea level but at a lower temperature on a high mountain?",
+        options: [
+          "Atmospheric pressure is lower on mountains.",
+          "Gravity is stronger on mountains.",
+          "Sun is closer on mountains.",
+          "Water is purer on mountains."
+        ],
+        correct: 0,
+        explanation: "Lower atmospheric pressure means the liquid's vapour pressure equals external pressure at a lower temperature."
+      },
+      {
+        question: "Which process does NOT require bubbles to form?",
+        options: [
+          "Boiling",
+          "Evaporation",
+          "Vaporisation at boiling point",
+          "Rapid boiling"
+        ],
+        correct: 1,
+        explanation: "Evaporation is a quiet surface escape mechanism without bubble formation."
+      },
+      {
+        question: "What state change describes boiling?",
+        options: [
+          "Solid to liquid",
+          "Liquid to solid",
+          "Liquid to gas",
+          "Gas to liquid"
+        ],
+        correct: 2,
+        explanation: "Boiling changes the state from liquid to gas throughout the substance."
+      },
+      {
+        question: "Why does blowing air over a hot drink cool it down faster?",
+        options: [
+          "It forces the drink to boil.",
+          "It increases the rate of evaporation.",
+          "It turns the steam into ice.",
+          "It stops all molecules from moving."
+        ],
+        correct: 1,
+        explanation: "Blowing sweeps away evaporated vapour, maintaining a high concentration gradient for faster evaporation."
+      },
+      {
+        question: "Under identical conditions, which liquid evaporates fastest?",
+        options: [
+          "Water (high boiling point)",
+          "Ether (very low boiling point)",
+          "Cooking oil (high boiling point)",
+          "Glycerine (very high boiling point)"
+        ],
+        correct: 1,
+        explanation: "Volatile liquids like ether have weak intermolecular forces, allowing faster evaporation at room temperature."
+      },
+      {
+        question: "How does the temperature of a boiling pot of pure water change as you increase the burner flame?",
+        options: [
+          "It increases above 100°C.",
+          "It remains at 100°C but boils faster.",
+          "It decreases due to fast bubble release.",
+          "It fluctuates unpredictably."
+        ],
+        correct: 1,
+        explanation: "A larger flame increases the rate of boiling, but the temperature stays at the boiling point (100°C)."
+      },
+      {
+        question: "Which of the following is a cooling process?",
+        options: [
+          "Condensation",
+          "Freezing",
+          "Evaporation",
+          "Deposition"
+        ],
+        correct: 2,
+        explanation: "Evaporation is a cooling process because escaping high-energy particles lower the average kinetic energy of the remaining liquid."
+      },
+      {
+        question: "What is required for a molecule to escape from the liquid surface during evaporation?",
+        options: [
+          "It must be at the bottom of the container.",
+          "It must have high kinetic energy and move upwards.",
+          "It must have zero kinetic energy.",
+          "It must be cool."
+        ],
+        correct: 1,
+        explanation: "It needs high kinetic energy to overcome attractive intermolecular forces and must be heading out of the surface."
+      },
+      {
+        question: "Why is evaporation called a surface phenomenon?",
+        options: [
+          "It only occurs when the container is open.",
+          "Molecules can only escape from the top surface layer.",
+          "It only happens on flat ground.",
+          "It occurs at the bottom surface."
+        ],
+        correct: 1,
+        explanation: "Molecules inside are surrounded by other molecules, whereas surface molecules can easily fly off into the air."
+      },
+      {
+        question: "At the boiling point, the thermal energy supplied is used to:",
+        options: [
+          "Increase the speed of the molecules",
+          "overcome forces of attraction between molecules to change phase",
+          "Cool down the surroundings",
+          "Create new atoms"
+        ],
+        correct: 1,
+        explanation: "Latent heat of vaporisation is used purely to overcome forces of attraction between molecules, not increase average kinetic energy of molecules and hence not to increase temperature of substance."
+      },
+      {
+        question: "If a liquid has strong intermolecular forces, its rate of evaporation is:",
+        options: [
+          "Very high",
+          "Very low",
+          "Unchanged",
+          "Infinite"
+        ],
+        correct: 1,
+        explanation: "Strong attractive forces make it difficult for molecules to break free and escape, lowering the rate."
+      },
+      {
+        question: "Which process describes wet clothes drying indoors?",
+        options: [
+          "Boiling",
+          "Evaporation",
+          "Melting",
+          "Sublimation"
+        ],
+        correct: 1,
+        explanation: "The water in wet clothes slowly evaporates at room temperature."
+      },
+      {
+        question: "In which process does phase change happen at a single, fixed temperature?",
+        options: [
+          "Evaporation",
+          "Boiling",
+          "Thermal expansion",
+          "Conduction"
+        ],
+        correct: 1,
+        explanation: "Boiling occurs strictly at the boiling point, whereas evaporation happens at any temperature."
+      },
+      {
+        question: "What happens to the total thermal energy of surroundings during evaporation?",
+        options: [
+          "It is absorbed by the evaporating liquid.",
+          "It increases.",
+          "It remains completely unchanged.",
+          "It turns into light energy."
+        ],
+        correct: 0,
+        explanation: "Surroundings lose heat energy as it is absorbed by the evaporating liquid to change state."
+      }
+    ];
+
+    let quizQuestions = [];
+    let currentQuizIdx = 0;
+    let quizScore = 0;
+    let wrongAnswersTrack = [];
+
+    function startQuiz() {
+      document.getElementById('quiz-intro').style.display = 'none';
+      document.getElementById('quiz-play').style.display = 'flex';
+      document.getElementById('quiz-result').style.display = 'none';
+      
+      // Shuffle pool and select 10 questions
+      quizQuestions = [...quizPool].sort(() => Math.random() - 0.5).slice(0, 10);
+      currentQuizIdx = 0;
+      quizScore = 0;
+      wrongAnswersTrack = [];
+      
+      showQuizQuestion();
+    }
+
+    function showQuizQuestion() {
+      const q = quizQuestions[currentQuizIdx];
+      document.getElementById('quiz-q-num').innerText = currentQuizIdx + 1;
+      document.getElementById('quiz-progress').style.width = `${((currentQuizIdx) / 10) * 100}%`;
+      document.getElementById('quiz-question-text').innerText = q.question;
+
+      const optionsContainer = document.getElementById('quiz-options');
+      optionsContainer.innerHTML = '';
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerText = opt;
+        btn.onclick = () => selectOption(idx);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function selectOption(selectedIdx) {
+      const q = quizQuestions[currentQuizIdx];
+      const options = document.querySelectorAll('.option-btn');
+      
+      // Disable further clicks
+      options.forEach(btn => btn.onclick = null);
+
+      if (selectedIdx === q.correct) {
+        options[selectedIdx].classList.add('correct');
+        quizScore++;
+        // Trigger correct visual celebration
+        const celebration = document.getElementById('correct-celebration');
+        celebration.classList.add('active');
+        setTimeout(() => {
+          celebration.classList.remove('active');
+        }, 500);
+      } else {
+        options[selectedIdx].classList.add('wrong');
+        options[q.correct].classList.add('correct');
+        // Track incorrect answers for the review section
+        wrongAnswersTrack.push({
+          question: q.question,
+          yourAnswer: q.options[selectedIdx],
+          correctAnswer: q.options[q.correct],
+          explanation: q.explanation
+        });
+      }
+
+      setTimeout(() => {
+        currentQuizIdx++;
+        if (currentQuizIdx < 10) {
+          showQuizQuestion();
+        } else {
+          showQuizResults();
+        }
+      }, 1400);
+    }
+
+    function showQuizResults() {
+      document.getElementById('quiz-play').style.display = 'none';
+      document.getElementById('quiz-result').style.display = 'flex';
+      document.getElementById('result-score-val').innerText = quizScore;
+
+      let gradeMsg = "";
+      if (quizScore >= 9) {
+        gradeMsg = "Distinction Master! Outstanding understanding of Thermal Physics.";
+      } else if (quizScore >= 6) {
+        gradeMsg = "Passable Effort! You have the basics down, but watch out for the differences in mechanism.";
+      } else {
+        gradeMsg = "Revision Needed! Review the Flashcards and Explorer to master the concepts.";
+      }
+      document.getElementById('result-grade-msg').innerText = gradeMsg;
+
+      // Render wrong answers
+      const list = document.getElementById('wrong-answers-list');
+      const title = document.getElementById('wrong-summary-title');
+      list.innerHTML = '';
+
+      if (wrongAnswersTrack.length === 0) {
+        title.style.display = 'none';
+      } else {
+        title.style.display = 'block';
+        wrongAnswersTrack.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'wrong-answer-card';
+          card.innerHTML = `
+            <div class="wrong-q">${item.question}</div>
+            <div style="font-size: 0.8rem; color: var(--danger)">Your Answer: ${item.yourAnswer}</div>
+            <div style="font-size: 0.8rem; color: var(--success)">Correct Answer: ${item.correctAnswer}</div>
+            <div class="wrong-explanation"><span>Reasoning:</span> ${item.explanation}</div>
+          `;
+          list.appendChild(card);
+        });
+      }
+    }
+
+    function resetQuiz() {
+      startQuiz();
+    }
+
+    // Initialize Card UI
+    updateCardUI();
+  </script>
+</body>
+</html>
