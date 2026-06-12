@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thermal Physics Masterclass | O-Level Syllabus 6091</title>
+  <meta name="description" content="Master Heat Capacity and Specific Heat Capacity for Singapore O-Level Physics 6091 with interactive simulations, flashcards, and randomized quizzes.">
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- App Shell -->
+  <div class="app-container">
+    
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo">
+        <span class="neon-text">THERMAL</span> <span class="logo-sub">PHYSICS</span>
+      </div>
+      <div class="syllabus-tag">Syllabus 6091</div>
+    </header>
+
+    <!-- Top navigation tab-bar -->
+    <nav class="app-nav">
+      <button class="nav-item active" data-target="section-intro">
+        <i class="fa-solid fa-book-open"></i>
+        <span>Concepts</span>
+      </button>
+      <button class="nav-item" data-target="section-explore">
+        <i class="fa-solid fa-sliders"></i>
+        <span>Simulate</span>
+      </button>
+      <button class="nav-item" data-target="section-flashcards">
+        <i class="fa-solid fa-layer-group"></i>
+        <span>Cards</span>
+      </button>
+      <button class="nav-item" data-target="section-quiz">
+        <i class="fa-solid fa-square-poll-horizontal"></i>
+        <span>Quiz</span>
+      </button>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+
+      <!-- SECTION 1: Concept Introduction -->
+      <section id="section-intro" class="app-section active">
+        <h2 class="section-title">Core Definitions</h2>
+        <div class="cards-grid">
+          
+          <div class="intro-card animate-card" style="--delay: 1">
+            <div class="card-icon"><i class="fa-solid fa-ruler-combined"></i></div>
+            <h3>Syllabus Quick Reference</h3>
+            <table class="quick-table">
+              <tr>
+                <td>Thermal Energy</td>
+                <td><span class="math-symbol">Q</span></td>
+                <td>Joules (<span class="neon-cyan">J</span>)</td>
+              </tr>
+              <tr>
+                <td>Mass</td>
+                <td><span class="math-symbol">m</span></td>
+                <td>Kilograms (<span class="neon-cyan">kg</span>)</td>
+              </tr>
+              <tr>
+                <td>Temp Change</td>
+                <td><span class="math-symbol">ΔT</span></td>
+                <td>Degree Celsius (<span class="neon-cyan">°C</span>)</td>
+              </tr>
+              <tr>
+                <td>Relation</td>
+                <td colspan="2"><span class="neon-cyan font-mono">C = mc</span></td>
+              </tr>
+            </table>
+            
+            <div class="symbol-key" style="margin-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 12px; font-size: 0.82rem; color: var(--text-dim); line-height: 1.5;">
+              <div style="margin-bottom: 4px;"><span class="neon-cyan font-mono" style="font-weight: bold; display: inline-block; min-width: 18px;">Q</span> : Heat / Thermal Energy supplied</div>
+              <div style="margin-bottom: 4px;"><span class="neon-cyan font-mono" style="font-weight: bold; display: inline-block; min-width: 18px;">m</span> : Mass of the substance</div>
+              <div style="margin-bottom: 4px;"><span class="neon-cyan font-mono" style="font-weight: bold; display: inline-block; min-width: 18px;">T</span> : Temperature</div>
+              <div><span class="neon-cyan font-mono" style="font-weight: bold; display: inline-block; min-width: 18px;">Δ</span> : Delta (representing "change in" a quantity)</div>
+            </div>
+          </div>
+
+          <div class="intro-card animate-card" style="--delay: 2">
+            <div class="card-icon"><i class="fa-solid fa-fire-flame-simple"></i></div>
+            <h3>Internal Energy</h3>
+            <p class="definition-text">
+              An energy store made up of the <strong>total kinetic energy</strong> (due to motion of particles) and <strong>total potential energy</strong> (due to intermolecular forces) of particles in a system.
+            </p>
+            <div class="card-tag">Energy Store</div>
+          </div>
+
+          <div class="intro-card animate-card" style="--delay: 3">
+            <div class="card-icon"><i class="fa-solid fa-temperature-half"></i></div>
+            <h3>Heat Capacity <span class="math-symbol">C</span></h3>
+            <p class="definition-text">
+              The amount of thermal energy needed to raise the temperature of an object by <strong>1°C</strong> (or 1 K) without a change of state.
+            </p>
+            <div class="formula-box">Q = CΔT</div>
+            <div class="units-label">Unit: <span class="neon-cyan">J/°C</span> or <span class="neon-cyan">J/K</span></div>
+          </div>
+
+          <div class="intro-card animate-card" style="--delay: 4">
+            <div class="card-icon"><i class="fa-solid fa-weight-scale"></i></div>
+            <h3>Specific Heat Capacity <span class="math-symbol">c</span></h3>
+            <p class="definition-text">
+              The amount of thermal energy needed to raise the temperature of <strong>1 kg</strong> of a substance by <strong>1°C</strong> (or 1 K) without a change of state.
+            </p>
+            <div class="formula-box">Q = mcΔT</div>
+            <div class="units-label">Unit: <span class="neon-cyan">J/(kg°C)</span> or <span class="neon-cyan">J/(kg K)</span></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SECTION 2: Interactive Exploration -->
+      <section id="section-explore" class="app-section">
+        <h2 class="section-title">Lab Simulator</h2>
+        
+        <!-- Tab Switcher -->
+        <div class="tab-container">
+          <button class="tab-btn active" data-tab="tab-shc">Specific Heat Capacity (c)</button>
+          <button class="tab-btn" data-tab="tab-hc">Heat Capacity (C)</button>
+        </div>
+
+        <!-- Panel A: Specific Heat Capacity -->
+        <div id="tab-shc" class="tab-panel active">
+          <div class="simulator-layout">
+            <div class="control-panel">
+              
+              <!-- Dropdown for material -->
+              <div class="control-group">
+                <label for="material-select">Select Material</label>
+                <div class="custom-select-wrapper">
+                  <select id="material-select">
+                    <option value="4200" selected>Water (c = 4200 J/kg°C)</option>
+                    <option value="900">Aluminium (c = 900 J/kg°C)</option>
+                    <option value="450">Iron (c = 450 J/kg°C)</option>
+                    <option value="390">Copper (c = 390 J/kg°C)</option>
+                    <option value="840">Glass (c = 840 J/kg°C)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Mass Slider -->
+              <div class="control-group">
+                <div class="label-val-row">
+                  <label for="mass-slider">Mass (m)</label>
+                  <span class="slider-value" id="mass-val">1.0 kg</span>
+                </div>
+                <input type="range" id="mass-slider" min="0.1" max="5.0" step="0.1" value="1.0" class="neon-slider">
+              </div>
+
+              <!-- Temp Change Slider -->
+              <div class="control-group">
+                <div class="label-val-row">
+                  <label for="temp-slider-a">Temp Change (ΔT)</label>
+                  <span class="slider-value" id="temp-val-a">10 °C</span>
+                </div>
+                <input type="range" id="temp-slider-a" min="1" max="100" step="1" value="10" class="neon-slider">
+              </div>
+
+            </div>
+
+            <div class="visualization-panel">
+              <div class="beaker-container">
+                <div class="beaker">
+                  <div class="liquid" id="shc-liquid"></div>
+                  <div class="bubbles" id="shc-bubbles"></div>
+                </div>
+                <div class="heater" id="shc-heater">
+                  <div class="glow-ring"></div>
+                </div>
+              </div>
+              
+              <div class="calculation-card practice-card">
+                <p class="practice-question">Calculate the energy needed for the temperature change.</p>
+                <button class="reveal-toggle-btn" data-target="shc-practice-area">Show Answer</button>
+                <div class="practice-reveal-area blurred" id="shc-practice-area">
+                  <div class="formula-header">Q = m × c × ΔT</div>
+                  <div class="formula-working" id="shc-working">
+                    Q = 1.0kg × 4200 J/kg°C × 10°C
+                  </div>
+                  <div class="result-display">
+                    <span class="result-label">Energy Required (Q)</span>
+                    <span class="result-value" id="shc-result">42,000 J</span>
+                    <span class="result-kj" id="shc-result-kj">(42.00 kJ)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel B: Heat Capacity -->
+        <div id="tab-hc" class="tab-panel">
+          <div class="simulator-layout">
+            <div class="control-panel">
+              
+              <!-- Heat Capacity Slider -->
+              <div class="control-group">
+                <div class="label-val-row">
+                  <label for="hc-slider">Heat Capacity (C)</label>
+                  <span class="slider-value" id="hc-val">500 J/°C</span>
+                </div>
+                <input type="range" id="hc-slider" min="100" max="5000" step="50" value="500" class="neon-slider">
+              </div>
+
+              <!-- Temp Change Slider -->
+              <div class="control-group">
+                <div class="label-val-row">
+                  <label for="temp-slider-b">Temp Change (ΔT)</label>
+                  <span class="slider-value" id="temp-val-b">10 °C</span>
+                </div>
+                <input type="range" id="temp-slider-b" min="1" max="100" step="1" value="10" class="neon-slider">
+              </div>
+
+            </div>
+
+            <div class="visualization-panel">
+              <div class="beaker-container">
+                <!-- Generic Object representation for heat capacity -->
+                <div class="metal-block" id="hc-block">
+                  <div class="heat-glow" id="hc-glow"></div>
+                </div>
+                <div class="heater" id="hc-heater">
+                  <div class="glow-ring"></div>
+                </div>
+              </div>
+
+              <div class="calculation-card practice-card">
+                <p class="practice-question">Calculate the energy needed for the temperature change.</p>
+                <button class="reveal-toggle-btn" data-target="hc-practice-area">Show Answer</button>
+                <div class="practice-reveal-area blurred" id="hc-practice-area">
+                  <div class="formula-header">Q = C × ΔT</div>
+                  <div class="formula-working" id="hc-working">
+                    Q = 500 J/°C × 10°C
+                  </div>
+                  <div class="result-display">
+                    <span class="result-label">Energy Required (Q)</span>
+                    <span class="result-value" id="hc-result">5,000 J</span>
+                    <span class="result-kj" id="hc-result-kj">(5.00 kJ)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- SECTION 3: Flashcard Revision Mode -->
+      <section id="section-flashcards" class="app-section">
+        <h2 class="section-title">Quick revision</h2>
+        
+        <div class="flashcard-deck-container">
+          
+          <div class="flashcard-card-wrapper" id="flashcard-container">
+            <!-- The actual flashcard that flips -->
+            <div class="flashcard" id="active-flashcard">
+              
+              <!-- Front Side -->
+              <div class="flashcard-side front">
+                <div class="flashcard-header">
+                  <span>Topic Cards</span>
+                  <i class="fa-solid fa-bolt neon-cyan"></i>
+                </div>
+                <div class="flashcard-body">
+                  <p id="card-front-content">What is the formula for heat energy change using specific heat capacity?</p>
+                </div>
+                <div class="flashcard-hint">Tap to Reveal Answer</div>
+              </div>
+              
+              <!-- Back Side -->
+              <div class="flashcard-side back">
+                <div class="flashcard-header">
+                  <span>Explanation</span>
+                  <i class="fa-regular fa-lightbulb neon-cyan"></i>
+                </div>
+                <div class="flashcard-body">
+                  <p id="card-back-content">Q = mcΔT</p>
+                </div>
+                <div class="flashcard-hint">Tap to Flip Back</div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Controls under card -->
+          <div class="flashcard-controls">
+            <button class="flash-btn" id="fc-shuffle" title="Shuffle Deck">
+              <i class="fa-solid fa-shuffle"></i>
+            </button>
+            
+            <div class="deck-nav">
+              <button class="flash-btn" id="fc-prev"><i class="fa-solid fa-chevron-left"></i></button>
+              <span id="card-counter" class="deck-counter">1 / 8</span>
+              <button class="flash-btn" id="fc-next"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+            
+            <button class="flash-btn" id="fc-flip" title="Flip Card">
+              <i class="fa-solid fa-rotate"></i>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SECTION 4: Randomized Quiz -->
+      <section id="section-quiz" class="app-section">
+        <h2 class="section-title">Assessment Challenge</h2>
+        
+        <!-- Quiz Intro & Start -->
+        <div id="quiz-start-screen" class="quiz-box active">
+          <div class="quiz-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+          <h3>O-Level Exam Ready?</h3>
+          <p>Test your knowledge with 10 randomly selected calculations and conceptual questions from the 6091 syllabus.</p>
+          <ul class="quiz-info-list">
+            <li><i class="fa-regular fa-circle-check"></i> Standard MCQs &amp; Numerical inputs</li>
+            <li><i class="fa-regular fa-circle-check"></i> Numerical answers accept &plusmn;2% tolerance</li>
+            <li><i class="fa-regular fa-circle-check"></i> Instant working details and feedback</li>
+          </ul>
+          <button id="start-quiz-btn" class="action-btn glow-btn">Start Test</button>
+        </div>
+
+        <!-- Quiz Gameplay Screen -->
+        <div id="quiz-play-screen" class="quiz-box">
+          <div class="quiz-progress-bar-wrapper">
+            <div class="quiz-progress-labels">
+              <span id="question-index">Question 1 of 10</span>
+              <span id="quiz-score-badge">Score: 0</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-bar-fill" id="quiz-progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="question-container">
+            <p class="question-text" id="question-text">Loading question...</p>
+            
+            <!-- MCQ Interface -->
+            <div id="mcq-options" class="options-container">
+              <!-- Dynamically populated -->
+            </div>
+
+            <!-- Numerical Interface -->
+            <div id="numerical-input-container" class="numerical-container">
+              <div class="input-wrapper">
+                <input type="number" step="any" id="numerical-answer" placeholder="Enter calculated value">
+                <span class="unit-addon" id="numerical-unit">J</span>
+              </div>
+              <button id="submit-numerical-btn" class="action-btn">Submit Answer</button>
+            </div>
+          </div>
+
+          <!-- Question Feedback overlay / footer -->
+          <div id="question-feedback" class="feedback-overlay">
+            <div class="feedback-icon" id="feedback-icon"></div>
+            <h4 id="feedback-title">Correct!</h4>
+            <div class="working-steps" id="working-steps">
+              <!-- Dynamically generated calculation steps -->
+            </div>
+            <button id="next-question-btn" class="action-btn glow-btn">Continue</button>
+          </div>
+        </div>
+
+        <!-- Quiz Score Screen (Section 4) -->
+        <div id="quiz-score-screen" class="quiz-box">
+          <div class="score-ring-container">
+            <svg class="score-ring" viewBox="0 0 120 120">
+              <circle class="score-ring-bg" cx="60" cy="60" r="54"></circle>
+              <circle class="score-ring-fill" id="score-ring-fill" cx="60" cy="60" r="54"></circle>
+            </svg>
+            <div class="score-text">
+              <span id="score-num">8</span>
+              <span class="score-total">/10</span>
+            </div>
+          </div>
+          
+          <h3 id="grade-tier-title">Exemplary Effort!</h3>
+          <p id="grade-tier-message">Excellent mastery of thermal calculations. Ready for distinction!</p>
+
+          <div class="mistakes-container" id="mistakes-container">
+            <!-- Summary of wrong answers with correct working steps -->
+          </div>
+
+          <div class="button-row">
+            <button id="retry-quiz-btn" class="action-btn outline-btn"><i class="fa-solid fa-rotate-left"></i> Try Again</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
