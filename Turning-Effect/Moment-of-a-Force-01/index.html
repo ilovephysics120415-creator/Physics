@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moment Builder — Physics Interactive Study Guide</title>
+  <meta name="description" content="Master Moment of a Force with interactive simulators, real-world examples, a randomized quiz, and revision flashcards for O-Level Physics.">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header / Navigation -->
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon"><i data-lucide="rotate-cw"></i></div>
+      <div class="logo-text">
+        <h1>MOMENT BUILDER</h1>
+        <p>O-Level Physics Interactive Guide</p>
+      </div>
+    </div>
+    <nav>
+      <button class="nav-btn active" data-section="section1"><i data-lucide="info"></i><span>Concept</span></button>
+      <button class="nav-btn" data-section="section2"><i data-lucide="compass"></i><span>Examples</span></button>
+      <button class="nav-btn" data-section="section3"><i data-lucide="sliders"></i><span>Simulator</span></button>
+      <button class="nav-btn" data-section="section5"><i data-lucide="layers"></i><span>Flashcards</span></button>
+      <button class="nav-btn" data-section="section4" id="quiz-nav-btn"><i data-lucide="help-circle"></i><span>Quiz</span></button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- SECTION 1: Concept Introduction -->
+    <section id="section1" class="app-section active">
+      <div class="card hero-card">
+        <div class="badge neon-blue-text">SECTION 1</div>
+        <h2>Concept Introduction</h2>
+        <p class="section-desc">What makes things rotate? A <strong>Moment</strong> is the turning effect of a force about a pivot.</p>
+        
+        <div class="formula-box">
+          <div class="formula-label">The Formula</div>
+          <div class="formula-math">Moment = Force &times; Perpendicular Distance</div>
+          <div class="formula-symbols">M = F &times; d</div>
+          <div class="formula-unit">SI Unit: <span class="neon-green-text">Newton-metre (N m)</span></div>
+        </div>
+
+        <div class="visualizer-container">
+          <svg id="concept-svg" viewBox="0 0 600 250">
+            <!-- Grid Background -->
+            <defs>
+              <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+
+            <!-- Ground line for Pivot -->
+            <line x1="50" y1="200" x2="550" y2="200" stroke="#222" stroke-width="4" stroke-linecap="round" />
+
+            <!-- Pivot (Triangle) -->
+            <polygon points="300,200 280,230 320,230" fill="var(--neon-pink)" class="glow-pink" />
+            <circle cx="300" cy="200" r="4" fill="#fff" />
+            <text x="300" y="248" text-anchor="middle" fill="var(--neon-pink)" class="label-text">Pivot</text>
+
+            <!-- Rotating Lever Structure -->
+            <g id="concept-lever-structure">
+              <!-- Lever Beam -->
+              <rect x="100" y="190" width="400" height="10" rx="3" fill="rgba(255,255,255,0.8)" />
+
+              <!-- Perpendicular Distance Line (d) -->
+              <g id="concept-d-group">
+                <line x1="300" y1="180" x2="450" y2="180" stroke="var(--neon-blue)" stroke-width="3" stroke-dasharray="4,4" />
+                <path d="M300,175 L300,185 M450,175 L450,185" stroke="var(--neon-blue)" stroke-width="3" />
+                <text x="375" y="165" text-anchor="middle" fill="var(--neon-blue)" class="math-label">Distance (d)</text>
+              </g>
+
+              <!-- Force Arrow (F) -->
+              <g id="concept-f-group">
+                <defs>
+                  <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--neon-green)" />
+                  </marker>
+                </defs>
+                <line x1="450" y1="90" x2="450" y2="180" stroke="var(--neon-green)" stroke-width="5" marker-end="url(#arrow)" />
+                <text x="475" y="130" fill="var(--neon-green)" class="math-label">Force (F)</text>
+              </g>
+            </g>
+
+            <!-- Turning Direction Arc -->
+            <path d="M 430,195 A 130,130 0 0,1 320,225" fill="none" stroke="var(--neon-yellow)" stroke-width="3" stroke-dasharray="3,3" marker-end="url(#arrow-yellow)" />
+            <defs>
+              <marker id="arrow-yellow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--neon-yellow)" />
+              </marker>
+            </defs>
+            <text x="380" y="225" fill="var(--neon-yellow)" class="label-text-small">Turning Effect (Clockwise)</text>
+          </svg>
+        </div>
+
+        <div class="animation-controls">
+          <button id="btn-replay-intro" class="action-btn"><i data-lucide="play"></i> Replay Animation</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: Everyday Examples Explorer -->
+    <section id="section2" class="app-section">
+      <div class="badge neon-blue-text">SECTION 2</div>
+      <h2>Everyday Examples Explorer</h2>
+      <p class="section-desc">See how moments operate in everyday objects. Click an example to explore the physics in detail.</p>
+
+      <div class="examples-grid">
+        <div class="example-card" data-example="spanner">
+          <div class="example-icon"><i data-lucide="wrench"></i></div>
+          <h3>Spanner &amp; Nut</h3>
+          <p>Tightening or loosening bolts with rotational force.</p>
+        </div>
+        <div class="example-card" data-example="door">
+          <div class="example-icon"><i data-lucide="door-closed"></i></div>
+          <h3>Pushing a Door</h3>
+          <p>Why is the handle placed far away from the hinges?</p>
+        </div>
+        <div class="example-card" data-example="scissors">
+          <div class="example-icon"><i data-lucide="scissors"></i></div>
+          <h3>Scissors Cutting</h3>
+          <p>Double-lever action to shear paper or packaging.</p>
+        </div>
+        <div class="example-card" data-example="wheelbarrow">
+          <div class="example-icon"><i data-lucide="truck"></i></div>
+          <h3>Wheelbarrow</h3>
+          <p>Lifting heavy loads easily using a lever design.</p>
+        </div>
+      </div>
+
+      <!-- Example Detail Panel -->
+      <div class="card detail-panel hidden" id="example-detail">
+        <div class="panel-header">
+          <h3 id="detail-title">Spanner tightening a nut</h3>
+          <button class="close-btn" id="close-detail-btn">&times;</button>
+        </div>
+        
+        <div class="detail-content">
+          <div class="detail-svg-container">
+            <svg id="detail-svg" viewBox="0 0 400 250"></svg>
+          </div>
+          <div class="detail-explanation">
+            <p class="explanation-text" id="detail-desc"></p>
+            
+            <div class="interactive-slider-box">
+              <label for="example-param-slider" id="slider-label">Increase Distance (d):</label>
+              <div class="slider-wrapper">
+                <input type="range" id="example-param-slider" min="1" max="2" step="0.1" value="1">
+                <span class="value-badge" id="example-slider-value">1.0x</span>
+              </div>
+              <p class="slider-hint" id="example-slider-hint"></p>
+            </div>
+            
+            <div class="summary-box" id="detail-summary">
+              Moment increases as distance from pivot increases!
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: Interactive Lever Simulator -->
+    <section id="section3" class="app-section">
+      <div class="badge neon-blue-text">SECTION 3</div>
+      <h2>Interactive Lever Simulator</h2>
+      <p class="section-desc">Drag the force arrow vertically or shift it horizontally along the beam to dynamically calculate the turning moment.</p>
+
+      <div class="simulator-layout">
+        <!-- Live Calculations Card -->
+        <div class="card calculations-card">
+          <div class="live-metrics">
+            <div class="metric-box">
+              <span class="m-label">Force (F)</span>
+              <span class="m-val neon-green-text" id="sim-f-val">25 N</span>
+            </div>
+            <div class="metric-separator">&times;</div>
+            <div class="metric-box">
+              <span class="m-label">Distance (d)</span>
+              <span class="m-val neon-blue-text" id="sim-d-val">1.0 m</span>
+            </div>
+            <div class="metric-separator">=</div>
+            <div class="metric-box highlighted">
+              <span class="m-label">Moment</span>
+              <span class="m-val neon-yellow-text" id="sim-m-val">25.0 N m</span>
+            </div>
+          </div>
+          
+          <div class="working-equation">
+            <strong>Working:</strong> <span class="eq-text">Moment = Force &times; Perpendicular Distance</span>
+            <div class="eq-math" id="sim-eq-math">Moment = 25 N &times; 1.0 m = 25.0 N m</div>
+          </div>
+        </div>
+
+        <!-- Simulator Sandbox -->
+        <div class="card sandbox-card">
+          <div class="sandbox-svg-container">
+            <svg id="simulator-svg" viewBox="0 0 600 300">
+              <defs>
+                <pattern id="sim-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1" />
+                </pattern>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+                <marker id="sim-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--neon-green)" />
+                </marker>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#sim-grid)" />
+
+              <!-- Ground / Floor -->
+              <line x1="50" y1="240" x2="550" y2="240" stroke="#1c1c24" stroke-width="6" />
+
+              <!-- Turning Direction Arc Indicator -->
+              <path id="sim-turn-arc" d="M 270,180 A 30,30 0 0,1 330,180" fill="none" stroke="var(--neon-yellow)" stroke-width="4" marker-end="url(#arrow-yellow)" style="filter: drop-shadow(0 0 5px var(--neon-yellow)); display: none;" />
+
+              <!-- Pivot Group (Draggable) -->
+              <g id="sim-pivot-group" style="cursor: grab;">
+                <polygon points="300,200 280,240 320,240" fill="var(--neon-pink)" filter="url(#glow)" id="sim-pivot-polygon" />
+                <circle cx="300" cy="200" r="5" fill="#fff" id="sim-pivot-circle" />
+                <text x="300" y="260" text-anchor="middle" fill="var(--neon-pink)" class="label-text" id="sim-pivot-text">Pivot</text>
+              </g>
+
+              <!-- Lever Beam -->
+              <rect x="80" y="190" width="440" height="10" rx="3" fill="#3a3a4c" />
+              <!-- Reference marks on the beam -->
+              <line x1="190" y1="190" x2="190" y2="200" stroke="#fff" stroke-width="1" />
+              <line x1="300" y1="190" x2="300" y2="200" stroke="#fff" stroke-width="1" />
+              <line x1="410" y1="190" x2="410" y2="200" stroke="#fff" stroke-width="1" />
+              <text x="190" y="215" text-anchor="middle" fill="#888" class="label-text-small">0.5 m</text>
+              <text x="300" y="215" text-anchor="middle" fill="#888" class="label-text-small">1.0 m</text>
+              <text x="410" y="215" text-anchor="middle" fill="#888" class="label-text-small">1.5 m</text>
+
+              <!-- Perpendicular Distance Line (d) -->
+              <g id="sim-dist-line-group">
+                <line x1="300" y1="170" x2="410" y2="170" stroke="var(--neon-blue)" stroke-width="2" stroke-dasharray="3,3" />
+                <path d="M300,165 L300,175 M410,165 L410,175" stroke="var(--neon-blue)" stroke-width="2" />
+                <text x="355" y="155" id="sim-d-label" text-anchor="middle" fill="var(--neon-blue)" class="math-label-small">0.5 m</text>
+              </g>
+
+              <!-- Force Vector (Interactive Arrow) -->
+              <g id="sim-force-arrow-group" style="cursor: grab;">
+                <!-- Target Area for easier dragging -->
+                <circle cx="410" cy="190" r="15" fill="transparent" id="drag-anchor-h" />
+                <line x1="410" y1="90" x2="410" y2="190" stroke="var(--neon-green)" stroke-width="6" id="sim-force-line" marker-end="url(#sim-arrow)" />
+                <circle cx="410" cy="90" r="15" fill="transparent" id="drag-anchor-v" />
+                <text x="410" y="70" id="sim-f-label" text-anchor="middle" fill="var(--neon-green)" class="math-label-small">25 N</text>
+              </g>
+            </svg>
+          </div>
+          
+          <div class="control-hints">
+            <span class="hint-item"><i data-lucide="move-horizontal"></i> Drag force arrow horizontally to position it</span>
+            <span class="hint-item"><i data-lucide="move-horizontal"></i> Drag pink pivot triangle horizontally to move pivot</span>
+            <span class="hint-item"><i data-lucide="move-vertical"></i> Drag green circle vertically to adjust force and direction</span>
+          </div>
+
+          <!-- Simulator Controls -->
+          <div class="sliders-controls">
+            <div class="control-slider-group">
+              <label for="range-f">Force Magnitude (F):</label>
+              <div class="range-input-wrapper">
+                <input type="range" id="range-f" min="1" max="50" value="25">
+                <span class="val-display green" id="range-f-val">25 N</span>
+              </div>
+            </div>
+            
+            <div class="control-slider-group">
+              <label>Force Direction:</label>
+              <div style="display: flex; gap: 10px; margin-top: 5px;">
+                <button class="action-btn active" id="btn-dir-down" style="flex: 1; justify-content: center; padding: 8px; font-size: 0.9rem;"><i data-lucide="arrow-down"></i> Downward</button>
+                <button class="action-btn" id="btn-dir-up" style="flex: 1; justify-content: center; padding: 8px; font-size: 0.9rem;"><i data-lucide="arrow-up"></i> Upward</button>
+              </div>
+            </div>
+
+            <div class="control-slider-group">
+              <label for="range-force-pos">Force Position (from Left):</label>
+              <div class="range-input-wrapper">
+                <input type="range" id="range-force-pos" min="0.2" max="1.8" step="0.1" value="1.5">
+                <span class="val-display green" id="range-force-pos-val">1.5 m</span>
+              </div>
+            </div>
+
+            <div class="control-slider-group">
+              <label for="range-pivot-pos">Pivot Position (from Left):</label>
+              <div class="range-input-wrapper">
+                <input type="range" id="range-pivot-pos" min="0.2" max="1.8" step="0.1" value="1.0">
+                <span class="val-display pink" id="range-pivot-pos-val">1.0 m</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: Flashcard Revision Mode (Placed as Section 4) -->
+    <section id="section5" class="app-section">
+      <div class="badge neon-blue-text">SECTION 4</div>
+      <h2>Flashcard Revision</h2>
+      <p class="section-desc">Tap a card to flip and reveal the answer. Shuffle to practice in random order.</p>
+
+      <div class="flashcard-controls">
+        <button id="btn-shuffle-cards" class="action-btn"><i data-lucide="shuffle"></i> Shuffle Cards</button>
+        <span class="card-indicator">Card <span id="card-index-display">1</span> / 10</span>
+      </div>
+
+      <div class="flashcard-container">
+        <button class="nav-arrow-btn" id="prev-card-btn"><i data-lucide="chevron-left"></i></button>
+        
+        <div class="flashcard-wrapper">
+          <div class="flashcard" id="active-flashcard">
+            <!-- Front of the card -->
+            <div class="card-side front">
+              <div class="card-category" id="card-cat-front">Concept</div>
+              <div class="card-body">
+                <p id="card-question-text">Definition of moment of a force</p>
+              </div>
+              <div class="flip-hint"><i data-lucide="help-circle"></i> Tap to flip</div>
+            </div>
+            <!-- Back of the card -->
+            <div class="card-side back">
+              <div class="card-category" id="card-cat-back">Concept</div>
+              <div class="card-body">
+                <p id="card-answer-text">The turning effect of a force about a pivot.</p>
+              </div>
+              <div class="flip-hint"><i data-lucide="refresh-cw"></i> Tap to flip back</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="nav-arrow-btn" id="next-card-btn"><i data-lucide="chevron-right"></i></button>
+      </div>
+    </section>
+
+    <!-- SECTION 4: Randomised Quiz (Placed as Section 5) -->
+    <section id="section4" class="app-section">
+      <div class="badge neon-blue-text">SECTION 5</div>
+      <h2>Randomised Quiz</h2>
+      <p class="section-desc">Test your understanding. Complete all 30 questions to master the turning effect calculation.</p>
+
+      <div class="quiz-container">
+        <!-- Start Quiz Window -->
+        <div class="card quiz-card" id="quiz-start-view">
+          <div class="quiz-intro-graphic">
+            <i data-lucide="trophy" class="trophy-icon"></i>
+          </div>
+          <h3>Moment Calculation Challenge</h3>
+          <p>You will face 30 randomized questions testing your ability to find Force, Perpendicular Distance, or Moment using the formula: <strong>Moment = Force &times; d</strong>.</p>
+          <div class="quiz-rules">
+            <div class="rule-item"><i data-lucide="check-circle-2"></i> 30 Dynamic Questions</div>
+            <div class="rule-item"><i data-lucide="percent"></i> &plusmn;2% Precision Accepted</div>
+            <div class="rule-item"><i data-lucide="sparkles"></i> Detailed Solutions Provided</div>
+          </div>
+          <button class="action-btn primary-neon-btn" id="start-quiz-btn">Start 30-Question Quiz</button>
+        </div>
+
+        <!-- Active Quiz Play Window -->
+        <div class="card quiz-card hidden" id="quiz-play-view">
+          <div class="quiz-header">
+            <div class="quiz-progress">Question <span id="q-current">1</span> of 30</div>
+            <div class="quiz-score-badge">Score: <span id="q-score">0</span></div>
+          </div>
+
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="quiz-progress-fill"></div>
+          </div>
+
+          <div class="question-box">
+            <div class="question-text" id="question-prompt"></div>
+            
+            <div class="formula-helper-visual">
+              <div class="formula-triangle">
+                <div class="ft-top" id="ft-top-val">Moment</div>
+                <div class="ft-bottom">
+                  <div class="ft-b-left" id="ft-left-val">Force</div>
+                  <div class="ft-b-right" id="ft-right-val">Distance</div>
+                </div>
+              </div>
+            </div>
+
+            <form id="quiz-submit-form" onsubmit="return false;">
+              <div class="input-group">
+                <input type="text" id="student-answer" placeholder="Enter answer with unit (e.g. 25 N m)..." required autocomplete="off">
+              </div>
+              <button type="submit" class="action-btn" id="btn-submit-answer">Submit Answer</button>
+            </form>
+          </div>
+
+          <!-- Answer Feedback Panel -->
+          <div class="feedback-panel hidden" id="quiz-feedback">
+            <div class="feedback-header">
+              <span class="feedback-status" id="feedback-status-text">Correct!</span>
+            </div>
+            <div class="worked-solution" id="worked-solution-text">
+              <!-- Solution text goes here -->
+            </div>
+            <button class="action-btn" id="btn-next-question">Next Question <i data-lucide="arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- Quiz Completion Screen -->
+        <div class="card quiz-card hidden" id="quiz-end-view">
+          <h3>Quiz Complete!</h3>
+          <div class="final-score-circle">
+            <span id="final-score-text">25/30</span>
+            <span class="subtext">Correct</span>
+          </div>
+
+          <div class="grade-badge" id="grade-badge-text">Excellent</div>
+          <p class="grade-message" id="grade-message-text">Excellent — you have mastered moments!</p>
+
+          <div class="completion-actions">
+            <button class="action-btn primary-neon-btn" id="restart-quiz-btn"><i data-lucide="rotate-ccw"></i> Try Again</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Moment Builder. Designed for O-Level Physics students.</p>
+  </footer>
+
+  <!-- Confetti Canvas for celebration -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- JS Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
