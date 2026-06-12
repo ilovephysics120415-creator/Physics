@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moments Decoded 🔄 Physics 6091</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Modern/Gen-Z Aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Social/Game Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
+        }
+        h1, h2, h3, .font-display {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .glow-blue {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+        }
+        .glow-emerald {
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+        }
+        .glow-rose {
+            box-shadow: 0 0 15px rgba(244, 63, 94, 0.4);
+        }
+        /* Custom slide-in animations */
+        @keyframes pop {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop {
+            animation: pop 0.25s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+    <!-- Top Navigation / Brand Header -->
+    <header class="border-b border-gray-800 bg-gray-950/80 backdrop-blur sticky top-0 z-50 px-4 py-3">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-tr from-indigo-500 to-purple-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-500/20">
+                    <i class="fa-solid fa-rotate-right text-lg animate-spin" style="animation-duration: 6s;"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-500 bg-clip-text text-transparent">MOMENTS DECODED</h1>
+                    <p class="text-xs text-gray-400">Singapore Syllabus 6091 • Sec Physics</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 bg-gray-900 border border-gray-800 px-3 py-1.5 rounded-full">
+                <span class="text-xs text-indigo-400 font-semibold uppercase tracking-wider">Streak</span>
+                <span class="text-sm font-bold text-white flex items-center gap-1">
+                    🔥 <span id="header-streak">0</span>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dynamic Container -->
+    <main class="flex-grow max-w-4xl w-full mx-auto p-4 flex flex-col gap-6">
+
+        <!-- Gen-Z Subtitle and Hook -->
+        <div class="bg-gradient-to-r from-gray-900 to-indigo-950/40 border border-indigo-950 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="text-center md:text-left">
+                <h2 class="text-lg font-bold text-white">No Cap. Turning Effects Made Easy. 🧠</h2>
+                <p class="text-sm text-gray-300 mt-1">Forget boring text equations. Visualise how forces spin things, learn the shortcuts, and ace your O-Levels.</p>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="switchTab('sandbox')" id="tab-btn-sandbox" class="tab-btn active bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition duration-200">
+                    🕹️ Play Sandbox
+                </button>
+                <button onclick="switchTab('challenge')" id="tab-btn-challenge" class="tab-btn bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-bold px-4 py-2 rounded-xl transition duration-200">
+                    ⚡ Quick Test
+                </button>
+                <button onclick="switchTab('cheatsheet')" id="tab-btn-cheatsheet" class="tab-btn bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-bold px-4 py-2 rounded-xl transition duration-200">
+                    📝 Physics Hacks
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= TAB 1: INTERACTIVE SANDBOX ================= -->
+        <section id="tab-sandbox" class="tab-content flex flex-col gap-6">
+            <!-- Simulator Card -->
+            <div class="bg-gray-900 border border-gray-800 rounded-3xl p-5 md:p-6 shadow-xl relative overflow-hidden">
+                <div class="absolute top-3 right-3 bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">
+                    Interactive Sim
+                </div>
+                
+                <h3 class="text-lg font-bold text-white mb-1 flex items-center gap-2">
+                    <i class="fa-solid fa-gamepad text-indigo-400"></i> Live Lever Playground
+                </h3>
+                <p class="text-xs text-gray-400 mb-6">Drag the sliders below to apply a force and watch the beam swing in real-time. Pivot points change the game!</p>
+
+                <!-- Interactive SVG Canvas Container -->
+                <div class="bg-gray-950 rounded-2xl border border-gray-800 p-4 relative flex flex-col items-center justify-center min-h-[220px]">
+                    <!-- Direction Indicator Badge (Floating) -->
+                    <div id="sandbox-badge" class="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 rounded-xl border font-bold text-xs shadow-md transition-all duration-300">
+                        <!-- Filled dynamically -->
+                    </div>
+
+                    <!-- Custom Interactive SVG -->
+                    <svg id="sim-svg" width="100%" height="160" viewBox="0 0 600 160" class="overflow-visible select-none">
+                        <!-- Definition for drop shadows/arrows -->
+                        <defs>
+                            <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" id="arrow-path"/>
+                            </marker>
+                            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="5" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+
+                        <!-- Ground Baseline -->
+                        <line x1="20" y1="130" x2="580" y2="130" stroke="#1f2937" stroke-width="2" stroke-linecap="round"/>
+
+                        <!-- Pivot Triangle (Under the beam) -->
+                        <polygon id="pivot-indicator" points="300,95 285,130 315,130" fill="#9ca3af" class="transition-all duration-300 ease-out"/>
+                        <!-- Pivot Label -->
+                        <text id="pivot-label" x="300" y="145" fill="#9ca3af" font-size="11" text-anchor="middle" font-weight="bold" class="transition-all duration-300 ease-out">PIVOT (d = 0m)</text>
+
+                        <!-- The Beam Group (Rotatable around pivot) -->
+                        <g id="beam-group" style="transform-origin: 300px 95px;">
+                            <!-- Wooden Lever/Beam Graphic -->
+                            <rect x="50" y="85" width="500" height="20" rx="4" fill="#1e1b4b" stroke="#4338ca" stroke-width="2" />
+                            <line x1="50" y1="95" x2="550" y2="95" stroke="#312e81" stroke-width="1" stroke-dasharray="4 4" />
+                            
+                            <!-- Mark points along the beam -->
+                            <!-- Left marks -->
+                            <circle cx="100" cy="95" r="3" fill="#6366f1" />
+                            <circle cx="150" cy="95" r="3" fill="#6366f1" />
+                            <circle cx="200" cy="95" r="3" fill="#6366f1" />
+                            <circle cx="250" cy="95" r="3" fill="#6366f1" />
+                            <!-- Right marks -->
+                            <circle cx="350" cy="95" r="3" fill="#6366f1" />
+                            <circle cx="400" cy="95" r="3" fill="#6366f1" />
+                            <circle cx="450" cy="95" r="3" fill="#6366f1" />
+                            <circle cx="500" cy="95" r="3" fill="#6366f1" />
+
+                            <!-- Perpendicular Distance Dimension Line -->
+                            <path id="dim-line" d="M 300 95 L 450 95" stroke="#f59e0b" stroke-width="2" stroke-dasharray="3 3" marker-end="" class="transition-all duration-300"/>
+                            
+                            <!-- Force Vector (Arrow) -->
+                            <g id="force-vector" class="transition-all duration-300">
+                                <!-- Line of action (faded vertical line) -->
+                                <line id="line-of-action" x1="450" y1="10" x2="450" y2="150" stroke="#ef4444" stroke-width="1" stroke-dasharray="2 2" opacity="0.3"/>
+                                <!-- The actual arrow -->
+                                <line id="arrow-line" x1="450" y1="45" x2="450" y2="85" stroke="#3b82f6" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow)" class="transition-all duration-300"/>
+                                <!-- Force Label on Beam -->
+                                <text id="force-text-graphic" x="450" y="30" fill="#3b82f6" font-size="12" font-weight="bold" text-anchor="middle">Force</text>
+                            </g>
+                        </g>
+                    </svg>
+
+                    <!-- Reset Button -->
+                    <button onclick="resetSandbox()" class="absolute bottom-3 right-3 text-[11px] bg-gray-900 border border-gray-800 hover:border-gray-700 text-gray-400 font-semibold px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-arrow-rotate-left"></i> Reset Sim
+                    </button>
+                </div>
+
+                <!-- Live Dashboard HUD -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                    <div class="bg-gray-950 border border-gray-800 p-3 rounded-2xl flex flex-col items-center text-center">
+                        <span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Force (F)</span>
+                        <span id="hud-force" class="text-xl font-extrabold text-blue-400 mt-0.5">30 N</span>
+                        <span id="hud-force-dir" class="text-[9px] text-gray-500">Pushing Upward</span>
+                    </div>
+                    <div class="bg-gray-950 border border-gray-800 p-3 rounded-2xl flex flex-col items-center text-center">
+                        <span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Dist. to Pivot (d)</span>
+                        <span id="hud-distance" class="text-xl font-extrabold text-amber-500 mt-0.5">1.5 m</span>
+                        <span class="text-[9px] text-gray-500">Perpendicular</span>
+                    </div>
+                    <div class="bg-gray-950 border border-gray-800 p-3 rounded-2xl flex flex-col items-center text-center">
+                        <span class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Formula Used</span>
+                        <span class="text-xs font-bold text-gray-300 mt-2">M = F × d</span>
+                        <span id="hud-formula-calc" class="text-[9px] text-gray-500">30N × 1.5m</span>
+                    </div>
+                    <div class="bg-gray-950 border border-indigo-950/80 p-3 rounded-2xl flex flex-col items-center text-center col-span-2 md:col-span-1">
+                        <span class="text-[10px] text-indigo-400 uppercase tracking-wider font-semibold">Moment (M)</span>
+                        <span id="hud-moment" class="text-xl font-extrabold text-indigo-300 mt-0.5">45 N m</span>
+                        <span id="hud-moment-type" class="text-[9px] font-bold text-emerald-400">Anticlockwise</span>
+                    </div>
+                </div>
+
+                <!-- Custom Dashboard Controls -->
+                <div class="mt-6 space-y-4 border-t border-gray-800 pt-5">
+                    
+                    <!-- Continuous Rotation Toggle Button Row -->
+                    <div class="flex items-center justify-between bg-gray-950 border border-gray-850 p-3.5 rounded-2xl">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-semibold text-gray-200 flex items-center gap-1.5">
+                                🔄 Continuous Spin Mode
+                            </span>
+                            <span class="text-[10px] text-gray-500 font-normal">Rotate continuously when Turning Moment &gt; 0</span>
+                        </div>
+                        <button id="toggle-continuous-spin" onclick="toggleContinuousSpin()" class="px-4 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 border bg-gray-900 border-gray-800 text-gray-400 hover:text-white">
+                            OFF
+                        </button>
+                    </div>
+
+                    <!-- Control 1: Force Position -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="text-sm font-semibold text-gray-300 flex items-center gap-1.5">
+                                📍 Position of Force <span class="text-xs text-gray-500 font-normal">(Distance from left end)</span>
+                            </label>
+                            <span id="val-force-pos" class="text-xs font-bold text-blue-400 bg-blue-950/50 border border-blue-900/40 px-2 py-0.5 rounded-lg">4.5m</span>
+                        </div>
+                        <input type="range" id="input-force-pos" min="50" max="550" value="450" step="50" 
+                               class="w-full h-2 bg-gray-950 rounded-lg appearance-none cursor-pointer accent-blue-500" 
+                               oninput="updateSim()">
+                    </div>
+
+                    <!-- Control 2: Pivot Position -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="text-sm font-semibold text-gray-300 flex items-center gap-1.5">
+                                📐 Position of Pivot <span class="text-xs text-gray-500 font-normal">(Shift turning point)</span>
+                            </label>
+                            <span id="val-pivot-pos" class="text-xs font-bold text-amber-500 bg-amber-950/50 border border-amber-900/40 px-2 py-0.5 rounded-lg">Center (3.0m)</span>
+                        </div>
+                        <input type="range" id="input-pivot-pos" min="50" max="550" value="300" step="50" 
+                               class="w-full h-2 bg-gray-950 rounded-lg appearance-none cursor-pointer accent-amber-500" 
+                               oninput="updateSim()">
+                    </div>
+
+                    <!-- Control 3: Force Magnitude & Direction -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="text-sm font-semibold text-gray-300 flex items-center gap-1.5">
+                                🏋️ Force Magnitude & Direction <span class="text-xs text-gray-500 font-normal">(Up vs Down)</span>
+                            </label>
+                            <span id="val-force-val" class="text-xs font-bold text-red-400 bg-red-950/50 border border-red-900/40 px-2 py-0.5 rounded-lg">+30 N (Upward)</span>
+                        </div>
+                        <input type="range" id="input-force-val" min="-50" max="50" value="30" step="10" 
+                               class="w-full h-2 bg-gray-950 rounded-lg appearance-none cursor-pointer accent-red-500" 
+                               oninput="updateSim()">
+                        <div class="flex justify-between text-[10px] text-gray-500 px-1 mt-1">
+                            <span>⬇️ Pushing Down (-50 N)</span>
+                            <span>No Force (0 N)</span>
+                            <span>⬆️ Pushing Up (+50 N)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Context Info Card for Sandbox -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-gray-900/60 border border-gray-800 p-4 rounded-2xl flex items-start gap-3">
+                    <span class="text-2xl mt-0.5">💡</span>
+                    <div>
+                        <h4 class="font-bold text-white text-sm">How to determine direction?</h4>
+                        <p class="text-xs text-gray-400 mt-1 leading-relaxed">Imagine holding a pencil flat, pinning it down with your finger at the <b class="text-amber-400">Pivot</b>, and pushing it in the direction of the <b class="text-blue-400">Force</b>. Does it spin clockwise or anticlockwise?</p>
+                    </div>
+                </div>
+                <div class="bg-gray-900/60 border border-gray-800 p-4 rounded-2xl flex items-start gap-3">
+                    <span class="text-2xl mt-0.5">⚡</span>
+                    <div>
+                        <h4 class="font-bold text-white text-sm">Syllabus Hack: Perpendicular Distance</h4>
+                        <p class="text-xs text-gray-400 mt-1 leading-relaxed">The distance <b class="text-indigo-400">d</b> is measured horizontally from the pivot to the vertical force vector. If the force is applied directly *at* the pivot, $d = 0\text{m}$, creating <b class="text-rose-400">zero moment</b>!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: SWIPE/TAP CHALLENGE ================= -->
+        <section id="tab-challenge" class="tab-content hidden flex flex-col gap-6">
+            <!-- Game Board Container -->
+            <div class="bg-gray-900 border border-gray-800 rounded-3xl p-6 shadow-xl text-center flex flex-col items-center relative overflow-hidden">
+                
+                <!-- Game Header Info -->
+                <div class="w-full flex items-center justify-between border-b border-gray-800 pb-4 mb-6">
+                    <div class="text-left">
+                        <span class="text-xs text-indigo-400 font-bold uppercase tracking-wider">Level Up Your Physics</span>
+                        <h3 class="text-lg font-bold text-white">Split-Second Spin Test</h3>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="bg-gray-950 border border-gray-800 px-3 py-1 rounded-xl">
+                            <span class="text-[10px] text-gray-500 uppercase font-semibold">Score</span>
+                            <span id="game-score" class="block text-base font-bold text-emerald-400">0</span>
+                        </div>
+                        <div class="bg-gray-950 border border-gray-800 px-3 py-1 rounded-xl">
+                            <span class="text-[10px] text-gray-500 uppercase font-semibold">Best</span>
+                            <span id="game-high" class="block text-base font-bold text-purple-400">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Game Screen Switcher -->
+                <!-- SCREEN 1: START SCREEN -->
+                <div id="game-start-screen" class="py-8 flex flex-col items-center gap-4 max-w-sm">
+                    <div class="w-16 h-16 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-2xl flex items-center justify-center text-3xl mb-2 animate-bounce">
+                        🔄
+                    </div>
+                    <h4 class="text-xl font-bold text-white">Can you spot the Moment?</h4>
+                    <p class="text-sm text-gray-400 leading-relaxed">You will see random force setups. Tap <b class="text-emerald-400">Clockwise</b> or <b class="text-indigo-400">Anticlockwise</b> before the 30-second timer runs out! Correct streaks award double points.</p>
+                    <button onclick="startGame()" class="mt-4 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-2xl text-sm transition duration-150 transform hover:scale-[1.02] shadow-lg shadow-indigo-500/25">
+                        ⚡ START RUN
+                    </button>
+                </div>
+
+                <!-- SCREEN 2: ACTIVE GAME SCREEN -->
+                <div id="game-active-screen" class="w-full hidden flex flex-col items-center gap-6">
+                    <!-- Timer Bar -->
+                    <div class="w-full bg-gray-950 rounded-full h-2.5 overflow-hidden border border-gray-800 flex justify-start">
+                        <div id="game-timer-fill" class="bg-gradient-to-r from-emerald-400 to-indigo-500 h-full w-full transition-all duration-100 ease-linear"></div>
+                    </div>
+
+                    <!-- Setup Graphic Card (Visual representation of challenge) -->
+                    <div class="bg-gray-950 w-full max-w-md border border-gray-800 rounded-2xl p-6 relative flex flex-col items-center justify-center min-h-[180px]">
+                        
+                        <!-- Floating setup info text -->
+                        <div id="challenge-prompt" class="text-sm text-gray-300 font-semibold mb-4 text-center">
+                            <!-- e.g. "Pivot at center, force applied at..." -->
+                        </div>
+
+                        <!-- Render SVG Challenge visually -->
+                        <svg id="challenge-svg" width="100%" height="100" viewBox="0 0 400 100" class="overflow-visible select-none">
+                            <!-- SVG elements injected dynamically in startQuestion() -->
+                        </svg>
+
+                        <!-- Feedback Overlay (Shows Correct/Incorrect overlay) -->
+                        <div id="feedback-overlay" class="absolute inset-0 bg-gray-950/90 rounded-2xl flex flex-col items-center justify-center opacity-0 pointer-events-none transition-all duration-200">
+                            <span id="feedback-icon" class="text-4xl mb-1">🔥</span>
+                            <span id="feedback-text" class="text-lg font-bold">Awesome!</span>
+                        </div>
+                    </div>
+
+                    <!-- Action Tap Buttons -->
+                    <div class="grid grid-cols-2 gap-4 w-full max-w-md">
+                        <!-- Clockwise Button (Right) -->
+                        <button onclick="submitAnswer('CW')" class="bg-gray-950 hover:bg-gray-800 border-2 border-emerald-500/30 hover:border-emerald-500/80 p-5 rounded-2xl flex flex-col items-center transition-all group">
+                            <span class="text-3xl mb-2 group-hover:rotate-45 transition-transform duration-300 text-emerald-400">🔄</span>
+                            <span class="text-sm font-bold text-emerald-400 tracking-wide uppercase">Clockwise</span>
+                            <span class="text-[10px] text-gray-500 mt-1">Spin like a clock hands</span>
+                        </button>
+                        <!-- Anticlockwise Button (Left) -->
+                        <button onclick="submitAnswer('ACW')" class="bg-gray-950 hover:bg-gray-800 border-2 border-indigo-500/30 hover:border-indigo-500/80 p-5 rounded-2xl flex flex-col items-center transition-all group">
+                            <span class="text-3xl mb-2 group-hover:-rotate-45 transition-transform duration-300 text-indigo-400">↩️</span>
+                            <span class="text-sm font-bold text-indigo-400 tracking-wide uppercase">Anticlockwise</span>
+                            <span class="text-[10px] text-gray-500 mt-1">Spin reverse way</span>
+                        </button>
+                    </div>
+
+                    <!-- Emergency No-Moment Button -->
+                    <button onclick="submitAnswer('NONE')" class="bg-gray-950 hover:bg-gray-900 border border-gray-800 text-gray-400 text-xs px-4 py-2.5 rounded-xl hover:text-white transition">
+                        📭 Pivot is at Force? (Zero Turning Effect)
+                    </button>
+                </div>
+
+                <!-- SCREEN 3: GAME OVER SCREEN -->
+                <div id="game-over-screen" class="py-6 hidden flex flex-col items-center gap-4 max-w-sm">
+                    <span class="text-5xl">🏆</span>
+                    <h4 class="text-xl font-bold text-white">Challenge Complete!</h4>
+                    <p class="text-sm text-gray-400">You scored <b class="text-indigo-400" id="final-score">0</b> this round.</p>
+                    <div id="game-over-evaluation" class="text-xs bg-indigo-950/40 border border-indigo-900/40 text-indigo-300 px-4 py-3 rounded-xl mt-1 leading-relaxed">
+                        <!-- Custom personalized feedback text -->
+                    </div>
+                    <button onclick="startGame()" class="mt-4 bg-gray-800 hover:bg-gray-700 text-white font-bold py-2.5 px-6 rounded-xl text-xs transition">
+                        🔄 Play Again
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: PHYSICS HACKS / CHEATSHEET ================= -->
+        <section id="tab-cheatsheet" class="tab-content hidden flex flex-col gap-6">
+            <!-- Syllabus Hack Card -->
+            <div class="bg-gray-900 border border-gray-800 rounded-3xl p-6 shadow-xl">
+                <div class="flex items-center gap-3 border-b border-gray-800 pb-4 mb-5">
+                    <span class="text-3xl">🧪</span>
+                    <div>
+                        <h3 class="text-lg font-bold text-white">Syllabus 6091 Quick Study Cheat</h3>
+                        <p class="text-xs text-gray-400">Learn only what you need to score on this topic.</p>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Concept 1 -->
+                    <div class="bg-gray-950 border border-gray-800 rounded-2xl p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="bg-blue-900/40 text-blue-300 text-[10px] px-2.5 py-1 rounded-lg font-bold uppercase tracking-wider">Concept 1</span>
+                            <span class="text-xs text-gray-500 font-mono">Formula Checklist</span>
+                        </div>
+                        <h4 class="text-sm font-bold text-white mb-2">Moment of a Force Equation</h4>
+                        <p class="text-xs text-gray-400 leading-relaxed mb-3">The turning effect of a force depends on both how hard you push (Force) and where you push (Distance from pivot).</p>
+                        
+                        <div class="bg-gray-900 border border-gray-800 p-3 rounded-xl flex items-center justify-center gap-4 text-center">
+                            <div>
+                                <span class="block text-lg font-extrabold text-blue-400">M = F × d</span>
+                                <span class="text-[9px] text-gray-500 uppercase tracking-wide">Standard Equation</span>
+                            </div>
+                            <div class="w-px h-8 bg-gray-800"></div>
+                            <div class="text-left text-[11px] text-gray-300 space-y-0.5">
+                                <div>• <b>M</b> = Moment of Force in <b>Newton-metres (N m)</b></div>
+                                <div>• <b>F</b> = Applied Force in <b>Newtons (N)</b></div>
+                                <div>• <b>d</b> = Perpendicular distance to pivot in <b>metres (m)</b></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Concept 2 -->
+                    <div class="bg-gray-950 border border-gray-800 rounded-2xl p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="bg-emerald-900/40 text-emerald-300 text-[10px] px-2.5 py-1 rounded-lg font-bold uppercase tracking-wider">Concept 2</span>
+                            <span class="text-xs text-gray-500 font-mono">Perpendicular Trap</span>
+                        </div>
+                        <h4 class="text-sm font-bold text-white mb-1">Watch out for the "Perpendicular" Trap! ⚠️</h4>
+                        <p class="text-xs text-gray-400 leading-relaxed">Cambridge examiners *love* setting traps where the force direction is skewed. "d" must always be at a <b>90-degree angle</b> to the force's line of action from the pivot.</p>
+                        <div class="mt-3 flex items-center gap-3 bg-gray-900/80 p-3 rounded-xl border border-gray-800 text-[11px] text-amber-300">
+                            <span class="text-lg">⚠️</span>
+                            <span><b>Tip:</b> If the force's line passes straight through the pivot itself, distance $d = 0$, meaning the <b>moment is exactly zero</b>. You can't open a door by pushing on its hinge!</span>
+                        </div>
+                    </div>
+
+                    <!-- Concept 3 -->
+                    <div class="bg-gray-950 border border-gray-800 rounded-2xl p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="bg-purple-900/40 text-purple-300 text-[10px] px-2.5 py-1 rounded-lg font-bold uppercase tracking-wider">Concept 3</span>
+                            <span class="text-xs text-gray-500 font-mono">Direction Hacks</span>
+                        </div>
+                        <h4 class="text-sm font-bold text-white mb-2">Pen / Ruler Pencil Hack</h4>
+                        <p class="text-xs text-gray-400 leading-relaxed mb-3">Unsure of direction in exam paper? Follow this 3-step physical hack during your papers:</p>
+                        <ol class="text-xs text-gray-300 space-y-2 list-decimal list-inside px-1">
+                            <li>Place your physical pen/ruler flat onto the exam page directly over the beam graphic.</li>
+                            <li>Hold down your pen firmly at the spot where the <b>Pivot</b> is.</li>
+                            <li>Use your other hand to push the pen in the direction of the <b>Force arrow</b>.</li>
+                            <li>Watch how your pen spins. Simple!</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Interactive Bottom Toast Message for Slang / Motivation -->
+    <div class="max-w-4xl w-full mx-auto px-4 pb-4">
+        <div id="physics-tip-toast" class="bg-gray-950 border border-gray-800 rounded-2xl p-3 flex items-center justify-between text-xs text-gray-400 transition-all duration-300 hover:border-indigo-900/60">
+            <span class="flex items-center gap-2">
+                <span class="bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded-lg text-[9px] uppercase font-bold tracking-wider">PRO-TIP</span>
+                <span id="toast-text">Loading daily turning effect wisdom...</span>
+            </span>
+            <button onclick="rollRandomToast()" class="text-indigo-400 hover:text-indigo-300 font-bold flex items-center gap-1">
+                Next <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Sticky Footer info -->
+    <footer class="border-t border-gray-900 bg-gray-950 py-4 text-center text-xs text-gray-500">
+        <div class="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <span>Designed for Singapore Secondary School Physics Syllabus 6091 (Sec 3 / 4)</span>
+            <span class="text-gray-600">Created with 💜 for digital native learners</span>
+        </div>
+    </footer>
+
+    <!-- Interactive Logic Script -->
+    <script>
+        // Global State variables
+        let streakCount = 0;
+        let bestScore = 0;
+        let activeTab = 'sandbox';
+
+        // Continuous Rotation State Variables
+        let momentValueNm = 0;
+        let direction = "NONE";
+        let isContinuousOn = false;
+        let continuousAngle = 0;
+        let animationFrameId = null;
+
+        // Physics Hack Toasts / Slang Pool
+        const physicsToasts = [
+            "Perpendicular distance is key. Make sure the distance is at 90° to the force! 📐",
+            "Slay your 6091 exams. Just remember: Moment = Force × Distance. No cap! 🏎️",
+            "If the force line of action points directly at the pivot, Moment = 0 N m. Real easy. 🤫",
+            "Anticlockwise (ACW) goes against standard clocks, Clockwise (CW) follows it! 🔄",
+            "Units matter: always convert your distances to meters (m) and force to Newtons (N)! 📏",
+            "Why do we use long door handles? More distance 'd' means less Force 'F' needed! Slay efficiency! 🚪",
+            "Spanners are long for a reason. Max distance = max leverage. Physics is literally a cheat code! 🔧",
+            "Pivot is just another fancy word for turning axis or hinge! ⚙️"
+        ];
+
+        // ---------------- TAB NAVIGATION LOGIC ----------------
+        function switchTab(tabId) {
+            activeTab = tabId;
+            // Hide all tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            // Show selected tab content
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            // Toggle active styling on buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-bold px-4 py-2 rounded-xl transition duration-200";
+            });
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            if (activeBtn) {
+                activeBtn.className = "tab-btn bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition duration-200";
+            }
+
+            // Custom initializers for tabs
+            if (tabId === 'sandbox') {
+                updateSim();
+            } else if (tabId === 'challenge') {
+                resetGameUI();
+            }
+        }
+
+        function rollRandomToast() {
+            const index = Math.floor(Math.random() * physicsToasts.length);
+            document.getElementById('toast-text').innerText = physicsToasts[index];
+        }
+
+        // ---------------- TAB 1: SANDBOX CODE ----------------
+        function resetSandbox() {
+            document.getElementById('input-force-pos').value = 450;
+            document.getElementById('input-pivot-pos').value = 300;
+            document.getElementById('input-force-val').value = 30;
+            updateSim();
+        }
+
+        // Toggle Continuous Spin
+        function toggleContinuousSpin() {
+            isContinuousOn = !isContinuousOn;
+            const btn = document.getElementById('toggle-continuous-spin');
+            if (isContinuousOn) {
+                btn.className = "px-4 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 border bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-500/25 animate-pulse";
+                btn.innerHTML = "ON 🔄";
+            } else {
+                btn.className = "px-4 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 border bg-gray-900 border-gray-800 text-gray-400 hover:text-white";
+                btn.innerHTML = "OFF";
+            }
+            updateSim();
+        }
+
+        // Constant loop animation for slow continuous spinning
+        function animate() {
+            if (isContinuousOn && momentValueNm > 0) {
+                // Constant gentle visual speed (0.6 degrees per frame)
+                const speed = 0.6; 
+                const directionMultiplier = (direction === "CW") ? 1 : -1;
+                continuousAngle += speed * directionMultiplier;
+                
+                // Wrap around smoothly at 360 to prevent large numbers, keeping it simple
+                continuousAngle = continuousAngle % 360;
+
+                const beamGroupNode = document.getElementById('beam-group');
+                if (beamGroupNode) {
+                    beamGroupNode.style.transform = `rotate(${continuousAngle}deg)`;
+                }
+                animationFrameId = requestAnimationFrame(animate);
+            } else {
+                animationFrameId = null;
+            }
+        }
+
+        function updateSim() {
+            // Read slider inputs
+            const forcePos = parseInt(document.getElementById('input-force-pos').value);
+            const pivotPos = parseInt(document.getElementById('input-pivot-pos').value);
+            const forceVal = parseInt(document.getElementById('input-force-val').value);
+
+            // Compute physics parameters (simulate a 6.0m beam scale)
+            // Scale: 100px on SVG = 1.0 meter
+            const actualDistanceM = Math.abs(forcePos - pivotPos) / 100;
+            const actualForceN = Math.abs(forceVal);
+
+            // Calculate turning moment direction and magnitude
+            momentValueNm = actualForceN * actualDistanceM;
+            direction = "NONE"; // NONE, CW, ACW
+
+            if (forceVal !== 0 && forcePos !== pivotPos) {
+                if (forcePos > pivotPos) {
+                    // Force is on the right of pivot
+                    direction = (forceVal > 0) ? "ACW" : "CW";
+                } else {
+                    // Force is on the left of pivot
+                    direction = (forceVal > 0) ? "CW" : "ACW";
+                }
+            }
+
+            // Update UI/HUD text
+            document.getElementById('val-force-pos').innerText = `${(forcePos / 100).toFixed(1)}m from Left`;
+            
+            // Pivot text helpers
+            let pivotHelper = `${(pivotPos / 100).toFixed(1)}m`;
+            if (pivotPos === 300) pivotHelper = "Center (3.0m)";
+            else if (pivotPos === 50) pivotHelper = "Left Edge (0.5m)";
+            else if (pivotPos === 550) pivotHelper = "Right Edge (5.5m)";
+            document.getElementById('val-pivot-pos').innerText = pivotHelper;
+
+            // Force label helper
+            let forceHelper = `${actualForceN} N`;
+            if (forceVal > 0) forceHelper = `+${forceVal} N (Upward ⬆️)`;
+            else if (forceVal < 0) forceHelper = `${forceVal} N (Downward ⬇️)`;
+            else forceHelper = `0 N (Neutral)`;
+            document.getElementById('val-force-val').innerText = forceHelper;
+
+            // HUD Fill
+            document.getElementById('hud-force').innerText = `${actualForceN} N`;
+            document.getElementById('hud-force-dir').innerText = forceVal > 0 ? "Pushing Upward" : (forceVal < 0 ? "Pushing Downward" : "No Force");
+            document.getElementById('hud-distance').innerText = `${actualDistanceM.toFixed(1)} m`;
+            document.getElementById('hud-formula-calc').innerText = `${actualForceN}N × ${actualDistanceM.toFixed(1)}m`;
+            document.getElementById('hud-moment').innerText = `${momentValueNm.toFixed(1)} N m`;
+
+            // Adjust interactive visualization on SVG
+            const pivotNode = document.getElementById('pivot-indicator');
+            const pivotLabel = document.getElementById('pivot-label');
+            const beamGroupNode = document.getElementById('beam-group');
+            const forceVectorNode = document.getElementById('force-vector');
+            const arrowLineNode = document.getElementById('arrow-line');
+            const forceTextGraphic = document.getElementById('force-text-graphic');
+            const dimLineNode = document.getElementById('dim-line');
+
+            // Shift Pivot Triangle
+            pivotNode.setAttribute("points", `${pivotPos},95 ${pivotPos-15},130 ${pivotPos+15},130`);
+            pivotLabel.setAttribute("x", pivotPos);
+            pivotLabel.innerHTML = `PIVOT (d = 0m)`;
+
+            // Position and setup dimension distance line (horizontal amber line)
+            if (actualDistanceM > 0) {
+                dimLineNode.setAttribute("d", `M ${pivotPos} 95 L ${forcePos} 95`);
+                dimLineNode.setAttribute("stroke", "#f59e0b");
+                dimLineNode.setAttribute("opacity", "0.85");
+            } else {
+                dimLineNode.setAttribute("opacity", "0");
+            }
+
+            // Adjust beam group origin point to pivot
+            beamGroupNode.style.transformOrigin = `${pivotPos}px 95px`;
+
+            // Handling continuous or static rotation logic
+            if (isContinuousOn && momentValueNm > 0) {
+                // CRITICAL FIX: Disable transition instantly during live rotation loop so it never reverses or snaps backward on wrap arounds
+                beamGroupNode.style.transition = "none";
+                
+                // Trigger rotation animation frame loop if not already running
+                if (!animationFrameId) {
+                    animationFrameId = requestAnimationFrame(animate);
+                }
+            } else {
+                // Cancel loop animation if active
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null;
+                }
+                
+                // Restore normal smooth transition animation when continuous mode is off
+                beamGroupNode.style.transition = "transform 0.3s ease-out";
+                
+                // Fallback to static, spring-like proportional deflection
+                let staticRotationAngle = 0;
+                if (momentValueNm > 0) {
+                    const multiplier = (direction === "CW") ? 1 : -1;
+                    staticRotationAngle = Math.min(22, momentValueNm * 0.25) * multiplier;
+                }
+                beamGroupNode.style.transform = `rotate(${staticRotationAngle}deg)`;
+                continuousAngle = staticRotationAngle; // Sync start state
+            }
+
+            // Shift Force Vector position
+            forceVectorNode.setAttribute("transform", `translate(${forcePos - 450}, 0)`);
+
+            // Adjust Force Arrow orientation and magnitude visual scale
+            if (forceVal !== 0) {
+                arrowLineNode.setAttribute("opacity", "1");
+                forceTextGraphic.setAttribute("opacity", "1");
+                forceTextGraphic.innerHTML = `${actualForceN} N`;
+
+                if (forceVal > 0) {
+                    // Pushing UP (Arrow starts down and points up)
+                    arrowLineNode.setAttribute("x1", "450");
+                    arrowLineNode.setAttribute("y1", "75");
+                    arrowLineNode.setAttribute("x2", "450");
+                    arrowLineNode.setAttribute("y2", "30"); // Points up
+                    forceTextGraphic.setAttribute("y", "15");
+                } else {
+                    // Pushing DOWN (Arrow starts up and points down)
+                    arrowLineNode.setAttribute("x1", "450");
+                    arrowLineNode.setAttribute("y1", "25");
+                    arrowLineNode.setAttribute("x2", "450");
+                    arrowLineNode.setAttribute("y2", "70"); // Points down
+                    forceTextGraphic.setAttribute("y", "15");
+                }
+            } else {
+                arrowLineNode.setAttribute("opacity", "0");
+                forceTextGraphic.setAttribute("opacity", "0");
+            }
+
+            // Style Badge
+            const badge = document.getElementById('sandbox-badge');
+            if (direction === "CW") {
+                badge.className = "absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 rounded-xl border font-bold text-xs shadow-md transition-all duration-300 bg-emerald-950/80 text-emerald-400 border-emerald-500/30 glow-emerald";
+                badge.innerHTML = `<i class="fa-solid fa-rotate-right animate-spin"></i> Clockwise Moment`;
+                document.getElementById('hud-moment-type').innerText = "Clockwise 🔄";
+                document.getElementById('hud-moment-type').className = "text-[9px] font-bold text-emerald-400";
+            } else if (direction === "ACW") {
+                badge.className = "absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 rounded-xl border font-bold text-xs shadow-md transition-all duration-300 bg-indigo-950/80 text-indigo-400 border-indigo-500/30 glow-blue";
+                badge.innerHTML = `<i class="fa-solid fa-arrow-rotate-left animate-spin" style="animation-direction: reverse;"></i> Anticlockwise Moment`;
+                document.getElementById('hud-moment-type').innerText = "Anticlockwise ↩️";
+                document.getElementById('hud-moment-type').className = "text-[9px] font-bold text-indigo-400";
+            } else {
+                badge.className = "absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 rounded-xl border font-bold text-xs shadow-md transition-all duration-300 bg-gray-900 border-gray-800 text-gray-500";
+                badge.innerHTML = `⚠️ Zero Turning Effect`;
+                document.getElementById('hud-moment-type').innerText = "None (d = 0m)";
+                document.getElementById('hud-moment-type').className = "text-[9px] font-bold text-gray-500";
+            }
+        }
+
+
+        // ---------------- TAB 2: GAME LOGIC ----------------
+        let gameScore = 0;
+        let gameTimer = null;
+        let gameTimeLeft = 100; // percent
+        let currentChallengeAnswer = ""; // "CW", "ACW", "NONE"
+        let currentQuestionCount = 0;
+        const totalQuestions = 10;
+        let streakMultiplier = 1;
+
+        // Custom Timer Values for a smooth 30-second duration
+        const totalTimeDurationMs = 30000; // 30 seconds
+        const timerTickRateMs = 100; // tick every 100ms
+        const timerDecrementPerTick = (timerTickRateMs / totalTimeDurationMs) * 100; // percentage per tick
+
+        function resetGameUI() {
+            document.getElementById('game-start-screen').classList.remove('hidden');
+            document.getElementById('game-active-screen').classList.add('hidden');
+            document.getElementById('game-over-screen').classList.add('hidden');
+            gameScore = 0;
+            document.getElementById('game-score').innerText = gameScore;
+        }
+
+        function startGame() {
+            gameScore = 0;
+            currentQuestionCount = 0;
+            streakMultiplier = 1;
+            document.getElementById('game-score').innerText = gameScore;
+            
+            document.getElementById('game-start-screen').classList.add('hidden');
+            document.getElementById('game-over-screen').classList.add('hidden');
+            document.getElementById('game-active-screen').classList.remove('hidden');
+            
+            nextChallenge();
+        }
+
+        // Generate dynamic questions focusing exclusively on turning moments
+        function nextChallenge() {
+            if (currentQuestionCount >= totalQuestions) {
+                endGame();
+                return;
+            }
+
+            currentQuestionCount++;
+            
+            // Randomly choose configuration
+            const setupType = Math.floor(Math.random() * 5) + 1;
+            const forceDirection = Math.random() > 0.5 ? "UP" : "DOWN"; // UP or DOWN
+
+            let pivotX = 200; // SVG space
+            let forceX = 300;
+            let explanationText = "";
+
+            if (setupType === 1) {
+                pivotX = 200; // Center
+                forceX = 320; // Right
+                currentChallengeAnswer = (forceDirection === "UP") ? "ACW" : "CW";
+                explanationText = `Pivot in Center. Force is pushing ${forceDirection} on the RIGHT side.`;
+            } else if (setupType === 2) {
+                pivotX = 200; // Center
+                forceX = 80;  // Left
+                currentChallengeAnswer = (forceDirection === "UP") ? "CW" : "ACW";
+                explanationText = `Pivot in Center. Force is pushing ${forceDirection} on the LEFT side.`;
+            } else if (setupType === 3) {
+                pivotX = 80;  // Left edge
+                forceX = 280; // Right side
+                currentChallengeAnswer = (forceDirection === "UP") ? "ACW" : "CW";
+                explanationText = `Pivot is at the Left hinge. Force is pushing ${forceDirection} on the right.`;
+            } else if (setupType === 4) {
+                pivotX = 320; // Right edge
+                forceX = 120; // Left side
+                currentChallengeAnswer = (forceDirection === "UP") ? "CW" : "ACW";
+                explanationText = `Pivot is at the Right hinge. Force is pushing ${forceDirection} on the left.`;
+            } else {
+                // Scenario 5: Force exactly on Pivot (Zero Moment)
+                pivotX = 200;
+                forceX = 200;
+                currentChallengeAnswer = "NONE";
+                explanationText = `Force is applied directly ON the Pivot hinge.`;
+            }
+
+            // Draw game challenge SVG dynamically
+            const challengeSvg = document.getElementById('challenge-svg');
+            challengeSvg.innerHTML = `
+                <!-- Beam -->
+                <rect x="50" y="45" width="300" height="12" rx="3" fill="#1e1b4b" stroke="#4338ca" stroke-width="2" />
+                <!-- Pivot Triangle -->
+                <polygon points="${pivotX},53 ${pivotX-10},75 ${pivotX+10},75" fill="#f59e0b" />
+                <text x="${pivotX}" y="88" fill="#f59e0b" font-size="9" text-anchor="middle" font-weight="bold">PIVOT</text>
+            `;
+
+            // Draw dynamic Force Arrow if not a zero moment setup
+            if (setupType !== 5) {
+                const isUp = forceDirection === "UP";
+                const y1 = isUp ? 35 : 10;
+                const y2 = isUp ? 10 : 35; // Arrow head direction
+                const labelY = isUp ? 4 : 45;
+
+                challengeSvg.innerHTML += `
+                    <!-- Force Vector Arrow -->
+                    <g>
+                        <line x1="${forceX}" y1="${y1}" x2="${forceX}" y2="${y2}" stroke="#3b82f6" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+                        <text x="${forceX}" y="${labelY}" fill="#3b82f6" font-size="10" font-weight="bold" text-anchor="middle">Force</text>
+                    </g>
+                `;
+            } else {
+                // Draw a force vector sitting right over the pivot to make it obvious
+                challengeSvg.innerHTML += `
+                    <!-- Force vector right on top of pivot -->
+                    <g>
+                        <line x1="${pivotX}" y1="35" x2="${pivotX}" y2="44" stroke="#ef4444" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+                        <text x="${pivotX}" y="20" fill="#ef4444" font-size="10" font-weight="bold" text-anchor="middle">Force at Pivot!</text>
+                    </g>
+                `;
+            }
+
+            // Update text instruction
+            document.getElementById('challenge-prompt').innerHTML = explanationText;
+
+            // Start smooth timer adjusted to exactly 30 seconds
+            clearInterval(gameTimer);
+            gameTimeLeft = 100;
+            const timerBar = document.getElementById('game-timer-fill');
+            timerBar.style.width = '100%';
+
+            gameTimer = setInterval(() => {
+                gameTimeLeft -= timerDecrementPerTick; // Decrement based on ticks
+                if (gameTimeLeft < 0) gameTimeLeft = 0;
+                timerBar.style.width = `${gameTimeLeft}%`;
+                
+                // Color shift timer bar based on urgency (less than 10 seconds / 33% remaining)
+                if (gameTimeLeft < 33) {
+                    timerBar.className = "bg-gradient-to-r from-rose-500 to-red-600 h-full w-full transition-all duration-100 ease-linear";
+                } else {
+                    timerBar.className = "bg-gradient-to-r from-emerald-400 to-indigo-500 h-full w-full transition-all duration-100 ease-linear";
+                }
+
+                if (gameTimeLeft <= 0) {
+                    clearInterval(gameTimer);
+                    submitAnswer("TIMEOUT");
+                }
+            }, timerTickRateMs);
+        }
+
+        function submitAnswer(userChoice) {
+            clearInterval(gameTimer);
+            const overlay = document.getElementById('feedback-overlay');
+            const feedbackText = document.getElementById('feedback-text');
+            const feedbackIcon = document.getElementById('feedback-icon');
+
+            const isCorrect = userChoice === currentChallengeAnswer;
+
+            if (isCorrect) {
+                // Correct answer
+                let pointsEarned = 10 * streakMultiplier;
+                gameScore += pointsEarned;
+                streakCount++;
+                document.getElementById('header-streak').innerText = streakCount;
+
+                // Update best score
+                if (gameScore > bestScore) {
+                    bestScore = gameScore;
+                    document.getElementById('game-high').innerText = bestScore;
+                }
+
+                // Hype phrases
+                const customSlang = ["Slayed! 💅", "Big Brain 🧠", "W Physics Skill ✨", "Absolute Chad 👑", "Clean calculations! ⚡"];
+                feedbackIcon.innerText = "🔥";
+                feedbackText.innerText = customSlang[Math.floor(Math.random() * customSlang.length)] + ` (+${pointsEarned})`;
+                overlay.className = "absolute inset-0 bg-emerald-950/95 rounded-2xl flex flex-col items-center justify-center opacity-100 transition-all duration-150 text-emerald-400";
+                
+                // Increase streak potential
+                if (streakCount % 3 === 0) streakMultiplier++;
+
+            } else {
+                // Incorrect answer or timeout
+                streakCount = 0;
+                streakMultiplier = 1;
+                document.getElementById('header-streak').innerText = streakCount;
+
+                feedbackIcon.innerText = "💀";
+                feedbackText.innerText = userChoice === "TIMEOUT" ? "Too slow! Time Out ⏰" : "Incorrect Pivot spin! ✖️";
+                overlay.className = "absolute inset-0 bg-rose-950/95 rounded-2xl flex flex-col items-center justify-center opacity-100 transition-all duration-150 text-rose-400";
+            }
+
+            document.getElementById('game-score').innerText = gameScore;
+
+            // Flash feedback screen then proceed
+            setTimeout(() => {
+                overlay.className = "absolute inset-0 bg-gray-950/90 rounded-2xl flex flex-col items-center justify-center opacity-0 pointer-events-none transition-all duration-200";
+                nextChallenge();
+            }, 1400);
+        }
+
+        function endGame() {
+            document.getElementById('game-active-screen').classList.add('hidden');
+            document.getElementById('game-over-screen').classList.remove('hidden');
+            document.getElementById('final-score').innerText = gameScore;
+
+            // Customized feedback review
+            const evalBox = document.getElementById('game-over-evaluation');
+            if (gameScore >= 90) {
+                evalBox.innerHTML = `🔥 <b>Physics S-Tier:</b> No cap, you understand moments better than the textbook itself. Complete academic weapon status achieved. 🚀`;
+            } else if (gameScore >= 50) {
+                evalBox.innerHTML = `✨ <b>Solid effort:</b> Pretty good turning logic, you clearly know your CW from ACW! Keep leveling up to secure that easy A1.`;
+            } else {
+                evalBox.innerHTML = `🧐 <b>A bit mid:</b> Don't worry, even Einstein had to practice! Remember, hold the pivot and push. Try again to boost your score!`;
+            }
+        }
+
+
+        // ---------------- WINDOW INITIALIZATION ----------------
+        window.onload = function() {
+            // Pick starting physics toast
+            rollRandomToast();
+            // Start the sandbox with default slider measurements
+            updateSim();
+        }
+    </script>
+</body>
+</html>
