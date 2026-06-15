@@ -546,15 +546,16 @@ function loadFlashcard() {
   cardElement.classList.remove('flipped');
 
   const countBadge = document.getElementById('flashcard-remaining-count');
-  countBadge.textContent = activeFlashcards.length;
 
   if (activeFlashcards.length === 0) {
+    countBadge.textContent = "0";
     document.getElementById('flashcard-front-text').textContent = "Revision Complete!";
     document.getElementById('flashcard-back-text').textContent = "Tap below or restart to revise again.";
     document.querySelector('.flashcard-actions').classList.add('hidden');
     return;
   }
 
+  countBadge.textContent = `${currentFlashcardIndex + 1} / ${activeFlashcards.length}`;
   document.querySelector('.flashcard-actions').classList.remove('hidden');
   const cardData = activeFlashcards[currentFlashcardIndex];
   document.getElementById('flashcard-front-text').textContent = cardData.front;
@@ -569,12 +570,13 @@ function flipFlashcard() {
 function handleFlashcardAction(action) {
   const cardElement = document.getElementById('flashcard');
   
-  if (action === 'got-it') {
-    // Remove from active list
-    activeFlashcards.splice(currentFlashcardIndex, 1);
-  } else {
-    // Keep in deck, move to next card index
+  if (action === 'next') {
     currentFlashcardIndex = (currentFlashcardIndex + 1) % activeFlashcards.length;
+  } else if (action === 'prev') {
+    currentFlashcardIndex = (currentFlashcardIndex - 1 + activeFlashcards.length) % activeFlashcards.length;
+  } else if (action === 'shuffle') {
+    activeFlashcards.sort(() => Math.random() - 0.5);
+    currentFlashcardIndex = 0;
   }
 
   // Visual card swipe transition
@@ -582,7 +584,6 @@ function handleFlashcardAction(action) {
   cardElement.style.opacity = "0";
 
   setTimeout(() => {
-    // Reset index if we went out of bounds
     if (activeFlashcards.length > 0) {
       currentFlashcardIndex = currentFlashcardIndex % activeFlashcards.length;
     }

@@ -189,7 +189,7 @@
               <span class="dot-indicator yellow"></span>
               <h2>04. REVISION FLASHCARDS</h2>
             </div>
-            <div class="card-count-badge">Cards Left: <span id="flashcard-remaining-count">10</span></div>
+            <div class="card-count-badge">Card: <span id="flashcard-remaining-count">1 / 10</span></div>
           </div>
 
           <div class="flashcard-arena">
@@ -212,11 +212,14 @@
           </div>
 
           <div class="flashcard-actions">
-            <button class="btn btn-danger btn-swipe" onclick="handleFlashcardAction('review')">
-              Review again ↩
+            <button class="btn" onclick="handleFlashcardAction('prev')">
+              prev
             </button>
-            <button class="btn btn-success btn-swipe" onclick="handleFlashcardAction('got-it')">
-              Got it ✓
+            <button class="btn" onclick="handleFlashcardAction('shuffle')">
+              shuffle
+            </button>
+            <button class="btn" onclick="handleFlashcardAction('next')">
+              next
             </button>
           </div>
         </div>
