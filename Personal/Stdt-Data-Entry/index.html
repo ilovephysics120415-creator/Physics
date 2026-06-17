@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Class Note Recorder</title>
+    <!-- Font Awesome for modern icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Premium Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --emerald: #10b981;
+            --emerald-dark: #059669;
+            --emerald-light: #ecfdf5;
+            --indigo: #6366f1;
+            --indigo-light: #e0e7ff;
+            --rose: #ef4444;
+            --rose-light: #fef2f2;
+            --border-color: #e2e8f0;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            padding-top: calc(16px + env(safe-area-inset-top));
+            padding-bottom: calc(16px + env(safe-area-inset-bottom));
+        }
+
+        /* Container & Card */
+        .container {
+            width: 100%;
+            max-width: 440px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 10px 15px -3px rgb(0 0 0 / 0.05);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Header Elements inside Card */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .badge-terminal {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--emerald-dark);
+            background-color: var(--emerald-light);
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .connection-status {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--text-muted);
+            display: inline-block;
+        }
+
+        .status-dot.connected {
+            background-color: var(--emerald);
+            box-shadow: 0 0 8px var(--emerald);
+        }
+
+        .status-dot.syncing {
+            background-color: #f59e0b;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-top: 6px;
+        }
+
+        .card-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            line-height: 1.4;
+        }
+
+        /* Form Controls */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .select-wrapper i.fa-chevron-down {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+            font-size: 12px;
+        }
+
+        .form-select, .form-input, .form-textarea {
+            width: 100%;
+            background-color: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--text-main);
+            transition: var(--transition-smooth);
+            appearance: none;
+        }
+
+        .form-select:focus, .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--indigo);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px var(--indigo-light);
+        }
+
+        .form-input[readonly] {
+            background-color: #f1f5f9;
+            color: var(--text-muted);
+            cursor: not-allowed;
+            padding-left: 38px;
+        }
+
+        .input-icon-wrapper {
+            position: relative;
+        }
+
+        .input-icon-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .form-textarea {
+            resize: none;
+            height: 120px;
+            line-height: 1.5;
+        }
+
+        /* Buttons & Footer Actions */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-sheet {
+            background-color: #f1f5f9;
+            color: #334155;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-sheet:hover {
+            background-color: #e2e8f0;
+        }
+
+        .btn-submit {
+            background-color: var(--emerald);
+            color: #ffffff;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--emerald-dark);
+        }
+
+        .btn:disabled {
+            background-color: #cbd5e1;
+            color: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Settings Icon */
+        .settings-btn {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 18px;
+            transition: var(--transition-smooth);
+            z-index: 10;
+        }
+
+        .settings-btn:hover {
+            color: var(--text-main);
+            transform: rotate(45deg);
+        }
+
+        /* Settings Overlay Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition-smooth);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background-color: var(--card-bg);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 400px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            transform: translateY(20px);
+            transition: var(--transition-smooth);
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: calc(24px + env(safe-area-inset-bottom));
+            left: 50%;
+            transform: translate(-50%, 100px);
+            width: calc(100% - 32px);
+            max-width: 400px;
+            background-color: var(--text-main);
+            color: #ffffff;
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            opacity: 0;
+            transition: var(--transition-smooth);
+            z-index: 1000;
+        }
+
+        .toast.active {
+            transform: translate(-50%, 0);
+            opacity: 1;
+        }
+
+        .toast-icon {
+            font-size: 18px;
+        }
+
+        .toast-icon.success {
+            color: var(--emerald);
+        }
+
+        .toast-icon.error {
+            color: var(--rose);
+        }
+
+        .toast-content {
+            flex-grow: 1;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 12px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Main Recording Card -->
+        <main class="card">
+            <!-- Settings trigger button -->
+            <button class="settings-btn" id="openSettingsBtn" title="Configure endpoints">
+                <i class="fa-solid fa-gear"></i>
+            </button>
+
+            <!-- Card Header info -->
+            <div>
+                <span class="badge-terminal">Live Terminal</span>
+                <h2 class="card-title">Log New Entry</h2>
+                <p class="card-subtitle">Submissions will be routed directly to your configured Google Web App.</p>
+            </div>
+
+            <form id="recorderForm" style="display: flex; flex-direction: column; gap: 16px;">
+                <!-- Student Dropdown -->
+                <div class="form-group">
+                    <label for="studentSelect" class="form-label">
+                        <span>Dropdownlist of names <span style="font-weight: normal; opacity: 0.7;">(from sheet)</span></span>
+                        <span class="connection-status" id="statusBadge">
+                            <span class="status-dot" id="statusDot"></span>
+                            <span id="statusText">Connecting...</span>
+                        </span>
+                    </label>
+                    <div class="select-wrapper">
+                        <select id="studentSelect" class="form-select" required>
+                            <option value="" disabled selected>-- Loading student roster --</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+
+                <!-- Class display (Auto-fill) -->
+                <div class="form-group">
+                    <label for="classDisplay" class="form-label">Class <span style="font-weight: normal; opacity: 0.7;">(Auto-fills from selection)</span></label>
+                    <div class="input-icon-wrapper">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                        <input type="text" id="classDisplay" class="form-input" readonly placeholder="No student selected">
+                    </div>
+                </div>
+
+                <!-- Notes Area -->
+                <div class="form-group">
+                    <label for="notesInput" class="form-label">Notes to be recorded</label>
+                    <textarea id="notesInput" class="form-textarea" required placeholder="Type notes here regarding the selection..."></textarea>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="button-group">
+                    <button type="button" class="btn btn-sheet" id="openSheetBtn">
+                        <i class="fa-solid fa-table" style="color: var(--emerald)"></i>
+                        <span>Open Sheet</span>
+                    </button>
+                    <button type="submit" class="btn btn-submit" id="submitBtn">
+                        <span>Submit Note</span>
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <!-- Settings Dialog -->
+    <div class="modal-overlay" id="settingsOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Settings</h3>
+                <button class="modal-close" id="closeSettingsBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="form-group">
+                <label for="sheetUrlInput" class="form-label">Google Sheet URL (for viewing)</label>
+                <input type="text" id="sheetUrlInput" class="form-input" placeholder="https://docs.google.com/spreadsheets/d/.../edit">
+            </div>
+            <button class="btn btn-submit" id="saveSettingsBtn" style="margin-top: 8px;">Save Settings</button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fa-solid fa-circle-info toast-icon" id="toastIcon"></i>
+        <div class="toast-content" id="toastMessage">Notification message</div>
+        <button class="toast-close" id="closeToastBtn"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <!-- App Logic -->
+    <script>
+        // Default Google Apps Script URL fallback
+        const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwYW-Bguie-7-5ioNOXhxrkCTDxxoN8RCsPo-toh6u6Gam7KP3JIxCrh7WsSt0PzY0R/exec";
+
+        // Simulated roster backup list
+        let mockRoster = [
+            { name: "[Fallback] Alexandra Smith", className: "Grade 10-A" },
+            { name: "[Fallback] Benjamin Carter", className: "Grade 11-B" },
+            { name: "[Fallback] Chloe Henderson", className: "Grade 9-C" },
+            { name: "[Fallback] Daniel Wright", className: "Grade 12-A" },
+            { name: "[Fallback] Emily Johansen", className: "Grade 10-A" }
+        ];
+
+        let loadedRoster = [];
+
+        // Load configured settings
+        function getSettings() {
+            return {
+                scriptUrl: DEFAULT_SCRIPT_URL,
+                sheetUrl: localStorage.getItem("google_sheet_url") || ""
+            };
+        }
+
+        // Initialize state
+        window.addEventListener("DOMContentLoaded", () => {
+            setupEventListeners();
+            loadSettingsToInputs();
+            fetchRoster();
+        });
+
+        function setupEventListeners() {
+            // Dropdown selection change
+            document.getElementById("studentSelect").addEventListener("change", handleStudentChange);
+
+            // Form submit
+            document.getElementById("recorderForm").addEventListener("submit", handleFormSubmit);
+
+            // Open Sheet button
+            document.getElementById("openSheetBtn").addEventListener("click", openConfiguredSheet);
+
+            // Settings modal interactions
+            document.getElementById("openSettingsBtn").addEventListener("click", () => toggleModal(true));
+            document.getElementById("closeSettingsBtn").addEventListener("click", () => toggleModal(false));
+            document.getElementById("settingsOverlay").addEventListener("click", (e) => {
+                if (e.target.id === "settingsOverlay") toggleModal(false);
+            });
+            document.getElementById("saveSettingsBtn").addEventListener("click", saveSettings);
+            document.getElementById("closeToastBtn").addEventListener("click", hideToast);
+        }
+
+        // Load stored settings into modal inputs
+        function loadSettingsToInputs() {
+            const settings = getSettings();
+            document.getElementById("sheetUrlInput").value = settings.sheetUrl;
+        }
+
+        // Toggle Settings Modal
+        function toggleModal(show) {
+            const overlay = document.getElementById("settingsOverlay");
+            if (show) {
+                loadSettingsToInputs();
+                overlay.classList.add("active");
+            } else {
+                overlay.classList.remove("active");
+            }
+        }
+
+        // Save Modal settings
+        function saveSettings() {
+            const sheetUrl = document.getElementById("sheetUrlInput").value.trim();
+
+            if (sheetUrl) {
+                localStorage.setItem("google_sheet_url", sheetUrl);
+            } else {
+                localStorage.removeItem("google_sheet_url");
+            }
+
+            toggleModal(false);
+            showToast("Settings saved successfully!", "success");
+            fetchRoster(); // Reload roster using the new URL
+        }
+
+        // Open Sheet Handler
+        function openConfiguredSheet() {
+            const settings = getSettings();
+            if (settings.sheetUrl) {
+                window.open(settings.sheetUrl, "_blank");
+            } else {
+                showToast("Please configure the Google Sheet URL in the Settings (gear icon) first.", "info");
+                toggleModal(true);
+            }
+        }
+
+        // Handle Change Event on Form Dropdown
+        function handleStudentChange() {
+            const dropdown = document.getElementById("studentSelect");
+            const selectedName = dropdown.value;
+            const classField = document.getElementById("classDisplay");
+
+            const matchingStudent = loadedRoster.find(student => student.name === selectedName);
+            if (matchingStudent) {
+                classField.value = matchingStudent.className;
+            } else {
+                classField.value = "";
+                classField.placeholder = "No student selected";
+            }
+        }
+
+        // Fetch Live Roster from Google Sheets (GET request)
+        function fetchRoster() {
+            const settings = getSettings();
+            const statusDot = document.getElementById("statusDot");
+            const statusText = document.getElementById("statusText");
+            const selectEl = document.getElementById("studentSelect");
+
+            statusDot.className = "status-dot syncing";
+            statusText.textContent = "Syncing roster...";
+
+            selectEl.disabled = true;
+            selectEl.innerHTML = '<option value="" disabled selected>-- Loading student roster --</option>';
+
+            fetch(settings.scriptUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.length > 0 && !data[0].error) {
+                        loadedRoster = data;
+                        statusDot.className = "status-dot connected";
+                        statusText.textContent = "Connected";
+                        populateDropdown(data);
+                    } else {
+                        throw new Error(data[0]?.error || "No data returned");
+                    }
+                })
+                .catch(err => {
+                    console.warn("Failed to fetch live roster. Loading fallback mock data.", err);
+                    loadedRoster = mockRoster;
+                    statusDot.className = "status-dot";
+                    statusText.textContent = "Sandbox Mode";
+                    populateDropdown(mockRoster);
+                    showToast("Could not connect to live sheet. Using fallback simulation data.", "info");
+                })
+                .finally(() => {
+                    selectEl.disabled = false;
+                });
+        }
+
+        // Populate dropdown with array of students
+        function populateDropdown(roster) {
+            const dropdown = document.getElementById("studentSelect");
+            dropdown.innerHTML = '<option value="" disabled selected>-- Select a student --</option>';
+
+            roster.forEach(student => {
+                const option = document.createElement("option");
+                option.value = student.name;
+                option.textContent = student.name;
+                dropdown.appendChild(option);
+            });
+
+            // Reset dependent field
+            document.getElementById("classDisplay").value = "";
+            document.getElementById("classDisplay").placeholder = "No student selected";
+        }
+
+        // Submit form data
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const settings = getSettings();
+            const studentSelect = document.getElementById("studentSelect");
+            const classDisplay = document.getElementById("classDisplay");
+            const notesInput = document.getElementById("notesInput");
+            const submitBtn = document.getElementById("submitBtn");
+
+            const selectedName = studentSelect.value;
+            const selectedClass = classDisplay.value;
+            const noteContent = notesInput.value.trim();
+
+            if (!selectedName || !noteContent) {
+                return;
+            }
+
+            // Lock UI
+            submitBtn.disabled = true;
+            const originalBtnHtml = submitBtn.innerHTML;
+            submitBtn.innerHTML = `<span>Posting...</span><i class="fa-solid fa-spinner fa-spin"></i>`;
+
+            const payload = {
+                name: selectedName,
+                className: selectedClass,
+                notes: noteContent
+            };
+
+            // Post request to Web App using no-cors because Google redirection servers block browser CORS requests
+            fetch(settings.scriptUrl, {
+                method: "POST",
+                mode: "no-cors",
+                headers: {
+                    "Content-Type": "text/plain"
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                // If it succeeded (or returned status 0/200), we treat it as logged
+                showToast("Note recorded successfully!", "success");
+                
+                // Reset form fields
+                studentSelect.value = "";
+                classDisplay.value = "";
+                classDisplay.placeholder = "No student selected";
+                notesInput.value = "";
+            })
+            .catch(err => {
+                console.error("Submission error", err);
+                showToast("Submission might have failed. Please check endpoint configuration.", "error");
+            })
+            .finally(() => {
+                // Restore button state
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnHtml;
+            });
+        }
+
+        // Show Toast Notifications
+        let toastTimeout;
+        function showToast(message, type = "info") {
+            const toast = document.getElementById("toast");
+            const icon = document.getElementById("toastIcon");
+            const messageEl = document.getElementById("toastMessage");
+
+            messageEl.textContent = message;
+
+            // Update icon and color based on notification type
+            icon.className = "fa-solid toast-icon";
+            if (type === "success") {
+                icon.classList.add("fa-circle-check", "success");
+            } else if (type === "error") {
+                icon.classList.add("fa-circle-exclamation", "error");
+            } else {
+                icon.classList.add("fa-circle-info");
+                icon.style.color = "var(--indigo)";
+            }
+
+            toast.classList.add("active");
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(hideToast, 4000);
+        }
+
+        function hideToast() {
+            document.getElementById("toast").classList.remove("active");
+        }
+    </script>
+</body>
+</html>
