@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocab Downtime Companion</title>
+    <style>
+        :root {
+            --bg-color: #f7fafc;
+            --card-bg: #ffffff;
+            --text-main: #1a202c;
+            --text-muted: #4a5568;
+            --text-example: #718096;
+            --accent-color: #3182ce;
+            --accent-bg-light: #ebf8ff;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --header-bg: rgba(255, 255, 255, 0.9);
+            --banner-bg: #feebc8;
+            --banner-text: #c05621;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0f172a;
+                --card-bg: #1e293b;
+                --text-main: #f8fafc;
+                --text-muted: #cbd5e1;
+                --text-example: #94a3b8;
+                --accent-color: #38bdf8;
+                --accent-bg-light: rgba(56, 189, 248, 0.1);
+                --border-color: #334155;
+                --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+                --header-bg: rgba(30, 41, 59, 0.9);
+                --banner-bg: #2c3e50;
+                --banner-text: #fbd38d;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 16px;
+            padding-top: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Fixed Header */
+        .header-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--header-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            padding: 12px 16px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .btn {
+            background-color: transparent;
+            border: 1.5px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            flex: 1;
+            max-width: 120px;
+            text-align: center;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn.active {
+            background-color: var(--accent-color);
+            color: var(--card-bg);
+        }
+
+        .btn-settings {
+            max-width: 45px;
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        /* Offline Banner style */
+        .demo-banner {
+            background-color: var(--banner-bg);
+            color: var(--banner-text);
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            padding: 8px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            width: 100%;
+            max-width: 480px;
+            border: 1px dashed var(--banner-text);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        /* Card Layout */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .word-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .word {
+            font-size: 26px;
+            font-weight: 800;
+            margin: 0;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+
+        .word-index {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-example);
+            background-color: var(--border-color);
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .meaning {
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 0 0 18px 0;
+            color: var(--text-muted);
+        }
+
+        /* Expandable Toggle Area */
+        .example-toggle {
+            align-self: flex-start;
+            color: var(--accent-color);
+            background-color: var(--accent-bg-light);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform 0.1s ease;
+        }
+
+        .example-toggle:active {
+            transform: scale(0.97);
+        }
+
+        .example-text {
+            display: none;
+            margin-top: 14px;
+            padding: 12px 16px;
+            border-left: 3.5px solid var(--accent-color);
+            background-color: rgba(0, 0, 0, 0.02);
+            font-style: italic;
+            font-size: 15px;
+            color: var(--text-example);
+            line-height: 1.5;
+            border-radius: 0 10px 10px 0;
+            animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .example-text.show {
+            display: block;
+        }
+
+        /* Next Button Layout for 1-at-a-time */
+        .next-container {
+            display: none;
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .btn-next {
+            background-color: var(--accent-color);
+            color: var(--card-bg);
+            border: none;
+            padding: 16px 44px;
+            border-radius: 30px;
+            font-size: 17px;
+            font-weight: 700;
+            box-shadow: 0 4px 14px rgba(49, 130, 206, 0.4);
+            width: 100%;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform 0.1s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-next:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 6px rgba(49, 130, 206, 0.2);
+        }
+
+        /* Setup Screen Panel Styles */
+        .setup-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 2px dashed var(--accent-color);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .setup-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--accent-color);
+        }
+
+        .setup-steps {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--text-muted);
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .setup-steps li {
+            margin-bottom: 8px;
+        }
+
+        .setup-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-size: 14px;
+        }
+
+        .setup-input:focus {
+            outline: 2px solid var(--accent-color);
+        }
+
+        .btn-save {
+            background-color: var(--accent-color);
+            color: var(--card-bg);
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .status-message {
+            text-align: center;
+            padding: 40px;
+            font-size: 16px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+
+    <div class="header-menu">
+        <button class="btn active" id="btn-shuffle" onclick="setView('shuffle')">Shuffle List</button>
+        <button class="btn" id="btn-single" onclick="setView('single')">1-at-a-Time</button>
+        <button class="btn btn-settings" id="btn-setup" onclick="showSetupScreen()">⚙️</button>
+    </div>
+
+    <!-- Live Status Banner for offline bypass mode -->
+    <div id="demo-banner-area"></div>
+
+    <div class="container" id="vocab-container">
+        <div class="status-message" id="status-display">Checking configuration...</div>
+    </div>
+
+    <div class="next-container" id="next-button-area">
+        <button class="btn-next" onclick="showNextSingleCard()">Next Word &rarr;</button>
+    </div>
+
+    <script>
+        // Memory fallback to support sandboxed environment settings
+        const virtualStorage = {};
+        
+        function safeGetItem(key) {
+            try {
+                return localStorage.getItem(key);
+            } catch (e) {
+                return virtualStorage[key] || null;
+            }
+        }
+
+        function safeSetItem(key, value) {
+            try {
+                localStorage.setItem(key, value);
+            } catch (e) {
+                virtualStorage[key] = value;
+            }
+        }
+
+        // Default embedded vocabulary list
+        const vocabData = [
+            {
+                word: "disputants",
+                meaning: "To exonerate is to officially clear someone of an accusation, blame, or criminal charge. It can also mean to relieve a person of a responsibility, obligation, or hardship.",
+                example: "The DNA evidence was enough to exonerate the man and prove his innocence."
+            },
+            {
+                word: "rectitude",
+                meaning: "Rectitude refers to behavior that is correct, upright, and honorable, typically characterized by moral integrity and honesty. It can also refer to the quality of being correct in judgment or procedure.",
+                example: "The judge was known for his moral rectitude and commitment to the law."
+            }
+        ];
+
+        let activeData = [...vocabData];
+        let currentMode = 'shuffle';
+        let singleCardIndex = 0;
+        let jsonpTimeout = null;
+
+        function getSavedUrl() {
+            return safeGetItem('vocab_google_sheet_url') || "https://docs.google.com/spreadsheets/d/e/2PACX-1vRUjQxzqTp1f8XJRxv5k_Pr7WcFRwh7A6MLT-f6upvTWFwRLWC6NrehMrVKu5dCIGcbA8YMmzbzYWJB/pub?output=csv";
+        }
+
+        function startOfflineDemo() {
+            safeSetItem('vocab_use_offline_demo', 'true');
+            activeData = [...vocabData];
+            
+            document.getElementById('demo-banner-area').innerHTML = `
+                <div class="demo-banner">
+                    💡 Running with Embedded Offline List. Tap ⚙️ above to link a live sheet.
+                </div>
+            `;
+            setView('shuffle');
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function toggleExample(element) {
+            const textPanel = element.nextElementSibling;
+            if (textPanel.classList.contains('show')) {
+                textPanel.classList.remove('show');
+                element.innerHTML = "💡 Show Example &darr;";
+            } else {
+                textPanel.classList.add('show');
+                element.innerHTML = "💡 Hide Example &uarr;";
+            }
+        }
+
+        function createCardHTML(item, currentIndex, totalCount) {
+            const indexIndicator = totalCount ? `<span class="word-index">${currentIndex + 1}/${totalCount}</span>` : '';
+            return `
+                <div class="card">
+                    <div class="word-header">
+                        <div class="word">${item.word}</div>
+                        ${indexIndicator}
+                    </div>
+                    <div class="meaning">${item.meaning}</div>
+                    <div class="example-toggle" onclick="toggleExample(this)">💡 Show Example &darr;</div>
+                    <div class="example-text">${item.example}</div>
+                </div>
+            `;
+        }
+
+        function showNextSingleCard() {
+            if (activeData.length === 0) return;
+            if (singleCardIndex >= activeData.length) {
+                shuffleArray(activeData);
+                singleCardIndex = 0;
+            }
+            const container = document.getElementById('vocab-container');
+            container.innerHTML = createCardHTML(activeData[singleCardIndex], singleCardIndex, activeData.length);
+            singleCardIndex++;
+        }
+
+        function showSetupScreen() {
+            document.getElementById('next-button-area').style.display = 'none';
+            document.getElementById('btn-shuffle').classList.remove('active');
+            document.getElementById('btn-single').classList.remove('active');
+            document.getElementById('demo-banner-area').innerHTML = '';
+            
+            const container = document.getElementById('vocab-container');
+            container.innerHTML = `
+                <div class="setup-card">
+                    <h2 class="setup-title">Link Your Google Sheet</h2>
+                    <p style="margin: 0; font-size: 14px; color: var(--text-muted);">Paste your sheet link to sync automatically.</p>
+                    <ol class="setup-steps">
+                        <li>Ensure access is set to <strong>"Anyone with the link can view"</strong> (as in image_438022.png).</li>
+                        <li>Copy your normal browser address link or Share link and paste it below:</li>
+                    </ol>
+                    <input type="text" class="setup-input" id="setup-url-input" placeholder="Paste Google Sheet URL..." value="${getSavedUrl()}">
+                    <button class="btn-save" onclick="handleSaveClick()">Save & Connect Live Sheet</button>
+                    <button class="btn-save" style="background-color: var(--text-muted);" onclick="startOfflineDemo()">✨ Try App with Sample Words (Offline)</button>
+                </div>
+            `;
+        }
+
+        function handleSaveClick() {
+            const urlInput = document.getElementById('setup-url-input').value.trim();
+            safeSetItem('vocab_google_sheet_url', urlInput);
+            safeSetItem('vocab_use_offline_demo', 'false');
+            initVocabApp();
+        }
+
+        function setView(mode) {
+            currentMode = mode;
+            document.getElementById('btn-shuffle').classList.remove('active');
+            document.getElementById('btn-single').classList.remove('active');
+            
+            const nextButtonArea = document.getElementById('next-button-area');
+            const container = document.getElementById('vocab-container');
+            
+            shuffleArray(activeData);
+
+            if (mode === 'shuffle') {
+                document.getElementById('btn-shuffle').classList.add('active');
+                nextButtonArea.style.display = 'none';
+                container.innerHTML = activeData.map((item, idx) => createCardHTML(item, idx, activeData.length)).join('');
+            } else if (mode === 'single') {
+                document.getElementById('btn-single').classList.add('active');
+                nextButtonArea.style.display = 'block';
+                singleCardIndex = 0;
+                showNextSingleCard();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.handleGoogleSheetsJSONP = function(data) {
+            clearTimeout(jsonpTimeout);
+            const script = document.getElementById('gviz-jsonp-script');
+            if (script) script.remove();
+
+            try {
+                if (!data || !data.table || !data.table.rows) {
+                    throw new Error("NO_DATA");
+                }
+
+                const rows = data.table.rows;
+                const cols = data.table.cols || [];
+                
+                let wordCol = 0;
+                let meaningCol = 1;
+                let exampleCol = 2;
+
+                cols.forEach((col, idx) => {
+                    const label = String(col.label || '').toLowerCase().trim();
+                    if (label === 'word' || label === 'words') wordCol = idx;
+                    if (label === 'meaning' || label === 'meanings' || label === 'definition' || label === 'definitions') meaningCol = idx;
+                    if (label === 'example' || label === 'examples') exampleCol = idx;
+                });
+
+                const mappedData = rows.map(row => {
+                    const cells = row.c || [];
+                    const getVal = (idx) => {
+                        if (!cells[idx]) return "";
+                        return cells[idx].v !== null ? String(cells[idx].v).trim() : "";
+                    };
+                    return {
+                        word: getVal(wordCol) || "Unknown Word",
+                        meaning: getVal(meaningCol) || "No definition found.",
+                        example: getVal(exampleCol) || "No example sentence provided."
+                    };
+                }).filter(item => item.word !== "Unknown Word" || item.meaning !== "No definition found.");
+
+                if (mappedData.length > 0) {
+                    activeData = mappedData;
+                    document.getElementById('demo-banner-area').innerHTML = '';
+                    setView('shuffle');
+                } else {
+                    throw new Error("NO_DATA");
+                }
+            } catch (error) {
+                console.error("JSONP processing error:", error);
+                showSyncErrorHTML("NO_DATA");
+            }
+        };
+
+        function showSyncErrorHTML(type, detail = "") {
+            const statusDisplay = document.getElementById('status-display');
+            if (!statusDisplay) return;
+
+            const errorDetailHtml = detail ? `<div style="font-family: monospace; font-size: 11px; margin-top: 8px; color: #f87171; background: rgba(0,0,0,0.05); padding: 6px; border-radius: 4px; overflow-wrap: break-word;">Error Details: ${detail}</div>` : '';
+
+            if (type === "PRIVATE_SHEET") {
+                statusDisplay.innerHTML = `
+                    <div style="text-align: left; line-height: 1.5;">
+                        ⚠️ <strong>Sync Failed: Sheet is Private</strong><br><br>
+                        Your sheet is locked behind Google's login page. To fix this:<br>
+                        1. Open your sheet.<br>
+                        2. Click the <strong>Share</strong> button.<br>
+                        3. Change access from 'Restricted' to <strong>'Anyone with the link can view'</strong> (as seen in image_438022.png).
+                        ${errorDetailHtml}
+                    </div>`;
+            } else if (type === "NO_DATA") {
+                statusDisplay.innerHTML = `⚠️ Sync Failed. No vocabulary rows found in this sheet. Please make sure your column headers are labeled 'word', 'meaning', and 'example'. ${errorDetailHtml}`;
+            } else {
+                statusDisplay.innerHTML = `
+                    <div style="text-align: left; line-height: 1.6;">
+                        <h3 style="color: #ef4444; margin: 0 0 10px 0; font-size: 16px;">⚠️ Connection / Sync Failed</h3>
+                        <p style="margin: 0 0 12px 0; font-size: 14px;">The browser request was blocked. This is almost always caused by one of the following:</p>
+                        <ul style="margin: 0 0 16px 0; padding-left: 20px; font-size: 13px; color: var(--text-muted); list-style-type: decimal;">
+                            <li style="margin-bottom: 8px;">
+                                <strong>Private / Restricted Access:</strong> Your sheet is restricted. You must set access to <strong>"Anyone with the link can view"</strong> (as seen in <code>image_438022.png</code>). Otherwise, Google redirects the app to a login page, triggering a browser security block.
+                            </li>
+                            <li style="margin-bottom: 8px;">
+                                <strong>Unpublished to Web:</strong> If you are using the CSV publish link, make sure you actually pressed the blue <strong>"Publish"</strong> button (as seen in <code>image_437fa7.png</code>).
+                            </li>
+                            <li style="margin-bottom: 8px;">
+                                <strong>Wrong / Broken URL:</strong> Tap the gear icon in the top right, clear the input, copy your spreadsheet's normal URL, paste it, and try again.
+                            </li>
+                        </ul>
+                        ${errorDetailHtml}
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <button class="btn btn-save" style="width: 100%; max-width: none;" onclick="showSetupScreen()">Review Settings / Re-paste Link</button>
+                            <button class="btn btn-save" style="width: 100%; max-width: none; background-color: var(--text-muted);" onclick="startOfflineDemo()">✨ Bypass: Run Offline with Embedded Words</button>
+                        </div>
+                    </div>`;
+            }
+        }
+
+        async function initVocabApp() {
+            const container = document.getElementById('vocab-container');
+            container.innerHTML = `<div class="status-message" id="status-display">Checking configuration...</div>`;
+            const statusDisplay = document.getElementById('status-display');
+
+            // Prevent app hanging on local viewers (like iPhone Files app) where remote fetches are blocked
+            if (window.location.protocol === 'file:') {
+                console.log("Running locally on device; bypassing remote fetching due to CORS sandboxing.");
+                startOfflineDemo();
+                document.getElementById('demo-banner-area').innerHTML = `
+                    <div class="demo-banner" style="background-color: #fee2e2; color: #991b1b; border-color: #f87171;">
+                        ⚠️ Running as a local file. Dynamic Google Sheet sync is blocked by phone security. Host this file on HTTPS (e.g. GitHub Pages) to sync live.
+                    </div>
+                `;
+                return;
+            }
+
+            const sheetUrl = getSavedUrl().trim();
+            if (safeGetItem('vocab_use_offline_demo') === 'true') {
+                startOfflineDemo();
+                return;
+            }
+
+            statusDisplay.innerHTML = `Fetching words from your Google Sheet... 🚌`;
+
+            // Detect if standard link can be mapped with the Chrome-safe JSONP method
+            let scriptUrl = "";
+            let gid = "0";
+            const gidMatch = sheetUrl.match(/[#&?]gid=([0-9]+)/);
+            if (gidMatch) {
+                gid = gidMatch[1];
+            }
+
+            const isPublished = sheetUrl.includes('/pub') || sheetUrl.includes('/d/e/');
+            const stdMatch = sheetUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
+            if (stdMatch && !isPublished) {
+                const sheetId = stdMatch[1];
+                scriptUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=responseHandler:handleGoogleSheetsJSONP&gid=${gid}`;
+            }
+
+            if (scriptUrl) {
+                const oldScript = document.getElementById('gviz-jsonp-script');
+                if (oldScript) oldScript.remove();
+
+                const script = document.createElement('script');
+                script.id = 'gviz-jsonp-script';
+                script.src = scriptUrl;
+
+                jsonpTimeout = setTimeout(() => {
+                    script.remove();
+                    showSyncErrorHTML("TIMEOUT");
+                }, 8000);
+
+                document.body.appendChild(script);
+                return;
+            }
+
+            // Fallback standard Fetch with AbortController timeout
+            try {
+                let directUrl = sheetUrl;
+                if (directUrl.includes('pubhtml')) {
+                    directUrl = directUrl.replace('pubhtml', 'pub');
+                }
+                if (!directUrl.includes('output=csv')) {
+                    const sep = directUrl.includes('?') ? '&' : '?';
+                    directUrl = `${directUrl}${sep}output=csv`;
+                }
+
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+                const response = await fetch(directUrl, { signal: controller.signal });
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+                }
+
+                const csvText = await response.text();
+                if (csvText.trim().startsWith("<!DOCTYPE") || csvText.trim().startsWith("<html")) {
+                    throw new Error("PRIVATE_SHEET");
+                }
+
+                Papa.parse(csvText, {
+                    header: false,
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        const rows = results.data;
+                        if (!rows || rows.length === 0) {
+                            showSyncErrorHTML("NO_DATA");
+                            return;
+                        }
+
+                        let dataRows = [];
+                        const firstRow = rows[0];
+                        const hasHeaders = firstRow.some(cell => {
+                            const val = String(cell).toLowerCase().trim();
+                            return val === 'word' || val === 'words' || val === 'meaning' || val === 'meanings' || val === 'definition' || val === 'definitions' || val === 'example' || val === 'examples';
+                        });
+
+                        let wordCol = 0;
+                        let meaningCol = 1;
+                        let exampleCol = 2;
+
+                        if (hasHeaders) {
+                            firstRow.forEach((cell, idx) => {
+                                const val = String(cell).toLowerCase().trim();
+                                if (val === 'word' || val === 'words') wordCol = idx;
+                                if (val === 'meaning' || val === 'meanings' || val === 'definition' || val === 'definitions') meaningCol = idx;
+                                if (val === 'example' || val === 'examples') exampleCol = idx;
+                            });
+                            dataRows = rows.slice(1);
+                        } else {
+                            dataRows = rows;
+                        }
+
+                        const mappedData = dataRows.map(row => ({
+                            word: row[wordCol] ? String(row[wordCol]).trim() : "Unknown Word",
+                            meaning: row[meaningCol] ? String(row[meaningCol]).trim() : "No definition found.",
+                            example: row[exampleCol] ? String(row[exampleCol]).trim() : "No example sentence provided."
+                        }));
+
+                        if (mappedData.length > 0) {
+                            activeData = mappedData;
+                            document.getElementById('demo-banner-area').innerHTML = '';
+                            setView('shuffle');
+                        } else {
+                            showSyncErrorHTML("NO_DATA");
+                        }
+                    },
+                    error: function(err) {
+                        showSyncErrorHTML("PARSE_ERROR", err.message || JSON.stringify(err));
+                    }
+                });
+
+            } catch (error) {
+                console.error("Fetch failure fallback:", error);
+                showSyncErrorHTML(error.message === "PRIVATE_SHEET" ? "PRIVATE_SHEET" : "FALLBACK_FAILED", error.message || error);
+            }
+        }
+
+        window.onload = function() {
+            initVocabApp();
+        };
+    </script>
+</body>
+</html>
