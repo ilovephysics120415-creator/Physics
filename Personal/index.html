@@ -516,11 +516,11 @@
                         return cells[idx].v !== null ? String(cells[idx].v).trim() : "";
                     };
                     return {
-                        word: getVal(wordCol) || "Unknown Word",
+                        word: getVal(wordCol),
                         meaning: getVal(meaningCol) || "No definition found.",
                         example: getVal(exampleCol) || "No example sentence provided."
                     };
-                }).filter(item => item.word !== "Unknown Word" || item.meaning !== "No definition found.");
+                }).filter(item => item.word !== "");
 
                 if (mappedData.length > 0) {
                     activeData = mappedData;
@@ -695,10 +695,10 @@
                         }
 
                         const mappedData = dataRows.map(row => ({
-                            word: row[wordCol] ? String(row[wordCol]).trim() : "Unknown Word",
+                            word: row[wordCol] ? String(row[wordCol]).trim() : "",
                             meaning: row[meaningCol] ? String(row[meaningCol]).trim() : "No definition found.",
                             example: row[exampleCol] ? String(row[exampleCol]).trim() : "No example sentence provided."
-                        }));
+                        })).filter(item => item.word !== "");
 
                         if (mappedData.length > 0) {
                             activeData = mappedData;
