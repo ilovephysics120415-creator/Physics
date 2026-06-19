@@ -3,379 +3,437 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Magnetic Field Explorer</title>
+  <title>Magnetism Explorer | O-Level Physics</title>
+  <!-- Google Fonts: Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <!-- Top Navigation Bar -->
-  <header class="app-header">
-    <div class="logo">
-      <span class="logo-icon">🧲</span>
-      <span class="logo-text">FieldForce</span>
+  <!-- Fixed Navigation Top Bar -->
+  <nav class="nav-bar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <i data-lucide="zap" class="logo-icon"></i>
+        <span>Magnetism</span>
+      </div>
+      <div class="nav-tabs">
+        <button class="nav-tab active" data-target="concept">
+          <i data-lucide="book-open"></i>
+          <span>Concept</span>
+        </button>
+        <button class="nav-tab" data-target="explore">
+          <i data-lucide="compass"></i>
+          <span>Explore</span>
+        </button>
+        <button class="nav-tab" data-target="flashcards">
+          <i data-lucide="layers"></i>
+          <span>Revise</span>
+        </button>
+        <button class="nav-tab" data-target="quiz">
+          <i data-lucide="help-circle"></i>
+          <span>Quiz</span>
+        </button>
+      </div>
     </div>
-    <nav class="nav-menu">
-      <button class="nav-btn active" data-tab="concept">Concept Intro</button>
-      <button class="nav-btn" data-tab="explore">Exploration</button>
-      <button class="nav-btn" data-tab="flashcards">Flashcards</button>
-      <button class="nav-btn" data-tab="quiz">Practice Quiz</button>
-    </nav>
-  </header>
+  </nav>
 
-  <main class="app-content">
-
+  <!-- Main Content Space -->
+  <main class="main-content">
+    
     <!-- SECTION 1: CONCEPT INTRODUCTION -->
-    <section id="concept-section" class="tab-content active">
-      <div class="intro-container">
-        <!-- Slide 1 -->
-        <div class="concept-card active" data-slide="1">
-          <div class="concept-text">
-            <h2>Compass &amp; Field Direction</h2>
-            <p>A compass is simply a <strong>small bar magnet</strong> that is free to rotate. </p>
-            <p>When placed in a magnetic field, the compass needle's <strong>North (N) pole</strong> points in the direction of the magnetic field at that specific point.</p>
-          </div>
-          <div class="concept-visual">
-            <svg viewBox="0 0 400 250" class="svg-diagram">
-              <!-- Grid Background -->
-              <defs>
-                <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-                </pattern>
-                <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#00d2ff"/>
-                </marker>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid)" rx="12"/>
-              
-              <!-- Magnetic Field Line -->
-              <path d="M 50 125 C 100 50, 300 50, 350 125" fill="none" stroke="#a855f7" stroke-width="3" stroke-dasharray="6,4"/>
-              
-              <!-- Direction Arrows along the line -->
-              <path d="M 195 68 L 205 68" fill="none" stroke="#a855f7" stroke-width="1" marker-end="url(#arrow)"/>
-              
-              <!-- Compass at a point -->
-              <g transform="translate(200, 68) rotate(0)">
-                <!-- Compass Outer Ring -->
-                <circle cx="0" cy="0" r="28" fill="#172033" stroke="#00d2ff" stroke-width="2.5" class="glow-cyan"/>
-                <!-- Compass Dial Ticks -->
-                <line x1="0" y1="-24" x2="0" y2="-20" stroke="#00d2ff" stroke-width="1.5"/>
-                <line x1="0" y1="20" x2="0" y2="24" stroke="#ff9f00" stroke-width="1.5"/>
-                <!-- Compass Needle -->
-                <polygon points="0,-20 8,0 0,6" fill="#00d2ff"/> <!-- N Pole (Points in field direction) -->
-                <polygon points="0,20 8,0 0,6" fill="#ff9f00"/> <!-- S Pole -->
-                <circle cx="0" cy="0" r="3" fill="#ffffff"/>
-                <!-- Labels -->
-                <text x="0" y="-30" fill="#00d2ff" font-size="11" font-weight="bold" text-anchor="middle">Field Direction (N)</text>
-              </g>
-              
-              <!-- Legends -->
-              <rect x="15" y="200" width="150" height="35" rx="6" fill="#0c101a" stroke="rgba(255,255,255,0.1)"/>
-              <circle cx="30" cy="217" r="6" fill="#00d2ff"/>
-              <text x="45" y="221" fill="#e2e8f0" font-size="11">North Pole (N)</text>
-              
-              <circle cx="110" cy="217" r="6" fill="#ff9f00"/>
-              <text x="125" y="221" fill="#e2e8f0" font-size="11">South (S)</text>
-            </svg>
-          </div>
-        </div>
-
-        <!-- Slide 2 -->
-        <div class="concept-card" data-slide="2">
-          <div class="concept-text">
-            <h2>Single Bar Magnet Pattern</h2>
-            <p>Magnetic field lines form closed loops around a magnet:</p>
-            <ul>
-              <li>Lines exit the <strong>North (N) pole</strong>, curve around, and enter the <strong>South (S) pole</strong>.</li>
-              <li>Lines are <strong>dense (closer together)</strong> near the poles, indicating a stronger magnetic field.</li>
-              <li>Lines spread out and grow further apart as distance increases.</li>
+    <section id="section-concept" class="app-section active">
+      <div class="concept-container">
+        <!-- Card 1: Properties -->
+        <div class="concept-card" id="card-properties">
+          <div class="concept-info">
+            <span class="concept-badge">1. Properties of Magnets</span>
+            <h2>How do magnets behave?</h2>
+            <ul class="concept-list">
+              <li><i data-lucide="check-circle-2" class="bullet-icon"></i> <strong>Attract</strong> magnetic materials (iron, steel, nickel, cobalt).</li>
+              <li><i data-lucide="check-circle-2" class="bullet-icon"></i> Have two poles: <strong>North (N)</strong> and <strong>South (S)</strong>.</li>
+              <li><i data-lucide="check-circle-2" class="bullet-icon"></i> <strong>Like poles repel</strong>; <strong>unlike poles attract</strong>.</li>
+              <li><i data-lucide="check-circle-2" class="bullet-icon"></i> A magnetic field exists all around a magnet.</li>
             </ul>
           </div>
           <div class="concept-visual">
-            <svg viewBox="0 0 400 250" class="svg-diagram">
-              <rect width="100%" height="100%" fill="url(#grid)" rx="12"/>
-              <!-- Field Lines (Symmetric paths) -->
-              <!-- Outer loops -->
-              <path d="M 150 115 C 60 50, 60 200, 150 135" fill="none" stroke="rgba(168,85,247,0.4)" stroke-width="2"/>
-              <path d="M 250 115 C 340 50, 340 200, 250 135" fill="none" stroke="rgba(168,85,247,0.4)" stroke-width="2"/>
+            <!-- SVG Animation for Card 1 -->
+            <svg viewBox="0 0 300 200" class="concept-svg" id="svg-properties">
+              <!-- Grid Background -->
+              <defs>
+                <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                </pattern>
+                <linearGradient id="northGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#06b6d4" />
+                  <stop offset="100%" stop-color="#0891b2" />
+                </linearGradient>
+                <linearGradient id="southGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#ea580c" />
+                  <stop offset="100%" stop-color="#f59e0b" />
+                </linearGradient>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grid)" />
               
-              <!-- Medium loops -->
-              <path d="M 150 115 C 100 70, 100 180, 150 135" fill="none" stroke="rgba(168,85,247,0.7)" stroke-width="2"/>
-              <path d="M 250 115 C 300 70, 300 180, 250 135" fill="none" stroke="rgba(168,85,247,0.7)" stroke-width="2"/>
-              
-              <!-- Main Connecting loops -->
-              <path d="M 150 100 C 130 30, 270 30, 250 100" fill="none" stroke="#a855f7" stroke-width="2" marker-end="url(#arrow)"/>
-              <path d="M 150 150 C 130 220, 270 220, 250 150" fill="none" stroke="#a855f7" stroke-width="2"/>
-              <!-- Arrow on bottom curve -->
-              <path d="M 205 185 L 195 185" fill="none" stroke="#a855f7" stroke-width="1" marker-end="url(#arrow)"/>
+              <!-- Magnetic Field Lines -->
+              <g class="field-lines">
+                <path d="M 90 100 Q 150 20 210 100" fill="none" stroke="rgba(6, 182, 212, 0.15)" stroke-width="2" stroke-dasharray="4,4" />
+                <path d="M 90 100 Q 150 180 210 100" fill="none" stroke="rgba(6, 182, 212, 0.15)" stroke-width="2" stroke-dasharray="4,4" />
+                <path d="M 90 100 Q 150 -10 210 100" fill="none" stroke="rgba(6, 182, 212, 0.1)" stroke-width="1.5" />
+                <path d="M 90 100 Q 150 210 210 100" fill="none" stroke="rgba(6, 182, 212, 0.1)" stroke-width="1.5" />
+              </g>
 
-              <!-- Bar Magnet -->
-              <g transform="translate(150, 100)">
-                <!-- North Half -->
-                <rect x="0" y="0" width="50" height="50" fill="#00d2ff" rx="4"/>
-                <text x="25" y="32" fill="#0b0f19" font-weight="800" font-size="20" text-anchor="middle">N</text>
-                <!-- South Half -->
-                <rect x="50" y="0" width="50" height="50" fill="#ff9f00" rx="4"/>
-                <text x="75" y="32" fill="#0b0f19" font-weight="800" font-size="20" text-anchor="middle">S</text>
-                <!-- Divider line -->
-                <line x1="50" y1="0" x2="50" y2="50" stroke="#0b0f19" stroke-width="2"/>
+              <!-- Magnet N -->
+              <rect x="60" y="85" width="90" height="30" fill="url(#northGrad)" rx="4" />
+              <text x="105" y="105" fill="#0f172a" font-weight="bold" text-anchor="middle">N</text>
+              <!-- Magnet S -->
+              <rect x="150" y="85" width="90" height="30" fill="url(#southGrad)" rx="4" />
+              <text x="195" y="105" fill="#0f172a" font-weight="bold" text-anchor="middle">S</text>
+
+              <!-- Compass needle -->
+              <g transform="translate(150, 40)" class="moving-needle">
+                <line x1="-20" y1="0" x2="20" y2="0" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
+                <polygon points="0,-6 20,0 0,6" fill="#06b6d4" />
+                <polygon points="0,-6 -20,0 0,6" fill="#f59e0b" />
+                <circle cx="0" cy="0" r="3" fill="#ffffff" />
               </g>
             </svg>
           </div>
         </div>
 
-        <!-- Slide 3 -->
-        <div class="concept-card" data-slide="3">
-          <div class="concept-text">
-            <h2>Unlike Poles (Attraction)</h2>
-            <p>When unlike poles (N and S) face each other, the magnetic field lines **join directly** from the North pole of one magnet to the South pole of the other.</p>
-            <p>This creates a strong, direct path representing an **attractive force** drawing them together.</p>
+        <!-- Card 2: Induced Magnetism -->
+        <div class="concept-card" id="card-induced">
+          <div class="concept-info">
+            <span class="concept-badge">2. Induced Magnetism</span>
+            <h2>Poles are created instantly</h2>
+            <ul class="concept-list">
+              <li><i data-lucide="check-circle-2" class="bullet-icon"></i> Placement near a strong magnet or inside a solenoid **magnetises** a material.</li>
+              <li><i data-lucide="check-circle-2" class="bullet-icon"></i> The nearest induced pole is **always opposite** to the inducing pole.</li>
+              <li><i data-lucide="check-circle-2" class="bullet-icon"></i> This opposite pole always results in a force of **attraction**.</li>
+            </ul>
           </div>
           <div class="concept-visual">
-            <svg viewBox="0 0 400 250" class="svg-diagram">
-              <rect width="100%" height="100%" fill="url(#grid)" rx="12"/>
+            <svg viewBox="0 0 300 200" class="concept-svg" id="svg-induced">
+              <rect width="100%" height="100%" fill="url(#grid)" />
               
-              <!-- Directly connecting lines -->
-              <path d="M 130 125 L 270 125" fill="none" stroke="#a855f7" stroke-width="2.5" marker-end="url(#arrow)"/>
-              <path d="M 130 110 C 170 90, 230 90, 270 110" fill="none" stroke="#a855f7" stroke-width="2"/>
-              <path d="M 130 140 C 170 160, 230 160, 270 140" fill="none" stroke="#a855f7" stroke-width="2"/>
-              
-              <!-- Loop returns -->
-              <path d="M 80 110 C 20 80, 20 170, 80 140" fill="none" stroke="rgba(168,85,247,0.4)" stroke-width="2"/>
-              <path d="M 320 110 C 380 80, 380 170, 320 140" fill="none" stroke="rgba(168,85,247,0.4)" stroke-width="2"/>
+              <!-- Fixed Magnet S-Pole -->
+              <rect x="20" y="85" width="80" height="30" fill="url(#southGrad)" rx="4" />
+              <text x="60" y="105" fill="#0f172a" font-weight="bold" text-anchor="middle">S</text>
 
-              <!-- Magnet 1 (Left, N facing right) -->
-              <g transform="translate(30, 105)">
-                <rect x="0" y="0" width="50" height="40" fill="#ff9f00" rx="3"/>
-                <text x="25" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">S</text>
-                <rect x="50" y="0" width="50" height="40" fill="#00d2ff" rx="3"/>
-                <text x="75" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">N</text>
+              <!-- Attraction waves -->
+              <g class="attraction-waves">
+                <path d="M 110 90 Q 120 100 110 110" fill="none" stroke="#06b6d4" stroke-width="2" class="wave-line" />
+                <path d="M 115 85 Q 130 100 115 115" fill="none" stroke="#06b6d4" stroke-width="2" class="wave-line opacity-50" />
               </g>
 
-              <!-- Magnet 2 (Right, S facing left) -->
-              <g transform="translate(270, 105)">
-                <rect x="0" y="0" width="50" height="40" fill="#ff9f00" rx="3"/>
-                <text x="25" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">S</text>
-                <rect x="50" y="0" width="50" height="40" fill="#00d2ff" rx="3"/>
-                <text x="75" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">N</text>
+              <!-- Induced Magnetized Nail -->
+              <g class="nail-group">
+                <!-- Nail outline -->
+                <path d="M 140 100 L 250 100 M 140 95 L 140 105" stroke="#94a3b8" stroke-width="6" stroke-linecap="round" />
+                <polygon points="250,97 260,100 250,103" fill="#94a3b8" />
+                
+                <!-- Induced Poles Labels -->
+                <circle cx="150" cy="100" r="10" fill="#06b6d4" class="pole-glow" />
+                <text x="150" y="104" fill="#0f172a" font-size="12" font-weight="bold" text-anchor="middle">N</text>
+                
+                <circle cx="230" cy="100" r="10" fill="#f59e0b" class="pole-glow" />
+                <text x="230" y="104" fill="#0f172a" font-size="12" font-weight="bold" text-anchor="middle">S</text>
               </g>
+              <text x="195" y="135" fill="#94a3b8" font-size="10" text-anchor="middle" font-style="italic">Induced Poles (Opposite pole near, attracts)</text>
             </svg>
           </div>
         </div>
 
-        <!-- Slide 4 -->
-        <div class="concept-card" data-slide="4">
-          <div class="concept-text">
-            <h2>Like Poles (Repulsion)</h2>
-            <p>When like poles (N and N, or S and S) face each other, the field lines **bend away and repel** each other.</p>
-            <p>This creates a **Neutral Point (𝘟)** in the exact center where the magnetic fields cancel out completely. The net magnetic field strength at a neutral point is **zero**.</p>
+        <!-- Card 3: Temporary vs Permanent -->
+        <div class="concept-card" id="card-materials">
+          <div class="concept-info">
+            <span class="concept-badge">3. Temporary vs Permanent</span>
+            <h2>Iron vs Steel</h2>
+            <div class="comparison-grid">
+              <div class="comp-box iron">
+                <h4>Iron (Temporary)</h4>
+                <ul>
+                  <li>Magnetised easily</li>
+                  <li>Loses magnetism easily</li>
+                  <li>Electromagnets, Relays</li>
+                </ul>
+              </div>
+              <div class="comp-box steel">
+                <h4>Steel (Permanent)</h4>
+                <ul>
+                  <li>Harder to magnetise</li>
+                  <li>Retains magnetism</li>
+                  <li>Compasses, fridge magnets</li>
+                </ul>
+              </div>
+            </div>
           </div>
           <div class="concept-visual">
-            <svg viewBox="0 0 400 250" class="svg-diagram">
-              <rect width="100%" height="100%" fill="url(#grid)" rx="12"/>
+            <svg viewBox="0 0 300 200" class="concept-svg" id="svg-materials">
+              <rect width="100%" height="100%" fill="url(#grid)" />
               
-              <!-- Repelling Lines -->
-              <!-- Left Magnet N lines bending up/down -->
-              <path d="M 130 115 C 160 105, 175 40, 175 0" fill="none" stroke="#a855f7" stroke-width="2"/>
-              <path d="M 130 135 C 160 145, 175 210, 175 250" fill="none" stroke="#a855f7" stroke-width="2"/>
-              <!-- Right Magnet N lines bending up/down -->
-              <path d="M 270 115 C 240 105, 225 40, 225 0" fill="none" stroke="#a855f7" stroke-width="2"/>
-              <path d="M 270 135 C 240 145, 225 210, 225 250" fill="none" stroke="#a855f7" stroke-width="2"/>
+              <!-- Domain alignment visual -->
+              <text x="150" y="25" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle">Domain Alignment inside Materials</text>
               
-              <!-- Neutral point X -->
-              <g transform="translate(200, 125)">
-                <line x1="-8" y1="-8" x2="8" y2="8" stroke="#facc15" stroke-width="3" />
-                <line x1="8" y1="-8" x2="-8" y2="8" stroke="#facc15" stroke-width="3" />
-                <text x="0" y="26" fill="#facc15" font-size="12" font-weight="bold" text-anchor="middle">Neutral Point</text>
+              <!-- Iron (Unmagnetized state) -->
+              <g transform="translate(20, 50)">
+                <rect width="110" height="50" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" rx="4" />
+                <text x="55" y="65" fill="#94a3b8" font-size="10" text-anchor="middle">Iron (Domains jumbled)</text>
+                <!-- Jumbled arrows -->
+                <path d="M 20 25 L 30 20 M 30 20 L 25 18 M 30 20 L 28 25" stroke="#94a3b8" stroke-width="2" />
+                <path d="M 50 35 L 45 20 M 45 20 L 48 24 M 45 20 L 42 22" stroke="#94a3b8" stroke-width="2" />
+                <path d="M 80 15 L 90 30 M 90 30 L 85 28 M 90 30 L 89 25" stroke="#94a3b8" stroke-width="2" />
               </g>
 
-              <!-- Magnet 1 (Left, N facing right) -->
-              <g transform="translate(30, 105)">
-                <rect x="0" y="0" width="50" height="40" fill="#ff9f00" rx="3"/>
-                <text x="25" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">S</text>
-                <rect x="50" y="0" width="50" height="40" fill="#00d2ff" rx="3"/>
-                <text x="75" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">N</text>
+              <!-- Steel (Magnetized / Aligned state) -->
+              <g transform="translate(170, 50)">
+                <rect width="110" height="50" fill="rgba(6, 182, 212, 0.05)" stroke="rgba(6, 182, 212, 0.3)" rx="4" />
+                <text x="55" y="65" fill="#06b6d4" font-size="10" text-anchor="middle">Steel (Domains aligned)</text>
+                <!-- Aligned arrows -->
+                <path d="M 20 25 L 35 25 M 35 25 L 30 21 M 35 25 L 30 29" stroke="#06b6d4" stroke-width="2" />
+                <path d="M 50 25 L 65 25 M 65 25 L 60 21 M 65 25 L 60 29" stroke="#06b6d4" stroke-width="2" />
+                <path d="M 80 25 L 95 25 M 95 25 L 90 21 M 95 25 L 90 29" stroke="#06b6d4" stroke-width="2" />
               </g>
 
-              <!-- Magnet 2 (Right, N facing left) -->
-              <g transform="translate(270, 105)">
-                <rect x="0" y="0" width="50" height="40" fill="#00d2ff" rx="3"/>
-                <text x="25" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">N</text>
-                <rect x="50" y="0" width="50" height="40" fill="#ff9f00" rx="3"/>
-                <text x="75" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">S</text>
+              <g transform="translate(20, 130)">
+                <rect width="260" height="40" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.05)" rx="4" />
+                <text x="130" y="24" fill="#f59e0b" font-size="10" text-anchor="middle" font-weight="500">
+                  Tip: Solenoid magnetic fields align domains instantly!
+                </text>
               </g>
             </svg>
           </div>
-        </div>
-
-        <!-- Slider Controls -->
-        <div class="slider-nav">
-          <button id="prev-slide-btn" class="ctrl-btn" disabled>&larr; Prev</button>
-          <span class="slide-indicator">1 / 4</span>
-          <button id="next-slide-btn" class="ctrl-btn">Next &rarr;</button>
         </div>
       </div>
     </section>
 
     <!-- SECTION 2: INTERACTIVE EXPLORATION -->
-    <section id="explore-section" class="tab-content">
-      <div class="explore-container">
+    <section id="section-explore" class="app-section">
+      <div class="explore-header">
+        <h2>Hands-on Magnetism Laboratory</h2>
+        <p class="section-subtitle">Drag materials to study induced poles and magnetic retention.</p>
         
-        <!-- Toggle tabs for canvas -->
-        <div class="explore-tabs">
-          <button id="tab-compass" class="sub-tab active">Compass Mapper</button>
-          <button id="tab-strength" class="sub-tab">Bar Magnet Strength</button>
-        </div>
-
-        <!-- Canvas Container -->
-        <div class="canvas-wrapper">
-          <canvas id="field-canvas" width="700" height="450"></canvas>
-          
-          <!-- Compass Overlay Element (used in Compass Mapper Tab) -->
-          <div id="interactive-compass" class="draggable-compass">
-            <div class="compass-ring"></div>
-            <div class="compass-needle">
-              <div class="needle-n"></div>
-              <div class="needle-s"></div>
-            </div>
-            <div class="compass-center"></div>
-          </div>
-        </div>
-
-        <!-- Control panels based on active tab -->
-        <div id="compass-controls" class="controls-panel">
+        <div class="lab-controls">
+          <!-- Mode Toggle -->
           <div class="control-group">
-            <label class="control-title">Configuration</label>
-            <div class="toggle-buttons">
-              <button class="toggle-btn active" data-config="single">Single Magnet</button>
-              <button class="toggle-btn" data-config="unlike">Unlike Poles (N-S)</button>
-              <button class="toggle-btn" data-config="like">Like Poles (N-N)</button>
+            <span class="control-label">Experiment Mode:</span>
+            <div class="toggle-buttons" id="mode-toggle">
+              <button class="toggle-btn active" data-mode="magnet">Near Bar Magnet</button>
+              <button class="toggle-btn" data-mode="solenoid">Inside Solenoid</button>
             </div>
           </div>
-          <div class="control-group inline-group">
-            <span class="label-text">Show Field Lines Pattern</span>
-            <label class="switch">
-              <input type="checkbox" id="toggle-fieldlines" checked>
-              <span class="slider-round"></span>
-            </label>
-          </div>
-        </div>
 
-        <div id="strength-controls" class="controls-panel hidden">
-          <div class="control-group slider-group">
-            <div class="slider-labels">
-              <span class="control-title">Magnet Strength</span>
-              <span id="strength-label-text">Medium</span>
-            </div>
-            <input type="range" id="strength-slider" min="1" max="5" value="3" step="1" class="neon-slider">
-            <div class="range-ticks">
-              <span>Weak</span>
-              <span></span>
-              <span>Medium</span>
-              <span></span>
-              <span>Strong</span>
+          <!-- Material Toggle -->
+          <div class="control-group">
+            <span class="control-label">Magnetic Material:</span>
+            <div class="toggle-buttons" id="material-toggle">
+              <button class="toggle-btn active" data-material="iron">Iron (Soft)</button>
+              <button class="toggle-btn" data-material="steel">Steel (Hard)</button>
             </div>
           </div>
         </div>
+      </div>
 
+      <!-- Interactive Playground -->
+      <div class="playground-wrapper">
+        <div class="playground" id="lab-playground">
+          
+          <!-- Mode A Components: Bar Magnet -->
+          <div id="playground-magnet-mode" class="lab-mode-container active-mode">
+            <div class="bar-magnet" id="lab-bar-magnet">
+              <div class="magnet-half south">S</div>
+              <div class="magnet-half north">N</div>
+            </div>
+          </div>
+
+          <!-- Mode B Components: Solenoid -->
+          <div id="playground-solenoid-mode" class="lab-mode-container">
+            <div class="solenoid-circuit">
+              <div class="solenoid-container">
+                <svg viewBox="0 0 280 160" class="solenoid-svg">
+                  <!-- Back Windings (150 degrees, Dotted) -->
+                  <g class="solenoid-back">
+                    <line x1="50" y1="30" x2="65" y2="70" fill="none" stroke="#475569" stroke-width="2.5" stroke-dasharray="3,3" />
+                    <line x1="80" y1="30" x2="95" y2="70" fill="none" stroke="#475569" stroke-width="2.5" stroke-dasharray="3,3" />
+                    <line x1="110" y1="30" x2="125" y2="70" fill="none" stroke="#475569" stroke-width="2.5" stroke-dasharray="3,3" />
+                    <line x1="140" y1="30" x2="155" y2="70" fill="none" stroke="#475569" stroke-width="2.5" stroke-dasharray="3,3" />
+                    <line x1="170" y1="30" x2="185" y2="70" fill="none" stroke="#475569" stroke-width="2.5" stroke-dasharray="3,3" />
+                    <line x1="200" y1="30" x2="215" y2="70" fill="none" stroke="#475569" stroke-width="2.5" stroke-dasharray="3,3" />
+                  </g>
+                  
+                  <!-- Front Windings (30 degrees, Solid) -->
+                  <g class="solenoid-front">
+                    <!-- Slanted front wires -->
+                    <line x1="65" y1="70" x2="80" y2="30" fill="none" stroke="#94a3b8" stroke-width="4" class="front-winding-line" />
+                    <line x1="95" y1="70" x2="110" y2="30" fill="none" stroke="#94a3b8" stroke-width="4" class="front-winding-line" />
+                    <line x1="125" y1="70" x2="140" y2="30" fill="none" stroke="#94a3b8" stroke-width="4" class="front-winding-line" />
+                    <line x1="155" y1="70" x2="170" y2="30" fill="none" stroke="#94a3b8" stroke-width="4" class="front-winding-line" />
+                    <line x1="185" y1="70" x2="200" y2="30" fill="none" stroke="#94a3b8" stroke-width="4" class="front-winding-line" />
+                    <line x1="215" y1="70" x2="230" y2="30" fill="none" stroke="#94a3b8" stroke-width="4" class="front-winding-line" />
+                    
+                    <!-- Left feed wire (symmetrical vertical drop) -->
+                    <line x1="50" y1="120" x2="50" y2="30" fill="none" stroke="#94a3b8" stroke-width="4" class="circuit-feed-line" />
+                    
+                    <!-- Right feed wire (symmetrical vertical drop) -->
+                    <line x1="230" y1="30" x2="230" y2="120" fill="none" stroke="#94a3b8" stroke-width="4" class="circuit-feed-line" />
+                    
+                    <!-- Bottom Wires connecting to components -->
+                    <line x1="50" y1="120" x2="90" y2="120" fill="none" stroke="#94a3b8" stroke-width="4" class="circuit-feed-line" />
+                    <line x1="100" y1="120" x2="150" y2="120" fill="none" stroke="#94a3b8" stroke-width="4" class="circuit-feed-line" />
+                    <line x1="190" y1="120" x2="230" y2="120" fill="none" stroke="#94a3b8" stroke-width="4" class="circuit-feed-line" />
+                    
+                    <!-- Battery Symbol (Long line on left = positive, short thick on right = negative) -->
+                    <line x1="90" y1="105" x2="90" y2="135" fill="none" stroke="#94a3b8" stroke-width="4" class="circuit-battery-line" />
+                    <line x1="100" y1="112" x2="100" y2="128" fill="none" stroke="#94a3b8" stroke-width="8" class="circuit-battery-line" />
+                    
+                    <!-- Resistor Box (Bottom Right) -->
+                    <rect x="150" y="112" width="40" height="16" fill="none" stroke="#94a3b8" stroke-width="4" rx="2" class="circuit-resistor-box" />
+                  </g>
+                </svg>
+                <div class="solenoid-hollow" id="solenoid-dropzone"></div>
+                <!-- Solenoid Polarity indicators -->
+                <div class="solenoid-pole left" id="solenoid-left-pole"></div>
+                <div class="solenoid-pole right" id="solenoid-right-pole"></div>
+              </div>
+              
+              <!-- Switch control wrapper -->
+              <div class="circuit-wire-bottom">
+                <div class="switch-container">
+                  <span class="switch-label">Solenoid Power Switch:</span>
+                  <label class="switch">
+                    <input type="checkbox" id="solenoid-switch">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Draggable Material Pin/Bar -->
+          <div class="draggable-material" id="draggable-bar" style="top: 250px; left: 100px;">
+            <div class="pole-indicator left-pole" id="drag-left-pole"></div>
+            <div class="material-label" id="drag-material-label">IRON</div>
+            <div class="pole-indicator right-pole" id="drag-right-pole"></div>
+            <div class="magnetic-field-flow" id="field-flow-glow"></div>
+          </div>
+
+        </div>
+        
+        <!-- Live Analysis Board -->
+        <div class="analysis-panel">
+          <div class="panel-header">
+            <i data-lucide="activity" class="panel-icon"></i>
+            <h3>Live Physics Analysis</h3>
+          </div>
+          <div class="analysis-stats">
+            <div class="stat-item">
+              <span class="stat-label">Material:</span>
+              <span class="stat-value text-cyan" id="status-material">Iron (Temporary)</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Magnetisation State:</span>
+              <span class="stat-value" id="status-magnetised">Unmagnetised</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Force Experienced:</span>
+              <span class="stat-value" id="status-force">None</span>
+            </div>
+          </div>
+          <div class="analysis-explanation" id="analysis-text">
+            Drag the metal bar closer to the magnet poles or place it inside the solenoid to observe induced magnetism.
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- SECTION 3: FLASHCARD REVISION -->
-    <section id="flashcards-section" class="tab-content">
-      <div class="flashcard-container">
-        <div class="flashcard-header">
-          <h2>Revision Flashcards</h2>
+    <section id="section-flashcards" class="app-section">
+      <div class="section-intro">
+        <h2>Revision Flashcards</h2>
+        <p class="section-subtitle">Tap cards to flip them. Master key O-Level terminology. <span class="card-counter" id="flashcard-counter">1 / 10</span></p>
+      </div>
+
+      <div class="flashcards-wrapper">
+        <div class="flashcard-container" id="flashcard-deck">
+          <!-- Cards injected via JS -->
         </div>
         
-        <div class="card-viewer">
-          <div class="flashcard" id="flashcard-element">
-            <div class="card-inner">
-              <div class="card-front">
-                <span class="card-index">Card 1</span>
-                <p class="card-text">Question front text goes here...</p>
-                <span class="tap-hint">Tap to Flip 🔄</span>
-              </div>
-              <div class="card-back">
-                <span class="card-index">Answer</span>
-                <p class="card-text">Answer back text goes here...</p>
-                <span class="tap-hint">Tap to Flip 🔄</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card-nav">
-          <button id="prev-card-btn" class="ctrl-btn">&larr; Prev</button>
-          <button id="shuffle-btn" class="ctrl-btn">Shuffle 🎲</button>
-          <button id="next-card-btn" class="ctrl-btn">Next &rarr;</button>
-          <span id="card-progress" class="hidden">1 / 10</span>
+        <!-- Flashcard Navigation Controls Below the Card -->
+        <div class="flashcard-controls-row">
+          <button class="flashcard-control-btn" id="prev-card-btn">prev</button>
+          <button class="flashcard-control-btn btn-shuffle" id="btn-shuffle-flashcards">shuffle</button>
+          <button class="flashcard-control-btn" id="next-card-btn">next</button>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 4 & 5: QUIZ AND RESULTS -->
-    <section id="quiz-section" class="tab-content">
-      <!-- Quiz Frame -->
-      <div class="quiz-container" id="quiz-container">
+    <!-- SECTION 4: QUIZ -->
+    <section id="section-quiz" class="app-section">
+      <!-- Quiz Panel -->
+      <div class="quiz-container" id="quiz-game-panel">
         <div class="quiz-header">
-          <div class="progress-bar-container">
-            <div class="progress-bar" id="quiz-progress-bar" style="width: 10%;"></div>
+          <div class="quiz-progress-bar">
+            <div class="progress-fill" id="quiz-progress-fill" style="width: 10%;"></div>
           </div>
           <div class="quiz-meta">
-            <span id="question-number">Question 1 of 10</span>
-            <span id="quiz-score-tracker">Score: 0/0</span>
+            <span class="question-number" id="quiz-question-number">Question 1 of 10</span>
+            <span class="quiz-score-live" id="quiz-live-score">Score: 0</span>
           </div>
         </div>
 
-        <div class="quiz-question-box">
-          <div id="quiz-question-visual" class="quiz-visual hidden">
-            <!-- Dynamically rendered SVGs representing questions -->
+        <div class="quiz-body">
+          <h3 class="question-text" id="quiz-question-text">Question text goes here?</h3>
+          <div class="quiz-options" id="quiz-options-list">
+            <!-- Answer buttons injected here -->
           </div>
-          <p id="quiz-question-text" class="question-text">Loading question...</p>
         </div>
 
-        <div class="quiz-options" id="quiz-options-container">
-          <!-- 4 option buttons will be placed here -->
-        </div>
-
-        <!-- Explanation Drawer (slides in when answered) -->
-        <div id="explanation-drawer" class="explanation-drawer hidden">
-          <div class="explanation-status" id="explanation-status">
-            <span class="status-icon" id="status-icon">✅</span>
-            <span class="status-msg" id="status-msg">Correct!</span>
+        <!-- Explanation card (revealed after option select) -->
+        <div class="quiz-explanation-card hidden" id="quiz-explanation-panel">
+          <div class="explanation-heading">
+            <i class="explanation-icon" id="explanation-status-icon"></i>
+            <span id="explanation-status-text">Correct!</span>
           </div>
-          <div class="explanation-body">
-            <h4>Worked Explanation:</h4>
-            <p id="explanation-text">Detailed physics explanation goes here.</p>
-          </div>
-          <button id="next-question-btn" class="ctrl-btn accent-btn">Continue &rarr;</button>
+          <p class="explanation-text" id="quiz-explanation-text">Explanation goes here...</p>
+          <button class="btn btn-primary" id="btn-next-question">
+            <span>Next Question</span>
+            <i data-lucide="arrow-right"></i>
+          </button>
         </div>
       </div>
 
-      <!-- Results View -->
-      <div class="results-container hidden" id="results-container">
-        <div class="results-card">
-          <div class="trophy-icon">🏆</div>
+      <!-- Quiz Results / Scoring Section -->
+      <div class="results-container hidden" id="quiz-results-panel">
+        <div class="results-header">
+          <div class="trophy-glow">
+            <i data-lucide="award" class="trophy-icon"></i>
+          </div>
           <h2>Quiz Completed!</h2>
-          <div class="final-score-box">
-            <span class="score-num" id="final-score-val">0</span>
-            <span class="score-total">/ 10</span>
-          </div>
-          <p class="feedback-tier" id="feedback-tier-msg">Excellent! You've mastered this topic.</p>
-          
-          <div class="score-summary-details">
-            <p>Great effort! Revisit sections you found difficult to lock in your understanding.</p>
-          </div>
-
-          <button id="retry-quiz-btn" class="ctrl-btn accent-btn">Practice Again 🔁</button>
+        </div>
+        <div class="results-score-box">
+          <span class="score-fraction" id="results-score-fraction">8/10</span>
+          <span class="score-label">Final Score</span>
+        </div>
+        <div class="results-feedback">
+          <h4 id="results-feedback-title">Great work!</h4>
+          <p id="results-feedback-desc">Just a few areas to review before the O-Levels.</p>
+        </div>
+        <div class="results-actions">
+          <button class="btn btn-primary" id="btn-retry-quiz">
+            <i data-lucide="rotate-ccw"></i>
+            <span>Retry Quiz</span>
+          </button>
         </div>
       </div>
     </section>
 
   </main>
+
+  <!-- Confetti Canvas overlay for quiz celebration -->
+  <canvas class="confetti-canvas" id="confetti-canvas"></canvas>
 
   <script src="app.js"></script>
 </body>

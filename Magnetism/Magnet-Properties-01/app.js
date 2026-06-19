@@ -1,1418 +1,905 @@
-// --- APP STATE ---
-let activeTab = 'concept';
-let conceptSlide = 1;
-const totalConceptSlides = 4;
+// Initialize Lucide Icons
+lucide.createIcons();
 
-let activeExploreSubTab = 'compass'; // 'compass' or 'strength'
-let currentConfig = 'single'; // 'single', 'unlike', 'like'
-let currentStrength = 3; // 1 to 5
-let showFieldLines = true;
+// --- NAVIGATION & ROUTING ---
+const navTabs = document.querySelectorAll('.nav-tab');
+const appSections = document.querySelectorAll('.app-section');
 
-// Flashcards
-let flashcards = [
-  {
-    front: "How does a compass needle indicate the direction of a magnetic field at a point?",
-    back: "The North (N) pole of the compass needle points in the direction of the magnetic field at that point."
-  },
-  {
-    front: "What is the convention for the direction of magnetic field lines outside a magnet?",
-    back: "Field lines always leave the North (N) pole, curve around, and enter the South (S) pole."
-  },
-  {
-    front: "How does the spacing/density of magnetic field lines relate to magnetic field strength?",
-    back: "Denser (closer) lines represent a stronger magnetic field, while widely spaced lines represent a weaker field."
-  },
-  {
-    front: "Where is the magnetic field strength of a bar magnet strongest?",
-    back: "It is strongest near the magnet's poles (N and S) where the field lines are most dense."
-  },
-  {
-    front: "What pattern is formed by field lines between two unlike poles (N facing S)?",
-    back: "The field lines connect directly from the North pole of one magnet to the South pole of the other, indicating attraction."
-  },
-  {
-    front: "What pattern is formed by field lines between two like poles (N facing N, or S facing S)?",
-    back: "The field lines bend away and repel each other, leaving a gap in the center."
-  },
-  {
-    front: "What is a 'Neutral Point' in a magnetic field?",
-    back: "A point where the magnetic fields of multiple sources cancel out completely, resulting in a net magnetic field strength of zero."
-  },
-  {
-    front: "What would a compass do if placed exactly at a neutral point?",
-    back: "It would display erratic, random rotation or point in any random direction because the net magnetic force acting on it is zero."
-  },
-  {
-    front: "Why do magnetic field lines never cross or intersect each other?",
-    back: "Because the magnetic field can only point in one unique direction at any given point. If they crossed, a compass would point in two directions at once."
-  },
-  {
-    front: "What happens to the field lines of a magnet as its magnetic strength decreases?",
-    back: "The field lines become fewer, more spread out, and less dense near the poles."
-  }
-];
-let currentCardIndex = 0;
+navTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = tab.getAttribute('data-target');
+    
+    // Update active tab
+    navTabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
 
-// Quiz Pool of 30 Questions
-const quizQuestionPool = [
-  {
-    id: 1,
-    question: "If a plotting compass is placed near the North pole of a bar magnet, which direction does the North pole of the compass needle point?",
-    options: [
-      "Directly towards the North pole",
-      "Directly away from the North pole",
-      "Parallel to the sides of the magnet",
-      "It spins continuously"
-    ],
-    answer: 1,
-    explanation: "Like poles repel. The North pole of the compass needle is repelled by the North pole of the bar magnet, so it points directly away from it.",
-    visual: "single_n"
-  },
-  {
-    id: 2,
-    question: "Which of the following describes the direction of magnetic field lines?",
-    options: [
-      "From South to North both inside and outside the magnet",
-      "From North to South outside, and South to North inside",
-      "From North to South both inside and outside",
-      "They do not have a defined direction"
-    ],
-    answer: 1,
-    explanation: "By convention, magnetic field lines leave the North pole and enter the South pole on the outside of a magnet, completing loops inside from South to North.",
-    visual: "none"
-  },
-  {
-    id: 3,
-    question: "Where is the magnetic field around a single bar magnet strongest?",
-    options: [
-      "Directly in the center of the magnet",
-      "At the poles, where the field lines are closest together",
-      "Far away from the magnet where lines are spread out",
-      "The strength is uniform everywhere around the magnet"
-    ],
-    answer: 1,
-    explanation: "The field strength is proportional to the density (closeness) of the field lines. Field lines are most dense near the poles, indicating the strongest magnetic field.",
-    visual: "none"
-  },
-  {
-    id: 4,
-    question: "Two magnets are placed with their North poles facing each other. What is the magnetic field strength at the midpoint between them?",
-    options: [
-      "Double the strength of a single magnet",
-      "Zero, creating a neutral point",
-      "Weaker than a single magnet, but not zero",
-      "Infinitely strong"
-    ],
-    answer: 1,
-    explanation: "The equal and opposite magnetic fields from the two identical North poles cancel each other out at the exact midpoint, creating a neutral point of zero field strength.",
-    visual: "like_poles"
-  },
-  {
-    id: 5,
-    question: "If a compass is placed at the neutral point between two like poles, how will its needle behave?",
-    options: [
-      "It will point directly to the nearest North pole",
-      "It will spin rapidly in a clockwise direction",
-      "It will have no preferred direction and may orient randomly",
-      "It will point straight up to the sky"
-    ],
-    answer: 2,
-    explanation: "At a neutral point, the net magnetic field is zero. Without an external magnetic field to align it, the compass needle experiences no alignment torque and can point in any direction.",
-    visual: "none"
-  },
-  {
-    id: 6,
-    question: "A field diagram shows lines that are very close together in Region A and widely separated in Region B. What does this tell us?",
-    options: [
-      "Region A has a weaker field than Region B",
-      "Region A has a stronger field than Region B",
-      "Both regions have the same field strength",
-      "Region A is a North pole and Region B is a South pole"
-    ],
-    answer: 1,
-    explanation: "Line density represents magnetic field strength. Closely spaced lines indicate a stronger field; widely separated lines indicate a weaker field.",
-    visual: "none"
-  },
-  {
-    id: 7,
-    question: "When drawing the magnetic field lines between two unlike poles (N facing S), what pattern is observed?",
-    options: [
-      "The lines repel and curve away from the space between magnets",
-      "The lines run directly from the North pole to the South pole",
-      "The lines form concentric circles around the midpoint",
-      "There are no field lines between them"
-    ],
-    answer: 1,
-    explanation: "Unlike poles attract, and field lines run continuously from the North pole of one magnet directly into the South pole of the facing magnet.",
-    visual: "unlike_poles"
-  },
-  {
-    id: 8,
-    question: "In a diagram showing repelling field lines between two facing poles, there is a point marked 'X' in the center with no lines passing through it. What is this point called?",
-    options: [
-      "The Magnetic Center",
-      "The Attraction Point",
-      "The Neutral Point",
-      "The Focal Point"
-    ],
-    answer: 2,
-    explanation: "The point where field lines repel and cancel out, leaving a region of zero field, is called the neutral point.",
-    visual: "like_poles"
-  },
-  {
-    id: 9,
-    question: "If the strength slider on a bar magnet simulation is increased from 1 to 5, how should the field line diagram change to reflect this?",
-    options: [
-      "The lines should become further apart",
-      "The lines should become more dense and tightly packed",
-      "The lines should change direction from S-to-N to N-to-S",
-      "The lines should disappear completely"
-    ],
-    answer: 1,
-    explanation: "Increasing the magnet strength means the magnetic field is stronger. This is visually represented by an increased density (more lines, packed closer together) of field lines.",
-    visual: "none"
-  },
-  {
-    id: 10,
-    question: "What direction does the South pole of a compass needle point when placed in a magnetic field?",
-    options: [
-      "In the direction of the magnetic field",
-      "Opposite to the direction of the magnetic field",
-      "At a right angle to the magnetic field",
-      "Towards the center of the earth"
-    ],
-    answer: 1,
-    explanation: "By definition, the North pole of the compass points in the direction of the field, which means the South pole points in the opposite direction.",
-    visual: "none"
-  },
-  {
-    id: 11,
-    question: "If we label a magnet's poles X and Y, and find that field lines emerge from X and enter Y, what are the polarities of X and Y?",
-    options: [
-      "X is South, Y is North",
-      "X is North, Y is South",
-      "Both X and Y are North",
-      "Both X and Y are South"
-    ],
-    answer: 1,
-    explanation: "Since magnetic field lines exit North poles and enter South poles, X must be North and Y must be South.",
-    visual: "none"
-  },
-  {
-    id: 12,
-    question: "Which of the following is true about a neutral point between two magnets?",
-    options: [
-      "It only occurs between unlike poles",
-      "It only occurs between like poles",
-      "It is a region of maximum magnetic force",
-      "It can be mapped using a single isolated magnet"
-    ],
-    answer: 1,
-    explanation: "A neutral point is created when opposing fields cancel out. This occurs between two like poles (which push against each other) or in combination configurations, but not between facing unlike poles.",
-    visual: "none"
-  },
-  {
-    id: 13,
-    question: "Why does a compass needle rotate when moved around a magnet?",
-    options: [
-      "It aligns itself parallel to the magnet's physical surface",
-      "It aligns itself tangent to the magnetic field line at that point",
-      "It is attracted by the gravitational pull of the magnet",
-      "The electric charges in the compass repel the magnet"
-    ],
-    answer: 1,
-    explanation: "A compass needle is a small dipole that experiences torque in a magnetic field, aligning its axis tangent to the field line at its current location.",
-    visual: "none"
-  },
-  {
-    id: 14,
-    question: "If you place a compass directly above the center of a horizontal bar magnet, which direction does the N-pole of the compass point?",
-    options: [
-      "Towards the South pole of the bar magnet",
-      "Towards the North pole of the bar magnet",
-      "Straight upwards away from the magnet",
-      "It spins continuously"
-    ],
-    answer: 0,
-    explanation: "Outside the magnet, field lines flow from the North pole to the South pole. Directly above the center, the field lines are moving parallel to the magnet towards the South pole side.",
-    visual: "single_center"
-  },
-  {
-    id: 15,
-    question: "What happens to the density of magnetic field lines as you move further away from a bar magnet?",
-    options: [
-      "It increases",
-      "It decreases",
-      "It remains constant",
-      "It becomes zero immediately"
-    ],
-    answer: 1,
-    explanation: "As you move away from the magnet, the magnetic field strength decreases, which is represented by the field lines becoming more spread out (decreasing density).",
-    visual: "none"
-  },
-  {
-    id: 16,
-    question: "Two magnets repel each other. What does this tell you about their facing poles?",
-    options: [
-      "They must be unlike poles",
-      "They must be like poles",
-      "One is magnetic and the other is not",
-      "They are both South poles only"
-    ],
-    answer: 1,
-    explanation: "Repulsion only occurs between like poles (North-North or South-South).",
-    visual: "none"
-  },
-  {
-    id: 17,
-    question: "If a compass needle's N-pole points to the left at a certain position, what is the direction of the magnetic field at that position?",
-    options: [
-      "To the right",
-      "To the left",
-      "Upwards",
-      "Downwards"
-    ],
-    answer: 1,
-    explanation: "The direction of a magnetic field at any point is defined as the direction in which the North pole of a compass needle points.",
-    visual: "none"
-  },
-  {
-    id: 18,
-    question: "Which magnetic configuration has a neutral point between the magnets?",
-    options: [
-      "A single bar magnet",
-      "Two unlike poles facing each other",
-      "Two like poles facing each other",
-      "A horseshoe magnet"
-    ],
-    answer: 2,
-    explanation: "Like poles facing each other create opposing magnetic fields that cancel out in the space between them, resulting in a neutral point.",
-    visual: "like_poles"
-  },
-  {
-    id: 19,
-    question: "If two magnets are placed with their S poles facing each other, where is the neutral point located?",
-    options: [
-      "At the North pole of the left magnet",
-      "At the midpoint between the two S poles",
-      "Inside the right magnet",
-      "There is no neutral point for S-S configurations"
-    ],
-    answer: 1,
-    explanation: "Just like N-N configurations, S-S configurations repel and create opposing fields that cancel out at the midpoint, forming a neutral point.",
-    visual: "none"
-  },
-  {
-    id: 20,
-    question: "If you break a bar magnet in half, what do you obtain?",
-    options: [
-      "Two magnets, each with a North and a South pole",
-      "One separate North pole and one separate South pole",
-      "Two non-magnetic pieces of metal",
-      "One magnet and one unmagnetized piece"
-    ],
-    answer: 0,
-    explanation: "Magnetic monopoles do not exist. Breaking a magnet in half results in two smaller magnets, each having its own North and South poles.",
-    visual: "none"
-  },
-  {
-    id: 21,
-    question: "What does a dense concentration of magnetic field lines at the corners of a magnet indicate?",
-    options: [
-      "The field is very weak there",
-      "The field is very strong there",
-      "The magnet is demagnetized at the corners",
-      "The field direction is reversing"
-    ],
-    answer: 1,
-    explanation: "High density of field lines always represents a strong magnetic field region.",
-    visual: "none"
-  },
-  {
-    id: 22,
-    question: "A student places a compass near a mystery pole of a magnet, and the North end of the compass needle points directly at the pole. What is the polarity of this mystery pole?",
-    options: [
-      "North pole",
-      "South pole",
-      "It could be either North or South",
-      "It is a neutral point"
-    ],
-    answer: 1,
-    explanation: "The North pole of a compass needle is attracted to South poles (unlike poles attract). Since it points directly at the pole, that pole must be South.",
-    visual: "mystery_pole"
-  },
-  {
-    id: 23,
-    question: "Which diagram correctly shows the magnetic field of a single bar magnet?",
-    options: [
-      "Lines starting from South, entering North",
-      "Lines starting from North, entering South",
-      "Lines crossing each other in the middle",
-      "Lines pointing straight out radially from both poles without looping"
-    ],
-    answer: 1,
-    explanation: "Outside the magnet, lines emerge from the North pole and curve around to enter the South pole, forming closed loops.",
-    visual: "none"
-  },
-  {
-    id: 24,
-    question: "What is the primary material used to make permanent magnets?",
-    options: [
-      "Copper",
-      "Steel (or Iron alloys)",
-      "Aluminum",
-      "Plastic"
-    ],
-    answer: 1,
-    explanation: "Ferromagnetic materials like iron, steel, nickel, and cobalt are used to make permanent magnets because they can retain magnetization.",
-    visual: "none"
-  },
-  {
-    id: 25,
-    question: "If you increase the strength of a magnet, how does the position of the neutral point between two like poles change?",
-    options: [
-      "It moves closer to the stronger magnet",
-      "It remains at the exact midpoint if both magnets are increased equally",
-      "It disappears completely",
-      "It moves inside the stronger magnet"
-    ],
-    answer: 1,
-    explanation: "If both magnets are increased in strength equally, the cancelation point remains exactly in the middle. If only one magnet is strengthened, the neutral point moves further away from the stronger magnet.",
-    visual: "none"
-  },
-  {
-    id: 26,
-    question: "Which of the following is NOT a property of magnetic field lines?",
-    options: [
-      "They form continuous closed loops",
-      "They can intersect under very strong fields",
-      "They exit North and enter South poles",
-      "Their density indicates field strength"
-    ],
-    answer: 1,
-    explanation: "Field lines never intersect or cross. If they crossed, it would mean the magnetic field has two different directions at the intersection point, which is impossible.",
-    visual: "none"
-  },
-  {
-    id: 27,
-    question: "How does a compass mapper show a neutral point?",
-    options: [
-      "The compass points steadily towards the North pole",
-      "The compass needle shows erratic or random alignment due to zero field strength",
-      "The compass needle breaks",
-      "The compass needle points to the South pole"
-    ],
-    answer: 1,
-    explanation: "At a neutral point, the opposing fields cancel out. The absence of a net magnetic field allows the compass needle to rotate erratically or sit in a random direction.",
-    visual: "none"
-  },
-  {
-    id: 28,
-    question: "What would the magnetic field pattern look like for two magnets placed with Unlike poles facing, compared to Like poles facing?",
-    options: [
-      "Unlike poles have repelling lines; Like poles have connecting lines",
-      "Unlike poles have connecting lines; Like poles have repelling lines",
-      "Both configurations look exactly the same",
-      "Neither configuration has any field lines between them"
-    ],
-    answer: 1,
-    explanation: "Unlike poles attract (connecting lines from N of one to S of the other), whereas like poles repel (lines bend away from each other).",
-    visual: "none"
-  },
-  {
-    id: 29,
-    question: "Why do we use steel rather than soft iron to make permanent magnets?",
-    options: [
-      "Steel is easier to magnetize but loses its magnetism easily",
-      "Steel is harder to magnetize but retains its magnetism much longer",
-      "Steel is non-magnetic",
-      "Soft iron does not conduct magnetic fields"
-    ],
-    answer: 1,
-    explanation: "Steel is a magnetically hard material. It is harder to magnetize than soft iron, but it retains its magnetism, making it suitable for permanent magnets.",
-    visual: "none"
-  },
-  {
-    id: 30,
-    question: "If a compass is placed very far from a magnet, why does it stop pointing towards the magnet's poles?",
-    options: [
-      "The compass becomes demagnetized",
-      "The magnet's field becomes weaker than the Earth's magnetic field",
-      "The compass needle gets stuck",
-      "The field lines loop back inside the compass"
-    ],
-    answer: 1,
-    explanation: "As distance increases, the magnet's field strength drops significantly. Eventually, it becomes weaker than the Earth's ambient magnetic field, so the compass aligns with the Earth's field instead.",
-    visual: "none"
-  }
-];
+    // Update active section with smooth transition
+    appSections.forEach(section => {
+      section.classList.remove('active');
+      if (section.id === `section-${target}`) {
+        section.classList.add('active');
+      }
+    });
 
-let activeQuestions = [];
-let currentQuestionIndex = 0;
-let quizScore = 0;
-let hasAnswered = false;
-
-// --- INITIALIZATION ---
-document.addEventListener('DOMContentLoaded', () => {
-  initNavigation();
-  initConceptSlider();
-  initExploreCanvas();
-  initFlashcards();
-  initQuiz();
+    // Re-render/reset specific sections if needed
+    if (target === 'explore') {
+      resetLabPositions();
+    }
+  });
 });
 
-// --- NAVIGATION LOGIC ---
-function initNavigation() {
-  const navButtons = document.querySelectorAll('.nav-btn');
-  const sections = document.querySelectorAll('.tab-content');
+// --- SECTION 2: INTERACTIVE LAB STATE ---
+let labState = {
+  mode: 'magnet', // 'magnet' or 'solenoid'
+  material: 'iron', // 'iron' or 'steel'
+  solenoidSwitch: false,
+  isDragging: false,
+  dragOffset: { x: 0, y: 0 },
+  magnetised: false,
+  steelPoles: null // Stores last poles if steel is permanently magnetised
+};
 
-  navButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const targetTab = btn.getAttribute('data-tab');
-      
-      // Update buttons
-      navButtons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+// DOM Elements for Lab
+const modeToggleBtns = document.querySelectorAll('#mode-toggle .toggle-btn');
+const materialToggleBtns = document.querySelectorAll('#material-toggle .toggle-btn');
+const playgroundMagnetMode = document.getElementById('playground-magnet-mode');
+const playgroundSolenoidMode = document.getElementById('playground-solenoid-mode');
+const dragBar = document.getElementById('draggable-bar');
+const dragLabel = document.getElementById('drag-material-label');
+const dragLeftPole = document.getElementById('drag-left-pole');
+const dragRightPole = document.getElementById('drag-right-pole');
+const solenoidSwitch = document.getElementById('solenoid-switch');
+const solenoidLeftPole = document.getElementById('solenoid-left-pole');
+const solenoidRightPole = document.getElementById('solenoid-right-pole');
+const playground = document.getElementById('lab-playground');
+const fieldFlowGlow = document.getElementById('field-flow-glow');
 
-      // Update sections
-      sections.forEach(s => s.classList.remove('active'));
-      
-      if (targetTab === 'concept') {
-        document.getElementById('concept-section').classList.add('active');
-      } else if (targetTab === 'explore') {
-        document.getElementById('explore-section').classList.add('active');
-        // Trigger canvas resize and redraw when tab becomes visible
-        resizeCanvas();
-        updateCanvas();
-      } else if (targetTab === 'flashcards') {
-        document.getElementById('flashcards-section').classList.add('active');
-      } else if (targetTab === 'quiz') {
-        document.getElementById('quiz-section').classList.add('active');
-      }
-      
-      activeTab = targetTab;
-    });
+// Live Status Board Elements
+const statusMaterial = document.getElementById('status-material');
+const statusMagnetised = document.getElementById('status-magnetised');
+const statusForce = document.getElementById('status-force');
+const analysisText = document.getElementById('analysis-text');
+
+// Lab Controls Toggles
+modeToggleBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    modeToggleBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    labState.mode = btn.getAttribute('data-mode');
+
+    if (labState.mode === 'magnet') {
+      playgroundMagnetMode.classList.add('active-mode');
+      playgroundSolenoidMode.classList.remove('active-mode');
+    } else {
+      playgroundMagnetMode.classList.remove('active-mode');
+      playgroundSolenoidMode.classList.add('active-mode');
+    }
+    resetLabPositions();
   });
+});
+
+materialToggleBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    materialToggleBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    labState.material = btn.getAttribute('data-material');
+    dragLabel.textContent = labState.material.toUpperCase();
+    
+    // Reset magnetization
+    labState.magnetised = false;
+    labState.steelPoles = null;
+    updateAnalysis();
+  });
+});
+
+solenoidSwitch.addEventListener('change', (e) => {
+  labState.solenoidSwitch = e.target.checked;
+  
+  // Select all front windings and circuit components to glow together
+  const circuitElements = document.querySelectorAll(
+    '#playground-solenoid-mode .front-winding-line, ' +
+    '#playground-solenoid-mode .circuit-feed-line, ' +
+    '#playground-solenoid-mode .circuit-battery-line, ' +
+    '#playground-solenoid-mode .circuit-resistor-box'
+  );
+
+  if (labState.solenoidSwitch) {
+    solenoidLeftPole.classList.add('active-north');
+    solenoidLeftPole.textContent = 'N';
+    solenoidRightPole.classList.add('active-south');
+    solenoidRightPole.textContent = 'S';
+    circuitElements.forEach(el => el.classList.add('solenoid-active-glow'));
+  } else {
+    solenoidLeftPole.classList.remove('active-north');
+    solenoidRightPole.classList.remove('active-south');
+    circuitElements.forEach(el => el.classList.remove('solenoid-active-glow'));
+  }
+  updatePhysicsLogic();
+});
+
+// Pointer drag logic
+dragBar.addEventListener('pointerdown', (e) => {
+  labState.isDragging = true;
+  dragBar.style.transition = 'none';
+  const rect = dragBar.getBoundingClientRect();
+  labState.dragOffset.x = e.clientX - rect.left;
+  labState.dragOffset.y = e.clientY - rect.top;
+  dragBar.setPointerCapture(e.pointerId);
+});
+
+dragBar.addEventListener('pointermove', (e) => {
+  if (!labState.isDragging) return;
+  const playRect = playground.getBoundingClientRect();
+  
+  // Calculate relative coordinates
+  let left = e.clientX - playRect.left - labState.dragOffset.x;
+  let top = e.clientY - playRect.top - labState.dragOffset.y;
+
+  // Keep within playground limits
+  const maxLeft = playRect.width - dragBar.offsetWidth;
+  const maxTop = playRect.height - dragBar.offsetHeight;
+
+  left = Math.max(0, Math.min(left, maxLeft));
+  top = Math.max(0, Math.min(top, maxTop));
+
+  dragBar.style.left = `${left}px`;
+  dragBar.style.top = `${top}px`;
+
+  updatePhysicsLogic();
+});
+
+const endDrag = (e) => {
+  if (labState.isDragging) {
+    labState.isDragging = false;
+    dragBar.style.transition = 'left 0.2s, top 0.2s';
+    updatePhysicsLogic();
+  }
+};
+
+dragBar.addEventListener('pointerup', endDrag);
+dragBar.addEventListener('pointercancel', endDrag);
+
+function resetLabPositions() {
+  dragBar.style.transition = 'none';
+  dragBar.style.left = '30px';
+  dragBar.style.top = '270px';
+  labState.magnetised = false;
+  labState.steelPoles = null;
+  solenoidSwitch.checked = false;
+  labState.solenoidSwitch = false;
+  solenoidLeftPole.classList.remove('active-north');
+  solenoidRightPole.classList.remove('active-south');
+  updatePhysicsLogic();
 }
 
-// --- CONCEPT SLIDER LOGIC ---
-function initConceptSlider() {
-  const cards = document.querySelectorAll('.concept-card');
-  const prevBtn = document.getElementById('prev-slide-btn');
-  const nextBtn = document.getElementById('next-slide-btn');
-  const indicator = document.querySelector('.slide-indicator');
+function updatePhysicsLogic() {
+  const barRect = dragBar.getBoundingClientRect();
+  const playRect = playground.getBoundingClientRect();
+  const barCenterX = barRect.left + barRect.width / 2;
+  const barCenterY = barRect.top + barRect.height / 2;
 
-  function updateSlide() {
-    cards.forEach(card => {
-      card.classList.remove('active');
-      if (parseInt(card.getAttribute('data-slide')) === conceptSlide) {
-        card.classList.add('active');
+  let isNearActiveSource = false;
+  let nearestSourcePole = ''; // 'N' or 'S'
+  let nearLeft = false; // Is the left end of the bar closer to the source pole than the right end?
+
+  if (labState.mode === 'magnet') {
+    // Bar Magnet configuration (Horizontal & Centered):
+    // Center is (playRect.width/2, playRect.height/2). Width: 150px, Height: 50px.
+    // South pole is on the left half, North pole is on the right half.
+    const magnetCenterY = playRect.top + playRect.height / 2;
+    const sPoleX = playRect.left + playRect.width / 2 - 37.5;
+    const nPoleX = playRect.left + playRect.width / 2 + 37.5;
+
+    // Draggable bar ends
+    const dragLeftX = barRect.left;
+    const dragRightX = barRect.right;
+    const dragY = barRect.top + barRect.height / 2;
+
+    // Distances
+    const distLeftToN = Math.hypot(dragLeftX - nPoleX, dragY - magnetCenterY);
+    const distRightToN = Math.hypot(dragRightX - nPoleX, dragY - magnetCenterY);
+    const distLeftToS = Math.hypot(dragLeftX - sPoleX, dragY - magnetCenterY);
+    const distRightToS = Math.hypot(dragRightX - sPoleX, dragY - magnetCenterY);
+
+    const minDist = Math.min(distLeftToN, distRightToN, distLeftToS, distRightToS);
+
+    if (minDist < 120) {
+      isNearActiveSource = true;
+      if (minDist === distLeftToN) {
+        nearestSourcePole = 'N';
+        nearLeft = true;
+      } else if (minDist === distRightToN) {
+        nearestSourcePole = 'N';
+        nearLeft = false;
+      } else if (minDist === distLeftToS) {
+        nearestSourcePole = 'S';
+        nearLeft = true;
+      } else {
+        nearestSourcePole = 'S';
+        nearLeft = false;
       }
-    });
+    }
+  } else {
+    // Solenoid configuration:
+    // Check if the center of the draggable bar is inside the solenoid dropzone bounding box
+    const dropzone = document.getElementById('solenoid-dropzone');
+    if (dropzone && labState.solenoidSwitch) {
+      const dropRect = dropzone.getBoundingClientRect();
+      const isInsideDropzone = (
+        barCenterX > dropRect.left &&
+        barCenterX < dropRect.right &&
+        barCenterY > dropRect.top &&
+        barCenterY < dropRect.bottom
+      );
 
-    indicator.textContent = `${conceptSlide} / ${totalConceptSlides}`;
-    prevBtn.disabled = conceptSlide === 1;
-    nextBtn.disabled = conceptSlide === totalConceptSlides;
+      if (isInsideDropzone) {
+        isNearActiveSource = true;
+        labState.isInsideSolenoid = true;
+      } else {
+        labState.isInsideSolenoid = false;
+        // Solenoid Left is North (N), Right is South (S)
+        const nPoleX = dropRect.left;
+        const sPoleX = dropRect.right;
+        const poleY = dropRect.top + dropRect.height / 2;
+
+        const dragLeftX = barRect.left;
+        const dragRightX = barRect.right;
+        const dragY = barRect.top + barRect.height / 2;
+
+        const distLeftToN = Math.hypot(dragLeftX - nPoleX, dragY - poleY);
+        const distRightToN = Math.hypot(dragRightX - nPoleX, dragY - poleY);
+        const distLeftToS = Math.hypot(dragLeftX - sPoleX, dragY - poleY);
+        const distRightToS = Math.hypot(dragRightX - sPoleX, dragY - poleY);
+
+        const minDist = Math.min(distLeftToN, distRightToN, distLeftToS, distRightToS);
+
+        if (minDist < 120) {
+          isNearActiveSource = true;
+          if (minDist === distLeftToN) {
+            nearestSourcePole = 'N';
+            nearLeft = true;
+          } else if (minDist === distRightToN) {
+            nearestSourcePole = 'N';
+            nearLeft = false;
+          } else if (minDist === distLeftToS) {
+            nearestSourcePole = 'S';
+            nearLeft = true;
+          } else {
+            nearestSourcePole = 'S';
+            nearLeft = false;
+          }
+        }
+      }
+    } else {
+      labState.isInsideSolenoid = false;
+    }
   }
 
-  prevBtn.addEventListener('click', () => {
-    if (conceptSlide > 1) {
-      conceptSlide--;
-      updateSlide();
-    }
-  });
+  // Handle induced magnetism rules
+  if (isNearActiveSource) {
+    labState.magnetised = true;
+    
+    let inducedLeftPole = '';
+    let inducedRightPole = '';
 
-  nextBtn.addEventListener('click', () => {
-    if (conceptSlide < totalConceptSlides) {
-      conceptSlide++;
-      updateSlide();
+    if (labState.mode === 'solenoid' && labState.isInsideSolenoid) {
+      // Inside a solenoid: domains align with the internal field lines (from S to N).
+      // Left end (near Solenoid N) becomes induced North (N).
+      // Right end (near Solenoid S) becomes induced South (S).
+      inducedLeftPole = 'N';
+      inducedRightPole = 'S';
+    } else {
+      // Near a Bar Magnet or OUTSIDE an active Solenoid: Nearest end is induced with the OPPOSITE pole.
+      if (nearLeft) {
+        inducedLeftPole = (nearestSourcePole === 'N') ? 'S' : 'N';
+        inducedRightPole = (inducedLeftPole === 'N') ? 'S' : 'N';
+      } else {
+        inducedRightPole = (nearestSourcePole === 'N') ? 'S' : 'N';
+        inducedLeftPole = (inducedRightPole === 'N') ? 'S' : 'N';
+      }
     }
+
+    labState.steelPoles = { left: inducedLeftPole, right: inducedRightPole };
+    setBarPoles(inducedLeftPole, inducedRightPole);
+    
+  } else {
+    // Moved away or source turned off
+    if (labState.material === 'iron') {
+      labState.magnetised = false;
+      clearBarPoles();
+    } else {
+      // Steel retains magnetism
+      if (labState.steelPoles) {
+        labState.magnetised = true;
+        setBarPoles(labState.steelPoles.left, labState.steelPoles.right);
+      } else {
+        labState.magnetised = false;
+        clearBarPoles();
+      }
+    }
+  }
+
+  updateAnalysis();
+}
+
+function setBarPoles(left, right) {
+  dragLeftPole.textContent = left;
+  dragRightPole.textContent = right;
+
+  if (left === 'N') {
+    dragLeftPole.className = 'pole-indicator left-pole active-n';
+    dragRightPole.className = 'pole-indicator right-pole active-s';
+  } else {
+    dragLeftPole.className = 'pole-indicator left-pole active-s';
+    dragRightPole.className = 'pole-indicator right-pole active-n';
+  }
+
+  // Apply glowing container classes
+  dragBar.className = `draggable-material magnetized-${labState.material}`;
+}
+
+function clearBarPoles() {
+  dragLeftPole.textContent = '';
+  dragRightPole.textContent = '';
+  dragLeftPole.className = 'pole-indicator left-pole';
+  dragRightPole.className = 'pole-indicator right-pole';
+  dragBar.className = 'draggable-material';
+}
+
+function updateAnalysis() {
+  // Update Live Board
+  statusMaterial.textContent = labState.material === 'iron' ? 'Iron (Temporary)' : 'Steel (Permanent)';
+  statusMaterial.className = `stat-value ${labState.material === 'iron' ? 'text-cyan' : 'text-amber'}`;
+
+  if (labState.magnetised) {
+    if (labState.material === 'iron') {
+      statusMagnetised.textContent = 'Magnetised (Induced)';
+      statusMagnetised.className = 'stat-value text-cyan';
+      statusForce.textContent = labState.mode === 'solenoid' ? 'Solenoid Alignment' : 'Strong Attraction';
+      if (labState.mode === 'solenoid') {
+        analysisText.innerHTML = `<strong>Iron (soft magnetic material)</strong> aligns its domains with the solenoid's internal magnetic field. The left end becomes **North (N)** and the right end becomes **South (S)**.`;
+      } else {
+        analysisText.innerHTML = `<strong>Iron (soft magnetic material)</strong> aligns its magnetic domains instantly. An opposite pole is induced at the closest end, creating a strong <strong>attractive force</strong>.`;
+      }
+    } else {
+      statusMagnetised.textContent = 'Magnetised (Permanent)';
+      statusMagnetised.className = 'stat-value text-amber';
+      statusForce.textContent = labState.mode === 'solenoid' ? 'Solenoid Alignment' : 'Attraction / Retention';
+      if (labState.mode === 'solenoid') {
+        analysisText.innerHTML = `<strong>Steel (hard magnetic material)</strong> aligns its domains with the solenoid's internal magnetic field. It becomes magnetised with **North (N)** on the left and **South (S)** on the right.`;
+      } else {
+        analysisText.innerHTML = `<strong>Steel (hard magnetic material)</strong> retains its alignment of magnetic domains. It remains magnetised even after leaving the magnetic field.`;
+      }
+    }
+  } else {
+    statusMagnetised.textContent = 'Unmagnetised';
+    statusMagnetised.className = 'stat-value';
+    statusForce.textContent = 'None';
+    if (labState.material === 'iron') {
+      analysisText.textContent = `Iron demagnetises instantly because it is a soft magnetic material. The domains scramble as soon as the external field is removed.`;
+    } else {
+      analysisText.textContent = `Drag steel into the field to magnetise it. Steel requires a stronger force to align domains, but it will retain its poles.`;
+    }
+  }
+}
+
+
+// --- SECTION 3: FLASHCARDS DATA & CONTROLS ---
+const flashcardsData = [
+  { term: "Magnet", definition: "A material or object that produces a magnetic field and can attract magnetic materials." },
+  { term: "Magnetic Material", definition: "A material that can be attracted by a magnet (e.g. Iron, Steel, Cobalt, Nickel)." },
+  { term: "Induced Magnetism", definition: "The process where a magnetic material becomes a temporary magnet when placed inside a magnetic field." },
+  { term: "Temporary Magnet", definition: "A magnet made of soft magnetic material (like iron) that magnetises easily but loses its magnetism quickly when removed from a magnetic field." },
+  { term: "Permanent Magnet", definition: "A magnet made of hard magnetic material (like steel) that is hard to magnetise but retains its magnetism for a long time." },
+  { term: "Magnetic Poles", definition: "Regions of a magnet where the magnetic forces are strongest. Every magnet has a North (N) and South (S) pole." },
+  { term: "Law of Magnetism", definition: "Like poles repel each other; unlike poles attract each other." },
+  { term: "Temporary Magnet Uses", definition: "Used in electromagnets, relays, electric bells, and magnetic cranes where magnetic force needs to be turned on/off." },
+  { term: "Permanent Magnet Uses", definition: "Used in compasses, electric motors, dynamos, loudspeakers, fridge doors, and magnetic locks." },
+  { term: "Induced Pole Rule", definition: "The induced pole closest to the inducing magnet is always an opposite pole, ensuring attraction occurs." }
+];
+
+let currentCardIndex = 0;
+let shuffledCards = [...flashcardsData];
+
+const flashcardDeck = document.getElementById('flashcard-deck');
+const flashcardCounter = document.getElementById('flashcard-counter');
+const prevCardBtn = document.getElementById('prev-card-btn');
+const nextCardBtn = document.getElementById('next-card-btn');
+const shuffleBtn = document.getElementById('btn-shuffle-flashcards');
+
+function renderCard() {
+  const card = shuffledCards[currentCardIndex];
+  flashcardDeck.innerHTML = `
+    <div class="flashcard" id="active-flashcard">
+      <div class="card-face front">
+        <h3>Front</h3>
+        <p>${card.term}</p>
+        <div class="tap-hint"><i data-lucide="help-circle"></i> Tap to flip</div>
+      </div>
+      <div class="card-face back">
+        <h3>Back</h3>
+        <p>${card.definition}</p>
+        <div class="tap-hint"><i data-lucide="rotate-cw"></i> Tap to flip back</div>
+      </div>
+    </div>
+  `;
+  
+  // Re-init lucide icons on the newly created card
+  lucide.createIcons();
+  
+  flashcardCounter.textContent = `${currentCardIndex + 1} / ${shuffledCards.length}`;
+  
+  const activeCard = document.getElementById('active-flashcard');
+  activeCard.addEventListener('click', () => {
+    activeCard.classList.toggle('flipped');
   });
 }
 
-// --- EXPLORATION CANVAS & PHYSICS ENGINE ---
-let canvas, ctx, compassElement;
-let isDraggingCompass = false;
-let compassOffset = { x: 0, y: 0 };
-let compassPos = { x: 150, y: 120 }; // Relative coordinates in wrapper
+prevCardBtn.addEventListener('click', () => {
+  currentCardIndex = (currentCardIndex - 1 + shuffledCards.length) % shuffledCards.length;
+  renderCard();
+});
 
-function initExploreCanvas() {
-  canvas = document.getElementById('field-canvas');
-  ctx = canvas.getContext('2d');
-  compassElement = document.getElementById('interactive-compass');
+nextCardBtn.addEventListener('click', () => {
+  currentCardIndex = (currentCardIndex + 1) % shuffledCards.length;
+  renderCard();
+});
 
-  // Sub-tabs Toggle
-  const tabCompass = document.getElementById('tab-compass');
-  const tabStrength = document.getElementById('tab-strength');
-  const compassControls = document.getElementById('compass-controls');
-  const strengthControls = document.getElementById('strength-controls');
+shuffleBtn.addEventListener('click', () => {
+  // Fisher-Yates shuffle
+  for (let i = shuffledCards.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledCards[i], shuffledCards[j]] = [shuffledCards[j], shuffledCards[i]];
+  }
+  currentCardIndex = 0;
+  renderCard();
+});
 
-  tabCompass.addEventListener('click', () => {
-    tabCompass.classList.add('active');
-    tabStrength.classList.remove('active');
-    activeExploreSubTab = 'compass';
-    compassControls.classList.remove('hidden');
-    strengthControls.classList.add('hidden');
-    compassElement.classList.remove('hidden');
-    updateCanvas();
-  });
+// Render first flashcard
+renderCard();
 
-  tabStrength.addEventListener('click', () => {
-    tabStrength.classList.add('active');
-    tabCompass.classList.remove('active');
-    activeExploreSubTab = 'strength';
-    strengthControls.classList.remove('hidden');
-    compassControls.classList.add('hidden');
-    compassElement.classList.add('hidden');
-    updateCanvas();
-  });
 
-  // Config toggles (Single, Unlike, Like)
-  const configBtns = document.querySelectorAll('.toggle-btn');
-  configBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      configBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentConfig = btn.getAttribute('data-config');
-      updateCanvas();
-      updateCompassOrientation();
-    });
-  });
+// --- SECTION 4 & 5: QUIZ SYSTEM ---
+const quizPool = [
+  // 1-5 Induced Pole Polarity
+  {
+    q: "A soft iron nail is placed with its head near the North pole of a bar magnet. What is the induced polarity at the nail's tip (far end)?",
+    options: ["North", "South", "No pole is induced", "It changes dynamically"],
+    answer: 0,
+    explanation: "The head of the nail (near end) gets an opposite pole (South) induced. Therefore, the tip of the nail (far end) becomes North."
+  },
+  {
+    q: "Two steel pins hang from the South pole of a bar magnet. What happens to the free lower tips of the pins?",
+    options: ["They attract and stick together", "They repel and swing apart", "They do not interact", "They fall off instantly"],
+    answer: 1,
+    explanation: "The top ends of the pins attached to the South pole become North poles. The lower free tips both become South poles. Since like poles repel, they repel and swing apart."
+  },
+  {
+    q: "An unmagnetized steel bar is placed inside a solenoid. The left end of the solenoid becomes a South pole. What pole is induced on the left end of the steel bar?",
+    options: ["North Pole", "South Pole", "No pole is induced", "Alternates between N and S"],
+    answer: 0,
+    explanation: "The induced pole closest to the inducing source is always the opposite. Since the left of the solenoid is South, the left of the steel bar is induced as a North pole."
+  },
+  {
+    q: "Why does an unmagnetized iron bar always get attracted to either pole of a permanent magnet?",
+    options: ["Its domains are already aligned", "Induced poles are always opposite to the nearest magnet pole", "Gravity pulls it towards the magnet", "Iron contains miniature currents"],
+    answer: 1,
+    explanation: "When brought near a magnet, the iron bar gets induced poles. The nearest side is always induced with an opposite pole, resulting in an attractive force."
+  },
+  {
+    q: "An electromagnet has a North pole on the left. A temporary iron rod is placed next to it on the left. What is the induced pole on the right side of the iron rod?",
+    options: ["North", "South", "Unmagnetised", "Both North and South"],
+    answer: 1,
+    explanation: "The right side of the iron rod is closest to the North pole of the electromagnet, so it becomes a South pole (opposite pole)."
+  },
+  
+  // 6-10 Iron vs Steel retention
+  {
+    q: "Which of the following materials would be most suitable to make a permanent compass needle?",
+    options: ["Soft Iron", "Steel", "Copper", "Aluminum"],
+    answer: 1,
+    explanation: "Steel is a hard magnetic material. It retains its magnetism for a long period, making it suitable for permanent magnets like compass needles."
+  },
+  {
+    q: "An iron rod and a steel rod are placed inside a strong solenoid. The current is turned off. What is the state of magnetism in both rods?",
+    options: [
+      "Both remain highly magnetised",
+      "Both lose all magnetism immediately",
+      "Iron retains magnetism, steel loses it",
+      "Steel retains magnetism, iron loses it"
+    ],
+    answer: 3,
+    explanation: "Iron is a soft magnetic material and loses its induced magnetism quickly. Steel is a hard magnetic material and retains its magnetisation."
+  },
+  {
+    q: "Why is soft iron used as the core of an electromagnet instead of steel?",
+    options: [
+      "Iron is harder to magnetise than steel",
+      "Iron can be turned on and off easily as it loses magnetism quickly",
+      "Iron becomes a permanent magnet",
+      "Iron does not conduct electricity"
+    ],
+    answer: 1,
+    explanation: "An electromagnet needs to be temporary. Soft iron magnetises and demagnetises easily, allowing the magnet to turn off when current is stopped."
+  },
+  {
+    q: "Which property is characteristic of a 'hard' magnetic material?",
+    options: [
+      "Difficult to magnetise and loses magnetism easily",
+      "Easy to magnetise and retains magnetism",
+      "Difficult to magnetise and retains magnetism",
+      "Easy to magnetise and loses magnetism easily"
+    ],
+    answer: 2,
+    explanation: "Hard magnetic materials (like steel) require a strong field to align domains, but once aligned, they retain magnetism permanently."
+  },
+  {
+    q: "A magnetic crane in a scrapyard drops iron scraps when the current is turned off. What is the core of this electromagnet made of?",
+    options: ["Steel", "Soft Iron", "Copper", "Cobalt"],
+    answer: 1,
+    explanation: "It must be soft iron. If it were steel, the crane would remain permanent and would not drop the scrap iron when the current is turned off."
+  },
 
-  // Field Lines Checkbox
-  const toggleFieldLines = document.getElementById('toggle-fieldlines');
-  toggleFieldLines.addEventListener('change', (e) => {
-    showFieldLines = e.target.checked;
-    updateCanvas();
-  });
+  // 11-15 Classifications & Applications
+  {
+    q: "Which application requires a temporary magnet?",
+    options: ["Magnetic compass", "Refrigerator door seal magnet", "Magnetic lock safety latch", "Electric relay switch core"],
+    answer: 3,
+    explanation: "A relay core must demagnetise immediately when current is cut, so it must be a temporary magnet (usually soft iron)."
+  },
+  {
+    q: "Which of the following is made of a permanent magnet?",
+    options: ["Electric bell armature core", "Loudspeaker magnet", "Transformer core", "Electromagnetic crane core"],
+    answer: 1,
+    explanation: "Loudspeakers require a constant, steady magnetic field to vibrate the coil, so they use strong permanent magnets (steel/alloys)."
+  },
+  {
+    q: "An object is easily attracted by a magnet but does not attract other magnetic objects on its own when removed. This object is a:",
+    options: ["Permanent magnet", "Magnetic material", "Non-magnetic material", "North pole"],
+    answer: 1,
+    explanation: "It is a magnetic material (like iron) that is unmagnetised. It gets attracted because of induced magnetism, but has no permanent field."
+  },
+  {
+    q: "If you want to store permanent magnets safely, they should be stored in pairs with soft iron pieces called:",
+    options: ["Resistors", "Keepers", "Solenoids", "Shields"],
+    answer: 1,
+    explanation: "Magnet keepers (made of soft iron) provide a closed path for magnetic field lines, preventing demagnetisation over time."
+  },
+  {
+    q: "What material is typically used to shield sensitive electronic instruments from external magnetic fields?",
+    options: ["Steel", "Soft Iron", "Glass", "Plastic"],
+    answer: 1,
+    explanation: "Soft iron has high magnetic permeability, redirecting external magnetic fields around the shielded space rather than through it."
+  },
 
-  // Strength Slider
-  const strengthSlider = document.getElementById('strength-slider');
-  const strengthLabelText = document.getElementById('strength-label-text');
-  strengthSlider.addEventListener('input', (e) => {
-    currentStrength = parseInt(e.target.value);
-    const labels = ["Very Weak", "Weak", "Medium", "Strong", "Very Strong"];
-    strengthLabelText.textContent = labels[currentStrength - 1];
-    updateCanvas();
-  });
+  // 16-20 General Properties of Magnets
+  {
+    q: "If a bar magnet is cut in half, what is the result?",
+    options: [
+      "Two magnets, one with only North and one with only South",
+      "Two complete smaller magnets, each with both N and S poles",
+      "The pieces lose all magnetism",
+      "Only the North pole retains magnetism"
+    ],
+    answer: 1,
+    explanation: "Magnetic poles always exist in pairs (dipoles). Breaking a magnet always results in two smaller, complete magnets."
+  },
+  {
+    q: "Which of the following methods CANNOT be used to demagnetise a permanent magnet?",
+    options: [
+      "Heating it to a high temperature",
+      "Hammering it repeatedly while pointing East-West",
+      "Placing it in a solenoid connected to a high DC current",
+      "Placing it in a solenoid connected to AC current and slowly withdrawing it"
+    ],
+    answer: 2,
+    explanation: "DC current in a solenoid magnetises materials. AC current followed by slow withdrawal, heating, or hammering will demagnetise it."
+  },
+  {
+    q: "What is the only sure test to identify if a metal bar is a permanent magnet?",
+    options: ["Attraction to a known magnet", "Repulsion from a known magnet", "Attraction to a piece of iron", "Deflection near copper wires"],
+    answer: 1,
+    explanation: "Repulsion is the only sure test. An unmagnetised magnetic material is attracted to both poles, but only another magnet can be repelled."
+  },
+  {
+    q: "Which statement about magnetic poles is correct?",
+    options: [
+      "Magnetic poles are located exactly at the ends of a magnet.",
+      "The North pole of a compass needle points to Earth's geographic south pole.",
+      "Like poles repel; unlike poles attract.",
+      "Poles can exist individually as monopoles."
+    ],
+    answer: 2,
+    explanation: "The fundamental law of magnetism states that like poles repel, and unlike poles attract."
+  },
+  {
+    q: "Which of the following is NOT a magnetic material?",
+    options: ["Cobalt", "Nickel", "Brass", "Steel"],
+    answer: 2,
+    explanation: "Brass is an alloy of copper and zinc, which are non-magnetic. Cobalt, Nickel, and Steel are magnetic."
+  },
 
-  // Setup Dragging for Compass
-  setupCompassDrag();
+  // 21-30 Field Behaviour & Extra Conceptual
+  {
+    q: "Where is the magnetic field of a bar magnet strongest?",
+    options: ["At the center of the magnet", "Near both poles", "Equally strong everywhere", "Just outside the side edges"],
+    answer: 1,
+    explanation: "The field lines are most dense (concentrated) near the North and South poles, indicating the strongest magnetic force."
+  },
+  {
+    q: "What is the direction of magnetic field lines outside a bar magnet?",
+    options: ["From South to North", "From North to South", "Radial outwards", "Circular around the poles"],
+    answer: 1,
+    explanation: "By convention, magnetic field lines always travel from the North pole to the South pole outside the magnet."
+  },
+  {
+    q: "What does the spacing of magnetic field lines represent?",
+    options: [
+      "The speed of magnetic waves",
+      "The strength of the magnetic field",
+      "The polarity of the magnet",
+      "The material inside the magnet"
+    ],
+    answer: 1,
+    explanation: "Closer field lines represent a stronger magnetic field. Wider spacing represents a weaker field."
+  },
+  {
+    q: "A magnetic material is placed in a field. What is the alignment of its magnetic domains when it is fully magnetised?",
+    options: [
+      "They point in random directions",
+      "They point perpendicular to the field",
+      "They all point in the same direction parallel to the field",
+      "They cancel each other out"
+    ],
+    answer: 2,
+    explanation: "Magnetisation aligns all magnetic domains in one uniform direction parallel to the external field lines."
+  },
+  {
+    q: "Which of the following best describes magnetic domains?",
+    options: [
+      "Tiny atomic magnets that exist in all materials",
+      "Groups of atoms with aligned magnetic fields in magnetic materials",
+      "The poles of an electromagnet",
+      "Regions of electric charge"
+    ],
+    answer: 1,
+    explanation: "Magnetic domains are microscopic regions where atomic magnetic moments are aligned in a common direction."
+  },
+  {
+    q: "How does the magnetism of a permanent magnet change if it is hammered heavily while aligned North-South?",
+    options: ["It becomes stronger", "It weakens or demagnetises", "It reverses poles", "It has no effect"],
+    answer: 1,
+    explanation: "Vigorous hammering shakes up the aligned domains. If aligned N-S, it might actually acquire magnetism from Earth's field, or get weakened. But generally, hammering causes demagnetisation (weakening)."
+  },
+  {
+    q: "Which method is the most efficient way to magnetise a steel bar?",
+    options: [
+      "Stroking it with a copper rod",
+      "Placing it inside a solenoid connected to a DC supply",
+      "Heating it and cooling it in ice",
+      "Leaving it near a compass overnight"
+    ],
+    answer: 1,
+    explanation: "A solenoid connected to a Direct Current (DC) supply creates a strong, steady magnetic field that aligns steel domains efficiently."
+  },
+  {
+    q: "What type of current is used to demagnetise a magnet using a solenoid?",
+    options: ["Direct Current (DC)", "Alternating Current (AC)", "Static Electricity", "High voltage battery pulse"],
+    answer: 1,
+    explanation: "AC current is used. The alternating field continuously reverses domains while the magnet is slowly pulled away, scrambling them."
+  },
+  {
+    q: "Which of these materials is considered magnetically soft?",
+    options: ["Alnico", "Hard steel", "Soft iron", "Neodymium"],
+    answer: 2,
+    explanation: "Soft iron is magnetically soft because it can be magnetised and demagnetised very easily."
+  },
+  {
+    q: "An compass needle points North because Earth acts like a giant magnet with its magnetic South pole near the:",
+    options: ["Geographic South Pole", "Geographic North Pole", "Equator", "Prime Meridian"],
+    answer: 1,
+    explanation: "Since the North pole of a compass needle points North, it must be attracted to a South magnetic pole. Therefore, Earth's magnetic South pole is near the geographic North Pole."
+  }
+];
 
-  // Resize listener
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
+let quizQuestions = [];
+let currentQuestionIndex = 0;
+let quizScore = 0;
+
+// Quiz DOM Elements
+const quizGamePanel = document.getElementById('quiz-game-panel');
+const quizResultsPanel = document.getElementById('quiz-results-panel');
+const quizProgressFill = document.getElementById('quiz-progress-fill');
+const quizQuestionNumber = document.getElementById('quiz-question-number');
+const quizLiveScore = document.getElementById('quiz-live-score');
+const quizQuestionText = document.getElementById('quiz-question-text');
+const quizOptionsList = document.getElementById('quiz-options-list');
+const quizExplanationPanel = document.getElementById('quiz-explanation-panel');
+const explanationStatusIcon = document.getElementById('explanation-status-icon');
+const explanationStatusText = document.getElementById('explanation-status-text');
+const quizExplanationText = document.getElementById('quiz-explanation-text');
+const btnNextQuestion = document.getElementById('btn-next-question');
+
+// Scoreboard Elements
+const resultsScoreFraction = document.getElementById('results-score-fraction');
+const resultsFeedbackTitle = document.getElementById('results-feedback-title');
+const resultsFeedbackDesc = document.getElementById('results-feedback-desc');
+const btnRetryQuiz = document.getElementById('btn-retry-quiz');
+
+function startQuizSession() {
+  quizScore = 0;
+  currentQuestionIndex = 0;
+  
+  // Shuffle and pick 10 random questions
+  const shuffledPool = [...quizPool].sort(() => 0.5 - Math.random());
+  quizQuestions = shuffledPool.slice(0, 10);
+  
+  quizResultsPanel.classList.add('hidden');
+  quizGamePanel.classList.remove('hidden');
+  
+  showQuestion();
 }
+
+function showQuestion() {
+  quizExplanationPanel.classList.add('hidden');
+  const q = quizQuestions[currentQuestionIndex];
+  
+  // Update progress bar & text
+  const progressPercent = ((currentQuestionIndex) / 10) * 100;
+  quizProgressFill.style.width = `${progressPercent}%`;
+  quizQuestionNumber.textContent = `Question ${currentQuestionIndex + 1} of 10`;
+  quizLiveScore.textContent = `Score: ${quizScore}`;
+  
+  quizQuestionText.textContent = q.q;
+  quizOptionsList.innerHTML = '';
+  
+  q.options.forEach((option, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span>${option}</span>`;
+    btn.addEventListener('click', () => handleOptionSelection(idx));
+    quizOptionsList.appendChild(btn);
+  });
+}
+
+function handleOptionSelection(selectedIdx) {
+  const q = quizQuestions[currentQuestionIndex];
+  const optionButtons = quizOptionsList.querySelectorAll('.option-btn');
+  
+  // Disable all options
+  optionButtons.forEach(btn => btn.classList.add('disabled'));
+  
+  const isCorrect = (selectedIdx === q.answer);
+  
+  if (isCorrect) {
+    quizScore++;
+    optionButtons[selectedIdx].classList.add('correct');
+    
+    // Celebratory icon state
+    explanationStatusIcon.className = 'lucide-icon text-cyan';
+    explanationStatusIcon.setAttribute('data-lucide', 'check-circle-2');
+    explanationStatusText.textContent = 'Correct!';
+    explanationStatusText.parentElement.className = 'explanation-heading correct-text';
+    
+    // Trigger canvas confetti
+    triggerConfetti();
+  } else {
+    optionButtons[selectedIdx].classList.add('incorrect');
+    optionButtons[q.answer].classList.add('correct');
+    
+    explanationStatusIcon.className = 'lucide-icon text-amber';
+    explanationStatusIcon.setAttribute('data-lucide', 'alert-circle');
+    explanationStatusText.textContent = 'Incorrect';
+    explanationStatusText.parentElement.className = 'explanation-heading incorrect-text';
+  }
+  
+  lucide.createIcons();
+  
+  // Set explanation text & reveal panel
+  quizExplanationText.textContent = q.explanation;
+  quizExplanationPanel.classList.remove('hidden');
+}
+
+btnNextQuestion.addEventListener('click', () => {
+  currentQuestionIndex++;
+  if (currentQuestionIndex < 10) {
+    showQuestion();
+  } else {
+    showQuizResults();
+  }
+});
+
+function showQuizResults() {
+  quizGamePanel.classList.add('hidden');
+  quizResultsPanel.classList.remove('hidden');
+  
+  resultsScoreFraction.textContent = `${quizScore} / 10`;
+  
+  // Set tiered feedback
+  if (quizScore >= 9) {
+    resultsFeedbackTitle.textContent = "Excellent!";
+    resultsFeedbackDesc.textContent = "You've completely mastered this magnetism syllabus topic. Ready for the O-Levels!";
+  } else if (quizScore >= 7) {
+    resultsFeedbackTitle.textContent = "Great work!";
+    resultsFeedbackDesc.textContent = "Just a few minor areas to review. Take a look at the flashcards.";
+  } else if (quizScore >= 5) {
+    resultsFeedbackTitle.textContent = "Good attempt!";
+    resultsFeedbackDesc.textContent = "A decent score, but revisit the Concept and Revision Flashcards sections before trying again.";
+  } else {
+    resultsFeedbackTitle.textContent = "Needs revision!";
+    resultsFeedbackDesc.textContent = "Revisit the Concept and Flashcard sections carefully, then try the quiz again.";
+  }
+}
+
+btnRetryQuiz.addEventListener('click', startQuizSession);
+
+// Initialize Quiz on App Load
+startQuizSession();
+
+
+// --- CELEBRATORY CONFETTI CANVAS ---
+const canvas = document.getElementById('confetti-canvas');
+const ctx = canvas.getContext('2d');
+
+let confettiArray = [];
+let animationFrameId;
 
 function resizeCanvas() {
-  const wrapper = canvas.parentElement;
-  canvas.width = wrapper.clientWidth;
-  // Keep aspect ratio 700 / 450
-  canvas.height = wrapper.clientWidth * (450 / 700);
-  
-  // Reposition compass within bounds if resized
-  limitCompassBounds();
-  updateCanvas();
-  updateCompassOrientation();
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 }
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
 
-function limitCompassBounds() {
-  const wrapper = canvas.parentElement;
-  const wRect = wrapper.getBoundingClientRect();
-  compassPos.x = Math.max(20, Math.min(wRect.width - 20, compassPos.x));
-  compassPos.y = Math.max(20, Math.min(wRect.height - 20, compassPos.y));
-  
-  compassElement.style.left = `${compassPos.x}px`;
-  compassElement.style.top = `${compassPos.y}px`;
-}
-
-function setupCompassDrag() {
-  const startDrag = (e) => {
-    isDraggingCompass = true;
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    
-    compassOffset.x = clientX - compassElement.offsetLeft;
-    compassOffset.y = clientY - compassElement.offsetTop;
-    
-    compassElement.style.transition = 'none';
-    e.preventDefault();
-  };
-
-  const dragMove = (e) => {
-    if (!isDraggingCompass) return;
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    
-    const wrapper = canvas.parentElement;
-    const wrapperRect = wrapper.getBoundingClientRect();
-    
-    let left = clientX - compassOffset.x;
-    let top = clientY - compassOffset.y;
-    
-    // Clamp to wrapper bounds
-    left = Math.max(20, Math.min(wrapperRect.width - 20, left));
-    top = Math.max(20, Math.min(wrapperRect.height - 20, top));
-    
-    compassPos.x = left;
-    compassPos.y = top;
-    
-    compassElement.style.left = `${left}px`;
-    compassElement.style.top = `${top}px`;
-    
-    updateCompassOrientation();
-  };
-
-  const endDrag = () => {
-    isDraggingCompass = false;
-  };
-
-  compassElement.addEventListener('mousedown', startDrag);
-  compassElement.addEventListener('touchstart', startDrag, { passive: false });
-  window.addEventListener('mousemove', dragMove);
-  window.addEventListener('touchmove', dragMove, { passive: false });
-  window.addEventListener('mouseup', endDrag);
-  window.addEventListener('touchend', endDrag);
-}
-
-// Compute the magnetic field vector B = (Bx, By) at a given point
-function getFieldAt(x, y, config, strengthVal) {
-  const W = canvas.width;
-  const H = canvas.height;
-  
-  // Setup magnet poles as charge locations
-  let poles = [];
-  const q = 35000 * (strengthVal / 3); // Scale magnetic charge
-  
-  if (config === 'single') {
-    // Single magnet in center: N on left, S on right (poles inside visual block)
-    poles.push({ x: W * 0.38, y: H * 0.5, type: 1 });  // N
-    poles.push({ x: W * 0.62, y: H * 0.5, type: -1 }); // S
-  } else if (config === 'unlike') {
-    // Left magnet: N on left, S on right
-    poles.push({ x: W * 0.2, y: H * 0.5, type: 1 });   // N
-    poles.push({ x: W * 0.38, y: H * 0.5, type: -1 }); // S
-    // Right magnet: N on left, S on right
-    poles.push({ x: W * 0.62, y: H * 0.5, type: 1 });  // N
-    poles.push({ x: W * 0.8, y: H * 0.5, type: -1 });  // S
-  } else if (config === 'like') {
-    // Left magnet: N on left, S on right
-    poles.push({ x: W * 0.2, y: H * 0.5, type: 1 });   // N
-    poles.push({ x: W * 0.38, y: H * 0.5, type: -1 }); // S
-    // Right magnet: S on left, N on right
-    poles.push({ x: W * 0.62, y: H * 0.5, type: -1 }); // S
-    poles.push({ x: W * 0.8, y: H * 0.5, type: 1 });   // N
+class ConfettiParticle {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height - canvas.height;
+    this.size = Math.random() * 6 + 4;
+    this.speed = Math.random() * 5 + 3;
+    this.angle = Math.random() * 360;
+    this.spin = Math.random() * 4 - 2;
+    this.color = Math.random() > 0.5 ? '#06b6d4' : '#f59e0b'; // colorblind safe neon cyan and amber
   }
   
-  let Bx = 0;
-  let By = 0;
-  
-  for (let pole of poles) {
-    let dx = x - pole.x;
-    let dy = y - pole.y;
-    let r2 = dx*dx + dy*dy;
-    let r = Math.sqrt(r2);
-    if (r < 8) continue; // Prevent infinity division near center
-    
-    // Field contribution: B = (q * type * r_vector) / r^3
-    let f = (q * pole.type) / (r2 * r);
-    Bx += f * dx;
-    By += f * dy;
+  update() {
+    this.y += this.speed;
+    this.angle += this.spin;
   }
   
-  return { x: Bx, y: By, poles };
-}
-
-function updateCompassOrientation() {
-  if (activeExploreSubTab !== 'compass') return;
-  
-  // Calculate relative coordinates in canvas space
-  const rect = canvas.getBoundingClientRect();
-  
-  // Position of compass in canvas coordinate space
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
-  const canvasX = compassPos.x * scaleX;
-  const canvasY = compassPos.y * scaleY;
-  
-  // Use strength 3 (fixed for mapper to isolate configuration effect)
-  const field = getFieldAt(canvasX, canvasY, currentConfig, 3);
-  const B_mag = Math.sqrt(field.x * field.x + field.y * field.y);
-  
-  let angle = 0;
-  
-  // Check if compass is near the neutral point in Like Poles configuration
-  let isNearNeutralPoint = false;
-  if (currentConfig === 'like') {
-    // Center point of canvas is approximately the neutral point
-    const neutralX = canvas.width / 2;
-    const neutralY = canvas.height / 2;
-    const distToNeutral = Math.hypot(canvasX - neutralX, canvasY - neutralY);
-    if (distToNeutral < 35) {
-      isNearNeutralPoint = true;
-    }
-  }
-
-  if (isNearNeutralPoint || B_mag < 0.12) {
-    // Aligns with the Earth's background magnetic field (pointing straight up / geographic North)
-    angle = -90;
-  } else {
-    // Arrow N points in direction of field vector
-    angle = Math.atan2(field.y, field.x) * (180 / Math.PI);
-  }
-  
-  // Add 90 degrees offset to match visual top-pointing needle layout
-  compassElement.style.transform = `translate(-50%, -50%) rotate(${angle + 90}deg)`;
-}
-
-// Traces field lines starting around both North (forward) and South (backward) poles
-function drawFieldLinesPattern(strengthVal) {
-  const W = canvas.width;
-  const H = canvas.height;
-  const config = activeExploreSubTab === 'strength' ? 'single' : currentConfig;
-  
-  const { poles } = getFieldAt(W/2, H/2, config, strengthVal);
-  
-  ctx.strokeStyle = 'rgba(168, 85, 247, 0.45)';
-  ctx.lineWidth = 1.8;
-  
-  // Euler tracing settings
-  const stepSize = 5;
-  const maxSteps = 150;
-  
-  // Adjust density: strength scales line count
-  // 1: 8 lines, 2: 12 lines, 3: 16 lines, 4: 20 lines, 5: 24 lines
-  const numLinesPerPole = 4 + strengthVal * 4;
-  
-  poles.forEach(pole => {
-    const isNorth = (pole.type === 1);
-    const directionMultiplier = isNorth ? 1 : -1;
-    
-    for (let i = 0; i < numLinesPerPole; i++) {
-      let angle = (i * 2 * Math.PI) / numLinesPerPole;
-      
-      // Start tracing slightly outside pole radius
-      let x = pole.x + 18 * Math.cos(angle);
-      let y = pole.y + 18 * Math.sin(angle);
-      
-      let path = [{x, y}];
-      let connectedToOpposite = false;
-      let hitBoundary = false;
-      
-      for (let step = 0; step < maxSteps; step++) {
-        let field = getFieldAt(x, y, config, strengthVal);
-        let B_mag = Math.sqrt(field.x * field.x + field.y * field.y);
-        
-        if (B_mag < 0.02) break; // Neutral point cutoff
-        
-        let dx = (field.x / B_mag) * stepSize * directionMultiplier;
-        let dy = (field.y / B_mag) * stepSize * directionMultiplier;
-        
-        let prevX = x;
-        x += dx;
-        y += dy;
-        
-        // Prevent lines from crossing the vertical symmetry plane between two like poles
-        if (config === 'like') {
-          const midX = W / 2;
-          if ((prevX < midX && x >= midX) || (prevX > midX && x <= midX)) {
-            hitBoundary = true;
-            break;
-          }
-        }
-        
-        path.push({x, y});
-        
-        // Terminate trace if we hit the opposite pole
-        let hitOpposite = false;
-        for (let other of poles) {
-          if (other.type === -pole.type) {
-            let dist = Math.hypot(x - other.x, y - other.y);
-            if (dist < 16) {
-              hitOpposite = true;
-              break;
-            }
-          }
-        }
-        
-        if (hitOpposite) {
-          connectedToOpposite = true;
-          break;
-        }
-        
-        if (x < -20 || x > W + 20 || y < -20 || y > H + 20) {
-          break;
-        }
-      }
-      
-      // Only draw lines traced forward from North, or lines traced backward from South that do NOT connect to North (to avoid duplication).
-      // Discard lines that hit the symmetry boundary (horizontal connecting lines).
-      if (!hitBoundary && (isNorth || !connectedToOpposite)) {
-        ctx.beginPath();
-        ctx.moveTo(path[0].x, path[0].y);
-        for (let pt of path) {
-          ctx.lineTo(pt.x, pt.y);
-        }
-        ctx.stroke();
-        
-        // Draw directional arrowhead at the midpoint of the field line
-        if (path.length > 8) {
-          const midIdx = Math.floor(path.length * 0.5);
-          const p1 = path[midIdx - 1];
-          const p2 = path[midIdx];
-          
-          let angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
-          if (!isNorth) {
-            angle += Math.PI; // Flip direction for backward traces from South
-          }
-          
-          ctx.save();
-          ctx.fillStyle = 'rgba(168, 85, 247, 0.95)'; // Brighter purple for visible arrows
-          ctx.translate(p2.x, p2.y);
-          ctx.rotate(angle);
-          ctx.beginPath();
-          ctx.moveTo(0, 0);
-          ctx.lineTo(-8, -4.5);
-          ctx.lineTo(-8, 4.5);
-          ctx.closePath();
-          ctx.fill();
-          ctx.restore();
-        }
-      }
-    }
-  });
-}
-
-function updateCanvas() {
-  if (!canvas || !ctx) return;
-  
-  const W = canvas.width;
-  const H = canvas.height;
-  
-  // Clear canvas
-  ctx.clearRect(0, 0, W, H);
-  
-  // 1. Draw Field grid background effect
-  ctx.fillStyle = '#0f172a';
-  ctx.fillRect(0, 0, W, H);
-  
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
-  ctx.lineWidth = 1;
-  const gridSize = 25;
-  for (let x = 0; x < W; x += gridSize) {
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, H);
-    ctx.stroke();
-  }
-  for (let y = 0; y < H; y += gridSize) {
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(W, y);
-    ctx.stroke();
-  }
-
-  // 2. Draw Field Lines
-  const strengthVal = activeExploreSubTab === 'strength' ? currentStrength : 3;
-  const drawLines = activeExploreSubTab === 'strength' ? true : showFieldLines;
-  
-  if (drawLines) {
-    drawFieldLinesPattern(strengthVal);
-  }
-  
-  // 3. Render magnets based on current config
-  const config = activeExploreSubTab === 'strength' ? 'single' : currentConfig;
-  
-  if (config === 'single') {
-    drawMagnet(W * 0.35, H * 0.5 - 20, W * 0.3, 40);
-  } else if (config === 'unlike') {
-    // Left Magnet (S - N)
-    drawMagnet(W * 0.17, H * 0.5 - 18, W * 0.24, 36);
-    // Right Magnet (S - N)
-    drawMagnet(W * 0.59, H * 0.5 - 18, W * 0.24, 36);
-  } else if (config === 'like') {
-    // Left Magnet (S - N)
-    drawMagnet(W * 0.17, H * 0.5 - 18, W * 0.24, 36);
-    // Right Magnet (N - S) flipped
-    drawMagnet(W * 0.59, H * 0.5 - 18, W * 0.24, 36, true);
-  }
-  
-  // 4. Draw neutral point indicator in Like Poles config
-  if (config === 'like') {
+  draw() {
     ctx.save();
-    ctx.strokeStyle = '#facc15';
-    ctx.fillStyle = '#facc15';
-    ctx.lineWidth = 2.5;
-    
-    // Draw an 'X' at center
-    const cx = W / 2;
-    const cy = H / 2;
-    ctx.beginPath();
-    ctx.moveTo(cx - 7, cy - 7);
-    ctx.lineTo(cx + 7, cy + 7);
-    ctx.moveTo(cx + 7, cy - 7);
-    ctx.lineTo(cx - 7, cy + 7);
-    ctx.stroke();
-    
-    ctx.font = 'bold 11px Outfit';
-    ctx.textAlign = 'center';
-    ctx.fillText('Neutral Point (X)', cx, cy + 22);
+    ctx.translate(this.x, this.y);
+    ctx.rotate((this.angle * Math.PI) / 180);
+    ctx.fillStyle = this.color;
+    ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
     ctx.restore();
   }
 }
 
-function drawMagnet(x, y, w, h, isFlipped = false) {
-  ctx.save();
+function animateConfetti() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   
-  // Magnet Body Shadow
-  ctx.shadowColor = 'rgba(0,0,0,0.5)';
-  ctx.shadowBlur = 10;
-  ctx.shadowOffsetY = 4;
-  
-  // Base Rounded Magnet
-  ctx.fillStyle = '#161e2e';
-  ctx.beginPath();
-  ctx.roundRect(x, y, w, h, 6);
-  ctx.fill();
-  ctx.shadowColor = 'transparent'; // Reset shadow
-  
-  const halfW = w / 2;
-  
-  // Draw Poles
-  ctx.beginPath();
-  if (!isFlipped) {
-    // Left half = North (Cyan)
-    ctx.fillStyle = varColor('--pole-n');
-    ctx.roundRect(x, y, halfW, h, {tl: 6, bl: 6, tr: 0, br: 0});
-    ctx.fill();
-    
-    // Right half = South (Amber)
-    ctx.beginPath();
-    ctx.fillStyle = varColor('--pole-s');
-    ctx.roundRect(x + halfW, y, halfW, h, {tl: 0, bl: 0, tr: 6, br: 6});
-    ctx.fill();
-    
-    // Text labels
-    ctx.fillStyle = '#0b0f19';
-    ctx.font = 'bold 16px Outfit';
-    ctx.textAlign = 'center';
-    ctx.fillText('N', x + halfW / 2, y + h / 2 + 5);
-    ctx.fillText('S', x + halfW + halfW / 2, y + h / 2 + 5);
-  } else {
-    // Left half = South (Amber)
-    ctx.fillStyle = varColor('--pole-s');
-    ctx.roundRect(x, y, halfW, h, {tl: 6, bl: 6, tr: 0, br: 0});
-    ctx.fill();
-    
-    // Right half = North (Cyan)
-    ctx.beginPath();
-    ctx.fillStyle = varColor('--pole-n');
-    ctx.roundRect(x + halfW, y, halfW, h, {tl: 0, bl: 0, tr: 6, br: 6});
-    ctx.fill();
-    
-    // Text labels
-    ctx.fillStyle = '#0b0f19';
-    ctx.font = 'bold 16px Outfit';
-    ctx.textAlign = 'center';
-    ctx.fillText('S', x + halfW / 2, y + h / 2 + 5);
-    ctx.fillText('N', x + halfW + halfW / 2, y + h / 2 + 5);
-  }
-  
-  // Center Divider Line
-  ctx.strokeStyle = '#0b0f19';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(x + halfW, y);
-  ctx.lineTo(x + halfW, y + h);
-  ctx.stroke();
-  
-  ctx.restore();
-}
-
-function varColor(name) {
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-}
-
-// --- FLASHCARDS LOGIC ---
-function initFlashcards() {
-  const cardElement = document.getElementById('flashcard-element');
-  const frontText = cardElement.querySelector('.card-front .card-text');
-  const backText = cardElement.querySelector('.card-back .card-text');
-  const cardIndexFront = cardElement.querySelector('.card-front .card-index');
-  const cardIndexBack = cardElement.querySelector('.card-back .card-index');
-  
-  const progressText = document.getElementById('card-progress');
-  const prevBtn = document.getElementById('prev-card-btn');
-  const nextBtn = document.getElementById('next-card-btn');
-  const shuffleBtn = document.getElementById('shuffle-btn');
-
-  function updateCard() {
-    cardElement.classList.remove('flipped');
-    
-    // Load content
-    const card = flashcards[currentCardIndex];
-    frontText.textContent = card.front;
-    backText.textContent = card.back;
-    
-    cardIndexFront.textContent = `Card ${currentCardIndex + 1} of ${flashcards.length}`;
-    cardIndexBack.textContent = `Answer (Card ${currentCardIndex + 1})`;
-    progressText.textContent = `${currentCardIndex + 1} / ${flashcards.length}`;
-    
-    prevBtn.disabled = currentCardIndex === 0;
-    nextBtn.disabled = currentCardIndex === flashcards.length - 1;
-  }
-
-  // Flip card on click
-  cardElement.addEventListener('click', () => {
-    cardElement.classList.toggle('flipped');
-  });
-
-  function changeCard(action) {
-    if (cardElement.classList.contains('flipped')) {
-      cardElement.classList.remove('flipped');
-      // Wait for the flip animation (approx 200ms) to hide the back face before loading new card
-      setTimeout(() => {
-        action();
-      }, 200);
-    } else {
-      action();
-    }
-  }
-
-  prevBtn.addEventListener('click', () => {
-    if (currentCardIndex > 0) {
-      changeCard(() => {
-        currentCardIndex--;
-        updateCard();
-      });
-    }
-  });
-
-  nextBtn.addEventListener('click', () => {
-    if (currentCardIndex < flashcards.length - 1) {
-      changeCard(() => {
-        currentCardIndex++;
-        updateCard();
-      });
-    }
-  });
-
-  shuffleBtn.addEventListener('click', () => {
-    changeCard(() => {
-      // Shuffle algorithm
-      for (let i = flashcards.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [flashcards[i], flashcards[j]] = [flashcards[j], flashcards[i]];
-      }
-      currentCardIndex = 0;
-      updateCard();
-      
-      // Subtle flash card animation
-      cardElement.style.transform = 'scale(0.95)';
-      setTimeout(() => {
-        cardElement.style.transform = 'none';
-      }, 150);
-    });
-  });
-
-  // Load first card
-  updateCard();
-}
-
-// --- PRACTICE QUIZ LOGIC ---
-function initQuiz() {
-  const nextBtn = document.getElementById('next-question-btn');
-  const retryBtn = document.getElementById('retry-quiz-btn');
-
-  nextBtn.addEventListener('click', () => {
-    goToNextQuestion();
-  });
-
-  retryBtn.addEventListener('click', () => {
-    startNewQuizSession();
-  });
-
-  startNewQuizSession();
-}
-
-function startNewQuizSession() {
-  // Hide results, show quiz container
-  document.getElementById('results-container').classList.add('hidden');
-  document.getElementById('quiz-container').classList.remove('hidden');
-  
-  // Randomly select 10 questions from the pool of 30
-  const shuffledPool = [...quizQuestionPool].sort(() => 0.5 - Math.random());
-  activeQuestions = shuffledPool.slice(0, 10);
-  
-  currentQuestionIndex = 0;
-  quizScore = 0;
-  
-  loadQuestion();
-}
-
-function loadQuestion() {
-  hasAnswered = false;
-  
-  // Hide explanation drawer
-  document.getElementById('explanation-drawer').classList.add('hidden');
-  
-  // Get current question details
-  const q = activeQuestions[currentQuestionIndex];
-  
-  // Update Header Progress
-  const progressPercent = ((currentQuestionIndex + 1) / 10) * 100;
-  document.getElementById('quiz-progress-bar').style.width = `${progressPercent}%`;
-  document.getElementById('question-number').textContent = `Question ${currentQuestionIndex + 1} of 10`;
-  document.getElementById('quiz-score-tracker').textContent = `Score: ${quizScore}/${currentQuestionIndex}`;
-
-  // Update text
-  document.getElementById('quiz-question-text').textContent = q.question;
-  
-  // Render visual if required
-  renderQuizVisual(q.visual);
-
-  // Render options
-  const container = document.getElementById('quiz-options-container');
-  container.innerHTML = '';
-  
-  q.options.forEach((optText, index) => {
-    const btn = document.createElement('button');
-    btn.className = 'option-btn';
-    btn.innerHTML = `<span>${optText}</span><span class="indicator"></span>`;
-    btn.addEventListener('click', () => handleAnswerSelect(index));
-    container.appendChild(btn);
-  });
-}
-
-function renderQuizVisual(visualType) {
-  const visualBox = document.getElementById('quiz-question-visual');
-  
-  if (visualType === 'none') {
-    visualBox.classList.add('hidden');
-    return;
-  }
-  
-  visualBox.classList.remove('hidden');
-  
-  let svgContent = '';
-  
-  // Setup SVGs for questions to display clear diagram options
-  if (visualType === 'single_n') {
-    svgContent = `
-      <svg viewBox="0 0 320 120" style="width: 100%; max-width: 280px; height: auto;">
-        <rect x="0" y="0" width="100%" height="100%" fill="#0b0f19" rx="8"/>
-        <!-- Magnet -->
-        <g transform="translate(100, 40)">
-          <rect x="0" y="0" width="60" height="40" fill="${varColor('--pole-n')}" rx="3"/>
-          <text x="30" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">N</text>
-          <rect x="60" y="0" width="60" height="40" fill="${varColor('--pole-s')}" rx="3"/>
-          <text x="90" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">S</text>
-          <line x1="60" y1="0" x2="60" y2="40" stroke="#0b0f19" stroke-width="2"/>
-        </g>
-        <!-- Compass placement point -->
-        <circle cx="60" cy="60" r="16" fill="rgba(255,255,255,0.05)" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="3,2"/>
-        <text x="60" y="64" fill="#a855f7" font-weight="bold" font-size="12" text-anchor="middle">?</text>
-      </svg>
-    `;
-  } else if (visualType === 'like_poles') {
-    svgContent = `
-      <svg viewBox="0 0 320 120" style="width: 100%; max-width: 280px; height: auto;">
-        <rect x="0" y="0" width="100%" height="100%" fill="#0b0f19" rx="8"/>
-        <!-- Magnet 1 -->
-        <g transform="translate(30, 40)">
-          <rect x="0" y="0" width="50" height="40" fill="${varColor('--pole-s')}" rx="3"/>
-          <text x="25" y="26" fill="#0b0f19" font-weight="bold" font-size="14" text-anchor="middle">S</text>
-          <rect x="50" y="0" width="50" height="40" fill="${varColor('--pole-n')}" rx="3"/>
-          <text x="75" y="26" fill="#0b0f19" font-weight="bold" font-size="14" text-anchor="middle">N</text>
-          <line x1="50" y1="0" x2="50" y2="40" stroke="#0b0f19" stroke-width="2"/>
-        </g>
-        <!-- Magnet 2 -->
-        <g transform="translate(190, 40)">
-          <rect x="0" y="0" width="50" height="40" fill="${varColor('--pole-n')}" rx="3"/>
-          <text x="25" y="26" fill="#0b0f19" font-weight="bold" font-size="14" text-anchor="middle">N</text>
-          <rect x="50" y="0" width="50" height="40" fill="${varColor('--pole-s')}" rx="3"/>
-          <text x="75" y="26" fill="#0b0f19" font-weight="bold" font-size="14" text-anchor="middle">S</text>
-          <line x1="50" y1="0" x2="50" y2="40" stroke="#0b0f19" stroke-width="2"/>
-        </g>
-        <!-- Neutral point location marker -->
-        <line x1="155" y1="55" x2="165" y2="65" stroke="#facc15" stroke-width="2.5" />
-        <line x1="165" y1="55" x2="155" y2="65" stroke="#facc15" stroke-width="2.5" />
-        <text x="160" y="80" fill="#facc15" font-size="11" font-weight="bold" text-anchor="middle">Midpoint X</text>
-      </svg>
-    `;
-  } else if (visualType === 'unlike_poles') {
-    svgContent = `
-      <svg viewBox="0 0 320 120" style="width: 100%; max-width: 280px; height: auto;">
-        <rect x="0" y="0" width="100%" height="100%" fill="#0b0f19" rx="8"/>
-        <!-- Magnet 1 -->
-        <g transform="translate(30, 40)">
-          <rect x="0" y="0" width="50" height="40" fill="${varColor('--pole-s')}" rx="3"/>
-          <text x="25" y="26" fill="#0b0f19" font-weight="bold" font-size="14" text-anchor="middle">S</text>
-          <rect x="50" y="0" width="50" height="40" fill="${varColor('--pole-n')}" rx="3"/>
-          <text x="75" y="26" fill="#0b0f19" font-weight="bold" font-size="14" text-anchor="middle">N</text>
-          <line x1="50" y1="0" x2="50" y2="40" stroke="#0b0f19" stroke-width="2"/>
-        </g>
-        <!-- Magnet 2 -->
-        <g transform="translate(190, 40)">
-          <rect x="0" y="0" width="50" height="40" fill="${varColor('--pole-s')}" rx="3"/>
-          <text x="25" y="26" fill="#0b0f19" font-weight="bold" font-size="14" text-anchor="middle">S</text>
-          <rect x="50" y="0" width="50" height="40" fill="${varColor('--pole-n')}" rx="3"/>
-          <text x="75" y="26" fill="#0b0f19" font-weight="bold" font-size="14" text-anchor="middle">N</text>
-          <line x1="50" y1="0" x2="50" y2="40" stroke="#0b0f19" stroke-width="2"/>
-        </g>
-        <!-- Path connection representation -->
-        <path d="M 130 60 L 190 60" fill="none" stroke="#a855f7" stroke-width="2" stroke-dasharray="3,3"/>
-      </svg>
-    `;
-  } else if (visualType === 'single_center') {
-    svgContent = `
-      <svg viewBox="0 0 320 120" style="width: 100%; max-width: 280px; height: auto;">
-        <rect x="0" y="0" width="100%" height="100%" fill="#0b0f19" rx="8"/>
-        <!-- Magnet -->
-        <g transform="translate(100, 50)">
-          <rect x="0" y="0" width="60" height="40" fill="${varColor('--pole-n')}" rx="3"/>
-          <text x="30" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">N</text>
-          <rect x="60" y="0" width="60" height="40" fill="${varColor('--pole-s')}" rx="3"/>
-          <text x="90" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">S</text>
-          <line x1="60" y1="0" x2="60" y2="40" stroke="#0b0f19" stroke-width="2"/>
-        </g>
-        <!-- Compass placement point directly above -->
-        <circle cx="160" cy="25" r="14" fill="rgba(255,255,255,0.05)" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="3,2"/>
-        <text x="160" y="29" fill="#a855f7" font-weight="bold" font-size="11" text-anchor="middle">?</text>
-      </svg>
-    `;
-  } else if (visualType === 'mystery_pole') {
-    svgContent = `
-      <svg viewBox="0 0 320 120" style="width: 100%; max-width: 280px; height: auto;">
-        <rect x="0" y="0" width="100%" height="100%" fill="#0b0f19" rx="8"/>
-        <!-- Magnet -->
-        <g transform="translate(140, 40)">
-          <rect x="0" y="0" width="100%" height="40" fill="#222d42" rx="3" stroke="rgba(255,255,255,0.1)"/>
-          <text x="50" y="26" fill="#ffffff" font-weight="bold" font-size="18" text-anchor="middle">P</text>
-        </g>
-        <!-- Compass on left pointing directly to the magnet -->
-        <g transform="translate(70, 60)">
-          <circle cx="0" cy="0" r="20" fill="#172033" stroke="#00d2ff" stroke-width="2"/>
-          <polygon points="0,-14 5,0 0,3" fill="${varColor('--pole-n')}" transform="rotate(90)"/>
-          <polygon points="0,14 5,0 0,3" fill="${varColor('--pole-s')}" transform="rotate(90)"/>
-          <circle cx="0" cy="0" r="2" fill="#fff"/>
-        </g>
-      </svg>
-    `;
-  }
-  
-  visualBox.innerHTML = svgContent;
-}
-
-function handleAnswerSelect(selectedIndex) {
-  if (hasAnswered) return;
-  hasAnswered = true;
-  
-  const q = activeQuestions[currentQuestionIndex];
-  const buttons = document.querySelectorAll('.option-btn');
-  
-  // Highlight choice results
-  buttons.forEach((btn, index) => {
-    btn.disabled = true; // Disable further selections
-    
-    if (index === q.answer) {
-      btn.classList.add('correct');
-      btn.querySelector('.indicator').textContent = '✅';
-    } else if (index === selectedIndex) {
-      btn.classList.add('incorrect');
-      btn.querySelector('.indicator').textContent = '❌';
+  confettiArray.forEach((p, idx) => {
+    p.update();
+    p.draw();
+    if (p.y > canvas.height) {
+      confettiArray.splice(idx, 1);
     }
   });
   
-  // Check answer correctness
-  const isCorrect = (selectedIndex === q.answer);
-  if (isCorrect) {
-    quizScore++;
-    triggerCorrectEffects();
-  }
-  
-  // Update scoreboard live tracker
-  document.getElementById('quiz-score-tracker').textContent = `Score: ${quizScore}/${currentQuestionIndex + 1}`;
-
-  // Fill in and reveal explanation drawer
-  const drawer = document.getElementById('explanation-drawer');
-  const statusMsg = document.getElementById('status-msg');
-  const statusIcon = document.getElementById('status-icon');
-  
-  if (isCorrect) {
-    statusMsg.textContent = "Correct!";
-    statusMsg.style.color = 'var(--success)';
-    statusIcon.textContent = "✅";
+  if (confettiArray.length > 0) {
+    animationFrameId = requestAnimationFrame(animateConfetti);
   } else {
-    statusMsg.textContent = "Incorrect";
-    statusMsg.style.color = 'var(--error)';
-    statusIcon.textContent = "❌";
-  }
-  
-  document.getElementById('explanation-text').textContent = q.explanation;
-  drawer.classList.remove('hidden');
-}
-
-function triggerCorrectEffects() {
-  const container = document.getElementById('quiz-container');
-  const colors = ['#00d2ff', '#ff9f00', '#a855f7', '#ffffff'];
-  
-  // Create small neon confetti burst
-  for (let i = 0; i < 20; i++) {
-    const particle = document.createElement('div');
-    particle.className = 'confetti-particle';
-    particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-    particle.style.left = `${50 + (Math.random() - 0.5) * 40}%`;
-    particle.style.top = `30%`;
-    particle.style.transform = `scale(${Math.random() * 0.8 + 0.4})`;
-    
-    // Custom animation values
-    const dx = (Math.random() - 0.5) * 300;
-    const dy = (Math.random() - 0.2) * 150;
-    particle.animate([
-      { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
-      { transform: `translate(${dx}px, ${dy}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
-    ], {
-      duration: 1000 + Math.random() * 400,
-      easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)',
-      fill: 'forwards'
-    });
-    
-    container.appendChild(particle);
-    setTimeout(() => particle.remove(), 1500);
+    cancelAnimationFrame(animationFrameId);
   }
 }
 
-function goToNextQuestion() {
-  currentQuestionIndex++;
-  
-  if (currentQuestionIndex < 10) {
-    loadQuestion();
-  } else {
-    showQuizResults();
+function triggerConfetti() {
+  confettiArray = [];
+  for (let i = 0; i < 80; i++) {
+    confettiArray.push(new ConfettiParticle());
   }
-}
-
-function showQuizResults() {
-  document.getElementById('quiz-container').classList.add('hidden');
-  document.getElementById('results-container').classList.remove('hidden');
-  
-  // Update Score Displays
-  document.getElementById('final-score-val').textContent = quizScore;
-  
-  // Feedback Messages based on Score Tiers
-  const feedbackMsg = document.getElementById('feedback-tier-msg');
-  if (quizScore >= 9) {
-    feedbackMsg.textContent = "Excellent! You've mastered this topic. 🚀";
-    feedbackMsg.style.color = '#22c55e';
-  } else if (quizScore >= 7) {
-    feedbackMsg.textContent = "Great work! Just a few areas to review. 👍";
-    feedbackMsg.style.color = '#3b82f6';
-  } else if (quizScore >= 5) {
-    feedbackMsg.textContent = "Good attempt — review flashcards before trying again. 📚";
-    feedbackMsg.style.color = '#facc15';
-  } else {
-    feedbackMsg.textContent = "Keep practicing! Revisit Concept and Flashcard tabs. 🔄";
-    feedbackMsg.style.color = '#ef4444';
-  }
+  cancelAnimationFrame(animationFrameId);
+  animateConfetti();
 }
