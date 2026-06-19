@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electrical Hazards & Safety - O-Level Physics</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="app-header">
+        <div class="logo-container">
+            <span class="logo-icon">⚡</span>
+            <h1 class="logo-text">VoltSafe <span class="logo-sub">Physics</span></h1>
+        </div>
+        <nav class="nav-bar">
+            <button class="nav-btn active" data-target="intro">
+                <span class="nav-icon">💡</span>
+                <span class="nav-label">Learn</span>
+            </button>
+            <button class="nav-btn" data-target="explore">
+                <span class="nav-icon">🔍</span>
+                <span class="nav-label">Explore</span>
+            </button>
+            <button class="nav-btn" data-target="cards">
+                <span class="nav-icon">🎴</span>
+                <span class="nav-label">Revise</span>
+            </button>
+            <button class="nav-btn" data-target="quiz">
+                <span class="nav-icon">📝</span>
+                <span class="nav-label">Quiz</span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="app-content">
+        
+        <!-- SECTION 1: CONCEPT INTRODUCTION -->
+        <section id="section-intro" class="app-section active">
+            <div class="section-header">
+                <h2>Concept Introduction</h2>
+                <p class="subtitle">Understand key hazards and essential safety features in home electricity.</p>
+            </div>
+
+            <!-- 1. Three Hazards Grid -->
+            <h3 class="group-title">The Three Electrical Hazards</h3>
+            <div class="grid-hazards">
+                <div class="intro-card hazard-card" data-hazard="insulation">
+                    <div class="card-icon">⚡</div>
+                    <h4>Damaged Insulation</h4>
+                    <p>When insulating plastic wears off or cracks, exposing conducting copper wires. Anyone touching it gets an electric shock.</p>
+                </div>
+                <div class="intro-card hazard-card" data-hazard="overheating">
+                    <div class="card-icon">🔥</div>
+                    <h4>Overheating of Cables</h4>
+                    <p>Occurs when drawing too much current (overloaded socket) or using thin wires. Can lead to fire.</p>
+                </div>
+                <div class="intro-card hazard-card" data-hazard="damp">
+                    <div class="card-icon">💧</div>
+                    <h4>Damp Conditions</h4>
+                    <p>Water lowers skin electrical resistance. Touching switches/appliances with wet hands dramatically increases current flow through the body.</p>
+                </div>
+            </div>
+
+            <!-- 2. Fuses and Circuit Breakers -->
+            <h3 class="group-title">Safety Devices</h3>
+            <div class="grid-safety">
+                <div class="intro-card device-card">
+                    <div class="device-header">
+                        <span class="device-icon">🩺</span>
+                        <h4>Fuse & Fuse Rating</h4>
+                    </div>
+                    <p>Contains a thin wire that <strong>melts and breaks</strong> the circuit when the current exceeds its rating. This prevents the circuit wires from getting extremely hot and catching fire.</p>
+                    <div class="fuse-spec-box">
+                        <span>Standard Ratings:</span>
+                        <div class="ratings-pills">
+                            <span class="pill">1 A</span>
+                            <span class="pill">3 A</span>
+                            <span class="pill">5 A</span>
+                            <span class="pill">13 A</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="intro-card device-card">
+                    <div class="device-header">
+                        <span class="device-icon">🔄</span>
+                        <h4>Circuit Breakers</h4>
+                    </div>
+                    <p>An electromagnetic switch that trips and cuts off current when it is too high. Unlike fuses, they do not melt and can be <strong>reset</strong> after fixing the fault.</p>
+                </div>
+            </div>
+
+            <!-- 3. Earthing & Double Insulation -->
+            <h3 class="group-title">Shock Prevention</h3>
+            <div class="grid-earthing">
+                <div class="intro-card shield-card">
+                    <div class="shield-header">
+                        <span class="shield-icon">🔌</span>
+                        <h4>Earthing Metal Casings</h4>
+                    </div>
+                    <p>If a fault causes the live wire to touch the metal casing, a massive current flows through the earth wire to ground instead of shocking a user. This large current melts the fuse, cutting the supply.</p>
+                </div>
+                <div class="intro-card shield-card">
+                    <div class="shield-header">
+                        <span class="shield-icon">🔳</span>
+                        <h4>Double Insulation</h4>
+                    </div>
+                    <p>Appliances with plastic casings (non-conducting bodies) have two layers of insulation. Since the body cannot conduct electricity, an <strong>earth wire is not needed</strong>.</p>
+                </div>
+            </div>
+
+            <!-- 4. Three-Pin Plug Wires -->
+            <h3 class="group-title">Mains Wiring Functions</h3>
+            <div class="plug-anatomy">
+                <div class="wire-row live-wire">
+                    <div class="wire-badge brown">Live (L)</div>
+                    <div class="wire-desc">
+                        <strong>Brown:</strong> Delivers current from the source to the appliance (at high voltage, usually 230V). Switches, fuses, and circuit breakers must be connected to this wire.
+                    </div>
+                </div>
+                <div class="wire-row neutral-wire">
+                    <div class="wire-badge blue">Neutral (N)</div>
+                    <div class="wire-desc">
+                        <strong>Blue:</strong> Completes the circuit by returning current back to the source (at or near 0V).
+                    </div>
+                </div>
+                <div class="wire-row earth-wire">
+                    <div class="wire-badge green-yellow">Earth (E)</div>
+                    <div class="wire-desc">
+                        <strong>Yellow & Green stripes:</strong> A safety wire connected to the metal body. Path of low resistance to route dangerous currents safely into the ground.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: INTERACTIVE EXPLORATION -->
+        <section id="section-explore" class="app-section">
+            <div class="section-header">
+                <h2>Interactive Exploration</h2>
+                <p class="subtitle">Tap the pulsating hazard hotspots in the room to investigate and correct them.</p>
+                
+                <div class="progress-bar-container">
+                    <div class="progress-info">
+                        <span>Hazards Analyzed</span>
+                        <span id="explore-progress-text">0 of 6 explored</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill" id="explore-progress-fill" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Room Scene Layout -->
+            <div class="scene-container">
+                <!-- SVG Room Graphic -->
+                <svg id="household-scene" viewBox="0 0 800 500" width="100%" height="100%">
+                    <!-- Room Background / Walls & Floor -->
+                    <rect x="10" y="10" width="780" height="480" rx="12" fill="#16161e" stroke="#2c2c3e" stroke-width="3"/>
+                    <path d="M 10 380 L 800 380" stroke="#3b3b4f" stroke-width="2" />
+                    <!-- Wall divider (Bathroom/Kitchen) -->
+                    <line x1="450" y1="10" x2="450" y2="380" stroke="#3b3b4f" stroke-width="3" stroke-dasharray="5 5" />
+                    <text x="30" y="45" fill="#5c5c7a" font-size="14" font-weight="600">LIVING ROOM & KITCHEN</text>
+                    <text x="470" y="45" fill="#5c5c7a" font-size="14" font-weight="600">BATHROOM & UTILITY</text>
+
+                    <!-- Kitchen Counter -->
+                    <rect x="50" y="240" width="200" height="140" fill="#20202a" stroke="#3b3b4f" stroke-width="2"/>
+                    <!-- Sink in Kitchen Counter -->
+                    <ellipse cx="100" cy="240" rx="40" ry="10" fill="#2d3748" stroke="#4a5568" stroke-width="2"/>
+                    <path d="M 100 215 Q 100 200 110 200 Q 110 215 100 220" stroke="#a0aec0" stroke-width="3" fill="none" />
+                    
+                    <!-- Bathroom tub/basin -->
+                    <rect x="550" y="260" width="180" height="120" rx="20" fill="#2d3748" stroke="#4a5568" stroke-width="2"/>
+                    <path d="M 570 230 Q 570 200 580 200" stroke="#a0aec0" stroke-width="3" fill="none" />
+                    <!-- Water droplets near basin -->
+                    <path class="water-droplets" d="M 580 225 Q 585 240 580 250" stroke="#00f0ff" stroke-width="2" fill="none" opacity="0.7"/>
+
+                    <!-- Hotspot 1: Kettle near Sink (Damp conditions) -->
+                    <g class="clickable-element" data-hotspot="damp-kitchen">
+                        <rect x="170" y="195" width="50" height="45" rx="5" fill="#4a5568" stroke="#718096" stroke-width="2" />
+                        <path d="M 220 210 H 230 V 240" stroke="#718096" stroke-width="2" />
+                        <!-- Water splashes near kettle -->
+                        <path d="M 140 230 Q 160 215 180 235" stroke="#00f0ff" stroke-width="1.5" fill="none" opacity="0.6"/>
+                        <!-- Hotspot circle -->
+                        <circle class="hotspot-pulse" cx="195" cy="220" r="16" />
+                        <circle class="hotspot-core" cx="195" cy="220" r="8" />
+                    </g>
+
+                    <!-- Hotspot 2: Overloaded Socket (Overheating) -->
+                    <g class="clickable-element" data-hotspot="overloaded-socket">
+                        <!-- Socket plate -->
+                        <rect x="340" y="280" width="45" height="30" rx="3" fill="#2d3748" stroke="#4a5568" stroke-width="1" />
+                        <!-- Stacked adapters -->
+                        <rect x="335" y="285" width="40" height="25" rx="2" fill="#718096" opacity="0.9"/>
+                        <rect x="330" y="290" width="30" height="20" rx="2" fill="#a0aec0" opacity="0.9"/>
+                        <!-- Plugs / cords spaghetti -->
+                        <path d="M 340 300 Q 320 330 300 350" stroke="#a0aec0" stroke-width="2.5" fill="none" />
+                        <path d="M 350 305 Q 350 340 360 370" stroke="#718096" stroke-width="2.5" fill="none" />
+                        <path d="M 360 305 Q 380 340 400 365" stroke="#4a5568" stroke-width="2.5" fill="none" />
+                        <!-- Hotspot circle -->
+                        <circle class="hotspot-pulse" cx="355" cy="295" r="16" />
+                        <circle class="hotspot-core" cx="355" cy="295" r="8" />
+                    </g>
+
+                    <!-- Hotspot 3: Frayed cable (Damaged insulation) -->
+                    <g class="clickable-element" data-hotspot="frayed-cable">
+                        <!-- Floor lamp on left -->
+                        <line x1="40" y1="380" x2="40" y2="240" stroke="#cbd5e0" stroke-width="4" />
+                        <path d="M 20 240 L 60 240 L 50 210 L 30 210 Z" fill="#ed8936" />
+                        <!-- Cable on the floor -->
+                        <path d="M 40 380 Q 80 410 160 400" stroke="#4a5568" stroke-width="3" fill="none" />
+                        <!-- Sparks/frayed region -->
+                        <path d="M 95 393 L 105 403" stroke="#e53e3e" stroke-width="2" />
+                        <!-- Hotspot circle -->
+                        <circle class="hotspot-pulse" cx="100" cy="397" r="16" />
+                        <circle class="hotspot-core" cx="100" cy="397" r="8" />
+                    </g>
+
+                    <!-- Hotspot 4: Metal fan missing earth (Earthing fault) -->
+                    <g class="clickable-element" data-hotspot="missing-earth">
+                        <!-- Metal table fan on counter -->
+                        <circle cx="280" cy="310" r="22" fill="#a0aec0" stroke="#cbd5e0" stroke-width="2"/>
+                        <line x1="280" y1="332" x2="280" y2="355" stroke="#a0aec0" stroke-width="4"/>
+                        <ellipse cx="280" cy="355" rx="15" ry="5" fill="#4a5568"/>
+                        <!-- Broken connection representation or shock sign -->
+                        <text x="295" y="325" fill="#e53e3e" font-size="18" font-weight="bold" opacity="0.8">⚡</text>
+                        <!-- Hotspot circle -->
+                        <circle class="hotspot-pulse" cx="280" cy="320" r="16" />
+                        <circle class="hotspot-core" cx="280" cy="320" r="8" />
+                    </g>
+
+                    <!-- Hotspot 5: Hairdryer with double insulation (Safe double insulation) -->
+                    <g class="clickable-element" data-hotspot="double-insulated">
+                        <!-- Plastic hairdryer near basin -->
+                        <path d="M 680 210 Q 695 210 700 220 L 690 235 L 675 220 Z" fill="#ed64a6" stroke="#d53f8c" stroke-width="1.5" />
+                        <rect x="655" y="212" width="22" height="10" fill="#4a5568" />
+                        <!-- Cable -->
+                        <path d="M 690 235 Q 700 260 705 285" stroke="#cbd5e0" stroke-width="2" fill="none" />
+                        <!-- Double square symbol marker -->
+                        <rect x="676" y="214" width="6" height="6" stroke="#fff" fill="none" stroke-width="1" />
+                        <rect x="678" y="216" width="2" height="2" stroke="#fff" fill="none" stroke-width="1" />
+                        <!-- Hotspot circle -->
+                        <circle class="hotspot-pulse" cx="680" cy="225" r="16" />
+                        <circle class="hotspot-core" cx="680" cy="225" r="8" />
+                    </g>
+
+                    <!-- Hotspot 6: Safely earthed microwave (Safe Contrast) -->
+                    <g class="clickable-element" data-hotspot="safe-microwave">
+                        <!-- Microwave -->
+                        <rect x="290" y="160" width="110" height="70" rx="4" fill="#1a202c" stroke="#4a5568" stroke-width="2" />
+                        <rect x="300" y="170" width="65" height="50" fill="#4a5568" rx="2" />
+                        <circle cx="385" cy="180" r="4" fill="#48bb78" />
+                        <rect x="375" y="195" width="15" height="15" fill="#2d3748" />
+                        <!-- Ground symbol icon -->
+                        <path d="M 370 220 H 380 M 372 223 H 378 M 374 226 H 376" stroke="#48bb78" stroke-width="1.5"/>
+                        <!-- Hotspot circle -->
+                        <circle class="hotspot-pulse" cx="345" cy="195" r="16" />
+                        <circle class="hotspot-core" cx="345" cy="195" r="8" />
+                    </g>
+                </svg>
+
+                <!-- Indicator Labels for user guidance -->
+                <div class="scene-hints">
+                    <span class="hint-tag">Tap hotspots to investigate</span>
+                </div>
+            </div>
+
+            <!-- Hazard Popup/Card Display -->
+            <div id="hazard-info-card" class="hazard-detail-card hidden">
+                <button class="close-card-btn" id="close-hazard-card">&times;</button>
+                <div class="card-status-badge" id="hazard-badge">HAZARD IDENTIFIED</div>
+                <h3 id="hazard-title">Hazard Title</h3>
+                <div class="hazard-desc-group">
+                    <h5>Description</h5>
+                    <p id="hazard-desc">How the hazard occurred and what it looks like.</p>
+                </div>
+                <div class="hazard-desc-group">
+                    <h5>Why It's Dangerous</h5>
+                    <p id="hazard-danger">The physics consequence / shock / fire risk.</p>
+                </div>
+                <div class="hazard-desc-group">
+                    <h5>Corrective Action</h5>
+                    <p id="hazard-solution">How this should be resolved to comply with electrical safety standards.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: FLASHCARD REVISION -->
+        <section id="section-cards" class="app-section">
+            <div class="section-header">
+                <h2>Flashcard Revision</h2>
+                <p class="subtitle">Flip these 14 cards to review essential definitions, risks, and wiring codes before taking the quiz.</p>
+                
+                <div class="flashcard-progress">
+                    <span id="card-index-text">Card 1 of 14</span>
+                </div>
+            </div>
+
+            <div class="flashcard-deck-container">
+                <div class="flashcard" id="active-flashcard">
+                    <!-- Front Side -->
+                    <div class="card-face card-front">
+                        <div class="card-glow-effect"></div>
+                        <div class="card-content">
+                            <span class="card-category" id="card-front-category">DEFINITION</span>
+                            <h3 class="card-title-text" id="card-front-text">Question/Term Front</h3>
+                            <span class="tap-hint">Tap card to flip</span>
+                        </div>
+                    </div>
+                    <!-- Back Side -->
+                    <div class="card-face card-back">
+                        <div class="card-glow-effect"></div>
+                        <div class="card-content">
+                            <span class="card-category" id="card-back-category">EXPLANATION</span>
+                            <div class="card-back-body" id="card-back-text">Explanation details go here.</div>
+                            <span class="tap-hint">Tap card to flip back</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deck Controls -->
+                <div class="deck-controls">
+                    <button class="control-btn" id="prev-card-btn" disabled>&larr; Previous</button>
+                    <button class="control-btn" id="shuffle-card-btn">🔄 Shuffle</button>
+                    <button class="control-btn" id="next-card-btn">Next &rarr;</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: QUIZ -->
+        <section id="section-quiz" class="app-section">
+            <!-- Start Screen -->
+            <div id="quiz-start-screen" class="quiz-state-panel active">
+                <div class="quiz-intro-hero">
+                    <span class="quiz-hero-icon">⚡</span>
+                    <h2>Electrical Safety Quiz</h2>
+                    <p>Put your knowledge to the test! Complete 15 randomly selected questions on safety concepts, hazards, and fuse ratings.</p>
+                    <div class="quiz-features">
+                        <div class="feature-tag">✔ 15 Questions</div>
+                        <div class="feature-tag">✔ Live Calculations</div>
+                        <div class="feature-tag">✔ Detailed Step-by-Step Working</div>
+                    </div>
+                    <button class="primary-action-btn" id="start-quiz-btn">Start Quiz</button>
+                </div>
+            </div>
+
+            <!-- Quiz Play Panel -->
+            <div id="quiz-play-panel" class="quiz-state-panel hidden">
+                <div class="quiz-header-bar">
+                    <span class="quiz-q-counter" id="q-counter">Question 1 of 15</span>
+                    <!-- Progress bar -->
+                    <div class="quiz-progress-track">
+                        <div class="quiz-progress-fill" id="quiz-progress-fill" style="width: 6.67%;"></div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Question Block -->
+                <div class="question-container">
+                    <div class="question-stem" id="question-text">
+                        Question description text?
+                    </div>
+
+                    <!-- Options (MCQ format) -->
+                    <div class="quiz-options" id="quiz-options-container">
+                        <!-- Buttons injected dynamically -->
+                    </div>
+
+                    <!-- Text Entry Box (Alternative) -->
+                    <div class="quiz-text-entry-container hidden" id="quiz-text-container">
+                        <input type="text" id="quiz-text-input" placeholder="Type one or two-word answer here..." autocomplete="off">
+                        <button class="primary-action-btn submit-text-btn" id="submit-text-btn">Submit Answer</button>
+                    </div>
+
+                    <!-- Reveal Working Trigger (Calculation questions only) -->
+                    <div class="calculation-reveal-bar hidden" id="calc-reveal-bar">
+                        <button class="reveal-working-btn" id="reveal-working-btn">
+                            <span class="calc-icon">💡</span> Reveal Working Steps
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Explanation Panel (Displayed after submission) -->
+                <div class="explanation-panel hidden" id="explanation-panel">
+                    <div class="explanation-status" id="explanation-status">
+                        <span id="explanation-status-icon"></span>
+                        <span id="explanation-status-text">Correct!</span>
+                    </div>
+                    <div class="explanation-body" id="explanation-text-content">
+                        Explanation details go here...
+                    </div>
+                    <button class="primary-action-btn next-q-btn" id="next-question-btn">Next Question &rarr;</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: SCORING AND FEEDBACK -->
+        <section id="section-results" class="app-section">
+            <div class="results-hero">
+                <div class="results-badge-container">
+                    <div class="results-glow"></div>
+                    <div class="results-circle">
+                        <span class="score-display" id="final-score">12</span>
+                        <span class="score-total">/ 15</span>
+                    </div>
+                </div>
+
+                <h2 id="feedback-headline">Excellent Work!</h2>
+                <p id="feedback-body" class="feedback-paragraph">
+                    You have a strong grasp of electrical hazards, safety devices, and fuse rating selection. Keep up the high standard!
+                </p>
+
+                <div class="result-actions">
+                    <button class="primary-action-btn" id="restart-quiz-btn">Try Quiz Again</button>
+                    <button class="secondary-btn" id="review-learn-btn">Review Concepts</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Step-by-Step Working Modal (Calculations) -->
+    <div class="modal-overlay hidden" id="working-modal">
+        <div class="modal-card">
+            <button class="close-modal-btn" id="close-modal">&times;</button>
+            <h3>Step-by-Step Working</h3>
+            <div class="modal-body-content">
+                <div class="formula-box">
+                    <span class="formula-label">Formula:</span>
+                    <span class="formula-text">\[I = \frac{P}{V}\]</span>
+                </div>
+                <div class="working-steps">
+                    <p><strong>Step 1:</strong> Identify Given Values</p>
+                    <ul>
+                        <li>Power, \(P = <span id="modal-val-p">1000</span>\text{ W}\)</li>
+                        <li>Voltage, \(V = <span id="modal-val-v">240</span>\text{ V}\)</li>
+                    </ul>
+                    <p><strong>Step 2:</strong> Calculate Current (\(I\))</p>
+                    <div class="math-line">
+                        \(I = \frac{<span id="modal-sub-p">1000</span>\text{ W}}{<span id="modal-sub-v">240</span>\text{ V}} = <span id="modal-val-i">4.17</span>\text{ A}\)
+                    </div>
+                    <p><strong>Step 3:</strong> Select Fuse Rating</p>
+                    <p class="working-reason">
+                        The fuse rating must be the **smallest standard rating** that is **greater than** the calculated current of <span id="modal-val-i-2">4.17</span> A. 
+                    </p>
+                    <p class="working-reason">
+                        Standard Fuse Ratings: 1 A, 3 A, 5 A, 13 A.
+                    </p>
+                    <p class="working-reason highlight-reason">
+                        Since <span id="modal-val-i-3">4.17</span> A is greater than 3 A but less than 5 A, we select the <strong>5 A</strong> fuse.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Celebration Overlay -->
+    <div id="celebration-overlay" class="celebration-overlay hidden"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
