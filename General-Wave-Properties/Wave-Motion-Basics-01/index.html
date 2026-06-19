@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wave Motion Basics — O-Level Physics</title>
+  <meta name="description" content="Master wave motion basics for O-Level Physics (6091). High-performance animations, simulations, and quiz.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- App Container -->
+  <div class="app-container">
+    <header class="app-header">
+      <div class="header-logo">
+        <span class="logo-icon">~</span>
+        <h1>Wave Motion Basics</h1>
+      </div>
+      <nav class="app-nav">
+        <button class="nav-btn active" data-tab="intro" id="nav-btn-intro">Intro</button>
+        <button class="nav-btn" data-tab="ripple" id="nav-btn-ripple">Ripple Tank</button>
+        <button class="nav-btn" data-tab="anatomy" id="nav-btn-anatomy">Anatomy</button>
+        <button class="nav-btn" data-tab="cards" id="nav-btn-cards">Flashcards</button>
+        <button class="nav-btn" data-tab="quiz" id="nav-btn-quiz">Quiz</button>
+      </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+
+      <!-- SECTION 1: CONCEPT INTRODUCTION -->
+      <section id="tab-intro" class="tab-content active">
+        <div class="section-card">
+          <h2>Understanding Wave Motion</h2>
+          <p class="subtitle">Physics Core Concept: O-Level Syllabus 6091</p>
+          
+          <div class="intro-visual-container">
+            <!-- Animation 1: Rope Pulse -->
+            <div class="animation-box">
+              <h3>1. Rope Wave Simulation</h3>
+              <p class="anim-desc">Observe the pulse moving to the right, while the red particles only bob up and down.</p>
+              <div class="canvas-wrapper">
+                <canvas id="rope-canvas"></canvas>
+              </div>
+              <div class="banner-overlay">
+                <span>Waves transfer energy, not matter.</span>
+              </div>
+            </div>
+
+            <!-- Animation 2: Cork Floating -->
+            <div class="animation-box">
+              <h3>2. Cork Bobbing on Water Waves</h3>
+              <p class="anim-desc">Watch the cork (yellow dot) bob up and down in a fixed horizontal position as ripples pass.</p>
+              <div class="canvas-wrapper">
+                <canvas id="cork-canvas"></canvas>
+              </div>
+            </div>
+
+            <!-- Animation 3: Wavefronts -->
+            <div class="animation-box">
+              <h3>3. Wavefronts (2D Ripples)</h3>
+              <p class="anim-desc">Concentric circular ripples expanding from a central source. A wavefront links all crests in phase.</p>
+              <div class="canvas-wrapper">
+                <canvas id="wavefront-canvas"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: RIPPLE TANK SIMULATOR -->
+      <section id="tab-ripple" class="tab-content">
+        <div class="section-card">
+          <h2>Ripple Tank Simulator</h2>
+          <p class="subtitle">Interact with circular wave propagation and see the graphs</p>
+          
+          <div class="ripple-layout">
+            <!-- Live Simulator View -->
+            <div class="simulator-view">
+              <div class="canvas-title">2D Ripple Tank (Top-down View)</div>
+              <div class="canvas-wrapper ripple-wrapper">
+                <canvas id="ripple-tank-canvas"></canvas>
+              </div>
+              
+              <div class="controls-panel">
+                <div class="control-group">
+                  <label for="freq-slider">Frequency: <span id="freq-val" class="value-highlight">5.0</span> Hz</label>
+                  <input type="range" id="freq-slider" min="1" max="10" step="0.1" value="5.0">
+                </div>
+                
+                <div class="control-group">
+                  <label for="amp-slider">Amplitude: <span id="amp-val" class="value-highlight">Medium</span></label>
+                  <input type="range" id="amp-slider" min="1" max="3" step="1" value="2">
+                </div>
+              </div>
+            </div>
+
+            <!-- Graphical View -->
+            <div class="graphical-view">
+              <div class="canvas-title">Transverse Wave Graph (y-displacement vs distance)</div>
+              <div class="canvas-wrapper graph-wrapper">
+                <canvas id="transverse-graph-canvas"></canvas>
+              </div>
+              <div class="info-bubble">
+                <p><strong>Observe:</strong> Increasing the <strong>frequency</strong> makes the ripples bunch closer together (shorter wavelength) and compresses the displacement-distance graph.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: WAVE ANATOMY LABELING -->
+      <section id="tab-anatomy" class="tab-content">
+        <div class="section-card">
+          <h2>Wave Anatomy Challenge</h2>
+          <p class="subtitle">Drag the vocabulary cards to their correct targets on the transverse wave</p>
+          
+          <div class="anatomy-game-container">
+            <!-- The Game Board (SVG and target dropzones) -->
+            <div class="game-board">
+              <svg id="anatomy-svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <!-- Single double-headed arrow markers (refX=10 puts the arrow tips exactly at the line end points) -->
+                  <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 Z" fill="#00e5ff" />
+                  </marker>
+                  <marker id="arrow-both" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 Z" fill="#ffffff" />
+                  </marker>
+                  <marker id="arrow-yellow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 Z" fill="#ffeb3b" />
+                  </marker>
+                </defs>
+
+                <!-- Grid Lines / Axes -->
+                <line x1="50" y1="200" x2="750" y2="200" class="axis-line" />
+                <line x1="120" y1="30" x2="120" y2="370" class="axis-line" />
+                
+                <!-- Axis Arrows & Labels -->
+                <path d="M 750 195 L 760 200 L 750 205 Z" fill="#ffffff" />
+                <path d="M 115 30 L 120 20 L 125 30 Z" fill="#ffffff" />
+                <text x="110" y="40" class="axis-label" text-anchor="end">Displacement (y)</text>
+                <text x="750" y="225" class="axis-label" text-anchor="end">Distance (x)</text>
+
+                <!-- Wave Path -->
+                <path id="anatomy-wave-path" class="wave-path" d="" />
+
+                <!-- Dynamic Reference Lines (dotted indicator lines) -->
+                <!-- Crest Indicator -->
+                <line x1="420" y1="100" x2="420" y2="50" class="guide-line" />
+                <!-- Trough Indicator -->
+                <line x1="620" y1="300" x2="620" y2="340" class="guide-line" />
+                <!-- Wavelength 1 Zero-Crossing helper guide -->
+                <line x1="520" y1="160" x2="520" y2="200" class="guide-line" />
+                
+                <!-- Amplitude Indicators (Double-headed Arrows for all three) -->
+                <line x1="220" y1="200" x2="220" y2="300" class="amplitude-arrow" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+                <line x1="420" y1="200" x2="420" y2="100" class="amplitude-arrow" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+                <line x1="620" y1="200" x2="620" y2="300" class="amplitude-arrow" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+
+                <!-- Wavelength Indicators (Three Yellow Double-headed Arrows) -->
+                <line x1="120" y1="160" x2="520" y2="160" class="wavelength-yellow-line" marker-start="url(#arrow-yellow)" marker-end="url(#arrow-yellow)" />
+                <line x1="320" y1="200" x2="720" y2="200" class="wavelength-yellow-line" marker-start="url(#arrow-yellow)" marker-end="url(#arrow-yellow)" />
+                <line x1="220" y1="240" x2="620" y2="240" class="wavelength-yellow-line" marker-start="url(#arrow-yellow)" marker-end="url(#arrow-yellow)" />
+                
+                <!-- Target Dropzones (represented by transparent circles/rects with outlines) -->
+                <!-- 1. Crest Dropzone -->
+                <g class="dropzone-group" data-target="Crest">
+                  <circle cx="420" cy="100" r="24" class="dropzone-anchor" />
+                  <rect x="370" y="20" width="100" height="36" rx="6" class="drop-rect" />
+                  <text x="420" y="42" class="drop-text">name??</text>
+                </g>
+
+                <!-- 2. Trough Dropzone -->
+                <g class="dropzone-group" data-target="Trough">
+                  <circle cx="620" cy="300" r="24" class="dropzone-anchor" />
+                  <rect x="570" y="340" width="100" height="36" rx="6" class="drop-rect" />
+                  <text x="620" y="362" class="drop-text">name??</text>
+                </g>
+
+                <!-- 3a. Amplitude Dropzone 1 (First Trough) -->
+                <g class="dropzone-group" data-target="Amplitude">
+                  <circle cx="220" cy="250" r="24" class="dropzone-anchor" />
+                  <rect x="170" y="232" width="100" height="36" rx="6" class="drop-rect" />
+                  <text x="220" y="254" class="drop-text">name??</text>
+                </g>
+
+                <!-- 3b. Amplitude Dropzone 2 (Crest) -->
+                <g class="dropzone-group" data-target="Amplitude">
+                  <circle cx="420" cy="150" r="24" class="dropzone-anchor" />
+                  <rect x="370" y="132" width="100" height="36" rx="6" class="drop-rect" />
+                  <text x="420" y="154" class="drop-text">name??</text>
+                </g>
+
+                <!-- 3c. Amplitude Dropzone 3 (Second Trough) -->
+                <g class="dropzone-group" data-target="Amplitude">
+                  <circle cx="620" cy="250" r="24" class="dropzone-anchor" />
+                  <rect x="570" y="232" width="100" height="36" rx="6" class="drop-rect" />
+                  <text x="620" y="254" class="drop-text">name??</text>
+                </g>
+
+                <!-- 4a. Wavelength Dropzone 1 (Axis to Wave Crest crossing cycle) -->
+                <g class="dropzone-group" data-target="Wavelength">
+                  <circle cx="320" cy="160" r="24" class="dropzone-anchor" />
+                  <rect x="270" y="142" width="100" height="36" rx="6" class="drop-rect" />
+                  <text x="320" y="164" class="drop-text">name??</text>
+                </g>
+
+                <!-- 4b. Wavelength Dropzone 2 (Up-crossing to Up-crossing cycle) -->
+                <g class="dropzone-group" data-target="Wavelength">
+                  <circle cx="520" cy="200" r="24" class="dropzone-anchor" />
+                  <rect x="470" y="182" width="100" height="36" rx="6" class="drop-rect" />
+                  <text x="520" y="204" class="drop-text">name??</text>
+                </g>
+
+                <!-- 4c. Wavelength Dropzone 3 (Trough-to-Trough cycle) -->
+                <g class="dropzone-group" data-target="Wavelength">
+                  <circle cx="420" cy="240" r="24" class="dropzone-anchor" />
+                  <rect x="370" y="222" width="100" height="36" rx="6" class="drop-rect" />
+                  <text x="420" y="244" class="drop-text">name??</text>
+                </g>
+              </svg>
+            </div>
+
+            <!-- Draggable Source Label Items -->
+            <div class="labels-tray" id="labels-tray">
+              <div class="draggable-label" draggable="true" data-label="Amplitude" id="drag-amp">Amplitude</div>
+              <div class="draggable-label" draggable="true" data-label="Wavelength" id="drag-wavelength">Wavelength</div>
+              <div class="draggable-label" draggable="true" data-label="Crest" id="drag-crest">Crest</div>
+              <div class="draggable-label" draggable="true" data-label="Trough" id="drag-trough">Trough</div>
+            </div>
+
+            <div class="game-controls">
+              <button id="btn-check-anatomy" class="action-btn cyan-glow">Check Placements</button>
+              <button id="btn-reset-anatomy" class="action-btn outline-btn">Reset Board</button>
+            </div>
+            
+            <div id="anatomy-feedback" class="status-banner hide"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: FLASHCARD REVISION MODE -->
+      <section id="tab-cards" class="tab-content">
+        <div class="section-card">
+          <h2>Flashcard Revision</h2>
+          <p class="subtitle">Tap card to flip, swipe or use buttons to navigate key concepts</p>
+          
+          <div class="flashcard-container">
+            <!-- Flashcard Frame -->
+            <div class="flashcard-frame">
+              <div class="flashcard" id="main-flashcard">
+                <!-- Front Side -->
+                <div class="card-face card-front">
+                  <div class="card-header">
+                    <span class="card-index" id="card-index-indicator">1 / 7</span>
+                    <span class="swipe-hint">Tap to Flip ↻</span>
+                  </div>
+                  <div class="card-body">
+                    <h3 id="card-front-title">Term</h3>
+                    <div class="card-visual-wrapper">
+                      <canvas id="card-visual-canvas"></canvas>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Back Side -->
+                <div class="card-face card-back">
+                  <div class="card-header">
+                    <span class="card-index">Definition & Explanation</span>
+                    <span class="swipe-hint">Tap to Flip ↻</span>
+                  </div>
+                  <div class="card-body">
+                    <h3 id="card-back-title">Term</h3>
+                    <p id="card-back-text">Explanation content goes here.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Controls -->
+            <div class="card-controls">
+              <button id="btn-prev-card" class="card-nav-btn" aria-label="Previous card">◀ Prev</button>
+              <button id="btn-shuffle-cards" class="action-btn outline-btn">Shuffle ⤳</button>
+              <button id="btn-next-card" class="card-nav-btn" aria-label="Next card">Next ▶</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5: RANDOMISED QUIZ -->
+      <section id="tab-quiz" class="tab-content">
+        <div class="section-card" id="quiz-start-card">
+          <h2>Concept Mastery Quiz</h2>
+          <p class="subtitle">Test your understanding of O-Level Wave Motion concepts</p>
+          
+          <div class="quiz-intro-box">
+            <p>Every session draws <strong>8 to 10 random questions</strong> from a pool of 30, spanning definition recall, graphical reading, true/false, and scenarios.</p>
+            <ul class="rules-list">
+              <li>✓ No timers: focus on deep understanding</li>
+              <li>✓ Adaptive shuffling makes every repeat attempt unique</li>
+              <li>✓ Immediate, detailed educational explanations shown</li>
+            </ul>
+            <button id="btn-start-quiz" class="action-btn cyan-glow font-large">Start Quiz</button>
+          </div>
+        </div>
+
+        <!-- Quiz Gameplay Card -->
+        <div class="section-card hide" id="quiz-play-card">
+          <div class="quiz-header">
+            <div class="quiz-progress">
+              <span>Question <strong id="quiz-curr-idx">1</strong> of <strong id="quiz-total-idx">8</strong></span>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="quiz-progress-fill"></div>
+              </div>
+            </div>
+            <div class="quiz-score-indicator">
+              Score: <strong id="quiz-curr-score">0</strong>
+            </div>
+          </div>
+
+          <div class="question-container">
+            <!-- Dynamic Graph Area for Graph Questions (if active) -->
+            <div id="quiz-graph-container" class="hide">
+              <canvas id="quiz-wave-canvas"></canvas>
+            </div>
+
+            <h3 id="quiz-question-text" class="question-title">Question prompt goes here?</h3>
+            
+            <div class="options-grid" id="quiz-options-grid">
+              <!-- Render options dynamically -->
+            </div>
+          </div>
+
+          <!-- Immediate Feedback Dialog -->
+          <div id="quiz-feedback-box" class="feedback-box hide">
+            <div class="feedback-header">
+              <span id="feedback-icon" class="fb-icon">✓</span>
+              <span id="feedback-status-text">Correct!</span>
+            </div>
+            <p id="feedback-explanation" class="feedback-desc">Explanation content here.</p>
+            <button id="btn-next-question" class="action-btn cyan-glow">Continue</button>
+          </div>
+        </div>
+
+        <!-- SECTION 6: SCORING & DIAGNOSTIC FEEDBACK -->
+        <div class="section-card hide" id="quiz-results-card">
+          <div class="results-container">
+            <h2>Quiz Results</h2>
+            <div class="score-circle-wrapper">
+              <div class="score-circle">
+                <span id="results-score-num">8/10</span>
+                <span class="score-label">Score</span>
+              </div>
+            </div>
+
+            <h3 id="results-tier-title" class="results-tier">Outstanding Job!</h3>
+            <p id="results-tier-msg" class="results-msg">You have fully mastered the fundamentals of wave motion.</p>
+
+            <hr class="divider">
+
+            <div class="diagnostics-box">
+              <h4>Concept Strengths & Weaknesses</h4>
+              <div class="diagnostic-list" id="diagnostics-list">
+                <!-- Dynamic categories like definitions, energy transfer, wavefronts -->
+              </div>
+            </div>
+
+            <div class="results-actions">
+              <button id="btn-restart-quiz" class="action-btn cyan-glow">Try Again</button>
+              <button id="btn-back-to-study" class="action-btn outline-btn">Review Concepts</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Global Confetti Canvas -->
+    <canvas id="confetti-canvas" class="confetti-canvas-overlay"></canvas>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
