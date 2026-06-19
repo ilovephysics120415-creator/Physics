@@ -1,0 +1,2327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echo & Ultrasound Applications | O-Level Physics</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons for premium UI look -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Canvas Confetti for celebrations -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* CSS variables for consistent, beautiful theme */
+        :root {
+            --bg-color: #0a0e1a;
+            --bg-card: rgba(16, 22, 42, 0.65);
+            --bg-card-hover: rgba(22, 31, 58, 0.8);
+            --border-color: rgba(236, 72, 153, 0.15);
+            --border-glow: rgba(236, 72, 153, 0.4);
+            
+            --accent-pink: #ec4899;
+            --accent-pink-glow: rgba(236, 72, 153, 0.5);
+            --accent-purple: #a855f7;
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            
+            /* Colour-blind friendly colors (focusing on magenta, blue, yellow, and monochrome, avoiding red/green coding) */
+            --color-correct-glow: 0 0 15px rgba(56, 189, 248, 0.8); /* Cyan/Blue */
+            --color-incorrect-glow: 0 0 15px rgba(234, 179, 8, 0.8); /* Yellow */
+            --border-correct: #38bdf8;
+            --border-incorrect: #eab308;
+            
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(236, 72, 153, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.08) 0px, transparent 50%);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding-bottom: 5rem;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        /* Header design */
+        header {
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(236, 72, 153, 0.1);
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            color: var(--accent-pink);
+            padding: 0.35rem 0.75rem;
+            border-radius: 9999px;
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 0 12px rgba(236, 72, 153, 0.15);
+        }
+
+        header h1 {
+            font-size: 2.25rem;
+            line-height: 1.15;
+            background: linear-gradient(135deg, #f8fafc 30%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Nav tabs for single page sections */
+        .nav-tabs {
+            display: flex;
+            background: rgba(16, 22, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 0.35rem;
+            margin-bottom: 2rem;
+            gap: 0.25rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-btn {
+            flex: 1;
+            white-space: nowrap;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.75rem 0.5rem;
+            border-radius: 12px;
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .nav-btn i {
+            font-size: 1.1rem;
+        }
+
+        .nav-btn.active {
+            background: var(--accent-pink);
+            color: white;
+            box-shadow: 0 0 15px var(--accent-pink-glow);
+        }
+
+        /* Cards and sections */
+        .section-panel {
+            display: none;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .section-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+            transition: var(--transition);
+        }
+
+        .glass-card:hover {
+            border-color: var(--border-glow);
+            background: var(--bg-card-hover);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .card-header i {
+            color: var(--accent-pink);
+            padding: 0.5rem;
+            background: rgba(236, 72, 153, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .card-header h2 {
+            font-size: 1.25rem;
+            color: var(--text-primary);
+        }
+
+        /* SECTION 1: Concept Introduction - Waves Animation */
+        .diagram-container {
+            width: 100%;
+            height: 180px;
+            background: #070a14;
+            border: 1px dashed rgba(236, 72, 153, 0.3);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .canvas-wave {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .formula-display {
+            background: rgba(236, 72, 153, 0.05);
+            border: 1px solid rgba(236, 72, 153, 0.25);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .formula-display::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-pink), transparent);
+        }
+
+        .formula-math {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(236, 72, 153, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            font-size: 1.25rem;
+        }
+
+        .fraction-top {
+            border-bottom: 1.5px solid white;
+            padding: 0 0.25rem;
+        }
+
+        .fraction-bottom {
+            padding: 0 0.25rem;
+        }
+
+        .formula-details {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .info-pill-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .info-pill {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 0.75rem;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        .info-pill strong {
+            display: block;
+            color: var(--accent-pink);
+            font-size: 0.95rem;
+            margin-top: 0.25rem;
+        }
+
+        /* SECTION 2: Simulator Controls */
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .control-value {
+            color: var(--accent-pink);
+            text-shadow: 0 0 8px rgba(236, 72, 153, 0.3);
+        }
+
+        .slider-custom {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            outline: none;
+        }
+
+        .slider-custom::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent-pink);
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--accent-pink);
+            transition: transform 0.1s;
+        }
+
+        .slider-custom::-webkit-slider-thumb:active {
+            transform: scale(1.3);
+        }
+
+        .btn-simulator {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            color: white;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 12px;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+        }
+
+        .btn-simulator:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+        }
+
+        /* SECTION 3: Hotspot Diagram */
+        .hotspot-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            background: rgba(0,0,0,0.2);
+            padding: 0.25rem;
+            border-radius: 10px;
+        }
+
+        .hotspot-tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: 8px;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .hotspot-tab-btn.active {
+            background: rgba(236, 72, 153, 0.15);
+            color: var(--accent-pink);
+            border: 1px solid rgba(236, 72, 153, 0.3);
+        }
+
+        .hotspot-wrapper {
+            position: relative;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .hotspot-svg {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: #080d1a;
+        }
+
+        .hotspot-dot {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: var(--accent-pink);
+            border: 2px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 15px var(--accent-pink);
+            animation: pulse 1.8s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .hotspot-dot:hover {
+            transform: translate(-50%, -50%) scale(1.25);
+            background: white;
+            color: var(--accent-pink);
+            box-shadow: 0 0 20px white;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(236, 72, 153, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0); }
+        }
+
+        .hotspot-info-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(236, 72, 153, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .worked-calc {
+            margin-top: 1.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .calc-input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .calc-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            border-radius: 8px;
+            color: white;
+            padding: 0.6rem;
+            font-family: var(--font-display);
+            font-size: 1rem;
+            text-align: center;
+            outline: none;
+        }
+
+        .calc-input:focus {
+            border-color: var(--accent-pink);
+            box-shadow: 0 0 8px rgba(236, 72, 153, 0.3);
+        }
+
+        .calc-result {
+            margin-top: 1rem;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--text-primary);
+        }
+
+        /* SECTION 4: Flashcard Revision */
+        .flashcard-container {
+            perspective: 1000px;
+            width: 100%;
+            height: 280px;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, rgba(16, 22, 42, 0.95), rgba(30, 41, 73, 0.95));
+            color: white;
+        }
+
+        .flashcard-front::after {
+            content: 'Tap to flip';
+            position: absolute;
+            bottom: 1.25rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .flashcard-back {
+            background: linear-gradient(135deg, rgba(30, 41, 73, 0.95), rgba(16, 22, 42, 0.95));
+            color: white;
+            transform: rotateY(180deg);
+            border-color: rgba(236, 72, 153, 0.4);
+        }
+
+        .flashcard-back::after {
+            content: 'Tap to flip back';
+            position: absolute;
+            bottom: 1.25rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        .flashcard-category {
+            position: absolute;
+            top: 1.25rem;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-pink);
+            font-weight: 700;
+        }
+
+        .flashcard h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .flashcard p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .card-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .btn-card:hover {
+            background: rgba(236, 72, 153, 0.1);
+            border-color: var(--accent-pink);
+            color: var(--accent-pink);
+        }
+
+        .btn-shuffle {
+            background: rgba(236, 72, 153, 0.1);
+            border: 1px solid rgba(236, 72, 153, 0.2);
+            color: var(--accent-pink);
+            padding: 0.6rem 1.2rem;
+            border-radius: 9999px;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .btn-shuffle:hover {
+            background: var(--accent-pink);
+            color: white;
+            box-shadow: 0 0 12px var(--accent-pink-glow);
+        }
+
+        /* SECTION 5 & 6: Quiz & Scoring */
+        .quiz-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 999px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--accent-pink);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .quiz-question-box {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1rem;
+            color: var(--text-primary);
+            text-align: left;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .option-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Color blind friendly feedback: yellow/blue glow & icons */
+        .option-btn.correct {
+            border-color: var(--border-correct) !important;
+            box-shadow: var(--color-correct-glow);
+            background: rgba(56, 189, 248, 0.05);
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--border-incorrect) !important;
+            box-shadow: var(--color-incorrect-glow);
+            background: rgba(234, 179, 8, 0.05);
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        .feedback-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            font-weight: bold;
+        }
+
+        .feedback-icon.correct-icon {
+            color: var(--border-correct);
+        }
+
+        .feedback-icon.incorrect-icon {
+            color: var(--border-incorrect);
+        }
+
+        .quiz-feedback-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .quiz-feedback-header {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .working-box {
+            display: none;
+            background: #060912;
+            border: 1px dashed rgba(236, 72, 153, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 0.75rem;
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .working-box strong {
+            color: white;
+        }
+
+        .btn-working-toggle {
+            background: rgba(236, 72, 153, 0.1);
+            border: 1px solid rgba(236, 72, 153, 0.25);
+            color: var(--accent-pink);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-family: var(--font-display);
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            margin-top: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .btn-working-toggle:hover {
+            background: rgba(236, 72, 153, 0.2);
+        }
+
+        .btn-next-question {
+            width: 100%;
+            background: var(--accent-pink);
+            color: white;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 12px;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .btn-next-question:hover {
+            box-shadow: 0 0 15px var(--accent-pink-glow);
+        }
+
+        /* Score Summary Screen */
+        .score-circle-wrapper {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .score-circle-svg {
+            transform: rotate(-90deg);
+        }
+
+        .score-circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.05);
+            stroke-width: 8;
+        }
+
+        .score-circle-bar {
+            fill: none;
+            stroke: var(--accent-pink);
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease-out;
+        }
+
+        .score-text {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .score-tier-msg {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding: 0 1rem;
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
+        }
+
+        .breakdown-row:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-score {
+            font-family: var(--font-display);
+            font-weight: bold;
+        }
+
+        /* Swipe helper animations & styles */
+        .swipe-hint {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .pulse-pink {
+            animation: pulse-pink-glow 2s infinite;
+        }
+
+        @keyframes pulse-pink-glow {
+            0% { text-shadow: 0 0 5px rgba(236, 72, 153, 0.2); }
+            50% { text-shadow: 0 0 15px rgba(236, 72, 153, 0.7); }
+            100% { text-shadow: 0 0 5px rgba(236, 72, 153, 0.2); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Badge and header info -->
+        <header>
+            <div class="badge">
+                <i data-lucide="sparkles"></i> O-Level Physics 6091
+            </div>
+            <h1>Echo & Ultrasound</h1>
+            <p>Master distance calculations, sonar, and medical scanning</p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="nav-btn active" onclick="switchTab('concept')">
+                <i data-lucide="book-open"></i>
+                <span>Concept</span>
+            </button>
+            <button class="nav-btn" onclick="switchTab('simulator')">
+                <i data-lucide="activity"></i>
+                <span>Simulator</span>
+            </button>
+            <button class="nav-btn" onclick="switchTab('hotspots')">
+                <i data-lucide="help-circle"></i>
+                <span>Applications</span>
+            </button>
+            <button class="nav-btn" onclick="switchTab('flashcards')">
+                <i data-lucide="layers"></i>
+                <span>Revision</span>
+            </button>
+            <button class="nav-btn" onclick="switchTab('quiz')">
+                <i data-lucide="award"></i>
+                <span>Quiz</span>
+            </button>
+        </nav>
+
+        <!-- SECTION 1: Concept Introduction -->
+        <div id="concept" class="section-panel active">
+            <div class="glass-card">
+                <div class="card-header">
+                    <i data-lucide="book-open"></i>
+                    <h2>What is an Echo?</h2>
+                </div>
+                
+                <!-- Animated diagram -->
+                <div class="diagram-container">
+                    <canvas id="conceptCanvas" class="canvas-wave"></canvas>
+                </div>
+                
+                <p style="margin-top: 0.5rem; font-size: 0.95rem; color: var(--text-secondary);">
+                    An <strong>echo</strong> is a reflected sound wave. Since the sound must travel to the reflecting surface and then travel all the way back, the total time measured is for the <strong>round trip</strong>. Divide the time by 2 to calculate the one-way distance.
+                </p>
+
+                <!-- Formula display -->
+                <div class="formula-display">
+                    <div class="formula-math">
+                        <span>Distance (d)</span>
+                        <span>=</span>
+                        <div class="fraction">
+                            <span class="fraction-top">Speed (v) × Time (t)</span>
+                            <span class="fraction-bottom">2</span>
+                        </div>
+                    </div>
+                    <div class="formula-details">
+                        Where <strong>t</strong> is the total round-trip time, and <strong>v</strong> is the speed of sound.
+                    </div>
+                </div>
+
+                <div class="info-pill-container">
+                    <div class="info-pill">
+                        Speed of Sound in Air
+                        <strong>340 m/s</strong>
+                    </div>
+                    <div class="info-pill">
+                        Speed of Sound in Water
+                        <strong>~1500 m/s</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: Echo Simulator -->
+        <div id="simulator" class="section-panel">
+            <div class="glass-card">
+                <div class="card-header">
+                    <i data-lucide="activity"></i>
+                    <h2>Interactive Echo Simulator</h2>
+                </div>
+                
+                <!-- Simulator Canvas -->
+                <div class="diagram-container">
+                    <canvas id="simCanvas" class="canvas-wave"></canvas>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Distance to Wall (d)</span>
+                        <span class="control-value" id="simDistanceText">250 m</span>
+                    </div>
+                    <input type="range" min="10" max="500" value="250" class="slider-custom" id="distanceSlider">
+                </div>
+
+                <div class="control-group" style="margin-top: 1rem;">
+                    <button class="btn-simulator" id="btnPing">
+                        <i data-lucide="volume-2"></i> Emit Sound Pulse
+                    </button>
+                </div>
+
+                <div class="info-pill-container" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="info-pill">
+                        Speed of Sound
+                        <strong>340 m/s</strong>
+                    </div>
+                    <div class="info-pill">
+                        Calculated Time
+                        <strong id="simTimeText">1.47 s</strong>
+                    </div>
+                    <div class="info-pill">
+                        Timer Readout
+                        <strong id="simTimerText">0.00 s</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: Hotspot Diagram / Sonar & Medical Scanning -->
+        <div id="hotspots" class="section-panel">
+            <div class="glass-card">
+                <div class="card-header">
+                    <i data-lucide="help-circle"></i>
+                    <h2>Ultrasound Applications</h2>
+                </div>
+
+                <div class="hotspot-tabs">
+                    <button class="hotspot-tab-btn active" onclick="switchHotspotTab('sonar')">Sonar Depth Finding</button>
+                    <button class="hotspot-tab-btn" onclick="switchHotspotTab('medical')">Medical Scanning</button>
+                </div>
+
+                <!-- Sonar hot spot diagram -->
+                <div id="sonarWrapper" class="hotspot-wrapper">
+                    <svg class="hotspot-svg" viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Water background -->
+                        <rect width="400" height="240" fill="#080e1e"/>
+                        <rect y="60" width="400" height="180" fill="#09142b"/>
+                        <path d="M 0,60 Q 50,55 100,60 T 200,60 T 300,60 T 400,60 L 400,240 L 0,240 Z" fill="#0a1836"/>
+                        <!-- Seabed -->
+                        <path d="M 0,220 Q 100,200 200,215 T 400,210 L 400,240 L 0,240 Z" fill="#1e1b18"/>
+                        <!-- Ship -->
+                        <path d="M 160,50 L 240,50 L 230,65 L 170,65 Z" fill="#ec4899" opacity="0.9"/>
+                        <rect x="185" y="38" width="15" height="12" fill="#a855f7"/>
+                        <line x1="200" y1="65" x2="200" y2="210" stroke="#ec4899" stroke-width="2" stroke-dasharray="4,4" opacity="0.6"/>
+                    </svg>
+                    <!-- Hotspots overlay -->
+                    <div class="hotspot-dot" style="top: 20%; left: 50%;" onclick="showHotspotInfo('sonar', 'transmitter')">1</div>
+                    <div class="hotspot-dot" style="top: 55%; left: 50%;" onclick="showHotspotInfo('sonar', 'pulse')">2</div>
+                    <div class="hotspot-dot" style="top: 88%; left: 50%;" onclick="showHotspotInfo('sonar', 'seabed')">3</div>
+                </div>
+
+                <!-- Medical Ultrasound hotspot diagram -->
+                <div id="medicalWrapper" class="hotspot-wrapper" style="display: none;">
+                    <svg class="hotspot-svg" viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="400" height="240" fill="#080e1e"/>
+                        <!-- Probe -->
+                        <path d="M 170,30 L 230,30 L 220,60 L 180,60 Z" fill="#ec4899" opacity="0.9"/>
+                        <!-- Tissue -->
+                        <rect x="100" y="60" width="200" height="150" fill="rgba(168, 85, 247, 0.1)" rx="10"/>
+                        <path d="M 120,150 Q 200,165 280,150" stroke="#ffffff" stroke-width="2.5" fill="none" opacity="0.7"/>
+                        <!-- Pulse paths -->
+                        <line x1="200" y1="60" x2="200" y2="157" stroke="#ec4899" stroke-width="2" stroke-dasharray="4,4" opacity="0.6"/>
+                    </svg>
+                    <!-- Hotspots overlay -->
+                    <div class="hotspot-dot" style="top: 20%; left: 50%;" onclick="showHotspotInfo('medical', 'probe')">1</div>
+                    <div class="hotspot-dot" style="top: 48%; left: 50%;" onclick="showHotspotInfo('medical', 'pulse')">2</div>
+                    <div class="hotspot-dot" style="top: 65%; left: 50%;" onclick="showHotspotInfo('medical', 'boundary')">3</div>
+                </div>
+
+                <!-- Hotspot explanatory text -->
+                <div class="hotspot-info-box" id="hotspotInfoBox">
+                    <p style="color: var(--text-secondary);"><i data-lucide="info" style="display: inline; vertical-align: middle; width: 16px; margin-right: 4px;"></i> Tap any hotspot marker (1, 2, or 3) on the diagram to see how it works.</p>
+                </div>
+
+                <!-- Worked Calculator replaced by Dynamic Problem Generator -->
+                <div class="worked-calc">
+                    <h3 style="font-size: 1.1rem; color: white; margin-bottom: 0.5rem;" id="calcTitle">Applications Challenge</h3>
+                    <p style="font-size: 0.95rem; color: #f1f5f9; margin-bottom: 1rem;" id="calcProblemText">Loading problem...</p>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <input type="text" placeholder="e.g., 600 m or 0.8 s" class="calc-input" id="calcAnswerInput" style="text-align: left; padding: 0.75rem; width: 100%;">
+                    </div>
+                    
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                        <button class="btn-simulator" id="btnCheckCalcAnswer" onclick="checkCalcAnswer()" style="flex: 2; padding: 0.6rem 1rem; font-size: 0.85rem; height: 38px;">Check Answer</button>
+                        <button class="btn-shuffle" onclick="generateAppProblem()" style="flex: 1; padding: 0.6rem 1rem; font-size: 0.85rem; height: 38px; justify-content: center;"><i data-lucide="shuffle"></i> Randomise</button>
+                    </div>
+
+                    <div id="calcFeedbackText" style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; padding: 0.6rem 0.8rem; border-radius: 8px; display: none;"></div>
+
+                    <button class="btn-working-toggle" id="btnToggleAppWorking" onclick="toggleAppWorking()" style="width: 100%; justify-content: center; margin-top: 0.5rem;">
+                        <i data-lucide="calculator"></i> Show Step-by-Step Working
+                    </button>
+                    <div class="working-box" id="calcWorkingBox" style="margin-top: 0.75rem; display: none;">
+                        <!-- Working shown here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 4: Flashcard Revision Mode -->
+        <div id="flashcards" class="section-panel">
+            <div class="glass-card">
+                <div class="card-header">
+                    <i data-lucide="layers"></i>
+                    <h2>Flashcard Revision</h2>
+                </div>
+
+                <div class="flashcard-container" onclick="flipFlashcard()">
+                    <div class="flashcard" id="flashcardElement">
+                        <div class="flashcard-face flashcard-front">
+                            <span class="flashcard-category" id="cardCategory">Category</span>
+                            <h3 id="cardFrontText">Front text</h3>
+                        </div>
+                        <div class="flashcard-face flashcard-back">
+                            <h3 style="font-size: 1.15rem;" id="cardBackText">Back text</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swipe-hint pulse-pink">
+                    <i data-lucide="info" style="width: 14px;"></i>
+                    <span>Tap card to flip</span>
+                </div>
+
+                <div class="card-controls" style="margin-top: 1.5rem;">
+                    <button class="btn-card" onclick="prevFlashcard()"><i data-lucide="chevron-left"></i></button>
+                    <button class="btn-shuffle" onclick="shuffleFlashcards()"><i data-lucide="shuffle"></i> Shuffle Deck</button>
+                    <button class="btn-card" onclick="nextFlashcard()"><i data-lucide="chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 5 & 6: Randomized Quiz & Scoring -->
+        <div id="quiz" class="section-panel">
+            <!-- Quiz Active Screen -->
+            <div class="glass-card" id="quizActivePanel">
+                <div class="quiz-progress">
+                    <span>Question <strong id="questionNum">1</strong> of <strong id="totalQuestions">8</strong></span>
+                    <span id="quizScoreCount">Correct: 0</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                </div>
+
+                <div class="quiz-question-box" id="quizQuestionText">
+                    Loading question...
+                </div>
+
+                <div class="quiz-options" id="quizOptionsContainer">
+                    <!-- Options buttons loaded dynamically -->
+                </div>
+
+                <button class="btn-working-toggle" id="btnToggleWorking" onclick="toggleQuizWorking()" style="display: none;">
+                    <i data-lucide="calculator"></i> Show Step-by-Step Working
+                </button>
+                <div class="working-box" id="quizWorkingBox">
+                    <!-- Working shown here -->
+                </div>
+
+                <div class="quiz-feedback-panel" id="quizFeedbackPanel">
+                    <div class="quiz-feedback-header" id="quizFeedbackHeader">
+                        <span class="feedback-icon" id="quizFeedbackIcon">✓</span>
+                        <span id="quizFeedbackHeaderText">Correct!</span>
+                    </div>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);" id="quizFeedbackExplanation">
+                        Explanation goes here.
+                    </p>
+                </div>
+
+                <button class="btn-next-question" id="btnNextQuestion" onclick="advanceQuiz()">
+                    <span>Next Question</span> <i data-lucide="arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- Quiz Score / Feedback Summary Screen -->
+            <div class="glass-card" id="quizScorePanel" style="display: none;">
+                <div class="card-header" style="justify-content: center;">
+                    <h2>Quiz Summary</h2>
+                </div>
+
+                <div class="score-circle-wrapper">
+                    <svg class="score-circle-svg" width="140" height="140">
+                        <circle class="score-circle-bg" cx="70" cy="70" r="60"/>
+                        <circle class="score-circle-bar" id="scoreCircleBar" cx="70" cy="70" r="60"/>
+                    </svg>
+                    <div class="score-text" id="scorePercentText">0%</div>
+                </div>
+
+                <div class="score-tier-msg" id="scoreTierMessage">
+                    Loading results...
+                </div>
+
+                <!-- Breakdown of performance -->
+                <div style="background: rgba(0,0,0,0.2); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;">
+                    <h3 style="font-size: 0.95rem; margin-bottom: 0.75rem; color: white;">Topic Breakdown</h3>
+                    <div id="breakdownContainer">
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+
+                <button class="btn-simulator" onclick="restartQuiz()">
+                    <i data-lucide="rotate-ccw"></i> Try Quiz Again
+                </button>
+                <button class="btn-working-toggle" id="btnBackToConcept" onclick="switchTab('concept')" style="display: none; width: 100%; margin-top: 0.75rem; justify-content: center; padding: 0.8rem;">
+                    <i data-lucide="book-open"></i> Return to Lesson Basics
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables and configuration
+        const SPEED_AIR = 340;
+        const SPEED_WATER = 1500;
+
+        // Flashcards Pool
+        const flashcardsData = [
+            {
+                category: "Definition",
+                front: "What is an echo?",
+                back: "An echo is the reflection of sound waves back to the source/observer from a hard surface."
+            },
+            {
+                category: "Formula",
+                front: "What is the formula to calculate echo distance?",
+                back: "Distance (d) = (Speed (v) × Time (t)) / 2. We divide by 2 because the time measured is for the round-trip."
+            },
+            {
+                category: "Speed of Sound",
+                front: "What is the speed of sound in air vs. water?",
+                back: "Speed of sound is approximately 340 m/s in air, and much faster at approximately 1500 m/s in water."
+            },
+            {
+                category: "Application",
+                front: "How does Sonar work?",
+                back: "A transmitter on a ship sends ultrasound pulses into the sea. The pulses reflect off the seabed and are detected by a receiver. Depth = (1500 × time) / 2."
+            },
+            {
+                category: "Medical Application",
+                front: "How does medical ultrasound scanning work?",
+                back: "Ultrasound pulses are emitted into the body. Whenever they hit a boundary between different tissues, some waves reflect back. The depth is calculated using time delay."
+            },
+            {
+                category: "Double Echo",
+                front: "How is the double-echo problem solved?",
+                back: "For a person between two walls: calculate distance to Wall 1 (d1 = v × t1 / 2) and Wall 2 (d2 = v × t2 / 2). Total distance between walls = d1 + d2."
+            }
+        ];
+
+        let currentFlashcardIndex = 0;
+
+        // Quiz Question bank (30 questions pool: 12 conceptual, 18 templates for calculation questions)
+        // We will generate the quiz session questions dynamically from these templates to guarantee random values every single run!
+        const questionPool = [
+            // Conceptual questions
+            {
+                type: "mcq",
+                category: "Echo Concepts",
+                text: "Why is the total time divided by 2 when calculating the distance from an echo?",
+                options: [
+                    "Because the sound wave travels the distance twice (round trip) to reach the observer.",
+                    "Because sound travels twice as fast when reflecting.",
+                    "Because ultrasound has twice the frequency of normal sound waves.",
+                    "To account for the speed difference in air vs. water."
+                ],
+                correctIndex: 0,
+                explanation: "Dividing the round-trip time by 2 gives the time taken for a one-way trip to the reflecting surface."
+            },
+            {
+                type: "mcq",
+                category: "Sonar Concepts",
+                text: "Sonar is primarily used to measure what parameter?",
+                options: [
+                    "Depth of the seabed or distance to underwater objects.",
+                    "The temperature profile of ocean water layers.",
+                    "The pressure changes in water currents.",
+                    "The wind speed above the sea surface."
+                ],
+                correctIndex: 0,
+                explanation: "Sonar uses sound reflections to measure distance/depth underwater."
+            },
+            {
+                type: "Medical Ultrasound",
+                category: "Ultrasound Concepts",
+                text: "Medical ultrasound scanning detects reflections of ultrasound waves from which areas?",
+                options: [
+                    "Boundaries between different tissues or organs.",
+                    "Bone tissues only.",
+                    "Blood vessels and water content only.",
+                    "Air pockets inside the lungs only."
+                ],
+                correctIndex: 0,
+                explanation: "Part of the ultrasound wave is reflected at the boundaries where tissues have different densities."
+            },
+            {
+                type: "mcq",
+                category: "Ultrasound Concepts",
+                text: "Why is ultrasound preferred over audible sound for medical scans?",
+                options: [
+                    "Its high frequency allows for much higher resolution and finer details.",
+                    "It is completely silent so it does not startle the patient.",
+                    "It travels much faster than audible sound through tissue.",
+                    "It cannot be reflected by bone boundaries, allowing clearer views."
+                ],
+                correctIndex: 0,
+                explanation: "Short wavelengths associated with high frequencies permit the imaging of very small structures."
+            },
+            {
+                type: "mcq",
+                category: "Echo Concepts",
+                text: "Which of the following conditions is required to hear a distinct echo in air?",
+                options: [
+                    "The reflecting wall must be far enough so the reflected sound is heard after a delay of at least 0.1s.",
+                    "The wall must be painted a bright color to increase wave reflection properties.",
+                    "The environment must be completely vacuum to prevent wave dispersion.",
+                    "The sound wave must have a frequency below 20 Hz."
+                ],
+                correctIndex: 0,
+                explanation: "The human brain needs about 0.1 seconds of delay to perceive two sounds as distinct instead of merged."
+            },
+            // Templates for dynamic calculations (we will generate numeric values on quiz build)
+            {
+                type: "calc_dist",
+                category: "Basic Echo Calculations"
+            },
+            {
+                type: "calc_time",
+                category: "Basic Echo Calculations"
+            },
+            {
+                type: "calc_speed",
+                category: "Basic Echo Calculations"
+            },
+            {
+                type: "calc_sonar",
+                category: "Sonar/Ultrasound Concepts"
+            },
+            {
+                type: "calc_double_echo",
+                category: "Two-walls problems"
+            }
+        ];
+
+        // Active Session variables
+        let currentQuizQuestions = [];
+        let currentQuizIndex = 0;
+        let quizScore = 0;
+        let topicBreakdown = {
+            "Basic Echo Calculations": { correct: 0, total: 0 },
+            "Two-walls problems": { correct: 0, total: 0 },
+            "Sonar/Ultrasound Concepts": { correct: 0, total: 0 },
+            "Echo Concepts": { correct: 0, total: 0 },
+            "Ultrasound Concepts": { correct: 0, total: 0 }
+        };
+
+        // Navigation switching
+        function switchTab(tabId) {
+            document.querySelectorAll('.section-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tabId).classList.add('active');
+            // Find nav button corresponding to target
+            const tabButtons = document.querySelectorAll('.nav-btn');
+            tabButtons.forEach(btn => {
+                if (btn.getAttribute('onclick').includes(tabId)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Start animations/render if switching to matching tab
+            if (tabId === 'concept') {
+                initConceptAnimation();
+            } else if (tabId === 'simulator') {
+                initSimulatorAnimation();
+            }
+        }
+
+        // --- ANIMATED DIAGRAMS ---
+        let conceptAnimFrame;
+        function initConceptAnimation() {
+            const canvas = document.getElementById('conceptCanvas');
+            const ctx = canvas.getContext('2d');
+            let width = (canvas.width = canvas.parentElement.clientWidth);
+            let height = (canvas.height = canvas.parentElement.clientHeight);
+
+            let pulseTime = 0;
+            
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+
+                // Draw speaker source (Observer/Microphone combined)
+                ctx.fillStyle = '#ec4899';
+                ctx.beginPath();
+                ctx.arc(40, height / 2, 12, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Draw wall
+                ctx.fillStyle = '#64748b';
+                ctx.fillRect(width - 30, 20, 15, height - 40);
+                
+                // Draw ground lines
+                ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(0, height - 15);
+                ctx.lineTo(width, height - 15);
+                ctx.stroke();
+
+                // Draw Text labels
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = '11px Outfit, sans-serif';
+                ctx.fillText("Source / Mic", 15, height / 2 + 30);
+                ctx.fillText("Reflecting Wall", width - 85, height / 2 + 30);
+
+                // Animate wavefront pulse
+                pulseTime += 0.008;
+                if (pulseTime > 2) pulseTime = 0; // reset loop
+
+                let distanceToWall = width - 70; // path width
+                
+                if (pulseTime < 1) {
+                    // Outward wave
+                    let x = 40 + pulseTime * distanceToWall;
+                    ctx.strokeStyle = 'rgba(236, 72, 153, 0.8)';
+                    ctx.shadowColor = '#ec4899';
+                    ctx.shadowBlur = 8;
+                    ctx.lineWidth = 3;
+                    
+                    // Wave arcs
+                    ctx.beginPath();
+                    ctx.arc(40, height / 2, x - 40, -Math.PI / 4, Math.PI / 4);
+                    ctx.stroke();
+                    ctx.shadowBlur = 0; // reset shadow
+                    
+                    // Label
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillText("Outward Sound Wave", x - 30, height / 2 - 25);
+                } else {
+                    // Reflected wave returning
+                    let returnProgress = pulseTime - 1;
+                    let x = (width - 30) - returnProgress * distanceToWall;
+                    ctx.strokeStyle = 'rgba(168, 85, 247, 0.8)';
+                    ctx.shadowColor = '#a855f7';
+                    ctx.shadowBlur = 8;
+                    ctx.lineWidth = 3;
+                    
+                    ctx.beginPath();
+                    ctx.arc(width - 30, height / 2, (width - 30) - x, Math.PI * 0.75, Math.PI * 1.25);
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+                    
+                    // Label
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillText("Reflected Echo", x - 10, height / 2 + 25);
+                }
+
+                conceptAnimFrame = requestAnimationFrame(animate);
+            }
+            
+            cancelAnimationFrame(conceptAnimFrame);
+            animate();
+        }
+
+        // --- ECHO SIMULATOR ---
+        let simAnimFrame;
+        let simDistance = 250;
+        let simPulseTime = 0;
+        let isSimRunning = false;
+        let simCurrentTimer = 0;
+
+        function initSimulatorAnimation() {
+            const canvas = document.getElementById('simCanvas');
+            const ctx = canvas.getContext('2d');
+            let width = (canvas.width = canvas.parentElement.clientWidth);
+            let height = (canvas.height = canvas.parentElement.clientHeight);
+
+            function drawSim() {
+                ctx.clearRect(0, 0, width, height);
+
+                // Draw source
+                ctx.fillStyle = '#ec4899';
+                ctx.beginPath();
+                ctx.arc(40, height / 2, 10, 0, Math.PI*2);
+                ctx.fill();
+
+                // Compute Wall position relative to canvas width
+                // Slider ranges 10 to 500. Map to canvas coordinates
+                let startX = 40;
+                let endX = width - 30;
+                let wallFraction = (simDistance - 10) / 490; // 0 to 1
+                let wallX = startX + wallFraction * (endX - startX);
+
+                // Draw Wall
+                ctx.fillStyle = '#64748b';
+                ctx.fillRect(wallX, 30, 12, height - 60);
+
+                // Wave Animation
+                if (isSimRunning) {
+                    let totalTimeForRoundTrip = (2 * simDistance) / SPEED_AIR;
+                    let elapsed = simCurrentTimer;
+                    let progressFraction = elapsed / totalTimeForRoundTrip; // 0 to 1
+
+                    if (progressFraction >= 1) {
+                        isSimRunning = false;
+                        simCurrentTimer = totalTimeForRoundTrip;
+                    } else {
+                        // Increment timer based on frame duration
+                        simCurrentTimer += 0.016; // Approx 60 FPS
+                    }
+
+                    document.getElementById('simTimerText').innerText = simCurrentTimer.toFixed(2) + " s";
+
+                    // Draw the wavefront
+                    let waveX;
+                    if (progressFraction < 0.5) {
+                        // Outbound: 0 to 0.5 fraction maps to 0 to wallX
+                        let partFraction = progressFraction / 0.5;
+                        waveX = startX + partFraction * (wallX - startX);
+                        ctx.strokeStyle = 'rgba(236, 72, 153, 0.8)';
+                        ctx.shadowColor = '#ec4899';
+                        ctx.shadowBlur = 8;
+                        ctx.lineWidth = 3;
+                        ctx.beginPath();
+                        ctx.arc(startX, height/2, waveX - startX, -Math.PI/4, Math.PI/4);
+                        ctx.stroke();
+                    } else {
+                        // Return: 0.5 to 1.0 fraction maps from wallX back to startX
+                        let partFraction = (progressFraction - 0.5) / 0.5;
+                        waveX = wallX - partFraction * (wallX - startX);
+                        ctx.strokeStyle = 'rgba(168, 85, 247, 0.8)';
+                        ctx.shadowColor = '#a855f7';
+                        ctx.shadowBlur = 8;
+                        ctx.lineWidth = 3;
+                        ctx.beginPath();
+                        ctx.arc(wallX, height/2, wallX - waveX, Math.PI * 0.75, Math.PI * 1.25);
+                        ctx.stroke();
+                    }
+                    ctx.shadowBlur = 0;
+                }
+
+                // Text labels
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = '11px Outfit, sans-serif';
+                ctx.fillText(`Distance: ${simDistance}m`, wallX - 35, 20);
+
+                simAnimFrame = requestAnimationFrame(drawSim);
+            }
+
+            cancelAnimationFrame(simAnimFrame);
+            drawSim();
+        }
+
+        // Setup Event listeners for simulator slider
+        document.getElementById('distanceSlider').addEventListener('input', (e) => {
+            simDistance = parseInt(e.target.value);
+            document.getElementById('simDistanceText').innerText = simDistance + " m";
+            
+            // Calculate round trip time instantly
+            let calculatedTime = (2 * simDistance) / SPEED_AIR;
+            document.getElementById('simTimeText').innerText = calculatedTime.toFixed(2) + " s";
+            
+            if (!isSimRunning) {
+                document.getElementById('simTimerText').innerText = "0.00 s";
+            }
+        });
+
+        document.getElementById('btnPing').addEventListener('click', () => {
+            isSimRunning = true;
+            simCurrentTimer = 0;
+        });
+
+        // --- APPLICATIONS HOTSPOTS ---
+        let currentAppProblem = {};
+
+        function switchHotspotTab(appType) {
+            document.querySelectorAll('.hotspot-tab-btn').forEach(btn => btn.classList.remove('active'));
+            if (appType === 'sonar') {
+                document.querySelector('[onclick*="sonar"]').classList.add('active');
+                document.getElementById('sonarWrapper').style.display = 'block';
+                document.getElementById('medicalWrapper').style.display = 'none';
+            } else {
+                document.querySelector('[onclick*="medical"]').classList.add('active');
+                document.getElementById('sonarWrapper').style.display = 'none';
+                document.getElementById('medicalWrapper').style.display = 'block';
+            }
+            
+            // Reset description box
+            document.getElementById('hotspotInfoBox').innerHTML = `<p style="color: var(--text-secondary);"><i data-lucide="info" style="display: inline; vertical-align: middle; width: 16px; margin-right: 4px;"></i> Tap any hotspot marker (1, 2, or 3) on the diagram to see how it works.</p>`;
+            
+            generateAppProblem();
+            lucide.createIcons();
+        }
+
+        const hotspotDetails = {
+            sonar: {
+                transmitter: {
+                    title: "Transmitter / Receiver",
+                    desc: "Device located on the ship hull. The transmitter converts electrical energy into high-frequency ultrasound waves, while the receiver detects the reflected waves returning from the seabed."
+                },
+                pulse: {
+                    title: "Ultrasound Pulse Path",
+                    desc: "Ultrasound travels rapidly through liquid. In seawater, the speed of sound is approximately 1500 m/s (faster than air due to density). The wave travels down, hits the bed, and returns."
+                },
+                seabed: {
+                    title: "Reflecting Seabed Boundary",
+                    desc: "The hard rock/sand seabed interface reflects the sound pulse. Because of the difference in density between seawater and solid seabed, a strong echo reflects back to the surface."
+                }
+            },
+            medical: {
+                probe: {
+                    title: "Ultrasound Probe (Transducer)",
+                    desc: "Held against the patient's skin. It emits pulses of high-frequency sound (ultrasound) and detects the echoes that bounce back. It acts as both the sender and receiver."
+                },
+                pulse: {
+                    title: "Ultrasound Wave Pulse",
+                    desc: "High frequency sound waves (typically 1 to 15 MHz) pass easily through soft body tissues, traveling at about 1540 m/s in human tissue. They are completely safe and non-ionising."
+                },
+                boundary: {
+                    title: "Tissue Boundary Reflection",
+                    desc: "When the pulse reaches a boundary between different organs or tissues (like kidney/fat boundary), some sound is reflected back. A computer computes the depth based on reflection time to render an image."
+                }
+            }
+        };
+
+        function showHotspotInfo(mode, point) {
+            const data = hotspotDetails[mode][point];
+            const infoBox = document.getElementById('hotspotInfoBox');
+            infoBox.innerHTML = `
+                <h4 style="color: var(--accent-pink); font-size: 0.95rem; margin-bottom: 0.25rem;">${data.title}</h4>
+                <p style="font-size: 0.85rem; color: #f1f5f9;">${data.desc}</p>
+            `;
+        }
+
+        function generateAppProblem() {
+            const isSonarActive = document.querySelector('[onclick*="sonar"]').classList.contains('active');
+            const appType = isSonarActive ? 'sonar' : 'medical';
+            
+            let speed, time, distance;
+            let hiddenVar = ['distance', 'speed', 'time'][Math.floor(Math.random() * 3)];
+            
+            if (appType === 'sonar') {
+                // Seawater range: 1400 to 2000 m/s in steps of 50
+                speed = 1400 + Math.floor(Math.random() * 13) * 50;
+                const times = [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2];
+                time = times[Math.floor(Math.random() * times.length)];
+                distance = (speed * time) / 2; // m
+            } else {
+                // Soft tissue range: 1450 to 1600 m/s in steps of 25
+                speed = 1450 + Math.floor(Math.random() * 7) * 25;
+                const times = [0.00002, 0.00004, 0.00006, 0.00008, 0.00010, 0.00012];
+                time = times[Math.floor(Math.random() * times.length)];
+                distance = (speed * time) / 2; // m
+            }
+
+            currentAppProblem = {
+                appType: appType,
+                speed: speed,
+                time: time,
+                distance: distance,
+                hiddenVar: hiddenVar
+            };
+
+            let title = appType === 'sonar' ? "Sonar Depth Challenge" : "Ultrasound Scanning Challenge";
+            let problemText = "";
+            let workingHTML = "";
+            let targetVal = 0;
+            let targetUnit = "";
+
+            if (hiddenVar === 'distance') {
+                targetVal = distance;
+                targetUnit = "m";
+                if (appType === 'sonar') {
+                    problemText = `A ship emits a sonar pulse downwards to the seabed. The speed of sound in seawater is <strong>${speed} m/s</strong>. If the echo returns after <strong>${time} s</strong>, calculate the depth of the seabed in meters.`;
+                } else {
+                    problemText = `A medical ultrasound probe emits a pulse into soft tissue where the speed of sound is <strong>${speed} m/s</strong>. The reflection from an organ boundary returns after <strong>${time} s</strong>. Calculate the depth of the boundary in meters.`;
+                }
+                workingHTML = `
+                    <strong>1. State formula:</strong><br>
+                    Distance = (Speed × Time) / 2<br><br>
+                    <strong>2. Substitute values:</strong><br>
+                    Distance = (${speed} m/s × ${time} s) / 2<br><br>
+                    <strong>3. Calculate:</strong><br>
+                    Distance = ${(speed * time).toFixed(4)} / 2 = <strong>${targetVal.toFixed(targetVal >= 1 ? 1 : 4)} m</strong>
+                `;
+            } else if (hiddenVar === 'speed') {
+                targetVal = speed;
+                targetUnit = "m/s";
+                const displayDistance = distance >= 1 ? distance.toFixed(1) : distance.toFixed(4);
+                if (appType === 'sonar') {
+                    problemText = `A sonar pulse is sent from a ship to the seabed at a depth of <strong>${displayDistance} m</strong>. The echo is received after <strong>${time} s</strong>. Calculate the speed of sound in this water.`;
+                } else {
+                    problemText = `An ultrasound pulse travels through soft tissue to a boundary at a depth of <strong>${displayDistance} m</strong>. The reflected signal returns to the probe after <strong>${time} s</strong>. Calculate the speed of sound in the tissue.`;
+                }
+                workingHTML = `
+                    <strong>1. State formula:</strong><br>
+                    Speed = (2 × Distance) / Time<br><br>
+                    <strong>2. Substitute values:</strong><br>
+                    Speed = (2 × ${displayDistance} m) / ${time} s<br><br>
+                    <strong>3. Calculate:</strong><br>
+                    Speed = ${(2 * distance).toFixed(4)} / ${time} = <strong>${targetVal} m/s</strong>
+                `;
+            } else { // time
+                targetVal = time;
+                targetUnit = "s";
+                const displayDistance = distance >= 1 ? distance.toFixed(1) : distance.toFixed(4);
+                if (appType === 'sonar') {
+                    problemText = `A ship maps the seabed at a depth of <strong>${displayDistance} m</strong>. If the speed of sound in seawater is <strong>${speed} m/s</strong>, calculate the time taken for the sonar pulse to return.`;
+                } else {
+                    problemText = `An organ boundary is located at a depth of <strong>${displayDistance} m</strong> in soft tissue. If the speed of ultrasound in the tissue is <strong>${speed} m/s</strong>, calculate the time taken for the echo to return to the probe.`;
+                }
+                workingHTML = `
+                    <strong>1. State formula:</strong><br>
+                    Time = (2 × Distance) / Speed<br><br>
+                    <strong>2. Substitute values:</strong><br>
+                    Time = (2 × ${displayDistance} m) / ${speed} m/s<br><br>
+                    <strong>3. Calculate:</strong><br>
+                    Time = ${(2 * distance).toFixed(4)} / ${speed} = <strong>${targetVal.toFixed(6)} s</strong>
+                `;
+            }
+
+            currentAppProblem.targetVal = targetVal;
+            currentAppProblem.targetUnit = targetUnit;
+            currentAppProblem.workingHTML = workingHTML;
+
+            document.getElementById('calcTitle').innerText = title;
+            document.getElementById('calcProblemText').innerHTML = problemText;
+            document.getElementById('calcAnswerInput').value = "";
+            
+            // Hide feedback and working boxes
+            const feedback = document.getElementById('calcFeedbackText');
+            feedback.style.display = 'none';
+            feedback.className = '';
+            
+            document.getElementById('calcWorkingBox').style.display = 'none';
+            document.getElementById('btnToggleAppWorking').innerHTML = `<i data-lucide="calculator"></i> Show Step-by-Step Working`;
+            
+            lucide.createIcons();
+        }
+
+        function checkCalcAnswer() {
+            const inputVal = document.getElementById('calcAnswerInput').value.trim();
+            const feedback = document.getElementById('calcFeedbackText');
+            
+            if (!inputVal) {
+                feedback.innerHTML = "Please enter an answer.";
+                feedback.style.display = 'block';
+                feedback.style.backgroundColor = 'rgba(234, 179, 8, 0.1)';
+                feedback.style.color = 'var(--border-incorrect)';
+                feedback.style.border = '1px solid var(--border-incorrect)';
+                feedback.style.boxShadow = 'none';
+                return;
+            }
+
+            // Parse number followed by unit (m, s, or m/s) with any spacing
+            const match = inputVal.match(/^\s*([+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)\s*(m\/s|m|s)\s*$/i);
+            
+            if (!match) {
+                feedback.innerHTML = "Invalid format. Please enter both the number and the unit beside it (e.g. <code>600 m</code>, <code>1500 m/s</code>, or <code>0.00004 s</code>).";
+                feedback.style.display = 'block';
+                feedback.style.backgroundColor = 'rgba(234, 179, 8, 0.1)';
+                feedback.style.color = 'var(--border-incorrect)';
+                feedback.style.border = '1px solid var(--border-incorrect)';
+                feedback.style.boxShadow = 'none';
+                
+                // Shake animation
+                feedback.style.animation = 'none';
+                feedback.offsetHeight; // trigger reflow
+                feedback.style.animation = 'shake 0.4s ease';
+                return;
+            }
+
+            const userNum = parseFloat(match[1]);
+            const userUnit = match[2].toLowerCase();
+            
+            const expectedVal = currentAppProblem.targetVal;
+            const expectedUnit = currentAppProblem.targetUnit.toLowerCase();
+
+            // Check unit
+            if (userUnit !== expectedUnit) {
+                feedback.innerHTML = `Incorrect unit. Expected unit for this calculation is <strong>${currentAppProblem.targetUnit}</strong>.`;
+                feedback.style.display = 'block';
+                feedback.style.backgroundColor = 'rgba(234, 179, 8, 0.1)';
+                feedback.style.color = 'var(--border-incorrect)';
+                feedback.style.border = '1px solid var(--border-incorrect)';
+                feedback.style.boxShadow = 'none';
+                
+                feedback.style.animation = 'none';
+                feedback.offsetHeight;
+                feedback.style.animation = 'shake 0.4s ease';
+                return;
+            }
+
+            // Check value within 2% margin
+            const diff = Math.abs(userNum - expectedVal);
+            const percentDiff = diff / expectedVal;
+            
+            if (percentDiff <= 0.02) {
+                feedback.innerHTML = "✓ Correct! Brilliant calculation.";
+                feedback.style.display = 'block';
+                feedback.style.backgroundColor = 'rgba(56, 189, 248, 0.1)';
+                feedback.style.color = 'var(--border-correct)';
+                feedback.style.border = '1px solid var(--border-correct)';
+                feedback.style.boxShadow = 'var(--color-correct-glow)';
+            } else {
+                feedback.innerHTML = "✗ Incorrect numerical value. Double check your math and try again.";
+                feedback.style.display = 'block';
+                feedback.style.backgroundColor = 'rgba(234, 179, 8, 0.1)';
+                feedback.style.color = 'var(--border-incorrect)';
+                feedback.style.border = '1px solid var(--border-incorrect)';
+                feedback.style.boxShadow = 'var(--color-incorrect-glow)';
+                
+                feedback.style.animation = 'none';
+                feedback.offsetHeight;
+                feedback.style.animation = 'shake 0.4s ease';
+            }
+        }
+
+        function toggleAppWorking() {
+            const box = document.getElementById('calcWorkingBox');
+            if (box.style.display === 'none' || !box.style.display) {
+                box.innerHTML = currentAppProblem.workingHTML;
+                box.style.display = 'block';
+                document.getElementById('btnToggleAppWorking').innerHTML = `<i data-lucide="eye-off"></i> Hide Working`;
+            } else {
+                box.style.display = 'none';
+                document.getElementById('btnToggleAppWorking').innerHTML = `<i data-lucide="calculator"></i> Show Step-by-Step Working`;
+            }
+            lucide.createIcons();
+        }
+
+        // --- FLASHCARD REVISION ---
+        let currentFlashcardDeck = [...flashcardsData];
+
+        function displayFlashcard() {
+            const card = currentFlashcardDeck[currentFlashcardIndex];
+            document.getElementById('cardCategory').innerText = card.category;
+            document.getElementById('cardFrontText').innerText = card.front;
+            document.getElementById('cardBackText').innerText = card.back;
+            document.getElementById('flashcardElement').classList.remove('flipped');
+        }
+
+        function flipFlashcard() {
+            document.getElementById('flashcardElement').classList.toggle('flipped');
+        }
+
+        function runAfterFlipBack(callback) {
+            const el = document.getElementById('flashcardElement');
+            if (el.classList.contains('flipped')) {
+                el.classList.remove('flipped');
+                setTimeout(callback, 300);
+            } else {
+                callback();
+            }
+        }
+
+        function nextFlashcard() {
+            runAfterFlipBack(() => {
+                currentFlashcardIndex = (currentFlashcardIndex + 1) % currentFlashcardDeck.length;
+                displayFlashcard();
+            });
+        }
+
+        function prevFlashcard() {
+            runAfterFlipBack(() => {
+                currentFlashcardIndex = (currentFlashcardIndex - 1 + currentFlashcardDeck.length) % currentFlashcardDeck.length;
+                displayFlashcard();
+            });
+        }
+
+        function shuffleFlashcards() {
+            runAfterFlipBack(() => {
+                // Fisher-Yates shuffle
+                for (let i = currentFlashcardDeck.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [currentFlashcardDeck[i], currentFlashcardDeck[j]] = [currentFlashcardDeck[j], currentFlashcardDeck[i]];
+                }
+                currentFlashcardIndex = 0;
+                displayFlashcard();
+            });
+        }
+
+        // Add touch gestures (Swipe support)
+        let touchstartX = 0;
+        let touchendX = 0;
+
+        function checkDirection() {
+            if (touchendX < touchstartX - 50) {
+                // swiped left
+                nextFlashcard();
+            }
+            if (touchendX > touchstartX + 50) {
+                // swiped right
+                prevFlashcard();
+            }
+        }
+
+        const cardContainer = document.querySelector('.flashcard-container');
+        cardContainer.addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX;
+        }, {passive: true});
+
+        cardContainer.addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX;
+            checkDirection();
+        }, {passive: true});
+
+
+        // --- QUIZ & SCORING SYSTEM ---
+        function generateQuizQuestions() {
+            let list = [];
+            
+            // Draw a total of 9 questions: 4 conceptual + 5 random calculations
+            // Conceptual questions
+            let conceptPool = questionPool.filter(q => q.type === 'mcq' || q.type === 'Medical Ultrasound');
+            // Shuffle and pick 4
+            let shuffledConcepts = conceptPool.sort(() => 0.5 - Math.random()).slice(0, 4);
+            list.push(...shuffledConcepts);
+
+            // Add calculations (all 5 calculator templates with randomized numbers)
+            // Type 1: Basic echo distance
+            const randTime1 = (Math.random() * 3.5 + 0.5).toFixed(2); // 0.5 to 4 s
+            const dist1 = (SPEED_AIR * parseFloat(randTime1) / 2).toFixed(1);
+            list.push({
+                type: "calc",
+                category: "Basic Echo Calculations",
+                text: `A sound pulse is emitted toward a wall in air. The echo returns to the source after ${randTime1} seconds. Calculate the distance from the source to the wall. (Speed of sound = 340 m/s)`,
+                options: shuffleArray([
+                    `${dist1} m`,
+                    `${(dist1 * 2).toFixed(1)} m`,
+                    `${(dist1 / 2).toFixed(1)} m`,
+                    `${(SPEED_AIR * parseFloat(randTime1)).toFixed(1)} m`
+                ]),
+                correctAnswer: `${dist1} m`,
+                working: `
+                    <strong>1. State formula:</strong><br>
+                    Distance = (Speed × Time) / 2<br><br>
+                    <strong>2. Substitute values:</strong><br>
+                    Distance = (340 m/s × ${randTime1} s) / 2<br><br>
+                    <strong>3. Calculate final answer:</strong><br>
+                    Distance = ${(340 * parseFloat(randTime1)).toFixed(1)} / 2 = <strong>${dist1} m</strong>
+                `,
+                explanation: `Sound must make a round-trip. Dividing by 2 gets the single distance to the wall.`
+            });
+
+            // Type 2: Basic echo time
+            const randDist2 = Math.floor(Math.random() * 550 + 50); // 50 to 600 m
+            const time2 = (2 * randDist2 / SPEED_AIR).toFixed(2);
+            list.push({
+                type: "calc",
+                category: "Basic Echo Calculations",
+                text: `A vertical cliff is ${randDist2} m away from an observer in air. Calculate the time taken for the echo of a clap to return to the observer. (Speed of sound = 340 m/s)`,
+                options: shuffleArray([
+                    `${time2} s`,
+                    `${(time2 / 2).toFixed(2)} s`,
+                    `${(time2 * 2).toFixed(2)} s`,
+                    `${(randDist2 / SPEED_AIR).toFixed(2)} s`
+                ]),
+                correctAnswer: `${time2} s`,
+                working: `
+                    <strong>1. Rearrange formula:</strong><br>
+                    Time = (2 × Distance) / Speed<br><br>
+                    <strong>2. Substitute values:</strong><br>
+                    Time = (2 × ${randDist2} m) / 340 m/s<br><br>
+                    <strong>3. Calculate final answer:</strong><br>
+                    Time = ${2 * randDist2} / 340 = <strong>${time2} s</strong>
+                `,
+                explanation: `The sound travels to the cliff and back, covering ${randDist2 * 2} m in total at 340 m/s.`
+            });
+
+            // Type 3: Basic echo speed
+            const randTime3 = (Math.random() * 2 + 1).toFixed(2); // 1 to 3 s
+            const randDist3 = Math.floor(Math.random() * 300 + 150); // 150 to 450 m
+            const speed3 = Math.round(2 * randDist3 / parseFloat(randTime3));
+            list.push({
+                type: "calc",
+                category: "Basic Echo Calculations",
+                text: `A student claps while standing at a distance of ${randDist3} m from a concrete wall. The echo is heard ${randTime3} s later. Calculate the speed of sound.`,
+                options: shuffleArray([
+                    `${speed3} m/s`,
+                    `${Math.round(speed3 / 2)} m/s`,
+                    `${Math.round(speed3 * 2)} m/s`,
+                    `${Math.round(randDist3 / randTime3)} m/s`
+                ]),
+                correctAnswer: `${speed3} m/s`,
+                working: `
+                    <strong>1. Rearrange formula:</strong><br>
+                    Speed = (2 × Distance) / Time<br><br>
+                    <strong>2. Substitute values:</strong><br>
+                    Speed = (2 × ${randDist3} m) / ${randTime3} s<br><br>
+                    <strong>3. Calculate final answer:</strong><br>
+                    Speed = ${2 * randDist3} / ${randTime3} = <strong>${speed3} m/s</strong>
+                `,
+                explanation: `Dividing total round-trip distance (${randDist3 * 2} m) by the elapsed time (${randTime3} s) gives the speed.`
+            });
+
+            // Type 4: Two-walls double-echo
+            const tNear = parseFloat((Math.random() * 2 + 1).toFixed(1)); // 1 to 3 s
+            const tGap = parseFloat((Math.random() * 1.5 + 0.5).toFixed(1)); // 0.5 to 2 s
+            const tFar = tNear + tGap;
+            const dNear = (SPEED_AIR * tNear) / 2;
+            const dFar = (SPEED_AIR * tFar) / 2;
+            const totalDistBetweenWalls = dNear + dFar;
+
+            list.push({
+                type: "calc",
+                category: "Two-walls problems",
+                text: `A sound source is placed between two vertical walls. The first echo returns after ${tNear} s, and the second echo returns ${tGap} s AFTER the first echo. Calculate the distance between the two walls. (Speed of sound = 340 m/s)`,
+                options: shuffleArray([
+                    `${totalDistBetweenWalls.toFixed(0)} m`,
+                    `${(dFar - dNear).toFixed(0)} m`,
+                    `${((dNear + dFar) / 2).toFixed(0)} m`,
+                    `${(SPEED_AIR * (tNear + tFar)).toFixed(0)} m`
+                ]),
+                correctAnswer: `${totalDistBetweenWalls.toFixed(0)} m`,
+                working: `
+                    <strong>1. Calculate distance to nearer wall:</strong><br>
+                    d1 = (Speed × t1) / 2 = (340 × ${tNear}) / 2 = ${dNear} m<br><br>
+                    <strong>2. Calculate distance to farther wall:</strong><br>
+                    t2 = ${tNear} + ${tGap} = ${tFar} s<br>
+                    d2 = (Speed × t2) / 2 = (340 × ${tFar}) / 2 = ${dFar} m<br><br>
+                    <strong>3. Sum the distances:</strong><br>
+                    Total Distance = d1 + d2 = ${dNear} + ${dFar} = <strong>${totalDistBetweenWalls.toFixed(0)} m</strong>
+                `,
+                explanation: `The sound source is between the walls, so the distance between the walls is the sum of the distances from the source to each wall.`
+            });
+
+            // Type 5: Sonar depth
+            const randTime5 = (Math.random() * 1.8 + 0.2).toFixed(2); // 0.2 to 2 s
+            const depth5 = (SPEED_WATER * parseFloat(randTime5) / 2).toFixed(0);
+            list.push({
+                type: "calc",
+                category: "Sonar/Ultrasound Concepts",
+                text: `A ship sends out an ultrasound pulse to measure the ocean depth. The pulse returns 40 kHz echoes to the receiver after ${randTime5} s. Calculate the seabed depth. (Speed of sound in seawater = 1500 m/s)`,
+                options: shuffleArray([
+                    `${depth5} m`,
+                    `${(depth5 * 2)} m`,
+                    `${(depth5 / 2).toFixed(0)} m`,
+                    `${(SPEED_AIR * parseFloat(randTime5) / 2).toFixed(0)} m`
+                ]),
+                correctAnswer: `${depth5} m`,
+                working: `
+                    <strong>1. State formula:</strong><br>
+                    Depth = (Speed in water × Time) / 2<br><br>
+                    <strong>2. Substitute values:</strong><br>
+                    Depth = (1500 m/s × ${randTime5} s) / 2<br><br>
+                    <strong>3. Calculate final answer:</strong><br>
+                    Depth = ${(1500 * parseFloat(randTime5))} / 2 = <strong>${depth5} m</strong>
+                `,
+                explanation: `Ultrasound travels at 1500 m/s in water. Using depth = (v × t) / 2 yields the depth.`
+            });
+
+            // Shuffle entire quiz list
+            return list.sort(() => 0.5 - Math.random());
+        }
+
+        function shuffleArray(arr) {
+            return arr.sort(() => 0.5 - Math.random());
+        }
+
+        function startNewQuizSession() {
+            currentQuizQuestions = generateQuizQuestions();
+            currentQuizIndex = 0;
+            quizScore = 0;
+            
+            // Reset categories tracker
+            for (let key in topicBreakdown) {
+                topicBreakdown[key].correct = 0;
+                topicBreakdown[key].total = 0;
+            }
+
+            document.getElementById('quizActivePanel').style.display = 'block';
+            document.getElementById('quizScorePanel').style.display = 'none';
+            document.getElementById('totalQuestions').innerText = currentQuizQuestions.length;
+            
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            // Hide working and feedback panels
+            document.getElementById('quizFeedbackPanel').style.display = 'none';
+            document.getElementById('quizWorkingBox').style.display = 'none';
+            document.getElementById('btnNextQuestion').style.display = 'none';
+            document.getElementById('btnToggleWorking').style.display = 'none';
+
+            const q = currentQuizQuestions[currentQuizIndex];
+            
+            // Track total for breakdown
+            topicBreakdown[q.category].total++;
+
+            // Update progress
+            document.getElementById('questionNum').innerText = currentQuizIndex + 1;
+            const progress = ((currentQuizIndex) / currentQuizQuestions.length) * 100;
+            document.getElementById('progressBarFill').style.width = progress + '%';
+            document.getElementById('quizScoreCount').innerText = `Correct: ${quizScore}`;
+
+            // Show text
+            document.getElementById('quizQuestionText').innerText = q.text;
+
+            // Generate option buttons
+            const container = document.getElementById('quizOptionsContainer');
+            container.innerHTML = '';
+
+            const options = q.options || q.options; // MCQs have option arrays
+            
+            if (q.type === 'mcq' || q.type === 'Medical Ultrasound') {
+                q.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerHTML = `<span>${opt}</span>`;
+                    btn.onclick = () => submitAnswer(idx, btn);
+                    container.appendChild(btn);
+                });
+            } else {
+                // Calc questions
+                q.options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerHTML = `<span>${opt}</span>`;
+                    btn.onclick = () => submitAnswer(opt, btn);
+                    container.appendChild(btn);
+                });
+            }
+        }
+
+        let hasSubmittedCurrent = false;
+
+        function submitAnswer(chosenVal, btnElement) {
+            if (hasSubmittedCurrent) return;
+            hasSubmittedCurrent = true;
+
+            const q = currentQuizQuestions[currentQuizIndex];
+            let isCorrect = false;
+
+            // Check correctness
+            if (q.type === 'mcq' || q.type === 'Medical Ultrasound') {
+                if (chosenVal === q.correctIndex) {
+                    isCorrect = true;
+                }
+            } else {
+                if (chosenVal === q.correctAnswer) {
+                    isCorrect = true;
+                }
+            }
+
+            // Disable other buttons, highlight chosen/correct
+            const buttons = document.querySelectorAll('.quiz-options .option-btn');
+            buttons.forEach((btn, idx) => {
+                btn.style.cursor = 'default';
+                
+                // For MCQs
+                if (q.type === 'mcq' || q.type === 'Medical Ultrasound') {
+                    if (idx === q.correctIndex) {
+                        btn.classList.add('correct');
+                        btn.innerHTML += `<span class="feedback-icon correct-icon">✓</span>`;
+                    } else if (btn === btnElement) {
+                        btn.classList.add('incorrect');
+                        btn.innerHTML += `<span class="feedback-icon incorrect-icon">✗</span>`;
+                    }
+                } else {
+                    // For calculation type questions
+                    const optVal = q.options[idx];
+                    if (optVal === q.correctAnswer) {
+                        btn.classList.add('correct');
+                        btn.innerHTML += `<span class="feedback-icon correct-icon">✓</span>`;
+                    } else if (btn === btnElement) {
+                        btn.classList.add('incorrect');
+                        btn.innerHTML += `<span class="feedback-icon incorrect-icon">✗</span>`;
+                    }
+                }
+            });
+
+            // Update stats
+            if (isCorrect) {
+                quizScore++;
+                topicBreakdown[q.category].correct++;
+                document.getElementById('quizFeedbackHeader').innerHTML = `<span class="feedback-icon correct-icon">✓</span> <span>Correct!</span>`;
+                document.getElementById('quizFeedbackPanel').style.boxShadow = 'var(--color-correct-glow)';
+                document.getElementById('quizFeedbackPanel').style.borderColor = 'var(--border-correct)';
+            } else {
+                document.getElementById('quizFeedbackHeader').innerHTML = `<span class="feedback-icon incorrect-icon">✗</span> <span>Incorrect</span>`;
+                document.getElementById('quizFeedbackPanel').style.boxShadow = 'var(--color-incorrect-glow)';
+                document.getElementById('quizFeedbackPanel').style.borderColor = 'var(--border-incorrect)';
+                btnElement.classList.add('incorrect');
+            }
+
+            // Show explanation panel
+            document.getElementById('quizFeedbackExplanation').innerText = q.explanation;
+            document.getElementById('quizFeedbackPanel').style.display = 'block';
+
+            // If calculation, enable worked formula review
+            if (q.working) {
+                document.getElementById('quizWorkingBox').innerHTML = q.working;
+                document.getElementById('btnToggleWorking').style.display = 'inline-flex';
+            }
+
+            document.getElementById('btnNextQuestion').style.display = 'flex';
+            document.getElementById('quizScoreCount').innerText = `Correct: ${quizScore}`;
+        }
+
+        function toggleQuizWorking() {
+            const box = document.getElementById('quizWorkingBox');
+            if (box.style.display === 'none' || !box.style.display) {
+                box.style.display = 'block';
+                document.getElementById('btnToggleWorking').innerHTML = `<i data-lucide="eye-off"></i> Hide Working`;
+            } else {
+                box.style.display = 'none';
+                document.getElementById('btnToggleWorking').innerHTML = `<i data-lucide="calculator"></i> Show Step-by-Step Working`;
+            }
+            lucide.createIcons();
+        }
+
+        function advanceQuiz() {
+            hasSubmittedCurrent = false;
+            currentQuizIndex++;
+            
+            if (currentQuizIndex < currentQuizQuestions.length) {
+                loadQuestion();
+            } else {
+                showQuizResults();
+            }
+        }
+
+        function showQuizResults() {
+            document.getElementById('quizActivePanel').style.display = 'none';
+            document.getElementById('quizScorePanel').style.display = 'block';
+
+            const percentage = Math.round((quizScore / currentQuizQuestions.length) * 100);
+            
+            // Animate progress circle
+            const circle = document.getElementById('scoreCircleBar');
+            const circumference = 2 * Math.PI * 60; // radius = 60
+            circle.style.strokeDasharray = circumference;
+            const offset = circumference - (percentage / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+
+            document.getElementById('scorePercentText').innerText = percentage + '%';
+
+            // Three-tier messages & actions
+            const messageBox = document.getElementById('scoreTierMessage');
+            const returnBasicsBtn = document.getElementById('btnBackToConcept');
+            
+            if (percentage >= 80) {
+                messageBox.innerHTML = `<span style="color: #ec4899;">Outstanding Work!</span><br>You have fully mastered the physics of echoes and ultrasound scanning.`;
+                // Celebrate with confetti!
+                confetti({
+                    particleCount: 150,
+                    spread: 80,
+                    origin: { y: 0.6 },
+                    colors: ['#ec4899', '#a855f7', '#38bdf8']
+                });
+                returnBasicsBtn.style.display = 'none';
+            } else if (percentage >= 50) {
+                messageBox.innerHTML = `<span style="color: #38bdf8;">Good Effort!</span><br>You have a solid foundation, but review some of the calculation formulas to achieve perfection.`;
+                returnBasicsBtn.style.display = 'none';
+            } else {
+                messageBox.innerHTML = `<span style="color: #eab308;">Let's Review the Basics!</span><br>Take another look at the formulas and how round-trip times are processed.`;
+                returnBasicsBtn.style.display = 'inline-flex';
+            }
+
+            // Fill Breakdown metrics
+            const breakdownContainer = document.getElementById('breakdownContainer');
+            breakdownContainer.innerHTML = '';
+            
+            for (let category in topicBreakdown) {
+                const stat = topicBreakdown[category];
+                if (stat.total > 0) {
+                    const row = document.createElement('div');
+                    row.className = 'breakdown-row';
+                    row.innerHTML = `
+                        <span style="color: var(--text-secondary);">${category}</span>
+                        <span class="breakdown-score" style="color: ${stat.correct === stat.total ? '#38bdf8' : '#ffffff'}">${stat.correct} / ${stat.total}</span>
+                    `;
+                    breakdownContainer.appendChild(row);
+                }
+            }
+        }
+
+        function restartQuiz() {
+            startNewQuizSession();
+        }
+
+        // Initialize elements on load
+        window.addEventListener('load', () => {
+            // Setup Lucide icons
+            lucide.createIcons();
+            
+            // Load initial animations and details
+            initConceptAnimation();
+            displayFlashcard();
+            generateAppProblem();
+            startNewQuizSession();
+        });
+    </script>
+</body>
+</html>
