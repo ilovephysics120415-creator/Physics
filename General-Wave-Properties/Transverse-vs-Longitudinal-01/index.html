@@ -1,0 +1,2299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transverse vs Longitudinal Waves - O-Level Physics</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* DESIGN SYSTEM & VARIABLES */
+    :root {
+      --bg-base: #0a0e1a;
+      --bg-card: #121829;
+      --bg-card-hover: #1b233d;
+      --accent-glow: rgba(167, 139, 250, 0.15);
+      --accent-glow-strong: rgba(167, 139, 250, 0.4);
+      --color-accent: #a78bfa;
+      --color-accent-dark: #7c3aed;
+      --color-accent-light: #c084fc;
+      --color-text-primary: #f3f4f6;
+      --color-text-secondary: #9ca3af;
+      --color-neutral-muted: #374151;
+      --color-white: #ffffff;
+      --color-feedback-neutral: #6b7280;
+      
+      /* Color-blind friendly status (no red/green, use style/symbols) */
+      --color-correct-border: #a78bfa;
+      --color-incorrect-border: #4b5563;
+      
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      
+      --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* GLOBAL STYLES */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--color-text-primary);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      padding-bottom: 60px;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 40px 20px 20px;
+      border-bottom: 1px solid var(--color-neutral-muted);
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #f3f4f6 0%, var(--color-accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: var(--color-text-secondary);
+      font-size: 1.1rem;
+    }
+
+    /* NAVIGATION BUTTONS */
+    .nav-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .nav-tab {
+      background: var(--bg-card);
+      border: 1px solid var(--color-neutral-muted);
+      color: var(--color-text-secondary);
+      padding: 10px 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 500;
+      font-family: var(--font-heading);
+      transition: var(--transition-smooth);
+    }
+
+    .nav-tab:hover, .nav-tab.active {
+      color: var(--color-white);
+      border-color: var(--color-accent);
+      background: rgba(167, 139, 250, 0.1);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    /* SECTION LAYOUT */
+    .section-card {
+      background: var(--bg-card);
+      border: 1px solid var(--color-neutral-muted);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transition: var(--transition-smooth);
+      display: none; /* Controlled by tab JS */
+    }
+
+    .section-card.active-section {
+      display: block;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: var(--color-accent-light);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* SECTION 1 & 2: CANVAS SIMULATIONS */
+    .wave-panels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .wave-panels {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .wave-panel {
+      background: rgba(10, 14, 26, 0.6);
+      border: 1px solid var(--color-neutral-muted);
+      border-radius: 15px;
+      padding: 15px;
+      text-align: center;
+      position: relative;
+    }
+
+    .wave-panel h3 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      color: var(--color-text-primary);
+    }
+
+    .wave-canvas-container {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      background: #060913;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .wave-label {
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      margin-top: 10px;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* CONTROLS (SECTION 2) */
+    .sim-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 15px;
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .control-btn {
+      background: var(--color-accent-dark);
+      border: none;
+      color: var(--color-white);
+      padding: 10px 24px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: var(--font-heading);
+      transition: var(--transition-smooth);
+      box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3);
+    }
+
+    .control-btn:hover {
+      background: var(--color-accent);
+      box-shadow: 0 0 15px var(--accent-glow-strong);
+      transform: translateY(-2px);
+    }
+
+    .control-btn:active {
+      transform: translateY(0);
+    }
+
+    .slider-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .slider-group label {
+      font-family: var(--font-heading);
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+    }
+
+    .speed-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 150px;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--color-neutral-muted);
+      outline: none;
+    }
+
+    .speed-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .speed-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 10px var(--color-accent);
+    }
+
+    /* SECTION 3: DRAG & DROP GAME */
+    .drag-game-container {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .drag-game-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .drag-items-pool {
+      background: rgba(10, 14, 26, 0.4);
+      border: 1px dashed var(--color-neutral-muted);
+      border-radius: 15px;
+      padding: 15px;
+      min-height: 250px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .drag-item {
+      background: var(--bg-card-hover);
+      border: 1px solid var(--color-neutral-muted);
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: grab;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      user-select: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .drag-item:active {
+      cursor: grabbing;
+    }
+
+    .drag-item.dragging {
+      opacity: 0.5;
+      transform: scale(0.95);
+    }
+
+    .drop-zones {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .drop-zones {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .drop-zone {
+      background: rgba(255,255,255,0.02);
+      border: 2px dashed var(--color-neutral-muted);
+      border-radius: 15px;
+      padding: 20px 15px;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      transition: var(--transition-smooth);
+    }
+
+    .drop-zone.drag-over {
+      border-color: var(--color-accent);
+      background: rgba(167, 139, 250, 0.05);
+      box-shadow: inset 0 0 15px var(--accent-glow);
+    }
+
+    .drop-zone h3 {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      color: var(--color-text-secondary);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      width: 100%;
+      text-align: center;
+      padding-bottom: 8px;
+    }
+
+    .drop-zone .drag-item {
+      width: 100%;
+    }
+
+    .game-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    @media (max-width: 900px) {
+      .game-actions {
+        flex-direction: row;
+      }
+    }
+
+    /* Game pulses and animations */
+    @keyframes pulse-correct {
+      0% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(167, 139, 250, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0); }
+    }
+
+    .pulse-glow {
+      animation: pulse-correct 0.8s ease-out;
+      border-color: var(--color-accent) !important;
+      box-shadow: 0 0 15px var(--color-accent);
+    }
+
+    @keyframes shake-incorrect {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    .shake-neutral {
+      animation: shake-incorrect 0.4s ease-in-out;
+      border-color: var(--color-feedback-neutral) !important;
+    }
+
+    /* SECTION 4: FLASHCARDS */
+    .flashcard-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      perspective: 1000px;
+    }
+
+    .flashcard-container {
+      width: 320px;
+      height: 400px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+
+    .flashcard-container.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .flashcard {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      border: 1px solid var(--color-neutral-muted);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+      background: var(--bg-card-hover);
+    }
+
+    .flashcard-front {
+      background: linear-gradient(145deg, var(--bg-card), var(--bg-card-hover));
+    }
+
+    .flashcard-back {
+      background: linear-gradient(145deg, var(--bg-card-hover), #131722);
+      transform: rotateY(180deg);
+    }
+
+    .flashcard-category {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-accent);
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .flashcard-title {
+      font-size: 1.6rem;
+      margin-bottom: 15px;
+      color: var(--color-white);
+    }
+
+    .flashcard-desc {
+      font-size: 1rem;
+      color: var(--color-text-secondary);
+    }
+
+    .flashcard-hint {
+      position: absolute;
+      bottom: 20px;
+      font-size: 0.8rem;
+      color: var(--color-neutral-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .flashcard-controls {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .card-indicator {
+      font-family: var(--font-heading);
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* SECTION 5: QUIZ */
+    .quiz-container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .quiz-progress-bar {
+      width: 100%;
+      height: 6px;
+      background: var(--color-neutral-muted);
+      border-radius: 3px;
+      margin-bottom: 25px;
+      overflow: hidden;
+    }
+
+    .quiz-progress-fill {
+      height: 100%;
+      background: var(--color-accent);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .question-box {
+      margin-bottom: 25px;
+    }
+
+    .question-text {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      font-family: var(--font-heading);
+      color: var(--color-white);
+    }
+
+    /* Visual Identification Question Container */
+    .question-visual-container {
+      width: 100%;
+      height: 120px;
+      background: #060913;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border: 1px solid var(--color-neutral-muted);
+      overflow: hidden;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--color-neutral-muted);
+      padding: 15px 20px;
+      border-radius: 12px;
+      color: var(--color-text-primary);
+      text-align: left;
+      font-size: 1rem;
+      font-family: var(--font-body);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      background: var(--bg-card-hover);
+      border-color: var(--color-accent);
+    }
+
+    .option-btn.selected {
+      border-color: var(--color-accent);
+      background: rgba(167, 139, 250, 0.08);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .option-btn.correct-choice {
+      border-color: var(--color-correct-border);
+      box-shadow: 0 0 12px var(--accent-glow-strong);
+    }
+
+    .option-btn.incorrect-choice {
+      border-color: var(--color-incorrect-border);
+      opacity: 0.7;
+    }
+
+    .option-feedback-icon {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .quiz-explanation-box {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(255,255,255,0.02);
+      border-left: 3px solid var(--color-accent);
+      border-radius: 0 8px 8px 0;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    .quiz-explanation-box h4 {
+      font-size: 0.95rem;
+      color: var(--color-accent-light);
+      margin-bottom: 5px;
+    }
+
+    .quiz-explanation-box p {
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+    }
+
+    .quiz-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 25px;
+    }
+
+    /* SECTION 6: RESULTS & GRADE SCREEN */
+    .results-container {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px 0;
+    }
+
+    .grade-badge {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(167, 139, 250, 0.1);
+      border: 3px solid var(--color-accent);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 20px;
+      font-size: 2.8rem;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--color-accent-light);
+      box-shadow: 0 0 25px var(--accent-glow-strong);
+      position: relative;
+    }
+
+    .grade-message {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: var(--color-white);
+    }
+
+    .grade-desc {
+      color: var(--color-text-secondary);
+      margin-bottom: 30px;
+      font-size: 1rem;
+    }
+
+    .concept-breakdown {
+      background: rgba(10, 14, 26, 0.4);
+      border: 1px solid var(--color-neutral-muted);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+      text-align: left;
+    }
+
+    .concept-breakdown h4 {
+      margin-bottom: 15px;
+      color: var(--color-accent-light);
+      font-size: 1.1rem;
+    }
+
+    .concept-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+    }
+
+    .concept-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .concept-name {
+      color: var(--color-text-primary);
+    }
+
+    .concept-score {
+      font-weight: 600;
+      color: var(--color-text-secondary);
+    }
+
+    .concept-score.high {
+      color: var(--color-accent-light);
+    }
+
+    /* CONFETTI/PARTICLE CANVAS FOR SCORE SCREEN */
+    #celebration-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* KEYFRAME ANIMATIONS */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ACCESSIBILITY FOCUS STYLES */
+    *:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 4px;
+    }
+
+    /* UTILITIES */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Celebration Canvas (Overlay for 80-100% quiz completion) -->
+  <canvas id="celebration-canvas"></canvas>
+
+  <div class="container">
+    <header>
+      <h1>Transverse &amp; Longitudinal Waves</h1>
+      <p>Singapore O-Level Physics (6091) Interactive Revise Suite</p>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs" role="tablist">
+      <button class="nav-tab active" role="tab" aria-selected="true" aria-controls="section-intro" onclick="switchTab(0)">1. Learn Concepts</button>
+      <button class="nav-tab" role="tab" aria-selected="false" aria-controls="section-compare" onclick="switchTab(1)">2. Interactive Slinky</button>
+      <button class="nav-tab" role="tab" aria-selected="false" aria-controls="section-classify" onclick="switchTab(2)">3. Drag &amp; Drop</button>
+      <button class="nav-tab" role="tab" aria-selected="false" aria-controls="section-flashcards" onclick="switchTab(3)">4. Flashcards</button>
+      <button class="nav-tab" role="tab" aria-selected="false" aria-controls="section-quiz" onclick="switchTab(4)">5. Practice Quiz</button>
+    </nav>
+
+    <!-- SECTION 1: CONCEPT INTRODUCTION -->
+    <section id="section-intro" class="section-card active-section" role="tabpanel">
+      <h2 class="section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12a10 10 0 1 0 20 0 10 10 0 1 0-20 0Z"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        Wave Categories
+      </h2>
+      <div class="wave-panels">
+        <!-- Transverse Waves -->
+        <div class="wave-panel">
+          <h3>Transverse Wave</h3>
+          <div class="wave-canvas-container">
+            <canvas id="intro-transverse-canvas"></canvas>
+          </div>
+          <p class="wave-label"><strong>Transverse:</strong> particles move perpendicular (up &amp; down) to the direction of wave travel (horizontal).</p>
+        </div>
+        <!-- Longitudinal Waves -->
+        <div class="wave-panel">
+          <h3>Longitudinal Wave</h3>
+          <div class="wave-canvas-container">
+            <canvas id="intro-longitudinal-canvas"></canvas>
+          </div>
+          <p class="wave-label"><strong>Longitudinal:</strong> particles move parallel (left &amp; right) to the direction of wave travel (horizontal).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: INTERACTIVE EXPLORATION — SLINKY-STYLE COMPARISON -->
+    <section id="section-compare" class="section-card" role="tabpanel">
+      <h2 class="section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2"/><path d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/><path d="M12 3v18"/></svg>
+        Slinky-Style Comparison
+      </h2>
+      <div class="wave-panels">
+        <!-- Interactive Transverse -->
+        <div class="wave-panel">
+          <h3>Transverse Wave (Rope Model)</h3>
+          <div class="wave-canvas-container">
+            <canvas id="explore-transverse-canvas"></canvas>
+          </div>
+          <div class="wave-label">
+            Highlighted particle (glowing dot) traces a vertical line as the wave energy flows to the right.
+          </div>
+        </div>
+        <!-- Interactive Longitudinal -->
+        <div class="wave-panel">
+          <h3>Longitudinal Wave (Slinky Model)</h3>
+          <div class="wave-canvas-container">
+            <canvas id="explore-longitudinal-canvas"></canvas>
+          </div>
+          <div class="wave-label">
+            Highlighted coil (glowing) bounces left/right. Watch regions of compression (bunched) &amp; rarefaction (spaced) travel right.
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="sim-controls">
+        <button id="sim-play-pause-btn" class="control-btn" onclick="togglePlayPause()">Pause</button>
+        <button id="sim-step-btn" class="control-btn" style="background:transparent; border:1px solid var(--color-accent); box-shadow:none;" onclick="stepSimulation()">Step</button>
+        
+        <div class="slider-group">
+          <label for="speed-slider">Simulation Speed:</label>
+          <span id="speed-label" style="font-weight: 600; width: 35px; text-align: left;">1.0x</span>
+          <input type="range" id="speed-slider" class="speed-slider" min="0.5" max="2.0" step="0.5" value="1.0" oninput="changeSpeed(this.value)">
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: INTERACTIVE EXPLORATION — DRAG EXAMPLES INTO CATEGORY -->
+    <section id="section-classify" class="section-card" role="tabpanel">
+      <h2 class="section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+        Wave Classifier
+      </h2>
+      
+      <div class="drag-game-container">
+        <!-- Pool of items to drag -->
+        <div>
+          <h4 style="margin-bottom:10px; color:var(--color-text-secondary);">Examples Pool</h4>
+          <div class="drag-items-pool" id="drag-pool" ondragover="allowDrop(event)" ondrop="dropToPool(event)">
+            <!-- Items generated dynamically in JS -->
+          </div>
+        </div>
+
+        <!-- Drop zones -->
+        <div class="drop-zones">
+          <div class="drop-zone" id="zone-transverse" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="dropToZone(event, 'transverse')">
+            <h3>Transverse Waves</h3>
+          </div>
+          <div class="drop-zone" id="zone-longitudinal" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="dropToZone(event, 'longitudinal')">
+            <h3>Longitudinal Waves</h3>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="game-actions">
+          <button class="control-btn" onclick="checkClassifications()">Check All</button>
+          <button class="control-btn" style="background:transparent; border:1px solid var(--color-neutral-muted); box-shadow:none;" onclick="resetClassificationGame()">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: FLASHCARD REVISION MODE -->
+    <section id="section-flashcards" class="section-card" role="tabpanel">
+      <h2 class="section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        Flashcard Revision
+      </h2>
+
+      <div class="flashcard-wrapper">
+        <div class="flashcard-container" id="flashcard-deck" onclick="flipCard()">
+          <!-- Card Front -->
+          <div class="flashcard flashcard-front">
+            <div class="flashcard-category" id="card-front-cat">Category</div>
+            <h3 class="flashcard-title" id="card-front-title">Question/Term</h3>
+            <div class="flashcard-hint">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+              Tap to Flip
+            </div>
+          </div>
+          <!-- Card Back -->
+          <div class="flashcard flashcard-back">
+            <div class="flashcard-category" id="card-back-cat">Answer</div>
+            <p class="flashcard-desc" id="card-back-text">Detailed explanation and info goes here.</p>
+            <div class="flashcard-hint">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+              Tap to Flip Back
+            </div>
+          </div>
+        </div>
+
+        <div class="flashcard-controls">
+          <button class="control-btn" style="padding:8px 16px; min-width:80px;" onclick="prevCard(event)">Prev</button>
+          <span class="card-indicator" id="card-progress">1 / 5</span>
+          <button class="control-btn" style="padding:8px 16px; min-width:80px;" onclick="nextCard(event)">Next</button>
+          <button class="control-btn" style="background:transparent; border:1px solid var(--color-neutral-muted); box-shadow:none; padding:8px 16px;" onclick="shuffleCards(event)">Shuffle</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: PRACTICE QUIZ -->
+    <section id="section-quiz" class="section-card" role="tabpanel">
+      <h2 class="section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        Practice Quiz
+      </h2>
+
+      <!-- Quiz Ongoing State -->
+      <div id="quiz-ongoing-view" class="quiz-container">
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="quiz-progress-indicator"></div>
+        </div>
+        <div class="quiz-header">
+          <span id="quiz-question-number">Question 1 of 10</span>
+          <span id="quiz-score-live">Score: 0</span>
+        </div>
+
+        <div class="question-box">
+          <div class="question-text" id="quiz-question-text">Question text here...</div>
+          
+          <!-- Container for drawing static visual questions -->
+          <div class="question-visual-container" id="quiz-visual-container" style="display: none;">
+            <canvas id="quiz-visual-canvas"></canvas>
+          </div>
+
+          <div class="options-list" id="quiz-options-container">
+            <!-- Dynamic Choice Buttons -->
+          </div>
+        </div>
+
+        <!-- Feedback / Explanation -->
+        <div class="quiz-explanation-box" id="quiz-feedback-box" style="display: none;">
+          <h4 id="quiz-feedback-title">Correct / Incorrect</h4>
+          <p id="quiz-feedback-explanation">Explanation text goes here...</p>
+        </div>
+
+        <div class="quiz-footer">
+          <button id="quiz-action-btn" class="control-btn" onclick="handleQuizAction()">Submit Answer</button>
+        </div>
+      </div>
+
+      <!-- Quiz Score Screen / Feedback State (Section 6) -->
+      <div id="quiz-result-view" class="results-container" style="display: none;">
+        <div class="grade-badge" id="result-grade-badge">A</div>
+        <h3 class="grade-message" id="result-grade-msg">Outstanding Effort!</h3>
+        <p class="grade-desc" id="result-score-desc">You scored 9/10 (90%)</p>
+
+        <!-- Topic Breakdown -->
+        <div class="concept-breakdown">
+          <h4>Performance Breakdown</h4>
+          <div class="concept-row">
+            <span class="concept-name">Particle Motion &amp; Definition</span>
+            <span class="concept-score" id="breakdown-motion">0/0</span>
+          </div>
+          <div class="concept-row">
+            <span class="concept-name">Wave Classification</span>
+            <span class="concept-score" id="breakdown-class">0/0</span>
+          </div>
+          <div class="concept-row">
+            <span class="concept-name">Compressions &amp; Rarefactions</span>
+            <span class="concept-score" id="breakdown-compression">0/0</span>
+          </div>
+        </div>
+
+        <button class="control-btn" onclick="startNewQuiz()">Retry Quiz</button>
+        <button id="quiz-review-concept-btn" class="control-btn" style="background:transparent; border:1px solid var(--color-neutral-muted); box-shadow:none; margin-left: 10px;" onclick="switchTab(0)">Review Section 1</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /* SIMULATION VARIABLES */
+    let animationFrameId;
+    let isPlaying = true;
+    let time = 0;
+    let simSpeed = 1.0;
+
+    // Canvas sizes & scaling
+    const canvases = {};
+    const ctxs = {};
+
+    function initCanvases() {
+      const ids = [
+        'intro-transverse', 'intro-longitudinal',
+        'explore-transverse', 'explore-longitudinal',
+        'quiz-visual'
+      ];
+      ids.forEach(id => {
+        const c = document.getElementById(id + '-canvas');
+        if (c) {
+          canvases[id] = c;
+          ctxs[id] = c.getContext('2d');
+          resizeCanvas(id);
+        }
+      });
+    }
+
+    function resizeCanvas(id) {
+      const c = canvases[id];
+      if (!c) return;
+      const rect = c.parentElement.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      // Use 2x scale for retina / high DPI screens
+      c.width = rect.width * 2;
+      c.height = rect.height * 2;
+      c.style.width = rect.width + 'px';
+      c.style.height = rect.height + 'px';
+      ctxs[id].scale(2, 2);
+    }
+
+    // Handle resize
+    window.addEventListener('resize', () => {
+      Object.keys(canvases).forEach(id => {
+        resizeCanvas(id);
+      });
+    });
+
+    /* SIMULATION RENDERING LOOPS */
+    function renderSimulations() {
+      if (isPlaying) {
+        time += 0.05 * simSpeed;
+      }
+
+      // Draw Intro Transverse (Section 1)
+      if (currentTab === 0) {
+        drawTransverseWave('intro-transverse', false);
+        drawLongitudinalWave('intro-longitudinal', false);
+      }
+
+      // Draw Interactive Exploration (Section 2)
+      if (currentTab === 1) {
+        drawTransverseWave('explore-transverse', true);
+        drawLongitudinalWave('explore-longitudinal', true);
+      }
+
+      animationFrameId = requestAnimationFrame(renderSimulations);
+    }
+
+    /* WAVE DRAWING FUNCTIONS */
+    function drawTransverseWave(id, isInteractive) {
+      const ctx = ctxs[id];
+      const canvas = canvases[id];
+      if (!ctx || !canvas) return;
+
+      const w = canvas.width / 2;
+      const h = canvas.height / 2;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Wave constants
+      const amplitude = 35;
+      const wavelength = 120;
+      const k = (2 * Math.PI) / wavelength;
+      const omega = 1.8;
+      const numParticles = 32;
+      const spacing = w / (numParticles - 1);
+      
+      // Draw background guidelines
+      if (isInteractive) {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(0, h / 2);
+        ctx.lineTo(w, h / 2);
+        ctx.stroke();
+        
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.font = '500 10px Space Grotesk';
+        ctx.fillText('Rest Position (Equilibrium)', 10, h / 2 - 6);
+      } else {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, h / 2);
+        ctx.lineTo(w, h / 2);
+        ctx.stroke();
+      }
+
+      // Collect points for drawing rope path
+      const points = [];
+      for (let i = 0; i < numParticles; i++) {
+        const x = i * spacing;
+        const y = h / 2 + amplitude * Math.sin(k * x - time * omega);
+        points.push({ x, y });
+      }
+
+      // Draw continuous rope connection
+      ctx.strokeStyle = 'rgba(167, 139, 250, 0.4)';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i].x, points[i].y);
+      }
+      ctx.stroke();
+
+      // Draw particle dots
+      for (let i = 0; i < points.length; i++) {
+        const pt = points[i];
+        const isMiddle = i === Math.floor(points.length / 2);
+        
+        if (isInteractive && isMiddle) {
+          // Highlight single tracking particle
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = 'var(--color-accent)';
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, 7, 0, 2 * Math.PI);
+          ctx.fill();
+          
+          // Clear shadow for other drawings
+          ctx.shadowBlur = 0;
+
+          // Trace vertical track guide for this particle
+          ctx.strokeStyle = 'rgba(167, 139, 250, 0.3)';
+          ctx.setLineDash([3, 3]);
+          ctx.beginPath();
+          ctx.moveTo(pt.x, h / 2 - amplitude - 10);
+          ctx.lineTo(pt.x, h / 2 + amplitude + 10);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        } else {
+          // Standard particle
+          ctx.fillStyle = '#7c3aed';
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, 3.5, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+      }
+
+      // SECTION 1 ONLY: Overlay directional arrows
+      if (!isInteractive) {
+        // Wave travel direction (horizontal arrow at bottom)
+        drawArrow(ctx, w / 2 - 40, h - 25, w / 2 + 40, h - 25, 'Wave Travel', true);
+
+        // Instantaneous particle velocity arrows (for 3 key particles)
+        const arrowIndices = [Math.floor(numParticles * 0.25), Math.floor(numParticles * 0.5), Math.floor(numParticles * 0.75)];
+        arrowIndices.forEach(idx => {
+          const pt = points[idx];
+          // Determine direction of motion (derivative with respect to time: dy/dt = -omega * A * cos(k*x - w*t))
+          const cosVal = Math.cos(k * pt.x - time * omega);
+          const dy = -cosVal; // motion direction
+          if (Math.abs(dy) > 0.2) {
+            const arrowLen = 22 * Math.sign(dy);
+            ctx.strokeStyle = '#c084fc';
+            ctx.fillStyle = '#c084fc';
+            ctx.lineWidth = 2;
+            drawSimpleArrow(ctx, pt.x, pt.y, pt.x, pt.y + arrowLen);
+          }
+        });
+      } else {
+        // INTERACTIVE MODE: Show Wavelength and Amplitude moving with the wave
+        const waveSpeed = omega / k;
+        const trackPeriod = Math.ceil((w + wavelength) / wavelength) * wavelength;
+        let x_crest = ((time * waveSpeed) - wavelength/4) % trackPeriod;
+        while (x_crest < -wavelength) x_crest += trackPeriod;
+        
+        // 1. Draw Amplitude Arrow at the traveling crest
+        if (x_crest >= 0 && x_crest < w) {
+          ctx.strokeStyle = 'var(--color-accent)';
+          ctx.fillStyle = 'var(--color-accent)';
+          ctx.lineWidth = 2;
+          // Draw double arrow to represent maximum displacement from equilibrium
+          drawSimpleArrow(ctx, x_crest, h / 2, x_crest, h / 2 - amplitude);
+          drawSimpleArrow(ctx, x_crest, h / 2 - amplitude, x_crest, h / 2);
+          
+          ctx.font = '600 11px Space Grotesk';
+          ctx.fillText('Amplitude (A)', x_crest + 8, h / 2 - amplitude / 2 + 4);
+        }
+
+        // 2. Draw Wavelength (λ) between two consecutive traveling crests
+        const x1 = x_crest;
+        const x2 = x_crest + wavelength;
+        if (x2 < w && x1 >= 0) {
+          ctx.strokeStyle = '#c084fc';
+          ctx.fillStyle = '#c084fc';
+          ctx.lineWidth = 1.5;
+          
+          // Double headed horizontal arrow
+          drawSimpleArrow(ctx, x1, h / 2 - amplitude - 15, x2, h / 2 - amplitude - 15);
+          drawSimpleArrow(ctx, x2, h / 2 - amplitude - 15, x1, h / 2 - amplitude - 15);
+          
+          ctx.font = '600 11px Space Grotesk';
+          ctx.textAlign = 'center';
+          ctx.fillText('Wavelength (λ)', (x1 + x2) / 2, h / 2 - amplitude - 23);
+          ctx.textAlign = 'left';
+        }
+      }
+    }
+
+    function drawLongitudinalWave(id, isInteractive) {
+      const ctx = ctxs[id];
+      const canvas = canvases[id];
+      if (!ctx || !canvas) return;
+
+      const w = canvas.width / 2;
+      const h = canvas.height / 2;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Slinky wave parameters
+      const numCoils = 45;
+      const spacing = w / (numCoils - 1);
+      const amplitude = 18;
+      const wavelength = 120;
+      const k = (2 * Math.PI) / wavelength;
+      const omega = 1.8;
+
+      // Draw background line
+      ctx.strokeStyle = 'rgba(255,255,255,0.02)';
+      ctx.beginPath();
+      ctx.moveTo(0, h / 2);
+      ctx.lineTo(w, h / 2);
+      ctx.stroke();
+
+      const coilPositions = [];
+      for (let i = 0; i < numCoils; i++) {
+        const x0 = i * spacing;
+        const disp = amplitude * Math.sin(k * x0 - time * omega);
+        coilPositions.push({ x: x0 + disp, x0 });
+      }
+
+      // Draw coils as beautiful helical spring loops (2D ellipses connected)
+      ctx.lineWidth = 1.8;
+      for (let i = 0; i < coilPositions.length; i++) {
+        const pt = coilPositions[i];
+        const isMiddle = i === Math.floor(numCoils / 2);
+        
+        ctx.strokeStyle = 'rgba(167, 139, 250, 0.45)';
+        if (isInteractive && isMiddle) {
+          // Highlighted particle
+          ctx.strokeStyle = '#ffffff';
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = 'var(--color-accent)';
+        }
+
+        // Draw loop
+        ctx.beginPath();
+        const rx = 4;
+        const ry = 30;
+        ctx.ellipse(pt.x, h / 2, rx, ry, 0, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.shadowBlur = 0; // Reset
+      }
+
+      // Draw dynamic compression/rarefaction labels in exploration (flowing smoothly with the wave)
+      if (isInteractive) {
+        const ry = 30;
+        const waveSpeed = omega / k;
+        const currentStartPos = (time * waveSpeed) % wavelength;
+        
+        ctx.textAlign = 'center';
+
+        // Draw compressions (C)
+        let x_comp_base = currentStartPos + wavelength / 2;
+        while (x_comp_base > 0) {
+          x_comp_base -= wavelength;
+        }
+        x_comp_base += wavelength;
+        
+        for (let x = x_comp_base; x < w; x += wavelength) {
+          ctx.fillStyle = '#c084fc';
+          ctx.font = '700 18px Space Grotesk';
+          ctx.fillText('C', x, h / 2 - ry - 12);
+        }
+
+        // Draw rarefactions (R)
+        let x_raref_base = currentStartPos;
+        while (x_raref_base > 0) {
+          x_raref_base -= wavelength;
+        }
+        x_raref_base += wavelength;
+        
+        for (let x = x_raref_base; x < w; x += wavelength) {
+          ctx.fillStyle = 'rgba(255,255,255,0.5)';
+          ctx.font = '700 18px Space Grotesk';
+          ctx.fillText('R', x, h / 2 - ry - 12);
+        }
+
+        // Draw Longitudinal Wavelength (λ) between two consecutive compression centers (C to C)
+        const trackPeriod = Math.ceil((w + wavelength) / wavelength) * wavelength;
+        let wl_start = ((time * waveSpeed) + wavelength / 2) % trackPeriod - wavelength;
+        while (wl_start < -wavelength) wl_start += trackPeriod;
+        
+        const wl_end = wl_start + wavelength;
+        if (wl_end < w && wl_start >= 0) {
+          ctx.strokeStyle = '#c084fc';
+          ctx.fillStyle = '#c084fc';
+          ctx.lineWidth = 1.5;
+          
+          // Double headed arrow at the bottom of the slinky coils
+          drawSimpleArrow(ctx, wl_start, h / 2 + ry + 12, wl_end, h / 2 + ry + 12);
+          drawSimpleArrow(ctx, wl_end, h / 2 + ry + 12, wl_start, h / 2 + ry + 12);
+          
+          ctx.font = '600 11px Space Grotesk';
+          ctx.fillStyle = 'var(--color-text-primary)';
+          ctx.fillText('Wavelength (λ)', (wl_start + wl_end) / 2, h / 2 + ry + 28);
+        }
+        
+        ctx.textAlign = 'left'; // Reset
+      }
+
+      // SECTION 1 ONLY: Overlay directional arrows & wave travel direction
+      if (!isInteractive) {
+        // Wave travel direction (horizontal arrow at bottom)
+        drawArrow(ctx, w / 2 - 40, h - 25, w / 2 + 40, h - 25, 'Wave Travel', true);
+
+        // Highlight horizontal motion arrows on 2 sample particles
+        const highlightIndices = [Math.floor(numCoils * 0.35), Math.floor(numCoils * 0.7)];
+        highlightIndices.forEach(idx => {
+          const pt = coilPositions[idx];
+          const cosVal = Math.cos(k * pt.x0 - time * omega);
+          // Particle motion arrow
+          if (Math.abs(cosVal) > 0.3) {
+            const arrowLen = 18 * Math.sign(cosVal);
+            ctx.strokeStyle = '#c084fc';
+            ctx.fillStyle = '#c084fc';
+            ctx.lineWidth = 2;
+            drawSimpleArrow(ctx, pt.x, h / 2, pt.x + arrowLen, h / 2);
+          }
+        });
+      }
+    }
+
+    /* ARROW DRAWING HELPERS */
+    function drawArrow(ctx, fromx, fromy, tox, toy, label, showHead) {
+      ctx.strokeStyle = 'var(--color-accent)';
+      ctx.fillStyle = 'var(--color-accent)';
+      ctx.lineWidth = 2;
+
+      ctx.beginPath();
+      ctx.moveTo(fromx, fromy);
+      ctx.lineTo(tox, toy);
+      ctx.stroke();
+
+      if (showHead) {
+        const headlen = 8;
+        const angle = Math.atan2(toy - fromy, tox - fromx);
+        ctx.beginPath();
+        ctx.moveTo(tox, toy);
+        ctx.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+        ctx.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+        ctx.fill();
+      }
+
+      if (label) {
+        ctx.font = '600 11px Space Grotesk';
+        ctx.fillStyle = 'var(--color-text-primary)';
+        ctx.textAlign = 'center';
+        ctx.fillText(label, (fromx + tox) / 2, fromy - 8);
+      }
+    }
+
+    function drawSimpleArrow(ctx, fromx, fromy, tox, toy) {
+      const headlen = 6;
+      const angle = Math.atan2(toy - fromy, tox - fromx);
+      ctx.beginPath();
+      ctx.moveTo(fromx, fromy);
+      ctx.lineTo(tox, toy);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(tox, toy);
+      ctx.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+      ctx.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+      ctx.fill();
+    }
+
+    /* PLAY/PAUSE & SPEED CONTROLS */
+    function togglePlayPause() {
+      isPlaying = !isPlaying;
+      const btn = document.getElementById('sim-play-pause-btn');
+      btn.innerText = isPlaying ? 'Pause' : 'Play';
+    }
+
+    function changeSpeed(val) {
+      simSpeed = parseFloat(val);
+      document.getElementById('speed-label').innerText = simSpeed.toFixed(1) + 'x';
+    }
+
+    function stepSimulation() {
+      // Pause the animation if it's currently playing
+      if (isPlaying) {
+        togglePlayPause();
+      }
+      // Increment time by a fixed step size
+      time += 0.15; // single step displacement
+      // Force immediate redraw for Section 2
+      if (currentTab === 1) {
+        drawTransverseWave('explore-transverse', true);
+        drawLongitudinalWave('explore-longitudinal', true);
+      }
+    }
+
+
+    /* TAB SWITCHING SYSTEM */
+    let currentTab = 0;
+    function switchTab(index) {
+      currentTab = index;
+      
+      // Update tab styling
+      const tabs = document.querySelectorAll('.nav-tab');
+      tabs.forEach((tab, i) => {
+        if (i === index) {
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+        } else {
+          tab.classList.remove('active');
+          tab.setAttribute('aria-selected', 'false');
+        }
+      });
+
+      // Update active section visibility
+      const sections = document.querySelectorAll('.section-card');
+      sections.forEach((sec, i) => {
+        if (i === index) {
+          sec.classList.add('active-section');
+        } else {
+          sec.classList.remove('active-section');
+        }
+      });
+
+      // Clear any pending physics frame if running
+      cancelAnimationFrame(animationFrameId);
+      
+      // Resize canvases to match the newly visible containers
+      Object.keys(canvases).forEach(id => {
+        resizeCanvas(id);
+      });
+      
+      renderSimulations();
+
+      // Trigger specifics
+      if (index === 2) {
+        initClassificationGame();
+      } else if (index === 3) {
+        initFlashcards();
+      } else if (index === 4) {
+        startNewQuiz();
+      }
+    }
+
+    /* SECTION 3: DRAG & DROP GAME LOGIC */
+    const classificationItems = [
+      { id: 'rope', text: 'Rope Shake (Up-Down)', category: 'transverse' },
+      { id: 'light', text: 'Light / EM Waves', category: 'transverse' },
+      { id: 'water', text: 'Water Waves', category: 'transverse' },
+      { id: 'seismic-s', text: 'Seismic S-waves', category: 'transverse' },
+      { id: 'slinky', text: 'Slinky Push-Pull', category: 'longitudinal' },
+      { id: 'sound', text: 'Sound Waves', category: 'longitudinal' },
+      { id: 'seismic-p', text: 'Seismic P-waves', category: 'longitudinal' }
+    ];
+
+    function initClassificationGame() {
+      resetClassificationGame();
+    }
+
+    function resetClassificationGame() {
+      const pool = document.getElementById('drag-pool');
+      const zoneTrans = document.getElementById('zone-transverse');
+      const zoneLong = document.getElementById('zone-longitudinal');
+
+      // Clear all
+      pool.innerHTML = '';
+      
+      // Reset drop zone headers, remove previous items
+      zoneTrans.querySelectorAll('.drag-item').forEach(el => el.remove());
+      zoneLong.querySelectorAll('.drag-item').forEach(el => el.remove());
+
+      // Shuffle items in the pool
+      const shuffled = [...classificationItems].sort(() => Math.random() - 0.5);
+      
+      shuffled.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'drag-item';
+        card.id = `item-${item.id}`;
+        card.draggable = true;
+        card.setAttribute('data-category', item.category);
+        card.innerText = item.text;
+        
+        card.addEventListener('dragstart', dragStart);
+        card.addEventListener('dragend', dragEnd);
+        
+        // Touch support
+        card.addEventListener('touchstart', touchStart, {passive: true});
+        card.addEventListener('touchmove', touchMove, {passive: false});
+        card.addEventListener('touchend', touchEnd);
+
+        pool.appendChild(card);
+      });
+    }
+
+    // Drag-and-drop Events for Desktop
+    let draggedItem = null;
+
+    function dragStart(e) {
+      draggedItem = this;
+      this.classList.add('dragging');
+    }
+
+    function dragEnd() {
+      this.classList.remove('dragging');
+      draggedItem = null;
+    }
+
+    function allowDrop(e) {
+      e.preventDefault();
+    }
+
+    function dragEnter(e) {
+      e.preventDefault();
+      this.classList.add('drag-over');
+    }
+
+    function dragLeave(e) {
+      this.classList.remove('drag-over');
+    }
+
+    function dropToZone(e, zoneName) {
+      e.preventDefault();
+      const zone = document.getElementById(`zone-${zoneName}`);
+      zone.classList.remove('drag-over');
+      if (draggedItem) {
+        zone.appendChild(draggedItem);
+      }
+    }
+
+    function dropToPool(e) {
+      e.preventDefault();
+      const pool = document.getElementById('drag-pool');
+      if (draggedItem) {
+        pool.appendChild(draggedItem);
+      }
+    }
+
+    // Touch Drag-and-drop support
+    let touchItem = null;
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    function touchStart(e) {
+      touchItem = this;
+      const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      touchItem.style.position = 'relative';
+      touchItem.style.zIndex = '1000';
+    }
+
+    function touchMove(e) {
+      if (!touchItem) return;
+      e.preventDefault(); // Prevent scrolling while dragging
+      const touch = e.touches[0];
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      touchItem.style.transform = `translate(${dx}px, ${dy}px)`;
+    }
+
+    function touchEnd(e) {
+      if (!touchItem) return;
+      touchItem.style.position = '';
+      touchItem.style.zIndex = '';
+      touchItem.style.transform = '';
+
+      const touch = e.changedTouches[0];
+      const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+      
+      const zoneTrans = document.getElementById('zone-transverse');
+      const zoneLong = document.getElementById('zone-longitudinal');
+      const pool = document.getElementById('drag-pool');
+
+      if (zoneTrans.contains(targetEl) || targetEl === zoneTrans) {
+        zoneTrans.appendChild(touchItem);
+      } else if (zoneLong.contains(targetEl) || targetEl === zoneLong) {
+        zoneLong.appendChild(touchItem);
+      } else {
+        pool.appendChild(touchItem);
+      }
+      touchItem = null;
+    }
+
+    function checkClassifications() {
+      const zones = ['transverse', 'longitudinal'];
+      let allCorrect = true;
+      let itemsCheckedCount = 0;
+
+      zones.forEach(zoneName => {
+        const zone = document.getElementById(`zone-${zoneName}`);
+        const items = zone.querySelectorAll('.drag-item');
+        
+        items.forEach(item => {
+          itemsCheckedCount++;
+          const actualCategory = item.getAttribute('data-category');
+          if (actualCategory === zoneName) {
+            // Correct
+            item.classList.remove('shake-neutral');
+            item.classList.add('pulse-glow');
+            setTimeout(() => item.classList.remove('pulse-glow'), 1000);
+          } else {
+            // Incorrect
+            allCorrect = false;
+            item.classList.remove('pulse-glow');
+            item.classList.add('shake-neutral');
+            
+            // Bounce back to pool after shake
+            setTimeout(() => {
+              item.classList.remove('shake-neutral');
+              document.getElementById('drag-pool').appendChild(item);
+            }, 600);
+          }
+        });
+      });
+
+      // Also verify if there are items left in the pool
+      const poolItems = document.getElementById('drag-pool').querySelectorAll('.drag-item');
+      if (poolItems.length > 0) {
+        allCorrect = false;
+      }
+
+      if (allCorrect && itemsCheckedCount === classificationItems.length) {
+        // Play small confetti or success celebration inside the zone
+        triggerCelebration(50);
+      }
+    }
+
+
+    /* SECTION 4: FLASHCARDS REV-DECK */
+    const flashcardsData = [
+      { cat: 'Transverse Waves', term: 'Definition', back: 'Waves where the direction of particle vibration is perpendicular to the direction of wave travel (energy transfer).' },
+      { cat: 'Longitudinal Waves', term: 'Definition', back: 'Waves where the direction of particle vibration is parallel to the direction of wave travel (energy transfer).' },
+      { cat: 'Transverse Waves', term: 'Key Examples', back: 'Light and all EM waves, Water waves, Seismic S-waves.' },
+      { cat: 'Longitudinal Waves', term: 'Key Examples', back: 'Sound waves, Slinky push-pull waves, Seismic P-waves.' },
+      { cat: 'Longitudinal Waves', term: 'Compressions', back: 'Regions in a longitudinal wave where particles are closest together (maximum pressure and density).' },
+      { cat: 'Longitudinal Waves', term: 'Rarefactions', back: 'Regions in a longitudinal wave where particles are furthest apart (minimum pressure and density).' },
+      { cat: 'Wave Travel vs Motion', term: 'Direction Arrow Rule', back: 'Wave travel is horizontal. Transverse particles move vertical (up/down). Longitudinal particles move horizontal (left/right).' }
+    ];
+
+    let currentCardIndex = 0;
+    let activeCards = [];
+
+    function initFlashcards() {
+      activeCards = [...flashcardsData];
+      currentCardIndex = 0;
+      updateCardUI();
+    }
+
+    function updateCardUI() {
+      const card = activeCards[currentCardIndex];
+      const container = document.getElementById('flashcard-deck');
+      
+      const isFlipped = container.classList.contains('flipped');
+      
+      // Reset flip before updating content
+      container.classList.remove('flipped');
+      
+      setTimeout(() => {
+        document.getElementById('card-front-cat').innerText = card.cat;
+        document.getElementById('card-front-title').innerText = card.term;
+        document.getElementById('card-back-cat').innerText = card.cat;
+        document.getElementById('card-back-text').innerText = card.back;
+        
+        document.getElementById('card-progress').innerText = `${currentCardIndex + 1} / ${activeCards.length}`;
+      }, isFlipped ? 300 : 0);
+    }
+
+    function flipCard() {
+      document.getElementById('flashcard-deck').classList.toggle('flipped');
+    }
+
+    function prevCard(e) {
+      e.stopPropagation();
+      if (currentCardIndex > 0) {
+        currentCardIndex--;
+        updateCardUI();
+      }
+    }
+
+    function nextCard(e) {
+      e.stopPropagation();
+      if (currentCardIndex < activeCards.length - 1) {
+        currentCardIndex++;
+        updateCardUI();
+      }
+    }
+
+    function shuffleCards(e) {
+      e.stopPropagation();
+      activeCards.sort(() => Math.random() - 0.5);
+      currentCardIndex = 0;
+      updateCardUI();
+    }
+
+    // Touch Swipe Gesture support on Flashcards
+    let swipeStartX = 0;
+    document.getElementById('flashcard-deck').addEventListener('touchstart', (e) => {
+      swipeStartX = e.touches[0].clientX;
+    }, {passive: true});
+
+    document.getElementById('flashcard-deck').addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - swipeStartX;
+      if (dx > 70) {
+        // Swipe Right -> Prev
+        if (currentCardIndex > 0) {
+          currentCardIndex--;
+          updateCardUI();
+        }
+      } else if (dx < -70) {
+        // Swipe Left -> Next
+        if (currentCardIndex < activeCards.length - 1) {
+          currentCardIndex++;
+          updateCardUI();
+        }
+      }
+    });
+
+
+    /* SECTION 5: QUIZ LOGIC & QUESTIONS */
+    // A pool of 30 randomized/customizable questions
+    const questionPool = [
+      {
+        type: 'mcq-def',
+        cat: 'motion',
+        q: 'In a transverse wave, the particles of the medium vibrate in a direction __________ to the direction of wave travel.',
+        options: ['perpendicular', 'parallel', 'circular'],
+        correct: 'perpendicular',
+        explanation: 'In transverse waves (like water or light), particles move up and down (perpendicular) while the energy transfers horizontally.'
+      },
+      {
+        type: 'mcq-def',
+        cat: 'motion',
+        q: 'In a longitudinal wave, the particles of the medium vibrate in a direction __________ to the direction of wave travel.',
+        options: ['parallel', 'perpendicular', 'circular'],
+        correct: 'parallel',
+        explanation: 'In longitudinal waves (like sound), particles vibrate back and forth (parallel) in the same line as the wave direction.'
+      },
+      {
+        type: 'mcq-class',
+        cat: 'classification',
+        q: 'Which of the following is an example of a transverse wave?',
+        options: ['Light waves', 'Sound waves', 'Seismic P-waves', 'Ultrasound waves'],
+        correct: 'Light waves',
+        explanation: 'Light is part of the electromagnetic spectrum; all EM waves are transverse.'
+      },
+      {
+        type: 'mcq-class',
+        cat: 'classification',
+        q: 'Which of the following is an example of a longitudinal wave?',
+        options: ['Sound waves', 'Water waves', 'Radio waves', 'Seismic S-waves'],
+        correct: 'Sound waves',
+        explanation: 'Sound waves travel through air as compressions and rarefactions, making them longitudinal.'
+      },
+      {
+        type: 'mcq-comp',
+        cat: 'compression',
+        q: 'In a longitudinal wave, the region where the coils of a slinky or air particles are bunched closest together is called a __________.',
+        options: ['compression', 'rarefaction', 'crest', 'trough'],
+        correct: 'compression',
+        explanation: 'Compressions are high-pressure regions where particles are closest together.'
+      },
+      {
+        type: 'mcq-comp',
+        cat: 'compression',
+        q: 'In a longitudinal wave, the region where the coils of a slinky or air particles are spread furthest apart is called a __________.',
+        options: ['rarefaction', 'compression', 'crest', 'trough'],
+        correct: 'rarefaction',
+        explanation: 'Rarefactions are low-pressure regions where particles are spread furthest apart.'
+      },
+      {
+        type: 'scenario',
+        cat: 'classification',
+        q: 'A seismic P-wave travels through the earth by compressing and stretching the rock in its direction of travel. What type of wave is this?',
+        options: ['Longitudinal', 'Transverse', 'Electromagnetic', 'Torsional'],
+        correct: 'Longitudinal',
+        explanation: 'Compressing and stretching parallel to the travel direction is the definition of a longitudinal wave.'
+      },
+      {
+        type: 'scenario',
+        cat: 'classification',
+        q: 'A seismic S-wave shakes the ground up-and-down as the energy travels horizontally. What type of wave is this?',
+        options: ['Transverse', 'Longitudinal', 'Seismic P-wave', 'Sound wave'],
+        correct: 'Transverse',
+        explanation: 'Since the ground shakes perpendicular (up-down) to the wave path, the S-wave is transverse.'
+      },
+      {
+        type: 'visual',
+        cat: 'motion',
+        q: 'Look at the particle arrangement diagram below. What wave type does this show?',
+        options: ['Transverse', 'Longitudinal'],
+        correct: 'Transverse', // we will draw a transverse sine wave representation on the canvas
+        explanation: 'The particles are displaced perpendicular to the horizontal axis, forming crests and troughs.'
+      },
+      {
+        type: 'visual',
+        cat: 'motion',
+        q: 'Look at the particle density diagram below. What wave type does this show?',
+        options: ['Longitudinal', 'Transverse'],
+        correct: 'Longitudinal', // we will draw bunched groups of dots on the canvas
+        explanation: 'The particles form alternating high-density (compression) and low-density (rarefaction) regions along the wave travel direction.'
+      },
+      {
+        type: 'mcq-class',
+        cat: 'classification',
+        q: 'All electromagnetic waves (e.g. X-rays, Gamma rays, Radio waves) belong to which category?',
+        options: ['Transverse waves only', 'Longitudinal waves only', 'A mixture of transverse and longitudinal', 'Neither'],
+        correct: 'Transverse waves only',
+        explanation: 'All EM waves consist of electric and magnetic fields oscillating perpendicular to the direction of propagation.'
+      },
+      {
+        type: 'mcq-def',
+        cat: 'motion',
+        q: 'When a guitar string is plucked, the wave generated along the string itself is __________.',
+        options: ['Transverse', 'Longitudinal', 'Electrostatic', 'Pressure wave'],
+        correct: 'Transverse',
+        explanation: 'The string moves perpendicular to the length of the string, making it a transverse wave.'
+      },
+      {
+        type: 'mcq-def',
+        cat: 'motion',
+        q: 'The sound wave produced in the air by a vibrating guitar string is __________.',
+        options: ['Longitudinal', 'Transverse', 'Electromagnetic', 'Torsional'],
+        correct: 'Longitudinal',
+        explanation: 'The vibrating string pushes air back and forth, generating longitudinal pressure waves in the air.'
+      },
+      {
+        type: 'mcq-comp',
+        cat: 'compression',
+        q: 'If you count the distance between two consecutive compressions in a longitudinal wave, you are measuring the __________.',
+        options: ['wavelength', 'amplitude', 'frequency', 'wave speed'],
+        correct: 'wavelength',
+        explanation: 'The wavelength of a longitudinal wave is the distance between two consecutive compressions or two consecutive rarefactions.'
+      },
+      {
+        type: 'mcq-comp',
+        cat: 'compression',
+        q: 'In a transverse wave, the equivalent of a compression (highest density/point) is the __________, and the equivalent of a rarefaction is the __________.',
+        options: ['crest; trough', 'trough; crest', 'compression; rarefaction', 'amplitude; wavelength'],
+        correct: 'crest; trough',
+        explanation: 'A crest is the highest point (positive displacement) and a trough is the lowest point (negative displacement).'
+      },
+      // 15 additional questions to complete the 30-pool
+      {
+        type: 'mcq-class',
+        cat: 'classification',
+        q: 'Which wave type does NOT require a medium (material) to propagate?',
+        options: ['Light/EM waves', 'Sound waves', 'Seismic waves', 'Water waves'],
+        correct: 'Light/EM waves',
+        explanation: 'EM waves are transverse oscillations of electric and magnetic fields and can travel through a vacuum.'
+      },
+      {
+        type: 'mcq-class',
+        cat: 'classification',
+        q: 'Why can sound NOT travel through outer space?',
+        options: ['It is a mechanical longitudinal wave and needs a medium to compress', 'Space has no light', 'Gravity is too low in space', 'Sound waves are electromagnetic'],
+        correct: 'It is a mechanical longitudinal wave and needs a medium to compress',
+        explanation: 'Mechanical waves like sound require particles to transmit vibrations. Space is a vacuum.'
+      },
+      {
+        type: 'mcq-def',
+        cat: 'motion',
+        q: 'Which of the following waves features crests and troughs?',
+        options: ['Water waves', 'Sound waves in air', 'Slinky push-pull wave', 'Ultrasound scan waves'],
+        correct: 'Water waves',
+        explanation: 'Water waves are transverse and exhibit crests and troughs.'
+      },
+      {
+        type: 'mcq-def',
+        cat: 'motion',
+        q: 'In a longitudinal wave, the distance from a compression to the adjacent rarefaction is equal to __________.',
+        options: ['half a wavelength', 'one wavelength', 'two wavelengths', 'a quarter of a wavelength'],
+        correct: 'half a wavelength',
+        explanation: 'A full wavelength is from one compression to the next. The distance from compression to rarefaction is half a wavelength.'
+      },
+      {
+        type: 'mcq-comp',
+        cat: 'compression',
+        q: 'How does pressure vary in a rarefaction region compared to normal atmospheric pressure?',
+        options: ['It is lower', 'It is higher', 'It is exactly the same', 'It fluctuates to infinite values'],
+        correct: 'It is lower',
+        explanation: 'Rarefactions are regions of low pressure and low particle density.'
+      },
+      {
+        type: 'mcq-comp',
+        cat: 'compression',
+        q: 'How does pressure vary in a compression region compared to normal atmospheric pressure?',
+        options: ['It is higher', 'It is lower', 'It remains constant', 'It drops to zero'],
+        correct: 'It is higher',
+        explanation: 'Compressions are regions of high pressure and high particle density.'
+      },
+      {
+        type: 'scenario',
+        cat: 'motion',
+        q: 'An student moves a rope up and down at 2 Hz. The wave travel direction is North. In which directions are the particles moving?',
+        options: ['East and West', 'North and South', 'Up and Down', 'In circular orbits'],
+        correct: 'Up and Down',
+        explanation: 'For a transverse wave traveling horizontally, the particle motion is vertical (up and down).'
+      },
+      {
+        type: 'scenario',
+        cat: 'motion',
+        q: 'A loudspeaker diaphragm moves back and forth horizontally to produce sound traveling East. In which direction do air particles vibrate?',
+        options: ['East and West', 'North and South', 'Up and Down', 'In circles'],
+        correct: 'East and West',
+        explanation: 'Sound is longitudinal. Particles vibrate parallel (East and West) to the wave travel direction (East).'
+      },
+      {
+        type: 'mcq-class',
+        cat: 'classification',
+        q: 'Which wave type is a water surface wave under realistic deep-water conditions (simplified for O-Levels)?',
+        options: ['Transverse', 'Longitudinal', 'Electromagnetic', 'Torsional'],
+        correct: 'Transverse',
+        explanation: 'O-Level syllabus groups water waves as transverse because the surface displacement is perpendicular to wave travel.'
+      },
+      {
+        type: 'mcq-def',
+        cat: 'motion',
+        q: 'Which statement is correct for BOTH transverse and longitudinal waves?',
+        options: ['They transfer energy without transferring matter', 'They both require a physical medium', 'They both vibrate in a vertical plane', 'They both travel at the speed of light'],
+        correct: 'They transfer energy without transferring matter',
+        explanation: 'All waves transfer energy from one place to another without transporting physical matter.'
+      },
+      {
+        type: 'mcq-def',
+        cat: 'motion',
+        q: 'In a transverse wave, what is the maximum displacement of a particle from its rest position called?',
+        options: ['Amplitude', 'Wavelength', 'Crest', 'Trough'],
+        correct: 'Amplitude',
+        explanation: 'Amplitude is the maximum displacement of a particle from its equilibrium/rest position.'
+      },
+      {
+        type: 'mcq-comp',
+        cat: 'compression',
+        q: 'What represents the amplitude of a longitudinal wave?',
+        options: ['The maximum displacement of a particle from its equilibrium position', 'The distance between two compressions', 'The length of the entire spring', 'The speed of the wave'],
+        correct: 'The maximum displacement of a particle from its equilibrium position',
+        explanation: 'For all waves, amplitude is the maximum displacement of a particle from its rest position.'
+      },
+      {
+        type: 'scenario',
+        cat: 'classification',
+        q: 'During an ultrasound scan, sound waves of frequency 5 MHz are sent into the body. What wave category is this?',
+        options: ['Longitudinal', 'Transverse', 'Electromagnetic', 'Radio'],
+        correct: 'Longitudinal',
+        explanation: 'Ultrasound is sound, which is always a longitudinal mechanical wave.'
+      },
+      {
+        type: 'mcq-class',
+        cat: 'classification',
+        q: 'Which of the following waves can be polarized? (Extension concept: only transverse waves can be polarized)',
+        options: ['Light waves', 'Sound waves', 'Ultrasound waves', 'P-waves'],
+        correct: 'Light waves',
+        explanation: 'Only transverse waves (like light) can be polarized because their vibrations occur perpendicular to wave travel.'
+      },
+      {
+        type: 'mcq-def',
+        cat: 'motion',
+        q: 'The vibrations of a transverse wave are restricted to ___________ plane(s) perpendicular to energy travel.',
+        options: ['infinite', 'one', 'zero', 'two parallel'],
+        correct: 'infinite',
+        explanation: 'Since perpendicular means any direction in the plane orthogonal to travel, there are infinite directions, but light is often polarized to one.'
+      }
+    ];
+
+    let currentQuizQuestions = [];
+    let currentQuestionIdx = 0;
+    let quizScore = 0;
+    let quizAnswered = false;
+    let selectedOptionIndex = null;
+    
+    // Performance area tracking
+    let performanceTracker = {
+      motion: { correct: 0, total: 0 },
+      classification: { correct: 0, total: 0 },
+      compression: { correct: 0, total: 0 }
+    };
+
+    function startNewQuiz() {
+      // Draw 8 to 10 questions randomly from 30 pool
+      const numQuestions = 10;
+      const shuffled = [...questionPool].sort(() => Math.random() - 0.5);
+      currentQuizQuestions = shuffled.slice(0, numQuestions);
+      
+      currentQuestionIdx = 0;
+      quizScore = 0;
+      quizAnswered = false;
+      selectedOptionIndex = null;
+      
+      performanceTracker = {
+        motion: { correct: 0, total: 0 },
+        classification: { correct: 0, total: 0 },
+        compression: { correct: 0, total: 0 }
+      };
+
+      document.getElementById('quiz-ongoing-view').style.display = 'block';
+      document.getElementById('quiz-result-view').style.display = 'none';
+      
+      displayQuestion();
+    }
+
+    function displayQuestion() {
+      quizAnswered = false;
+      selectedOptionIndex = null;
+      
+      const qData = currentQuizQuestions[currentQuestionIdx];
+      
+      // Update header info
+      document.getElementById('quiz-question-number').innerText = `Question ${currentQuestionIdx + 1} of ${currentQuizQuestions.length}`;
+      document.getElementById('quiz-score-live').innerText = `Score: ${quizScore}`;
+      
+      // Update progress bar
+      const percent = (currentQuestionIdx / currentQuizQuestions.length) * 100;
+      document.getElementById('quiz-progress-indicator').style.minWidth = percent + '%';
+      document.getElementById('quiz-progress-indicator').style.width = percent + '%';
+
+      // Set text
+      document.getElementById('quiz-question-text').innerText = qData.q;
+      
+      // Hide feedback box
+      document.getElementById('quiz-feedback-box').style.display = 'none';
+      
+      // Handle visual question canvas
+      const canvasContainer = document.getElementById('quiz-visual-container');
+      if (qData.type === 'visual') {
+        canvasContainer.style.display = 'block';
+        drawStaticVisualQuestion(qData.correct === 'Transverse');
+      } else {
+        canvasContainer.style.display = 'none';
+      }
+
+      // Populate options with randomized order
+      const optionsContainer = document.getElementById('quiz-options-container');
+      optionsContainer.innerHTML = '';
+
+      // Create option list
+      const originalOptions = [...qData.options];
+      // Shuffle options
+      const shuffledOptions = originalOptions.sort(() => Math.random() - 0.5);
+      
+      shuffledOptions.forEach((optionText, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `<span>${optionText}</span><span class="option-feedback-icon" id="opt-icon-${index}"></span>`;
+        btn.onclick = () => selectOption(index, optionText);
+        optionsContainer.appendChild(btn);
+      });
+
+      // Update action button
+      const actionBtn = document.getElementById('quiz-action-btn');
+      actionBtn.innerText = 'Submit Answer';
+      actionBtn.disabled = true;
+    }
+
+    function selectOption(index, optionText) {
+      if (quizAnswered) return;
+      
+      selectedOptionIndex = index;
+      
+      const buttons = document.querySelectorAll('.option-btn');
+      buttons.forEach((btn, idx) => {
+        if (idx === index) {
+          btn.classList.add('selected');
+        } else {
+          btn.classList.remove('selected');
+        }
+      });
+
+      document.getElementById('quiz-action-btn').disabled = false;
+    }
+
+    function handleQuizAction() {
+      const qData = currentQuizQuestions[currentQuestionIdx];
+      const actionBtn = document.getElementById('quiz-action-btn');
+
+      if (!quizAnswered) {
+        // Evaluate answer
+        quizAnswered = true;
+        
+        const buttons = document.querySelectorAll('.option-btn');
+        const selectedBtn = buttons[selectedOptionIndex];
+        const selectedText = selectedBtn.querySelector('span').innerText;
+        
+        const isCorrect = (selectedText === qData.correct);
+
+        // Update tracking categories
+        performanceTracker[qData.cat].total++;
+        if (isCorrect) {
+          performanceTracker[qData.cat].correct++;
+          quizScore++;
+          selectedBtn.classList.add('correct-choice');
+          selectedBtn.querySelector('.option-feedback-icon').innerHTML = '&#10003;'; // Checkmark
+          // Visual correct pulse
+          selectedBtn.classList.add('pulse-glow');
+        } else {
+          selectedBtn.classList.add('incorrect-choice');
+          selectedBtn.querySelector('.option-feedback-icon').innerHTML = '&#10007;'; // Cross
+          // Visual incorrect shake
+          selectedBtn.classList.add('shake-neutral');
+          
+          // Highlight correct one neutrally
+          buttons.forEach(btn => {
+            if (btn.querySelector('span').innerText === qData.correct) {
+              btn.classList.add('correct-choice');
+              btn.querySelector('.option-feedback-icon').innerHTML = '&#10003;';
+            }
+          });
+        }
+
+        // Show explanation box
+        const feedbackBox = document.getElementById('quiz-feedback-box');
+        const feedbackTitle = document.getElementById('quiz-feedback-title');
+        const feedbackExpl = document.getElementById('quiz-feedback-explanation');
+        
+        feedbackTitle.innerText = isCorrect ? 'Correct!' : 'Review Concept';
+        feedbackExpl.innerText = qData.explanation;
+        feedbackBox.style.display = 'block';
+
+        // Update action button text
+        if (currentQuestionIdx < currentQuizQuestions.length - 1) {
+          actionBtn.innerText = 'Next Question';
+        } else {
+          actionBtn.innerText = 'Finish Quiz';
+        }
+      } else {
+        // Go to next question or show score
+        if (currentQuestionIdx < currentQuizQuestions.length - 1) {
+          currentQuestionIdx++;
+          displayQuestion();
+        } else {
+          showQuizResults();
+        }
+      }
+    }
+
+    function drawStaticVisualQuestion(isTransverse) {
+      const ctx = ctxs['quiz-visual'];
+      const canvas = canvases['quiz-visual'];
+      if (!ctx || !canvas) return;
+
+      const w = canvas.width / 2;
+      const h = canvas.height / 2;
+      ctx.clearRect(0, 0, w, h);
+
+      if (isTransverse) {
+        // Draw static sine wave dots
+        ctx.fillStyle = '#a78bfa';
+        const numDots = 30;
+        const spacing = w / (numDots - 1);
+        const amp = 25;
+        const wl = 100;
+        const k = (2 * Math.PI) / wl;
+
+        for (let i = 0; i < numDots; i++) {
+          const x = i * spacing;
+          const y = h / 2 + amp * Math.sin(k * x);
+          ctx.beginPath();
+          ctx.arc(x, y, 4, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+      } else {
+        // Draw static compressions & rarefactions
+        ctx.fillStyle = '#a78bfa';
+        const numDots = 40;
+        const spacing = w / (numDots - 1);
+        const amp = 15;
+        const wl = 100;
+        const k = (2 * Math.PI) / wl;
+
+        for (let i = 0; i < numDots; i++) {
+          const x0 = i * spacing;
+          const disp = amp * Math.sin(k * x0);
+          const x = x0 + disp;
+          ctx.beginPath();
+          ctx.arc(x, h / 2, 4, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+      }
+    }
+
+    /* SECTION 6: RESULTS PANEL & GRADE FEEDBACK */
+    function showQuizResults() {
+      document.getElementById('quiz-ongoing-view').style.display = 'none';
+      document.getElementById('quiz-result-view').style.display = 'block';
+
+      const percentage = (quizScore / currentQuizQuestions.length) * 100;
+      
+      // Update score text
+      document.getElementById('result-score-desc').innerText = `You scored ${quizScore} out of ${currentQuizQuestions.length} (${percentage.toFixed(0)}%)`;
+
+      // Define grade metrics and feedback
+      const badge = document.getElementById('result-grade-badge');
+      const msg = document.getElementById('result-grade-msg');
+      const reviewBtn = document.getElementById('quiz-review-concept-btn');
+
+      if (percentage >= 80) {
+        badge.innerText = 'A';
+        msg.innerText = 'Excellent Work!';
+        reviewBtn.style.display = 'none'; // No need to go back
+        // Success celebration particle trigger
+        triggerCelebration(120);
+      } else if (percentage >= 50) {
+        badge.innerText = 'B';
+        msg.innerText = 'Good Effort!';
+        reviewBtn.style.display = 'inline-block';
+        reviewBtn.innerText = 'Review Basics';
+      } else {
+        badge.innerText = 'C';
+        msg.innerText = 'Keep Practicing!';
+        reviewBtn.style.display = 'inline-block';
+        reviewBtn.innerText = 'Back to Section 1';
+      }
+
+      // Display category breakdown values
+      updateBreakdownRow('breakdown-motion', performanceTracker.motion);
+      updateBreakdownRow('breakdown-class', performanceTracker.classification);
+      updateBreakdownRow('breakdown-compression', performanceTracker.compression);
+    }
+
+    function updateBreakdownRow(elementId, categoryData) {
+      const element = document.getElementById(elementId);
+      if (categoryData.total > 0) {
+        element.innerText = `${categoryData.correct} / ${categoryData.total}`;
+        const ratio = categoryData.correct / categoryData.total;
+        if (ratio >= 0.8) {
+          element.className = 'concept-score high';
+        } else {
+          element.className = 'concept-score';
+        }
+      } else {
+        element.innerText = 'N/A';
+        element.className = 'concept-score';
+      }
+    }
+
+    /* SCORE CELEBRATION CANVAS ANIMATIONS */
+    let particles = [];
+    let celebrationId = null;
+
+    function triggerCelebration(count) {
+      const canvas = document.getElementById('celebration-canvas');
+      const ctx = canvas.getContext('2d');
+      
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      particles = [];
+      const colors = ['#a78bfa', '#c084fc', '#8b5cf6', '#ffffff', '#7c3aed'];
+
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: canvas.width / 2,
+          y: canvas.height * 0.4,
+          vx: (Math.random() - 0.5) * 12,
+          vy: (Math.random() - 0.5) * 12 - 4,
+          size: Math.random() * 5 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          alpha: 1,
+          gravity: 0.2
+        });
+      }
+
+      if (celebrationId) {
+        cancelAnimationFrame(celebrationId);
+      }
+      runCelebrationLoop();
+    }
+
+    function runCelebrationLoop() {
+      const canvas = document.getElementById('celebration-canvas');
+      const ctx = canvas.getContext('2d');
+      if (!canvas) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      let alive = false;
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += p.gravity;
+        p.alpha -= 0.015;
+
+        if (p.alpha > 0) {
+          alive = true;
+          ctx.save();
+          ctx.globalAlpha = p.alpha;
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, 2 * Math.PI);
+          ctx.fill();
+          ctx.restore();
+        }
+      });
+
+      if (alive) {
+        celebrationId = requestAnimationFrame(runCelebrationLoop);
+      }
+    }
+
+
+    /* INITIALIZATION ON LOAD */
+    window.addEventListener('DOMContentLoaded', () => {
+      initCanvases();
+      switchTab(0);
+    });
+
+  </script>
+</body>
+</html>
