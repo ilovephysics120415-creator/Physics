@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magnetic Field Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="app-header">
+    <div class="logo">
+      <span class="logo-icon">🧲</span>
+      <span class="logo-text">FieldForce</span>
+    </div>
+    <nav class="nav-menu">
+      <button class="nav-btn active" data-tab="concept">Concept Intro</button>
+      <button class="nav-btn" data-tab="explore">Exploration</button>
+      <button class="nav-btn" data-tab="flashcards">Flashcards</button>
+      <button class="nav-btn" data-tab="quiz">Practice Quiz</button>
+    </nav>
+  </header>
+
+  <main class="app-content">
+
+    <!-- SECTION 1: CONCEPT INTRODUCTION -->
+    <section id="concept-section" class="tab-content active">
+      <div class="intro-container">
+        <!-- Slide 1 -->
+        <div class="concept-card active" data-slide="1">
+          <div class="concept-text">
+            <h2>Compass &amp; Field Direction</h2>
+            <p>A compass is simply a <strong>small bar magnet</strong> that is free to rotate. </p>
+            <p>When placed in a magnetic field, the compass needle's <strong>North (N) pole</strong> points in the direction of the magnetic field at that specific point.</p>
+          </div>
+          <div class="concept-visual">
+            <svg viewBox="0 0 400 250" class="svg-diagram">
+              <!-- Grid Background -->
+              <defs>
+                <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                </pattern>
+                <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#00d2ff"/>
+                </marker>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grid)" rx="12"/>
+              
+              <!-- Magnetic Field Line -->
+              <path d="M 50 125 C 100 50, 300 50, 350 125" fill="none" stroke="#a855f7" stroke-width="3" stroke-dasharray="6,4"/>
+              
+              <!-- Direction Arrows along the line -->
+              <path d="M 195 68 L 205 68" fill="none" stroke="#a855f7" stroke-width="1" marker-end="url(#arrow)"/>
+              
+              <!-- Compass at a point -->
+              <g transform="translate(200, 68) rotate(0)">
+                <!-- Compass Outer Ring -->
+                <circle cx="0" cy="0" r="28" fill="#172033" stroke="#00d2ff" stroke-width="2.5" class="glow-cyan"/>
+                <!-- Compass Dial Ticks -->
+                <line x1="0" y1="-24" x2="0" y2="-20" stroke="#00d2ff" stroke-width="1.5"/>
+                <line x1="0" y1="20" x2="0" y2="24" stroke="#ff9f00" stroke-width="1.5"/>
+                <!-- Compass Needle -->
+                <polygon points="0,-20 8,0 0,6" fill="#00d2ff"/> <!-- N Pole (Points in field direction) -->
+                <polygon points="0,20 8,0 0,6" fill="#ff9f00"/> <!-- S Pole -->
+                <circle cx="0" cy="0" r="3" fill="#ffffff"/>
+                <!-- Labels -->
+                <text x="0" y="-30" fill="#00d2ff" font-size="11" font-weight="bold" text-anchor="middle">Field Direction (N)</text>
+              </g>
+              
+              <!-- Legends -->
+              <rect x="15" y="200" width="150" height="35" rx="6" fill="#0c101a" stroke="rgba(255,255,255,0.1)"/>
+              <circle cx="30" cy="217" r="6" fill="#00d2ff"/>
+              <text x="45" y="221" fill="#e2e8f0" font-size="11">North Pole (N)</text>
+              
+              <circle cx="110" cy="217" r="6" fill="#ff9f00"/>
+              <text x="125" y="221" fill="#e2e8f0" font-size="11">South (S)</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="concept-card" data-slide="2">
+          <div class="concept-text">
+            <h2>Single Bar Magnet Pattern</h2>
+            <p>Magnetic field lines form closed loops around a magnet:</p>
+            <ul>
+              <li>Lines exit the <strong>North (N) pole</strong>, curve around, and enter the <strong>South (S) pole</strong>.</li>
+              <li>Lines are <strong>dense (closer together)</strong> near the poles, indicating a stronger magnetic field.</li>
+              <li>Lines spread out and grow further apart as distance increases.</li>
+            </ul>
+          </div>
+          <div class="concept-visual">
+            <svg viewBox="0 0 400 250" class="svg-diagram">
+              <rect width="100%" height="100%" fill="url(#grid)" rx="12"/>
+              <!-- Field Lines (Symmetric paths) -->
+              <!-- Outer loops -->
+              <path d="M 150 115 C 60 50, 60 200, 150 135" fill="none" stroke="rgba(168,85,247,0.4)" stroke-width="2"/>
+              <path d="M 250 115 C 340 50, 340 200, 250 135" fill="none" stroke="rgba(168,85,247,0.4)" stroke-width="2"/>
+              
+              <!-- Medium loops -->
+              <path d="M 150 115 C 100 70, 100 180, 150 135" fill="none" stroke="rgba(168,85,247,0.7)" stroke-width="2"/>
+              <path d="M 250 115 C 300 70, 300 180, 250 135" fill="none" stroke="rgba(168,85,247,0.7)" stroke-width="2"/>
+              
+              <!-- Main Connecting loops -->
+              <path d="M 150 100 C 130 30, 270 30, 250 100" fill="none" stroke="#a855f7" stroke-width="2" marker-end="url(#arrow)"/>
+              <path d="M 150 150 C 130 220, 270 220, 250 150" fill="none" stroke="#a855f7" stroke-width="2"/>
+              <!-- Arrow on bottom curve -->
+              <path d="M 205 185 L 195 185" fill="none" stroke="#a855f7" stroke-width="1" marker-end="url(#arrow)"/>
+
+              <!-- Bar Magnet -->
+              <g transform="translate(150, 100)">
+                <!-- North Half -->
+                <rect x="0" y="0" width="50" height="50" fill="#00d2ff" rx="4"/>
+                <text x="25" y="32" fill="#0b0f19" font-weight="800" font-size="20" text-anchor="middle">N</text>
+                <!-- South Half -->
+                <rect x="50" y="0" width="50" height="50" fill="#ff9f00" rx="4"/>
+                <text x="75" y="32" fill="#0b0f19" font-weight="800" font-size="20" text-anchor="middle">S</text>
+                <!-- Divider line -->
+                <line x1="50" y1="0" x2="50" y2="50" stroke="#0b0f19" stroke-width="2"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="concept-card" data-slide="3">
+          <div class="concept-text">
+            <h2>Unlike Poles (Attraction)</h2>
+            <p>When unlike poles (N and S) face each other, the magnetic field lines **join directly** from the North pole of one magnet to the South pole of the other.</p>
+            <p>This creates a strong, direct path representing an **attractive force** drawing them together.</p>
+          </div>
+          <div class="concept-visual">
+            <svg viewBox="0 0 400 250" class="svg-diagram">
+              <rect width="100%" height="100%" fill="url(#grid)" rx="12"/>
+              
+              <!-- Directly connecting lines -->
+              <path d="M 130 125 L 270 125" fill="none" stroke="#a855f7" stroke-width="2.5" marker-end="url(#arrow)"/>
+              <path d="M 130 110 C 170 90, 230 90, 270 110" fill="none" stroke="#a855f7" stroke-width="2"/>
+              <path d="M 130 140 C 170 160, 230 160, 270 140" fill="none" stroke="#a855f7" stroke-width="2"/>
+              
+              <!-- Loop returns -->
+              <path d="M 80 110 C 20 80, 20 170, 80 140" fill="none" stroke="rgba(168,85,247,0.4)" stroke-width="2"/>
+              <path d="M 320 110 C 380 80, 380 170, 320 140" fill="none" stroke="rgba(168,85,247,0.4)" stroke-width="2"/>
+
+              <!-- Magnet 1 (Left, N facing right) -->
+              <g transform="translate(30, 105)">
+                <rect x="0" y="0" width="50" height="40" fill="#ff9f00" rx="3"/>
+                <text x="25" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">S</text>
+                <rect x="50" y="0" width="50" height="40" fill="#00d2ff" rx="3"/>
+                <text x="75" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">N</text>
+              </g>
+
+              <!-- Magnet 2 (Right, S facing left) -->
+              <g transform="translate(270, 105)">
+                <rect x="0" y="0" width="50" height="40" fill="#ff9f00" rx="3"/>
+                <text x="25" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">S</text>
+                <rect x="50" y="0" width="50" height="40" fill="#00d2ff" rx="3"/>
+                <text x="75" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">N</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="concept-card" data-slide="4">
+          <div class="concept-text">
+            <h2>Like Poles (Repulsion)</h2>
+            <p>When like poles (N and N, or S and S) face each other, the field lines **bend away and repel** each other.</p>
+            <p>This creates a **Neutral Point (𝘟)** in the exact center where the magnetic fields cancel out completely. The net magnetic field strength at a neutral point is **zero**.</p>
+          </div>
+          <div class="concept-visual">
+            <svg viewBox="0 0 400 250" class="svg-diagram">
+              <rect width="100%" height="100%" fill="url(#grid)" rx="12"/>
+              
+              <!-- Repelling Lines -->
+              <!-- Left Magnet N lines bending up/down -->
+              <path d="M 130 115 C 160 105, 175 40, 175 0" fill="none" stroke="#a855f7" stroke-width="2"/>
+              <path d="M 130 135 C 160 145, 175 210, 175 250" fill="none" stroke="#a855f7" stroke-width="2"/>
+              <!-- Right Magnet N lines bending up/down -->
+              <path d="M 270 115 C 240 105, 225 40, 225 0" fill="none" stroke="#a855f7" stroke-width="2"/>
+              <path d="M 270 135 C 240 145, 225 210, 225 250" fill="none" stroke="#a855f7" stroke-width="2"/>
+              
+              <!-- Neutral point X -->
+              <g transform="translate(200, 125)">
+                <line x1="-8" y1="-8" x2="8" y2="8" stroke="#facc15" stroke-width="3" />
+                <line x1="8" y1="-8" x2="-8" y2="8" stroke="#facc15" stroke-width="3" />
+                <text x="0" y="26" fill="#facc15" font-size="12" font-weight="bold" text-anchor="middle">Neutral Point</text>
+              </g>
+
+              <!-- Magnet 1 (Left, N facing right) -->
+              <g transform="translate(30, 105)">
+                <rect x="0" y="0" width="50" height="40" fill="#ff9f00" rx="3"/>
+                <text x="25" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">S</text>
+                <rect x="50" y="0" width="50" height="40" fill="#00d2ff" rx="3"/>
+                <text x="75" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">N</text>
+              </g>
+
+              <!-- Magnet 2 (Right, N facing left) -->
+              <g transform="translate(270, 105)">
+                <rect x="0" y="0" width="50" height="40" fill="#00d2ff" rx="3"/>
+                <text x="25" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">N</text>
+                <rect x="50" y="0" width="50" height="40" fill="#ff9f00" rx="3"/>
+                <text x="75" y="26" fill="#0b0f19" font-weight="bold" font-size="16" text-anchor="middle">S</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Slider Controls -->
+        <div class="slider-nav">
+          <button id="prev-slide-btn" class="ctrl-btn" disabled>&larr; Prev</button>
+          <span class="slide-indicator">1 / 4</span>
+          <button id="next-slide-btn" class="ctrl-btn">Next &rarr;</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: INTERACTIVE EXPLORATION -->
+    <section id="explore-section" class="tab-content">
+      <div class="explore-container">
+        
+        <!-- Toggle tabs for canvas -->
+        <div class="explore-tabs">
+          <button id="tab-compass" class="sub-tab active">Compass Mapper</button>
+          <button id="tab-strength" class="sub-tab">Bar Magnet Strength</button>
+        </div>
+
+        <!-- Canvas Container -->
+        <div class="canvas-wrapper">
+          <canvas id="field-canvas" width="700" height="450"></canvas>
+          
+          <!-- Compass Overlay Element (used in Compass Mapper Tab) -->
+          <div id="interactive-compass" class="draggable-compass">
+            <div class="compass-ring"></div>
+            <div class="compass-needle">
+              <div class="needle-n"></div>
+              <div class="needle-s"></div>
+            </div>
+            <div class="compass-center"></div>
+          </div>
+        </div>
+
+        <!-- Control panels based on active tab -->
+        <div id="compass-controls" class="controls-panel">
+          <div class="control-group">
+            <label class="control-title">Configuration</label>
+            <div class="toggle-buttons">
+              <button class="toggle-btn active" data-config="single">Single Magnet</button>
+              <button class="toggle-btn" data-config="unlike">Unlike Poles (N-S)</button>
+              <button class="toggle-btn" data-config="like">Like Poles (N-N)</button>
+            </div>
+          </div>
+          <div class="control-group inline-group">
+            <span class="label-text">Show Field Lines Pattern</span>
+            <label class="switch">
+              <input type="checkbox" id="toggle-fieldlines" checked>
+              <span class="slider-round"></span>
+            </label>
+          </div>
+        </div>
+
+        <div id="strength-controls" class="controls-panel hidden">
+          <div class="control-group slider-group">
+            <div class="slider-labels">
+              <span class="control-title">Magnet Strength</span>
+              <span id="strength-label-text">Medium</span>
+            </div>
+            <input type="range" id="strength-slider" min="1" max="5" value="3" step="1" class="neon-slider">
+            <div class="range-ticks">
+              <span>Weak</span>
+              <span></span>
+              <span>Medium</span>
+              <span></span>
+              <span>Strong</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 3: FLASHCARD REVISION -->
+    <section id="flashcards-section" class="tab-content">
+      <div class="flashcard-container">
+        <div class="flashcard-header">
+          <h2>Revision Flashcards</h2>
+        </div>
+        
+        <div class="card-viewer">
+          <div class="flashcard" id="flashcard-element">
+            <div class="card-inner">
+              <div class="card-front">
+                <span class="card-index">Card 1</span>
+                <p class="card-text">Question front text goes here...</p>
+                <span class="tap-hint">Tap to Flip 🔄</span>
+              </div>
+              <div class="card-back">
+                <span class="card-index">Answer</span>
+                <p class="card-text">Answer back text goes here...</p>
+                <span class="tap-hint">Tap to Flip 🔄</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-nav">
+          <button id="prev-card-btn" class="ctrl-btn">&larr; Prev</button>
+          <button id="shuffle-btn" class="ctrl-btn">Shuffle 🎲</button>
+          <button id="next-card-btn" class="ctrl-btn">Next &rarr;</button>
+          <span id="card-progress" class="hidden">1 / 10</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4 & 5: QUIZ AND RESULTS -->
+    <section id="quiz-section" class="tab-content">
+      <!-- Quiz Frame -->
+      <div class="quiz-container" id="quiz-container">
+        <div class="quiz-header">
+          <div class="progress-bar-container">
+            <div class="progress-bar" id="quiz-progress-bar" style="width: 10%;"></div>
+          </div>
+          <div class="quiz-meta">
+            <span id="question-number">Question 1 of 10</span>
+            <span id="quiz-score-tracker">Score: 0/0</span>
+          </div>
+        </div>
+
+        <div class="quiz-question-box">
+          <div id="quiz-question-visual" class="quiz-visual hidden">
+            <!-- Dynamically rendered SVGs representing questions -->
+          </div>
+          <p id="quiz-question-text" class="question-text">Loading question...</p>
+        </div>
+
+        <div class="quiz-options" id="quiz-options-container">
+          <!-- 4 option buttons will be placed here -->
+        </div>
+
+        <!-- Explanation Drawer (slides in when answered) -->
+        <div id="explanation-drawer" class="explanation-drawer hidden">
+          <div class="explanation-status" id="explanation-status">
+            <span class="status-icon" id="status-icon">✅</span>
+            <span class="status-msg" id="status-msg">Correct!</span>
+          </div>
+          <div class="explanation-body">
+            <h4>Worked Explanation:</h4>
+            <p id="explanation-text">Detailed physics explanation goes here.</p>
+          </div>
+          <button id="next-question-btn" class="ctrl-btn accent-btn">Continue &rarr;</button>
+        </div>
+      </div>
+
+      <!-- Results View -->
+      <div class="results-container hidden" id="results-container">
+        <div class="results-card">
+          <div class="trophy-icon">🏆</div>
+          <h2>Quiz Completed!</h2>
+          <div class="final-score-box">
+            <span class="score-num" id="final-score-val">0</span>
+            <span class="score-total">/ 10</span>
+          </div>
+          <p class="feedback-tier" id="feedback-tier-msg">Excellent! You've mastered this topic.</p>
+          
+          <div class="score-summary-details">
+            <p>Great effort! Revisit sections you found difficult to lock in your understanding.</p>
+          </div>
+
+          <button id="retry-quiz-btn" class="ctrl-btn accent-btn">Practice Again 🔁</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
