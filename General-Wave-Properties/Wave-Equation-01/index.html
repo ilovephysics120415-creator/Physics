@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wave Speed Equation (v = fλ) | O-Level Physics</title>
+  <meta name="description" content="Interactive visual explorer and practice app for Singapore O-Level Physics students learning the wave speed equation.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Wave Speed Equation</h1>
+    <div class="nav-tabs" role="tablist">
+      <button class="nav-tab active" id="tab-intro" role="tab" aria-selected="true" aria-controls="sec-intro" tabindex="0">Concept Intro</button>
+      <button class="nav-tab" id="tab-sim" role="tab" aria-selected="false" aria-controls="sec-sim" tabindex="-1">Wave Simulator</button>
+      <button class="nav-tab" id="tab-cards" role="tab" aria-selected="false" aria-controls="sec-cards" tabindex="-1">Revision Cards</button>
+      <button class="nav-tab" id="tab-quiz" role="tab" aria-selected="false" aria-controls="sec-quiz" tabindex="-1">Exam Quiz</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- SECTION 1: CONCEPT INTRODUCTION -->
+    <section id="sec-intro" class="app-section active" role="tabpanel" aria-labelledby="tab-intro">
+      <div class="panel">
+        <h2 class="panel-title">The Wave Equation</h2>
+        
+        <div class="formula-display" id="intro-formula" aria-label="v equals f times lambda">
+          <span class="formula-symbol active" data-symbol="v" id="symbol-v-lbl">v</span>
+          <span>=</span>
+          <span class="formula-symbol" data-symbol="f" id="symbol-f-lbl">f</span>
+          <span>&times;</span>
+          <span class="formula-symbol" data-symbol="l" id="symbol-l-lbl">&lambda;</span>
+        </div>
+
+        <div class="symbol-details">
+          <div class="symbol-card active" data-symbol="v" id="card-v">
+            <div class="symbol-title">Wave Speed (v)</div>
+            <div class="symbol-unit">Unit: metres per second (m/s)</div>
+            <p class="intro-desc">How fast the wave pattern propagates through space. Speed measures distance covered per second.</p>
+          </div>
+          <div class="symbol-card" data-symbol="f" id="card-f">
+            <div class="symbol-title">Frequency (f)</div>
+            <div class="symbol-unit">Unit: hertz (Hz)</div>
+            <p class="intro-desc">How many complete waves pass a single reference point every second. 1 Hz = 1 wave/second.</p>
+          </div>
+          <div class="symbol-card" data-symbol="l" id="card-l">
+            <div class="symbol-title">Wavelength (&lambda;)</div>
+            <div class="symbol-unit">Unit: metres (m)</div>
+            <p class="intro-desc">The spatial length of one complete wave cycle (e.g. from crest to crest or trough to trough).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel-title">Visualising the Wave</h2>
+        <div class="canvas-container">
+          <canvas id="intro-wave-canvas"></canvas>
+          <div class="canvas-labels">
+            <div class="canvas-badge" id="intro-badge-f">f = 1.0 Hz</div>
+            <div class="canvas-badge" id="intro-badge-l">&lambda; = 2.0 m</div>
+            <div class="canvas-badge" id="intro-badge-v">v = 2.0 m/s</div>
+          </div>
+        </div>
+        <p class="intro-desc" style="margin-top: 0.8rem; font-weight: 600; text-align: center; color: var(--accent-color);">
+          Tap symbols above to highlight how each relates to the traveling wave.
+        </p>
+      </div>
+    </section>
+
+    <!-- SECTION 2: INTERACTIVE EXPLORATION -->
+    <section id="sec-sim" class="app-section" role="tabpanel" aria-labelledby="tab-sim">
+      <div class="panel">
+        <h2 class="panel-title">Wave Simulator</h2>
+        <div class="canvas-container">
+          <canvas id="sim-wave-canvas"></canvas>
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-container">
+            <div class="slider-header">
+              <span class="slider-label">Frequency (f)</span>
+              <span class="slider-value" id="sim-val-f">1.00 Hz</span>
+            </div>
+            <input type="range" id="sim-slider-f" min="0.5" max="20" step="0.1" value="1.0" aria-label="Frequency in Hertz">
+          </div>
+
+          <div class="slider-container">
+            <div class="slider-header">
+              <span class="slider-label">Wavelength (&lambda;)</span>
+              <span class="slider-value" id="sim-val-l">2.00 m</span>
+            </div>
+            <input type="range" id="sim-slider-l" min="0.1" max="4.0" step="0.05" value="2.0" aria-label="Wavelength in Metres">
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="readout-panel">
+          <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); font-weight: 600;">Calculated Wave Speed</div>
+          <div class="readout-eq" id="sim-readout">v = f &times; &lambda; = <span id="sim-val-v">2.00</span> m/s</div>
+          
+          <div class="context-tags">
+            <div class="context-tag" id="tag-ripple">~1-2 m/s (Water Ripple)</div>
+            <div class="context-tag" id="tag-sound-air">~340 m/s (Sound in Air)</div>
+            <div class="context-tag" id="tag-sound-water">~1500 m/s (Sound in Water)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: FLASHCARD REVISION -->
+    <section id="sec-cards" class="app-section" role="tabpanel" aria-labelledby="tab-cards">
+      <div class="flashcard-deck" id="flashcard" tabindex="0" aria-label="Revision Flashcard. Press space or enter to flip.">
+        <div class="flashcard-inner">
+          <div class="flashcard-side flashcard-front">
+            <div class="card-num" id="card-index-front">Card 1/5</div>
+            <div class="card-prompt" id="card-prompt-front">Equation</div>
+            <div class="card-content" id="card-q-front">v = ?</div>
+            <div class="card-tap-hint">Tap card to flip / show answer</div>
+          </div>
+          <div class="flashcard-side flashcard-back">
+            <div class="card-num" id="card-index-back">Card 1/5</div>
+            <div class="card-prompt" id="card-prompt-back">Answer</div>
+            <div class="card-content" id="card-q-back">v = f &times; &lambda;</div>
+            <div class="card-explanation" id="card-exp-back">Wave Speed = Frequency &times; Wavelength</div>
+            <div class="card-tap-hint">Tap card to return</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard-controls">
+        <button class="btn" id="btn-prev-card" aria-label="Previous card">Prev</button>
+        <button class="btn" id="btn-shuffle-cards">Shuffle</button>
+        <button class="btn" id="btn-next-card" aria-label="Next card">Next</button>
+      </div>
+    </section>
+
+    <!-- SECTION 4 & 5: QUIZ AND SCORING -->
+    <section id="sec-quiz" class="app-section" role="tabpanel" aria-labelledby="tab-quiz">
+      <!-- Welcome panel -->
+      <div class="panel" id="quiz-intro-panel">
+        <h2 class="panel-title">Exam Practice</h2>
+        <p class="intro-desc" style="margin-bottom: 1.5rem;">
+          Test your skills on Singapore O-Level style calculations and conceptual wave questions. 
+          10 randomized questions drawn from our exam pool.
+        </p>
+        <button class="btn btn-primary" id="btn-start-quiz" style="width: 100%; justify-content: center;">Start Quiz</button>
+      </div>
+
+      <!-- Question panel -->
+      <div class="panel" id="quiz-question-panel" style="display: none;">
+        <div class="quiz-progress" style="margin-bottom: 0.5rem;">
+          <span id="quiz-progress-text">Question 1 of 10</span>
+          <span id="quiz-score-live">Score: 0/0</span>
+        </div>
+        <div class="progress-bar" style="margin-bottom: 1.25rem;">
+          <div class="progress-fill" id="quiz-progress-fill"></div>
+        </div>
+
+        <div class="quiz-question-container">
+          <div class="question-text" id="question-text">Loading question...</div>
+          <div class="options-list" id="options-list">
+            <!-- Dynamically populated options -->
+          </div>
+        </div>
+
+        <!-- Feedback & Working Panel -->
+        <div class="quiz-feedback-box" id="quiz-feedback-box" style="margin-top: 1.25rem;">
+          <div class="feedback-header" id="feedback-header">Correct!</div>
+          <div class="working-box" id="feedback-working">Working...</div>
+          <button class="btn btn-primary" id="btn-next-question" style="align-self: flex-end;">Next Question</button>
+        </div>
+      </div>
+
+      <!-- Results panel -->
+      <div class="panel" id="quiz-results-panel" style="display: none; text-align: center;">
+        <h2 class="panel-title" style="justify-content: center; border: none; padding: 0;">Quiz Completed!</h2>
+        
+        <div class="score-circle-container">
+          <div class="score-circle">
+            <span class="score-value" id="results-score">9/10</span>
+            <span class="score-label">Correct</span>
+          </div>
+        </div>
+
+        <div class="grade-message" id="results-grade-message">Fantastic work! You've mastered the Wave Speed Equation.</div>
+        
+        <div class="panel" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); margin: 1.25rem 0; text-align: left;">
+          <div class="performance-breakdown">
+            <div class="breakdown-row">
+              <span>Calculations Accuracy</span>
+              <span class="breakdown-val" id="breakdown-calc">0%</span>
+            </div>
+            <div class="breakdown-row">
+              <span>Conceptual Accuracy</span>
+              <span class="breakdown-val" id="breakdown-concept">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; justify-content: center;">
+          <button class="btn" id="btn-retry-quiz">Retry Quiz</button>
+          <button class="btn btn-primary" id="btn-revisit-intro" style="display: none;">Revisit Formula</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <canvas id="confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 999; display: none;"></canvas>
+
+  <script src="app.js"></script>
+</body>
+</html>
