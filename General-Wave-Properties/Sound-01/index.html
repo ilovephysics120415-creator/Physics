@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sound Waves: Production & Transmission</title>
+  <!-- Google Fonts: Outfit and Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons (CDN) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Canvas Confetti for Quiz celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <!-- Header / Navigation -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo">
+        <span class="logo-accent">SOUND</span> WAVES
+      </div>
+      <nav class="nav-tabs">
+        <button class="nav-btn active" data-target="intro-section" aria-label="Introduction">
+          <i data-lucide="info"></i>
+          <span>Intro</span>
+        </button>
+        <button class="nav-btn" data-target="vibration-section" aria-label="Tuning Fork & Frequency">
+          <i data-lucide="activity"></i>
+          <span>Vibration</span>
+        </button>
+        <button class="nav-btn" data-target="vacuum-section" aria-label="Sound in Vacuum">
+          <i data-lucide="wind"></i>
+          <span>Vacuum</span>
+        </button>
+        <button class="nav-btn" data-target="drag-section" aria-label="Labeling Exercise">
+          <i data-lucide="move"></i>
+          <span>Label</span>
+        </button>
+        <button class="nav-btn" data-target="flashcard-section" aria-label="Flashcards">
+          <i data-lucide="layers"></i>
+          <span>Cards</span>
+        </button>
+        <button class="nav-btn" data-target="quiz-section" aria-label="Revision Quiz">
+          <i data-lucide="award"></i>
+          <span>Quiz</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="app-main">
+    
+    <!-- SECTION 1: CONCEPT INTRODUCTION -->
+    <section id="intro-section" class="tab-panel active">
+      <div class="card panel-card">
+        <h1 class="panel-title">Sound Waves: Production & Transmission</h1>
+        
+        <p class="panel-subtitle">Sound is produced by <strong>vibrations</strong> and needs a <strong>medium</strong> (like air) to travel.</p>
+        
+        <!-- Live Animation Container -->
+        <div class="animation-wrapper">
+          <canvas id="intro-canvas" class="sim-canvas"></canvas>
+          <div class="canvas-legend">
+            <span class="legend-item">Compression (C)</span>
+            <span class="legend-item">Rarefaction (R)</span>
+          </div>
+        </div>
+
+        <div class="info-blocks-grid">
+          <div class="info-box">
+            <div class="info-icon-wrapper">
+              <i data-lucide="volume-2" class="accent-color"></i>
+            </div>
+            <div>
+              <h3>How It's Made</h3>
+              <p>A vibrating source pushes surrounding air molecules, forming alternating high and low density regions.</p>
+            </div>
+          </div>
+          <div class="info-box">
+            <div class="info-icon-wrapper">
+              <i data-lucide="shield-alert" class="accent-color"></i>
+            </div>
+            <div>
+              <h3>The Vacuum Trap</h3>
+              <p>Without particles to pass the vibration along, sound cannot propagate. Let's compare below:</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comparative mini animations -->
+        <div class="comparison-container">
+          <div class="compare-card">
+            <h4>In Air (With Medium)</h4>
+            <div class="compare-visual">
+              <canvas id="compare-air-canvas" style="width: 100%; height: 60px; background: #0c1224; border-radius: var(--radius-sm);"></canvas>
+              <div class="status-badge"><i data-lucide="check" class="success-icon"></i> Waves Travel</div>
+            </div>
+          </div>
+          <div class="compare-card">
+            <h4>In Vacuum (No Medium)</h4>
+            <div class="compare-visual">
+              <canvas id="compare-vacuum-canvas" style="width: 100%; height: 60px; background: #0c1224; border-radius: var(--radius-sm);"></canvas>
+              <div class="status-badge"><i data-lucide="x" class="fail-icon"></i> No Transmission</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cta-container">
+          <button class="btn btn-primary next-tab-btn" data-next="vibration-section">
+            Start Exploration <i data-lucide="arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: INTERACTIVE EXPLORATION — TUNING FORK / SPEAKER VIBRATION -->
+    <section id="vibration-section" class="tab-panel">
+      <div class="card panel-card">
+        <h2 class="panel-title">Tuning Fork & Speaker Vibration</h2>
+        <p class="panel-subtitle">Change the frequency to see how it affects the spacing between compressions (wavelength).</p>
+        
+        <div class="control-panel">
+          <div class="control-group">
+            <label for="freq-slider" class="control-label">
+              <span>Vibration Frequency:</span>
+              <span id="freq-val" class="badge">Medium</span>
+            </label>
+            <input type="range" id="freq-slider" min="1" max="3" step="1" value="2" class="slider">
+            <div class="slider-ticks">
+              <span>Low</span>
+              <span>Medium</span>
+              <span>High</span>
+            </div>
+          </div>
+
+          <div class="toggle-group">
+            <button class="toggle-btn active" id="btn-source-fork"><i data-lucide="toy-brick"></i> Tuning Fork</button>
+            <button class="toggle-btn" id="btn-source-speaker"><i data-lucide="speaker"></i> Speaker</button>
+          </div>
+        </div>
+
+        <div class="simulation-container">
+          <canvas id="vibration-canvas" class="sim-canvas"></canvas>
+        </div>
+
+        <div class="guided-question">
+          <div class="guided-header">
+            <i data-lucide="lightbulb" class="accent-color"></i>
+            <span>Observe the behavior:</span>
+          </div>
+          <p>Notice how high frequency causes compressions to bunch closer together. This shows a shorter wavelength!</p>
+        </div>
+
+        <div class="cta-container">
+          <button class="btn btn-primary next-tab-btn" data-next="vacuum-section">
+            Test in a Vacuum <i data-lucide="arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: INTERACTIVE EXPLORATION — SOUND IN A VACUUM -->
+    <section id="vacuum-section" class="tab-panel">
+      <div class="card panel-card">
+        <h2 class="panel-title">Sound in a Vacuum</h2>
+        <p class="panel-subtitle">Remove the air from the bell jar to see what happens to the sound waves.</p>
+
+        <div class="vacuum-layout">
+          <div class="vacuum-display">
+            <!-- Simulated Bell Jar chamber -->
+            <div class="bell-jar-chamber">
+              <canvas id="vacuum-canvas" class="sim-canvas"></canvas>
+              <div class="vacuum-gauge">
+                <div class="gauge-label">Pressure</div>
+                <div class="gauge-value" id="gauge-val">100 kPa</div>
+              </div>
+            </div>
+
+            <!-- Sound intensity indicator outside -->
+            <div class="sound-heard-box" id="heard-indicator">
+              <i data-lucide="volume-2" class="sound-icon" id="heard-icon"></i>
+              <span class="heard-label" id="heard-text">Sound Heard Outside</span>
+            </div>
+          </div>
+
+          <div class="vacuum-controls">
+            <div class="control-group">
+              <label for="pressure-slider" class="control-label">
+                <span>Air Pressure:</span>
+                <span id="pressure-badge" class="badge">Atmospheric</span>
+              </label>
+              <input type="range" id="pressure-slider" min="0" max="100" value="100" class="slider">
+              <div class="slider-ticks">
+                <span>Vacuum (0%)</span>
+                <span>Full Air (100%)</span>
+              </div>
+            </div>
+
+            <div class="vacuum-info-card">
+              <div class="vacuum-info-header">
+                <i data-lucide="help-circle" class="accent-color"></i>
+                <span>Why does this happen?</span>
+              </div>
+              <p id="vacuum-explanation">Air molecules act as the medium. At 100% pressure, there are plenty of molecules to carry the vibration. As you pump air out, the energy cannot be transmitted.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="cta-container">
+          <button class="btn btn-primary next-tab-btn" data-next="drag-section">
+            Try Labeling Waves <i data-lucide="arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: INTERACTIVE EXPLORATION — COMPRESSION/RAREFACTION LABELING -->
+    <section id="drag-section" class="tab-panel">
+      <div class="card panel-card">
+        <h2 class="panel-title">Longitudinal Wave Labeling</h2>
+        <p class="panel-subtitle">Identify key regions and direction of a longitudinal sound wave by placing labels correctly.</p>
+
+        <div class="labeling-workspace">
+          <!-- Static/Dynamic diagram with droppoints -->
+          <div class="diagram-container" style="width: 100%;">
+            <canvas id="labeling-canvas" class="sim-canvas"></canvas>
+            
+            <!-- Absolute positioned dropzones -->
+            <div class="dropzone" id="dz-compression" data-accept="compression" style="top: 25%; left: 24%;">
+              <span class="dz-placeholder">Drop Here</span>
+            </div>
+            <div class="dropzone" id="dz-rarefaction" data-accept="rarefaction" style="top: 25%; left: 60%;">
+              <span class="dz-placeholder">Drop Here</span>
+            </div>
+            <div class="dropzone" id="dz-travel" data-accept="travel" style="bottom: 12%; left: 45%;">
+              <span class="dz-placeholder">Drop Here</span>
+            </div>
+          </div>
+
+          <!-- Draggable Labels Tray -->
+          <div class="labels-tray" id="draggable-tray" style="width: 100%; display: flex; flex-direction: row; justify-content: center; gap: 1rem;">
+            <div class="draggable-label" draggable="true" id="lbl-compression" data-label="compression">
+              <i data-lucide="grip-horizontal"></i> Compression
+            </div>
+            <div class="draggable-label" draggable="true" id="lbl-rarefaction" data-label="rarefaction">
+              <i data-lucide="grip-horizontal"></i> Rarefaction
+            </div>
+            <div class="draggable-label" draggable="true" id="lbl-travel" data-label="travel">
+              <i data-lucide="grip-horizontal"></i> Direction of wave travel
+            </div>
+          </div>
+        </div>
+
+        <div class="labeling-actions">
+          <button class="btn btn-secondary" id="btn-reset-labels"><i data-lucide="rotate-ccw"></i> Reset</button>
+          <button class="btn btn-primary" id="btn-check-labels">Check All <i data-lucide="check-circle-2"></i></button>
+        </div>
+
+        <div class="cta-container">
+          <button class="btn btn-primary next-tab-btn" data-next="flashcard-section">
+            Review Flashcards <i data-lucide="arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: FLASHCARD REVISION MODE -->
+    <section id="flashcard-section" class="tab-panel">
+      <div class="card panel-card">
+        <h2 class="panel-title">Flashcard Revision</h2>
+        <p class="panel-subtitle">Tap cards to flip them. Swipe or use buttons to navigate.</p>
+
+        <div class="flashcard-deck-wrapper">
+          <div class="flashcard" id="main-flashcard">
+            <!-- Front of Card -->
+            <div class="card-side front">
+              <div class="card-header">
+                <span class="card-num" id="card-num-indicator">1 / 5</span>
+                <i data-lucide="help-circle" class="card-type-icon"></i>
+              </div>
+              <div class="card-body">
+                <p id="card-question-text">How is sound produced?</p>
+              </div>
+              <div class="card-footer">
+                <span>Tap to reveal explanation</span>
+              </div>
+            </div>
+            
+            <!-- Back of Card -->
+            <div class="card-side back">
+              <div class="card-header">
+                <span class="card-num">Explanation</span>
+                <i data-lucide="check-circle" class="card-type-icon accent-color"></i>
+              </div>
+              <div class="card-body">
+                <p id="card-answer-text">Sound is produced by vibrating sources which deform the medium around them.</p>
+                <div class="card-mini-visual" id="card-visual-slot"></div>
+              </div>
+              <div class="card-footer">
+                <span>Tap to see front again</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flashcard-controls">
+          <button class="btn btn-icon-only" id="btn-prev-card" aria-label="Previous card" style="font-size: 1.2rem; font-weight: bold; line-height: 1;">
+            ←
+          </button>
+          <button class="btn btn-secondary" id="btn-shuffle-cards">
+            <i data-lucide="shuffle"></i> Shuffle
+          </button>
+          <button class="btn btn-icon-only" id="btn-next-card" aria-label="Next card" style="font-size: 1.2rem; font-weight: bold; line-height: 1;">
+            →
+          </button>
+        </div>
+
+        <div class="cta-container">
+          <button class="btn btn-primary next-tab-btn" data-next="quiz-section">
+            Take Revision Quiz <i data-lucide="arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6 & 7: RANDOMISED QUIZ & FEEDBACK -->
+    <section id="quiz-section" class="tab-panel">
+      <!-- Quiz Welcome / Configuration -->
+      <div class="card panel-card" id="quiz-intro-card">
+        <h2 class="panel-title">Singapore O-Level Physics Revision</h2>
+        <p class="panel-subtitle">Test your understanding of Sound Waves. 8 random questions per session drawn from a 30-question database.</p>
+        
+        <div class="quiz-illustration">
+          <i data-lucide="clipboard-list" class="quiz-illustration-icon"></i>
+        </div>
+
+        <div class="quiz-info-grid">
+          <div class="quiz-info-pill">
+            <i data-lucide="check-square"></i> 8 Random Questions
+          </div>
+          <div class="quiz-info-pill">
+            <i data-lucide="clock"></i> No Time Limit
+          </div>
+          <div class="quiz-info-pill">
+            <i data-lucide="eye"></i> Immediate Feedback
+          </div>
+        </div>
+
+        <div class="cta-container">
+          <button class="btn btn-primary btn-large" id="btn-start-quiz">
+            Start Quiz Now <i data-lucide="play"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Active Question Card -->
+      <div class="card panel-card hidden" id="quiz-question-card">
+        <div class="quiz-header">
+          <span class="quiz-progress-text" id="quiz-progress">Question 1 of 8</span>
+          <div class="quiz-progress-bar-container">
+            <div class="quiz-progress-bar" id="quiz-progress-fill" style="width: 12.5%;"></div>
+          </div>
+        </div>
+
+        <div class="question-container">
+          <!-- Question text -->
+          <h3 class="question-text" id="q-text">Which marked region represents a compression?</h3>
+          
+          <!-- Optional inline visual helper -->
+          <div class="question-visual-box hidden" id="q-visual-box">
+            <canvas id="q-helper-canvas" class="sim-canvas"></canvas>
+          </div>
+
+          <!-- Options list -->
+          <div class="options-list" id="q-options">
+            <!-- Dynamic button options -->
+          </div>
+        </div>
+
+        <!-- Immediate Explanation Panel (Appears after selecting an option) -->
+        <div class="feedback-panel hidden" id="q-feedback">
+          <div class="feedback-header">
+            <i data-lucide="help-circle" class="feedback-icon" id="feedback-icon"></i>
+            <span class="feedback-title" id="feedback-title">Correct!</span>
+          </div>
+          <p class="feedback-body" id="feedback-desc">Sound is a longitudinal wave, consisting of compressions and rarefactions.</p>
+          <button class="btn btn-primary" id="btn-next-question">
+            Next Question <i data-lucide="chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Final Score / Results Card -->
+      <div class="card panel-card hidden" id="quiz-results-card">
+        <h2 class="panel-title">Quiz Completed!</h2>
+        
+        <div class="score-display-wrapper">
+          <div class="score-circle">
+            <span class="score-num" id="results-score">8/8</span>
+            <span class="score-label">Correct Answers</span>
+          </div>
+        </div>
+
+        <div class="tier-message-box" id="tier-box">
+          <h3 id="tier-title">Excellent Job!</h3>
+          <p id="tier-description">You've mastered the concepts of sound production and transmission.</p>
+        </div>
+
+        <!-- Category performance breakdowns -->
+        <div class="breakdown-container">
+          <h4>Concept Breakdown</h4>
+          <div class="breakdown-list">
+            <div class="breakdown-item">
+              <span class="breakdown-label">Sound Production</span>
+              <div class="breakdown-track">
+                <div class="breakdown-fill" id="bd-production" style="width: 100%;"></div>
+              </div>
+              <span class="breakdown-percent" id="bd-production-pct">100%</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Medium & Vacuum</span>
+              <div class="breakdown-track">
+                <div class="breakdown-fill" id="bd-medium" style="width: 100%;"></div>
+              </div>
+              <span class="breakdown-percent" id="bd-medium-pct">100%</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Wave Properties (Comp/Rare)</span>
+              <div class="breakdown-track">
+                <div class="breakdown-fill" id="bd-properties" style="width: 100%;"></div>
+              </div>
+              <span class="breakdown-percent" id="bd-properties-pct">100%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cta-container quiz-finish-actions">
+          <button class="btn btn-secondary" id="btn-restart-quiz">
+            <i data-lucide="rotate-ccw"></i> Try Again
+          </button>
+          <button class="btn btn-primary" id="btn-back-intro">
+            <i data-lucide="home"></i> Review Intro
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <p>Singapore O-Level Physics (6091) Review App • Interactive Sound Waves</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
