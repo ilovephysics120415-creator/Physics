@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AC Generator Simulator | Physics 6091</title>
+    <meta name="description" content="An interactive 3D AC generator showing the rotating coil, slip rings, carbon brushes, and a real-time voltage-time graph.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-area">
+                <span class="badge">Syllabus 6091</span>
+                <h1>A.C. Generator 3D</h1>
+            </div>
+            <div class="app-tagline">
+                <p>Drag to Orbit • Electromagnetic Induction Simulator</p>
+            </div>
+        </header>
+
+        <!-- Main Layout: Just the Simulator and the Graph -->
+        <main class="app-main">
+            <!-- Three.js 3D Viewport -->
+            <section class="glass-card visualizer-card">
+                <div class="canvas-header">
+                    <div class="tab-title">
+                        <i class="fa-solid fa-cube animate-spin-slow"></i>
+                        <span>Generator Anatomy (3D Interactive)</span>
+                    </div>
+                    <div class="legend">
+                        <span class="legend-item"><span class="dot field-dot"></span> Field (B)</span>
+                        <span class="legend-item"><span class="dot current-dot"></span> Current (I)</span>
+                        <span class="legend-item"><span class="dot force-dot"></span> Motion (F)</span>
+                    </div>
+                </div>
+                <div class="canvas-container" id="animation-section">
+                    <canvas id="threejs-canvas"></canvas>
+                    <div class="hud-angle-overlay">Angle: <span id="hud-angle">0°</span></div>
+                    <div class="hud-alert-overlay" id="hud-alert">Coil is Horizontal: Max rate of cutting, PEAK Voltage!</div>
+                </div>
+                <!-- Control Panel -->
+                <div class="control-panel">
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Number of Turns</span>
+                            <span class="control-value" id="val-turns">1 Turn</span>
+                        </div>
+                        <input type="range" id="input-turns" min="1" max="40" step="1" value="1">
+                    </div>
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span>Rotation Frequency</span>
+                            <span class="control-value" id="val-frequency">1 Hz</span>
+                        </div>
+                        <input type="range" id="input-frequency" min="0" max="50" step="1" value="1">
+                        <div id="frequency-notice" class="frequency-notice" style="display: none;">
+                            This is the frequency of Singapore (and many countries) AC generator in power plants. As such you cannot see the lamp in your home or classroom blink even though it is blinking at 50 times in one second.
+                        </div>
+                    </div>
+                    <div class="control-group toggle-group">
+                        <label class="switch-label" for="input-core">Soft-Iron Core</label>
+                        <label class="switch">
+                            <input type="checkbox" id="input-core">
+                            <span class="slider-toggle"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="discussion-questions">
+                    <h4>Discussion Questions</h4>
+                    <ol>
+                        <li>Where can you find an AC generator in Singapore?</li>
+                        <li>If the output voltage is more than 240 V, how do we get 240 V at our three pin electrical outlet?</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- Scope / Graph Display -->
+            <section class="glass-card graph-card">
+                <div class="canvas-header">
+                    <div class="tab-title">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span>Voltage output against Time</span>
+                    </div>
+                    <div class="graph-stats">
+                        <span>Peak Voltage: <span id="val-peak-v">12.0 V</span></span>
+                    </div>
+                </div>
+                <div class="canvas-container">
+                    <canvas id="canvas-graph"></canvas>
+                </div>
+            </section>
+        </main>
+
+        <!-- Syllabus Quick Card -->
+        <footer class="syllabus-notes">
+            <div class="note-card">
+                <div class="note-icon"><i class="fa-solid fa-circle-info"></i></div>
+                <div class="note-content">
+                    <h3>Key Exam concepts (6091 Syllabus)</h3>
+                    <p>
+                        As the coil rotates, it cuts magnetic flux. Continuous connection to the external circuit is maintained using <strong>slip rings</strong> and <strong>carbon brushes</strong>. Because each side of the coil moves up and down alternately, the direction of the induced current reverses every half-cycle, producing an <strong>alternating current (a.c.)</strong> voltage-time graph.
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Three.js Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- Main Script -->
+    <script src="app.js"></script>
+</body>
+</html>
