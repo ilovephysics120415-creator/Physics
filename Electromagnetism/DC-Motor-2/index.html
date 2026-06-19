@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D DC Motor Sandbox</title>
+    <!-- Google Fonts for premium design -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome for clean iconography -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- Three.js and OrbitControls via CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <div id="app-container">
+        <!-- Left Panel: Controls section (0.25 width) -->
+        <aside id="controls-section">
+            <div class="section-title">
+                <h2>DC MOTOR CONTROLS</h2>
+            </div>
+            
+            <div class="control-group">
+                <div class="hud-item"><span class="label">Speed:</span> <span id="val-speed" class="value text-cyan">0 RPM</span></div>
+                <div class="hud-item"><span class="label">Turns (N):</span> <span id="val-turns" class="value text-gold">1</span></div>
+                <div class="hud-item"><span class="label">Current (I):</span> <span id="val-current" class="value text-yellow">+1.5 A</span></div>
+                <div class="hud-item"><span class="label">Soft-Iron Core:</span> <span id="val-core" class="value text-green">None</span></div>
+            </div>
+
+            <!-- Controls -->
+            <div class="control-group">
+                <div class="hud-control">
+                    <span class="label">Polarity:</span>
+                    <button id="btn-toggle-polarity" class="hud-btn"><i class="fa-solid fa-sync"></i> Reverse Source</button>
+                </div>
+                <div class="hud-control slider-control">
+                    <span class="label">Rheostat Resistance:</span>
+                    <div class="slider-row">
+                        <input type="range" id="slider-resistance" min="0.5" max="3.0" step="0.1" value="1.0">
+                        <span id="val-resistance" class="value text-yellow">1.0 &Omega;</span>
+                    </div>
+                </div>
+                <div class="hud-control slider-control">
+                    <span class="label">Simulation Speed:</span>
+                    <div class="slider-row">
+                        <input type="range" id="slider-time-scale" min="1" max="10" step="0.5" value="1">
+                        <span id="val-time-scale" class="value text-cyan">1.0x</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Play / Pause Button -->
+            <div class="control-group" style="margin-top: auto;">
+                <button id="btn-play-pause" class="sidebar-play-btn"><i class="fa-solid fa-pause"></i> Play/Pause</button>
+            </div>
+        </aside>
+
+        <!-- Right Panel: Instructions + Animation (0.75 width) -->
+        <main id="right-panel">
+            <!-- Instruction section (Above the DC motor) -->
+            <section id="instruction-section">
+                <h1>DC MOTOR SIMULATION</h1>
+                <p><i class="fa-solid fa-hand-pointer"></i> Click elements in 3D space to interact:</p>
+                <div class="instruction-grid">
+                    <div class="inst-item"><strong>Coil:</strong> Toggle turns ($N = 1$ to $4$)</div>
+                    <div class="inst-item"><strong>Commutator:</strong> Reverse Current polarity ($I$)</div>
+                    <div class="inst-item"><strong>Magnets:</strong> Toggle Field Strength ($B$)</div>
+                    <div class="inst-item"><strong>Center Cylinder:</strong> Insert / Remove Soft-Iron Core</div>
+                    <div class="inst-item"><strong>Rheostat:</strong> Slide contact to adjust Current ($I$)</div>
+                </div>
+            </section>
+
+            <!-- Animation section -->
+            <section id="animation-section">
+                <canvas id="threejs-canvas"></canvas>
+            </section>
+
+            <!-- Quiz section -->
+            <section id="quiz-section">
+                <div class="quiz-title">
+                    <h2><i class="fa-solid fa-graduation-cap"></i> SYLLABUS CHECKPOINT (6091 ELECTROMAGNETISM)</h2>
+                    <span id="quiz-score-badge" class="score-badge">Score: 0 / 10</span>
+                </div>
+                
+                <form id="quiz-form" onsubmit="event.preventDefault();">
+                    <!-- Q1: MCQ -->
+                    <div class="question-card" data-qid="1">
+                        <p class="q-text">1. What is the primary function of the split-ring commutator in a DC motor?</p>
+                        <div class="q-options">
+                            <label><input type="radio" name="q1" value="A"> A) To reverse the direction of magnetic field every half rotation.</label>
+                            <label><input type="radio" name="q1" value="B"> B) To reverse the direction of current in the coil every half rotation.</label>
+                            <label><input type="radio" name="q1" value="C"> C) To keep the current flowing in one direction inside the coil.</label>
+                            <label><input type="radio" name="q1" value="D"> D) To increase the turning effect of the coil.</label>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+
+                    <!-- Q2: MCQ -->
+                    <div class="question-card" data-qid="2">
+                        <p class="q-text">2. At the vertical position (90°), the gaps of the split-ring commutator align with the carbon brushes. What happens at this instant?</p>
+                        <div class="q-options">
+                            <label><input type="radio" name="q2" value="A"> A) Current is doubled, maximizing turning force.</label>
+                            <label><input type="radio" name="q2" value="B"> B) Current drops to zero, and the coil continues rotating due to momentum/inertia.</label>
+                            <label><input type="radio" name="q2" value="C"> C) The magnetic field direction flips immediately.</label>
+                            <label><input type="radio" name="q2" value="D"> D) The coil stops moving completely.</label>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+
+                    <!-- Q3: MCQ -->
+                    <div class="question-card" data-qid="3">
+                        <p class="q-text">3. Which rule is used to determine the direction of force on a current-carrying conductor in a magnetic field?</p>
+                        <div class="q-options">
+                            <label><input type="radio" name="q3" value="A"> A) Fleming's Left-Hand Rule</label>
+                            <label><input type="radio" name="q3" value="B"> B) Fleming's Right-Hand Rule</label>
+                            <label><input type="radio" name="q3" value="C"> C) Right-Hand Grip Rule</label>
+                            <label><input type="radio" name="q3" value="D"> D) Lenz's Law</label>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+
+                    <!-- Q4: MCQ -->
+                    <div class="question-card" data-qid="4">
+                        <p class="q-text">4. What is the effect of winding the coil onto a soft-iron cylinder core?</p>
+                        <div class="q-options">
+                            <label><input type="radio" name="q4" value="A"> A) It reduces the weight of the rotor group.</label>
+                            <label><input type="radio" name="q4" value="B"> B) It concentrates magnetic flux lines, making the magnetic field radial and much stronger.</label>
+                            <label><input type="radio" name="q4" value="C"> C) It acts as a cooling system for the copper coils.</label>
+                            <label><input type="radio" name="q4" value="D"> D) It completely eliminates friction at the axle.</label>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+
+                    <!-- Q5: MCQ -->
+                    <div class="question-card" data-qid="5">
+                        <p class="q-text">5. Under Singapore O-Level Syllabus 6091, which of the following actions will NOT increase the turning effect (torque) of a DC motor?</p>
+                        <div class="q-options">
+                            <label><input type="radio" name="q5" value="A"> A) Increasing the current in the coil</label>
+                            <label><input type="radio" name="q5" value="B"> B) Increasing the number of turns on the coil</label>
+                            <label><input type="radio" name="q5" value="C"> C) Reversing the polarity of the battery source</label>
+                            <label><input type="radio" name="q5" value="D"> D) Winding the coil onto a soft-iron cylinder</label>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+
+                    <!-- Q6: MCQ -->
+                    <div class="question-card" data-qid="6">
+                        <p class="q-text">6. How does a radial magnetic field (using a soft-iron cylinder) benefit the DC motor?</p>
+                        <div class="q-options">
+                            <label><input type="radio" name="q6" value="A"> A) It ensures that the force on the coil is always perpendicular, maintaining maximum torque.</label>
+                            <label><input type="radio" name="q6" value="B"> B) It reverses the current direction twice as fast.</label>
+                            <label><input type="radio" name="q6" value="C"> C) It stops the motor from overheating.</label>
+                            <label><input type="radio" name="q6" value="D"> D) It allows the motor to run without a commutator.</label>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+
+                    <!-- Q7: MCQ -->
+                    <div class="question-card" data-qid="7">
+                        <p class="q-text">7. If conventional current flows INWARD (away from you) on the left side of the coil, and the magnetic field points from LEFT to RIGHT, what is the direction of the force acting on this side?</p>
+                        <div class="q-options">
+                            <label><input type="radio" name="q7" value="A"> A) Upward</label>
+                            <label><input type="radio" name="q7" value="B"> B) Downward</label>
+                            <label><input type="radio" name="q7" value="C"> C) To the left</label>
+                            <label><input type="radio" name="q7" value="D"> D) To the right</label>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+
+                    <!-- Q8: MCQ -->
+                    <div class="question-card" data-qid="8">
+                        <p class="q-text">8. What role do the static carbon brushes play in a DC motor?</p>
+                        <div class="q-options">
+                            <label><input type="radio" name="q8" value="A"> A) They spin with the commutator to sweep dust off the magnets.</label>
+                            <label><input type="radio" name="q8" value="B"> B) They provide electrical contact to the rotating split-ring commutator.</label>
+                            <label><input type="radio" name="q8" value="C"> C) They generate the magnetic field lines.</label>
+                            <label><input type="radio" name="q8" value="D"> D) They regulate the resistance of the rheostat.</label>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+
+                    <!-- Q9: MCQ -->
+                    <div class="question-card" data-qid="9">
+                        <p class="q-text">9. If you reverse BOTH the battery polarity and the magnetic field poles at the same time, what happens to the rotation direction of the coil?</p>
+                        <div class="q-options">
+                            <label><input type="radio" name="q9" value="A"> A) It reverses direction.</label>
+                            <label><input type="radio" name="q9" value="B"> B) It rotates in the same direction.</label>
+                            <label><input type="radio" name="q9" value="C"> C) It stops rotating.</label>
+                            <label><input type="radio" name="q9" value="D"> D) It oscillates back and forth.</label>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+
+                    <!-- Q10: Fill-in-the-blank -->
+                    <div class="question-card" data-qid="10">
+                        <p class="q-text">10. Fill in the blank: The turning effect of the motor is created by a pair of equal and opposite forces acting on the sides of the coil. In physics, this turning effect is also known as __________.</p>
+                        <div class="q-options">
+                            <input type="text" id="q10-answer" class="quiz-text-input" placeholder="Type answer (e.g. Torque or Moment)...">
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+
+                    <button id="quiz-submit-btn" class="hud-btn" style="width: 100%; padding: 12px; margin-top: 15px; font-size: 1rem;"><i class="fa-solid fa-paper-plane"></i> Submit Answers</button>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <!-- Application Script -->
+    <script src="app.js"></script>
+</body>
+</html>
