@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mains Plug Wiring & Circuit Function - O-Level Physics</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <span class="nav-logo">⚡ SAFE<span class="accent-text">WIRE</span></span>
+            <div class="nav-links">
+                <button class="nav-btn active" data-target="concept">Concept</button>
+                <button class="nav-btn" data-target="explore">Explore</button>
+                <button class="nav-btn" data-target="flashcards">Flashcards</button>
+                <button class="nav-btn" data-target="quiz">Quiz</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+        
+        <!-- Section 1: Concept Introduction -->
+        <section id="concept" class="app-section active">
+            <header class="section-header">
+                <h1>Mains Electricity Safety</h1>
+                <p>Learn the functions, color codes, and safety configuration of standard UK 3-pin plugs.</p>
+            </header>
+            
+            <div class="concept-grid">
+                <!-- Card 1: Three Wires Functions -->
+                <div class="concept-card">
+                    <div class="card-icon">🔌</div>
+                    <h3>Wire Functions & Hazards</h3>
+                    <ul class="clean-list">
+                        <li><span class="wire-dot live"></span><strong>Live (Brown):</strong> Delivers high alternating voltage (~230V) from the power source to the appliance. The most dangerous wire.</li>
+                        <li><span class="wire-dot neutral"></span><strong>Neutral (Blue):</strong> Completes the circuit by returning current to the power source at near-zero voltage.</li>
+                        <li><span class="wire-dot earth"></span><strong>Earth (Green/Yellow):</strong> A low-resistance safety wire connecting the metal casing of the appliance to the ground, preventing electric shocks.</li>
+                    </ul>
+                </div>
+
+                <!-- Card 2: 3-Pin Plug Layout -->
+                <div class="concept-card">
+                    <div class="card-icon">🏷️</div>
+                    <h3>Standard UK 3-Pin Plug</h3>
+                    <div class="plug-diagram-container">
+                        <!-- SVG Diagram of standard plug -->
+                        <svg class="plug-diagram" viewBox="0 0 200 200" width="100%">
+                            <!-- Outer body -->
+                            <rect x="30" y="30" width="140" height="140" rx="30" fill="#1e2530" stroke="#00f5ff" stroke-width="2" />
+                            <!-- Earth terminal (Top) -->
+                            <circle cx="100" cy="65" r="14" fill="#2d3748" stroke="#a0aec0" stroke-width="2" />
+                            <text x="100" y="69" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">E</text>
+                            <!-- Neutral terminal (Bottom Left) -->
+                            <circle cx="65" cy="135" r="14" fill="#2d3748" stroke="#a0aec0" stroke-width="2" />
+                            <text x="65" y="139" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">N</text>
+                            <!-- Live terminal (Bottom Right) -->
+                            <circle cx="135" cy="135" r="14" fill="#2d3748" stroke="#a0aec0" stroke-width="2" />
+                            <text x="135" y="139" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">L</text>
+                        </svg>
+                    </div>
+                    <p class="diagram-caption">Pins are arranged as: <strong>Earth</strong> at the top, <strong>Neutral</strong> on the left, and <strong>Live</strong> on the right.</p>
+                </div>
+
+                <!-- Card 3: Switch & Fuse Placement -->
+                <div class="concept-card full-width">
+                    <div class="card-icon">🛡️</div>
+                    <h3>Why Switch & Fuse are on the Live Wire</h3>
+                    <div class="safety-diagram-container">
+                        <!-- SVG Safety schematic -->
+                        <svg class="safety-diagram" viewBox="0 0 400 120" width="100%">
+                            <!-- Rails -->
+                            <line x1="20" y1="30" x2="380" y2="30" stroke="#ff9f43" stroke-width="3" stroke-dasharray="5 5" />
+                            <text x="25" y="22" font-size="11" fill="#ff9f43">LIVE WIRE (230V)</text>
+                            
+                            <line x1="20" y1="90" x2="380" y2="90" stroke="#54a0ff" stroke-width="3" />
+                            <text x="25" y="108" font-size="11" fill="#54a0ff">NEUTRAL WIRE (0V)</text>
+                            
+                            <!-- Fuse symbol on Live -->
+                            <rect x="80" y="20" width="40" height="20" fill="#1b2230" stroke="#00f5ff" stroke-width="2" />
+                            <line x1="80" y1="30" x2="120" y2="30" stroke="#00f5ff" stroke-width="1.5" />
+                            <text x="100" y="15" text-anchor="middle" font-size="9" fill="#00f5ff">Fuse</text>
+                            
+                            <!-- Switch symbol on Live -->
+                            <line x1="160" y1="30" x2="185" y2="15" stroke="#00f5ff" stroke-width="3" id="switch-lever" />
+                            <circle cx="160" cy="30" r="3" fill="#00f5ff" />
+                            <circle cx="190" cy="30" r="3" fill="#00f5ff" />
+                            <text x="175" y="15" text-anchor="middle" font-size="9" fill="#00f5ff">Switch</text>
+                            
+                            <!-- Appliance -->
+                            <rect x="260" y="20" width="80" height="80" rx="10" fill="#2d3748" stroke="#fff" stroke-width="2" />
+                            <text x="300" y="65" text-anchor="middle" font-size="11" fill="#fff">Appliance</text>
+                        </svg>
+                    </div>
+                    <p class="diagram-caption">Placing safety devices on the <strong>Live</strong> wire disconnects the high voltage from the appliance, isolating it and preventing electrocution hazards if a fault occurs.</p>
+                </div>
+            </div>
+            
+            <div class="action-bar">
+                <button class="btn primary-btn" id="start-explore-btn">Go to Interactive Exploration ➔</button>
+            </div>
+        </section>
+
+        <!-- Section 2: Interactive Exploration -->
+        <section id="explore" class="app-section">
+            <header class="section-header">
+                <h1>Interactive Wiring Simulator</h1>
+                <p>Drag the color-coded wires to their correct pins on the plug. Tap/click a wire, then tap/click the correct terminal (or drag-and-drop).</p>
+            </header>
+
+            <div class="explore-layout">
+                <!-- Draggable Wires Panel -->
+                <div class="wires-panel">
+                    <h3>Available Wires</h3>
+                    <div class="wires-container" id="draggable-wires-container">
+                        <!-- Wires will be dynamically generated and shuffled here -->
+                    </div>
+                </div>
+
+                <!-- Open Plug Target -->
+                <div class="plug-board">
+                    <div class="plug-casing">
+                        <div class="terminal-target" id="terminal-earth" data-terminal="earth">
+                            <span class="terminal-indicator">E</span>
+                            <span class="terminal-glow"></span>
+                            <div class="wire-slot">Drop Earth Here</div>
+                        </div>
+                        <div class="terminal-target" id="terminal-neutral" data-terminal="neutral">
+                            <span class="terminal-indicator">N</span>
+                            <span class="terminal-glow"></span>
+                            <div class="wire-slot">Drop Neutral Here</div>
+                        </div>
+                        <div class="terminal-target" id="terminal-live" data-terminal="live">
+                            <span class="terminal-indicator">L</span>
+                            <span class="terminal-glow"></span>
+                            <div class="wire-slot">Drop Live Here</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exploration Feedback / Overlay Info -->
+            <div class="explore-feedback-panel id-hidden" id="explore-feedback">
+                <div class="feedback-card">
+                    <h3 id="explore-feedback-title">Correct!</h3>
+                    <p id="explore-feedback-desc"></p>
+                </div>
+            </div>
+
+            <div class="action-bar flex-center gap-15">
+                <button class="btn secondary-btn" id="reset-explore-btn">Reset & Shuffle</button>
+                <button class="btn primary-btn id-hidden" id="explore-to-flash-btn">Go to Flashcards ➔</button>
+            </div>
+        </section>
+
+        <!-- Section 3: Flashcard Revision -->
+        <section id="flashcards" class="app-section">
+            <header class="section-header">
+                <h1>Flashcard Revision</h1>
+                <p>Tap a card to flip it and test your knowledge of electricity safety concepts.</p>
+            </header>
+
+            <div class="flashcard-deck-container">
+                <div class="flashcard-wrapper">
+                    <div class="flashcard" id="current-flashcard">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div class="card-progress" id="flash-progress">Card 1 / 12</div>
+                                <div class="card-question" id="flash-front-text">Question front placeholder</div>
+                                <div class="card-hint">Tap to Flip 🔄</div>
+                            </div>
+                            <div class="flashcard-back">
+                                <div class="card-progress">Explanation</div>
+                                <div class="card-answer" id="flash-back-text">Answer back placeholder</div>
+                                <div class="card-hint">Tap to Flip 🔄</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flash-nav">
+                <button class="btn secondary-btn" id="prev-flash-btn">◀ Prev</button>
+                <button class="btn secondary-btn" id="shuffle-flash-btn">Shuffle 🔀</button>
+                <button class="btn secondary-btn" id="next-flash-btn">Next ▶</button>
+            </div>
+
+            <div class="action-bar">
+                <button class="btn primary-btn" id="start-quiz-btn">Ready? Start the Quiz! ➔</button>
+            </div>
+        </section>
+
+        <!-- Section 4: Quiz -->
+        <section id="quiz" class="app-section">
+            <header class="section-header">
+                <div class="quiz-header-status">
+                    <span id="quiz-question-number">Question 1 of 15</span>
+                    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-progress-fill"></div></div>
+                </div>
+            </header>
+
+            <!-- Quiz Display Area -->
+            <div id="quiz-question-container">
+                <!-- Standard MCQ layout -->
+                <div id="quiz-mcq-view" class="quiz-question-view">
+                    <h2 class="quiz-question-text" id="mcq-question-text">Question text placeholder?</h2>
+                    <div class="quiz-options-list" id="mcq-options-container">
+                        <!-- MCQ buttons generated here -->
+                    </div>
+                </div>
+
+                <!-- Drag & Drop Wiring Question Layout -->
+                <div id="quiz-drag-view" class="quiz-question-view id-hidden">
+                    <h2 class="quiz-question-text">Drag the wires to their correct terminals on this plug:</h2>
+                    
+                    <div class="explore-layout border-subtle">
+                        <div class="wires-panel">
+                            <div class="wires-container" id="quiz-wires-container">
+                                <!-- Quiz wires draggable blocks -->
+                            </div>
+                        </div>
+                        <div class="plug-board scale-down">
+                            <div class="plug-casing" id="quiz-plug-casing">
+                                <div class="terminal-target" id="quiz-terminal-earth" data-terminal="earth">
+                                    <span class="terminal-indicator">E</span>
+                                    <span class="terminal-glow"></span>
+                                    <div class="wire-slot">Empty Terminal</div>
+                                </div>
+                                <div class="terminal-target" id="quiz-terminal-neutral" data-terminal="neutral">
+                                    <span class="terminal-indicator">N</span>
+                                    <span class="terminal-glow"></span>
+                                    <div class="wire-slot">Empty Terminal</div>
+                                </div>
+                                <div class="terminal-target" id="quiz-terminal-live" data-terminal="live">
+                                    <span class="terminal-indicator">L</span>
+                                    <span class="terminal-glow"></span>
+                                    <div class="wire-slot">Empty Terminal</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quiz-drag-submit-bar">
+                        <button class="btn primary-btn width-full" id="quiz-submit-drag-btn" disabled>Confirm Wiring Placement</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Feedback Overlay / Area -->
+            <div class="quiz-feedback-box id-hidden" id="quiz-feedback-box">
+                <div class="feedback-indicator" id="quiz-feedback-indicator">Correct!</div>
+                <p class="feedback-text" id="quiz-feedback-explanation">Explanation text goes here.</p>
+                <button class="btn primary-btn" id="quiz-next-btn">Next Question ➔</button>
+            </div>
+        </section>
+
+        <!-- Section 5: Scoring and Feedback -->
+        <section id="results" class="app-section">
+            <div class="results-card">
+                <div class="score-circle-container">
+                    <div class="score-circle">
+                        <span id="final-score">0</span>
+                        <span class="score-total">/ 15</span>
+                    </div>
+                </div>
+                
+                <h2 id="feedback-grade-title">Strong Performance!</h2>
+                <p id="feedback-message">Feedback statement goes here.</p>
+
+                <div class="results-actions">
+                    <button class="btn primary-btn" id="restart-quiz-btn">Try the Quiz Again</button>
+                    <button class="btn secondary-btn" id="review-concepts-btn">Review Concepts</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Canvas for celebratory animations -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <script src="app.js"></script>
+</body>
+</html>
