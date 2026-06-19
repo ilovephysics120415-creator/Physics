@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Critical Angle & Total Internal Reflection | O-Level Physics</title>
+  <meta name="description" content="Master Critical Angle and Total Internal Reflection with this interactive physics app designed for Singapore O-Level Physics students.">
+  
+  <!-- Font integration -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Canvas for celebration confetti -->
+  <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+
+  <div class="app-container">
+    <header>
+      <h1 class="gradient-text">TIR & Critical Angle</h1>
+      <p>Singapore O-Level Physics (Syllabus 6091)</p>
+    </header>
+
+    <!-- Navigation Tabs for Sections -->
+    <nav class="nav-tabs" aria-label="App Navigation">
+      <button class="tab-btn active" id="tab-intro" onclick="switchSection('intro')">Intro</button>
+      <button class="tab-btn" id="tab-sim" onclick="switchSection('sim')">Explore</button>
+      <button class="tab-btn" id="tab-examples" onclick="switchSection('examples')">Examples</button>
+      <button class="tab-btn" id="tab-drag" onclick="switchSection('drag')">Fibres</button>
+      <button class="tab-btn" id="tab-cards" onclick="switchSection('cards')">Flashcards</button>
+      <button class="tab-btn" id="tab-quiz" onclick="switchSection('quiz')">Quiz</button>
+    </nav>
+
+    <!-- Section 1: Concept Introduction -->
+    <section id="section-intro" class="app-section active">
+      <div class="card">
+        <h2 class="card-title">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+          Concept Introduction
+        </h2>
+        <div class="intro-container">
+          <div class="intro-canvas-wrapper">
+            <canvas id="introCanvas"></canvas>
+          </div>
+          <div class="intro-text-banner" id="intro-banner-text">
+            Beyond the critical angle, light reflects completely.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Interactive Exploration -->
+    <section id="section-sim" class="app-section">
+      <div class="card">
+        <h2 class="card-title">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polygon points="10 8 16 12 10 16 10 8"></polygon>
+          </svg>
+          Interactive Exploration
+        </h2>
+        
+        <div class="intro-canvas-wrapper" style="aspect-ratio: 4/3;">
+          <canvas id="simCanvas"></canvas>
+        </div>
+
+        <div class="sim-controls">
+          <div class="selector-group">
+            <span class="selector-label">Select Medium (Denser Medium)</span>
+            <div class="medium-buttons">
+              <button class="medium-btn active" id="btn-water" onclick="selectMedium('water')">Water</button>
+              <button class="medium-btn" id="btn-glass" onclick="selectMedium('glass')">Glass</button>
+              <button class="medium-btn" id="btn-diamond" onclick="selectMedium('diamond')">Diamond</button>
+            </div>
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <span>Angle of Incidence (inside medium) <input type="number" id="input-incidence" class="explore-inline-input" placeholder="?" style="display:none;" oninput="verifyExploreInput('incidence')"></span>
+              <span class="slider-value" id="val-incidence">0°</span>
+            </div>
+            <input type="range" id="slider-incidence" class="custom-slider" min="0" max="80" step="0.5" value="0" oninput="updateIncidence(this.value)">
+          </div>
+
+          <div class="sim-info-grid">
+            <div class="info-box">
+              <div class="label">Refractive Index (<span class="lowercase-var">n</span>) <input type="number" id="input-n" class="explore-inline-input" placeholder="?" style="display:none;" oninput="verifyExploreInput('n')"></div>
+              <div class="val" id="val-n">1.33</div>
+            </div>
+            <div class="info-box highlight">
+              <div class="label">Critical Angle (<span class="lowercase-var">c</span>) <input type="number" id="input-critical" class="explore-inline-input" placeholder="?" style="display:none;" oninput="verifyExploreInput('critical')"></div>
+              <div class="val" id="val-critical">48.8°</div>
+            </div>
+            <div class="info-box">
+              <div class="label">Angle of Refraction <input type="number" id="input-refraction" class="explore-inline-input" placeholder="?" style="display:none;" oninput="verifyExploreInput('refraction')"></div>
+              <div class="val" id="val-refraction">0°</div>
+            </div>
+            <div class="info-box">
+              <div class="label">Optical Behavior</div>
+              <div class="val" id="val-behavior">Normal Refraction</div>
+            </div>
+          </div>
+
+          <div class="explore-btn-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px;">
+            <button class="btn-submit-answer" onclick="randomiseExploreProblem()">Randomise Problem</button>
+            <button class="btn-submit-answer" id="btn-show-working" onclick="toggleExploreWorking()" style="background: var(--bg-secondary); border: 1px solid var(--accent-cyan); color: var(--accent-cyan); display: none;">Show Working</button>
+          </div>
+
+          <div class="solution-panel" id="explore-working-panel" style="margin-top: 16px;">
+            <div class="solution-explanation" id="explore-working-content">
+              <!-- Worked explanation populated dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Worked Examples -->
+    <section id="section-examples" class="app-section">
+      <div class="card">
+        <h2 class="card-title">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          Worked Examples
+        </h2>
+
+        <div class="example-tabs">
+          <button class="tab-btn active" id="tab-ex1" onclick="switchExample(1)">Ex 1: Find c</button>
+          <button class="tab-btn" id="tab-ex2" onclick="switchExample(2)">Ex 2: Find n</button>
+          <button class="tab-btn" id="tab-ex3" onclick="switchExample(3)">Ex 3: Fiber Ray</button>
+        </div>
+
+        <!-- Example 1 -->
+        <div id="example-1" class="example-content active">
+          <div class="step-card">
+            <div class="step-num">Question</div>
+            <div class="step-detail">A glass block has a refractive index of 1.50. Calculate its critical angle.</div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">Step 1: Formula</div>
+            <div class="step-detail">State the relationship between refractive index (n) and critical angle (c):</div>
+            <div class="math-block">sin c = 1 / n</div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">Step 2: Substitution</div>
+            <div class="step-detail">Substitute the given refractive index n = 1.50 into the formula:</div>
+            <div class="math-block">sin c = 1 / 1.50 = 0.667</div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">Step 3: Calculate Answer</div>
+            <div class="step-detail">Solve for c by taking the inverse sine (sin⁻¹):</div>
+            <div class="math-block">c = sin⁻¹(0.667) ≈ 41.8° (to 3 s.f.)</div>
+          </div>
+        </div>
+
+        <!-- Example 2 -->
+        <div id="example-2" class="example-content">
+          <div class="step-card">
+            <div class="step-num">Question</div>
+            <div class="step-detail">A certain liquid has a critical angle of 45.0°. Determine its refractive index.</div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">Step 1: Formula</div>
+            <div class="step-detail">State the relationship between refractive index (n) and critical angle (c):</div>
+            <div class="math-block">n = 1 / sin c</div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">Step 2: Substitution</div>
+            <div class="step-detail">Substitute c = 45.0° into the equation:</div>
+            <div class="math-block">n = 1 / sin(45.0°)</div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">Step 3: Calculate Answer</div>
+            <div class="step-detail">Perform the calculation using a scientific calculator:</div>
+            <div class="math-block">n = 1 / 0.7071 ≈ 1.41 (to 3 s.f.)</div>
+          </div>
+        </div>
+
+        <!-- Example 3 -->
+        <div id="example-3" class="example-content">
+          <div class="step-card">
+            <div class="step-num">Optical Fibre Concept</div>
+            <div class="step-detail">Optical fibres transmit data using total internal reflection along a thin glass core wrapped in a cladding of lower refractive index.</div>
+          </div>
+          <!-- Ray diagram inside fiber -->
+          <svg class="fibre-preview-svg" viewBox="0 0 400 150">
+            <!-- Core -->
+            <rect x="0" y="35" width="400" height="80" fill="#0f172a" stroke="#00f3ff" stroke-width="1.5" stroke-dasharray="4 4" />
+            <text x="10" y="55" fill="#94a3b8" font-size="11">Core (High n)</text>
+            
+            <!-- Cladding -->
+            <rect x="0" y="5" width="400" height="30" fill="rgba(0, 243, 255, 0.05)" />
+            <rect x="0" y="115" width="400" height="30" fill="rgba(0, 243, 255, 0.05)" />
+            <text x="10" y="25" fill="#64748b" font-size="11">Cladding (Low n)</text>
+            
+            <!-- Light Ray -->
+            <path d="M 0 100 L 80 50 L 220 100 L 360 50 L 400 64" fill="none" stroke="#ffee00" stroke-width="3" />
+            <text x="110" y="45" fill="#ffee00" font-size="10">Ray path (TIR)</text>
+
+            <!-- Normal and Angle Annotation at first reflection -->
+            <line x1="80" y1="20" x2="80" y2="130" stroke="#64748b" stroke-dasharray="3 3" />
+            <text x="85" y="30" fill="#64748b" font-size="9">Normal</text>
+
+            <!-- Angle text -->
+            <text x="45" y="65" fill="#ffee00" font-size="10">θ &gt; c</text>
+          </svg>
+          <div class="step-card">
+            <div class="step-num">Important Rule</div>
+            <div class="step-detail">For TIR to happen repeatedly inside the core, the angle of incidence at the core-cladding boundary must always be greater than the critical angle (i &gt; c), and the core must have a higher refractive index than the cladding (n_core &gt; n_cladding).</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Drag and Drop Optical Fibre -->
+    <section id="section-drag" class="app-section">
+      <div class="card">
+        <h2 class="card-title">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          Optical Fibre Applications
+        </h2>
+        <div class="drag-drop-instructions">
+          Drag each advantage to the correct field of application. Some advantages apply to both!
+        </div>
+
+        <div class="drag-tiles-container" id="drag-tiles">
+          <!-- Draggable items will be populated by JS -->
+        </div>
+
+        <div class="drop-zones-container">
+          <div class="drop-zone" id="zone-telecom" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="handleDrop(event, 'telecom')">
+            <div class="drop-zone-title">Telecommunications</div>
+            <!-- Placed tiles -->
+          </div>
+          <div class="drop-zone" id="zone-medicine" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="handleDrop(event, 'medicine')">
+            <div class="drop-zone-title">Medicine (Endoscopy)</div>
+            <!-- Placed tiles -->
+          </div>
+        </div>
+
+        <div class="match-feedback" id="drag-feedback"></div>
+        <button class="btn-reset" onclick="resetDragAndDrop()">Reset Drag Game</button>
+      </div>
+    </section>
+
+    <!-- Section 5: Flashcard Revision Mode -->
+    <section id="section-cards" class="app-section">
+      <div class="card">
+        <h2 class="card-title">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="9" y1="9" x2="15" y2="9"></line>
+            <line x1="9" y1="13" x2="15" y2="13"></line>
+            <line x1="9" y1="17" x2="13" y2="17"></line>
+          </svg>
+          Flashcard Revision
+        </h2>
+
+        <div style="text-align: center; margin-bottom: 10px;" class="card-index" id="card-index-info">Card 1 of 5</div>
+
+        <div class="flashcard-deck">
+          <div class="flashcard-wrapper" id="flashcard-wrapper" onclick="flipCard()">
+            <div class="flashcard-face flashcard-front">
+              <h3 id="card-category">Definition</h3>
+              <p id="card-front-text">Critical Angle</p>
+            </div>
+            <div class="flashcard-face flashcard-back">
+              <h3>Answer</h3>
+              <p id="card-back-text">The angle of incidence in a optically denser medium for which the angle of refraction in the less dense medium is 90°.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flashcard-controls" style="margin: 10px auto 0 auto;">
+          <button class="flashcard-btn" style="justify-self: start;" onclick="prevCard()">← Prev</button>
+          <button class="flashcard-btn" style="justify-self: center;" onclick="shuffleFlashcards()">Shuffle Cards</button>
+          <button class="flashcard-btn" style="justify-self: end;" onclick="nextCard()">Next →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Quiz -->
+    <section id="section-quiz" class="app-section">
+      <div class="card">
+        <h2 class="card-title">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          Challenge Quiz
+        </h2>
+
+        <div id="quiz-screen-start">
+          <div class="drag-drop-instructions" style="text-align: left; margin-bottom: 20px;">
+            Test your understanding with 10 questions selected from our pool of 30 calculation and conceptual questions.
+            <br><br>
+            • Includes refractive index & critical angle calculations.<br>
+            • Requires ±2% tolerance for numerical input answers.<br>
+            • Conceptual questions on TIR rules, optical fibres, and diagrams.
+          </div>
+          <button class="btn-submit-answer" style="width: 100%;" onclick="startQuiz()">Start Quiz</button>
+        </div>
+
+        <div id="quiz-screen-play" style="display: none;">
+          <div class="quiz-header">
+            <span class="quiz-progress" id="quiz-question-num">Question 1 of 10</span>
+            <span class="quiz-score-live" id="quiz-score-live">Score: 0</span>
+          </div>
+
+          <div class="quiz-progress-bar-container">
+            <div class="quiz-progress-bar" id="quiz-progress-bar"></div>
+          </div>
+
+          <div class="question-text" id="quiz-question-text">
+            Sample question text goes here?
+          </div>
+
+          <div class="quiz-options" id="quiz-options-container">
+            <!-- MCQ Options will go here -->
+          </div>
+
+          <div class="numeric-input-container" id="quiz-numeric-container" style="display: none;">
+            <input type="number" id="quiz-numeric-input" class="numeric-input" placeholder="Enter answer" step="any">
+            <button class="btn-submit-answer" id="quiz-submit-btn" onclick="submitNumericAnswer()">Submit Answer</button>
+          </div>
+
+          <!-- Solution Panel shown after submitting response -->
+          <div class="solution-panel" id="quiz-solution-panel">
+            <div class="solution-status" id="quiz-solution-status">
+              <!-- Correct/Incorrect label -->
+            </div>
+            <div class="solution-explanation" id="quiz-solution-explanation">
+              <!-- Steps/formulas explanation -->
+            </div>
+            <div class="solution-diagram-wrapper" id="quiz-solution-diagram">
+              <!-- Dynamically generated SVG ray diagram representing the question -->
+            </div>
+            <button class="btn-next-question" onclick="nextQuizQuestion()">Next Question</button>
+          </div>
+        </div>
+
+        <div id="quiz-screen-results" class="quiz-results">
+          <div class="results-grade" id="quiz-grade-title">Physics Master!</div>
+          <div class="results-score" id="quiz-final-score">You scored 10/10 (100%)</div>
+          <div class="results-summary" id="quiz-results-summary">
+            Excellent! You have a perfect grasp of Critical Angle and Total Internal Reflection.
+          </div>
+          <button class="btn-restart" onclick="restartQuiz()">Try Again</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
