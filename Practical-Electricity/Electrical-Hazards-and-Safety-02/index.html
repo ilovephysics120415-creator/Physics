@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secondary 2 Science - Interactive Practical Electricity Simulator</title>
+    <!-- Tailwind CSS for sleek UI styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for modern typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom styles for current flow animation */
+        @keyframes flow-fast {
+            to { stroke-dashoffset: -40; }
+        }
+        @keyframes flow-normal {
+            to { stroke-dashoffset: -20; }
+        }
+        @keyframes lightning-glow {
+            0%, 100% { filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.8)); }
+            50% { filter: drop-shadow(0 0 10px rgba(239, 68, 68, 1)); }
+        }
+        .current-flow-active {
+            stroke-dasharray: 6, 6;
+            animation: flow-normal 1.5s linear infinite;
+        }
+        .current-flow-surge {
+            stroke-dasharray: 4, 4;
+            animation: flow-fast 0.4s linear infinite;
+        }
+        .wire-danger {
+            animation: lightning-glow 0.8s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <!-- Header Section -->
+    <header class="bg-slate-800 border-b border-slate-700 py-4 px-6 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-indigo-600 rounded-lg text-white font-bold text-xl shadow-lg shadow-indigo-500/30">
+                    ⚡
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-white">Practical Electricity Simulator</h1>
+                    
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="changeLesson('normal')" class="lesson-btn px-3 py-1.5 rounded-md text-xs font-semibold bg-indigo-600 text-white transition hover:bg-indigo-500" id="btn-normal">
+                    1. Normal Operation
+                </button>
+                <button onclick="changeLesson('fault')" class="lesson-btn px-3 py-1.5 rounded-md text-xs font-semibold bg-slate-700 text-slate-300 transition hover:bg-slate-600" id="btn-fault">
+                    2. Fault & Earth protection
+                </button>
+                <button onclick="changeLesson('neutral')" class="lesson-btn px-3 py-1.5 rounded-md text-xs font-semibold bg-slate-700 text-slate-300 transition hover:bg-slate-600" id="btn-neutral">
+                    3. Neutral Switch Hazard
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Column: Interactive Simulation (Canvas/SVG Container) -->
+        <section class="lg:col-span-7 flex flex-col gap-4">
+            <!-- Simulator Box -->
+            <div class="bg-slate-800 rounded-xl p-5 border border-slate-700 shadow-xl flex flex-col relative overflow-hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm font-semibold tracking-wide text-slate-300 flex items-center gap-2">
+                        <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                        LIVE LAB DIAGRAM
+                    </span>
+                    <div class="flex gap-2">
+                        <button onclick="resetCircuit()" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-medium rounded-md transition border border-slate-600">
+                            🔄 Reset Circuit
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Interactive State Banner -->
+                <div id="status-banner" class="mb-4 p-3 rounded-lg bg-emerald-950/80 border border-emerald-800 text-emerald-300 text-sm flex items-center justify-between">
+                    <span id="status-text"><strong>Normal State:</strong> Appliance working safely. Current flows through Live and returns via Neutral.</span>
+                    <span id="voltage-indicator" class="text-xs px-2 py-0.5 bg-emerald-900 border border-emerald-700 rounded text-emerald-200 font-mono font-bold">240V AC OK</span>
+                </div>
+
+                <!-- Circuit Board SVG Visualization -->
+                <div class="bg-slate-950 rounded-lg p-2 border border-slate-800 aspect-[8/5] w-full relative">
+                    <svg id="circuit-svg" viewBox="0 0 800 500" class="w-full h-full select-none">
+                        <!-- Definitions for markers and filters -->
+                        <defs>
+                            <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8" />
+                            </marker>
+                            <!-- Glow effects -->
+                            <filter id="glow-red" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="5" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+
+                        <!-- Grid Background Pattern -->
+                        <g opacity="0.05">
+                            <path d="M 0,50 L 800,50 M 0,100 L 800,100 M 0,150 L 800,150 M 0,200 L 800,200 M 0,250 L 800,250 M 0,300 L 800,300 M 0,350 L 800,350 M 0,400 L 800,400 M 0,450 L 800,450" stroke="#ffffff" stroke-width="1"/>
+                            <path d="M 50,0 L 50,500 M 100,0 L 100,500 M 150,0 L 150,500 M 200,0 L 200,500 M 250,0 L 250,500 M 300,0 L 300,500 M 350,0 L 350,500 M 400,0 L 400,500 M 450,0 L 450,500 M 500,0 L 500,500 M 550,0 L 550,500 M 600,0 L 600,500 M 650,0 L 650,500 M 700,0 L 700,500 M 750,0 L 750,500" stroke="#ffffff" stroke-width="1"/>
+                        </g>
+
+                        <!-- Main Grid Labels & Boundaries -->
+                        <text x="30" y="35" class="fill-slate-500 font-semibold text-sm">240V AC Mains Supply</text>
+                        <text x="550" y="35" class="fill-slate-500 font-semibold text-sm">Metal Appliance Box (Casing)</text>
+
+                        <!-- ================= CIRCUIT ELEMENTS ================= -->
+                        
+                        <!-- AC Voltage Source (240V Mains) -->
+                        <g transform="translate(80, 240)" class="cursor-pointer">
+                            <circle cx="0" cy="0" r="28" fill="#1e293b" stroke="#64748b" stroke-width="3" />
+                            <!-- Sine wave for AC -->
+                            <path d="M -15 0 Q -7.5 -12 0 0 T 15 0" fill="none" stroke="#f1f5f9" stroke-width="3" stroke-linecap="round"/>
+                            <text x="-25" y="42" fill="#94a3b8" font-size="11" font-weight="bold">240V AC</text>
+                        </g>
+
+                        <!-- Ground/Earth Anchor Station (Bottom Right) -->
+                        <g transform="translate(620, 440)">
+                            <line x1="0" y1="0" x2="0" y2="25" stroke="#22c55e" stroke-width="3"/>
+                            <line x1="-15" y1="25" x2="15" y2="25" stroke="#22c55e" stroke-width="3"/>
+                            <line x1="-10" y1="31" x2="10" y2="31" stroke="#22c55e" stroke-width="3"/>
+                            <line x1="-5" y1="37" x2="5" y2="37" stroke="#22c55e" stroke-width="3"/>
+                            <text x="25" y="32" fill="#22c55e" font-size="11" font-weight="bold">EARTH BED</text>
+                        </g>
+
+                        <!-- Appliance Outer Metal Casing (Safeguard Shell) -->
+                        <!-- Casing shifts visually if electrified -->
+                        <rect id="appliance-casing" x="500" y="70" width="240" height="260" rx="10" fill="#1e293b" fill-opacity="0.9" stroke="#94a3b8" stroke-width="4" stroke-dasharray="none" class="transition-all duration-300"/>
+                        <text x="620" y="100" text-anchor="middle" fill="#94a3b8" font-size="12" font-weight="bold">METAL CASING</text>
+
+                        <!-- Load Appliance (Inner Filament / Element) -->
+                        <g transform="translate(560, 160)">
+                            <!-- Shaded box for internal load -->
+                            <rect x="0" y="0" width="120" height="80" rx="6" fill="#334155" stroke="#475569" stroke-width="2"/>
+                            <!-- Heating Element / Resistor Symbol -->
+                            <path d="M 20 40 L 40 40 L 47 25 L 53 55 L 60 25 L 67 55 L 73 25 L 80 55 L 87 40 L 100 40" fill="none" stroke="#f59e0b" stroke-width="3" id="load-coil" class="transition-colors duration-300"/>
+                            <text x="60" y="70" text-anchor="middle" fill="#cbd5e1" font-size="11" font-weight="bold">LOAD (Appliance)</text>
+                        </g>
+
+                        <!-- ================= CONDUCTING WIRES ================= -->
+
+                        <!-- LIVE WIRE PATHWAY -->
+                        <!-- Normal active Live path from AC to Fuse to Switch to Load inside Casing -->
+                        <path id="wire-live" d="M 80 212 L 80 120 L 160 120 M 230 120 L 320 120 M 380 120 L 520 120 L 520 180 L 560 180" fill="none" stroke="#b45309" stroke-width="4" stroke-linecap="round"/>
+                        <!-- Current visual overlay dots -->
+                        <path id="flow-live" d="M 80 212 L 80 120 L 160 120 M 230 120 L 320 120 M 380 120 L 520 120 L 520 180 L 560 180" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" class="opacity-0"/>
+
+                        <!-- NEUTRAL WIRE PATHWAY -->
+                        <!-- Dynamic Neutral path back to AC source (will split dynamically when Neutral Switch is activated) -->
+                        <path id="wire-neutral" d="M 680 200 L 710 200 L 710 380 L 80 380 L 80 268" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/>
+                        <path id="flow-neutral" d="M 680 200 L 710 200 L 710 380 L 80 380 L 80 268" fill="none" stroke="#60a5fa" stroke-width="4" stroke-linecap="round" class="opacity-0"/>
+
+                        <!-- EARTH WIRE PATHWAY -->
+                        <!-- Safety Earth wire connection from appliance casing to physical Earth Ground -->
+                        <path id="wire-earth" d="M 620 330 L 620 440" fill="none" stroke="#16a34a" stroke-dasharray="10 6" stroke-width="4" stroke-linecap="round" class="transition-opacity duration-300"/>
+                        <path id="flow-earth" d="M 620 330 L 620 440" fill="none" stroke="#4ade80" stroke-width="4" stroke-linecap="round" class="opacity-0"/>
+
+                        <!-- FAULT CONTACT SHORT-CIRCUIT WIRE (Invisible/Inactive during normal operation) -->
+                        <path id="wire-fault" d="M 520 160 L 500 160" fill="none" stroke="#ef4444" stroke-width="4" class="hidden opacity-0" stroke-linecap="round"/>
+
+                        <!-- ================= SAFETY CONTROL DEVICES ================= -->
+
+                        <!-- FUSE ASSEMBLY ON THE LIVE WIRE -->
+                        <g id="fuse-group" transform="translate(160, 100)" class="cursor-pointer" onclick="clickFuse()">
+                            <rect x="0" y="0" width="70" height="40" rx="4" fill="#0f172a" stroke="#d97706" stroke-width="3" />
+                            <!-- Inner wire filament of fuse -->
+                            <line id="fuse-wire" x1="5" y1="20" x2="65" y2="20" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+                            <text x="35" y="36" text-anchor="middle" fill="#94a3b8" font-size="10" font-weight="bold">FUSE (13A)</text>
+                        </g>
+
+                        <!-- SWITCH ASSEMBLY (Double Throw representations for dynamic positions) -->
+                        <!-- Switch in standard correct live placement -->
+                        <g id="switch-live-group" transform="translate(320, 100)" class="cursor-pointer" onclick="toggleSwitch()">
+                            <circle cx="10" cy="20" r="6" fill="#f59e0b" />
+                            <circle cx="50" cy="20" r="6" fill="#f59e0b" />
+                            <!-- Dynamic blade representation -->
+                            <line id="switch-live-blade" x1="10" y1="20" x2="48" y2="5" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" class="transition-all duration-200" />
+                            <text x="30" y="38" text-anchor="middle" fill="#94a3b8" font-size="10" font-weight="bold">SWITCH</text>
+                        </g>
+
+                        <!-- Switch in dangerous neutral wire placement (Hidden initially) -->
+                        <g id="switch-neutral-group" transform="translate(320, 360)" class="cursor-pointer hidden opacity-0" onclick="toggleSwitch()">
+                            <circle cx="10" cy="20" r="6" fill="#3b82f6" />
+                            <circle cx="50" cy="20" r="6" fill="#3b82f6" />
+                            <line id="switch-neutral-blade" x1="10" y1="20" x2="48" y2="5" stroke="#3b82f6" stroke-width="4" stroke-linecap="round" class="transition-all duration-200" />
+                            <text x="30" y="38" text-anchor="middle" fill="#94a3b8" font-size="10" font-weight="bold">SWITCH (NEUTRAL)</text>
+                        </g>
+
+                        <!-- Wire Text Indicators -->
+                        <text x="110" y="95" fill="#f59e0b" font-size="12" font-weight="bold" class="opacity-70">LIVE WIRE (Brown - 240V)</text>
+                        <text x="110" y="415" fill="#3b82f6" font-size="12" font-weight="bold" class="opacity-70">NEUTRAL WIRE (Blue - 0V)</text>
+                        <text x="635" y="390" id="earth-wire-label" fill="#22c55e" font-size="12" font-weight="bold" class="opacity-70">EARTH WIRE (Green/Yellow - 0V)</text>
+
+                        <!-- ================= INTERACTIVE HUMAN CHARACTER ================= -->
+                        <g id="human-group" class="cursor-pointer transition-all duration-300" transform="translate(360, 180)" onclick="humanTouchAppliance()">
+                            <!-- Dashed line from floor up to represent human standing path -->
+                            <rect x="0" y="0" width="85" height="150" fill="transparent" />
+                            <!-- Human Figure -->
+                            <circle cx="40" cy="30" r="16" fill="#cbd5e1" stroke="#94a3b8" stroke-width="3" id="human-head"/>
+                            <line x1="40" y1="46" x2="40" y2="110" stroke="#cbd5e1" stroke-width="3" id="human-spine"/>
+                            <!-- Touch Arm -->
+                            <line id="human-arm" x1="40" y1="60" x2="140" y2="60" stroke="#cbd5e1" stroke-width="3" stroke-linecap="round" class="transition-all duration-300"/>
+                            <!-- Legs -->
+                            <line x1="40" y1="110" x2="20" y2="160" stroke="#cbd5e1" stroke-width="3"/>
+                            <line x1="40" y1="110" x2="60" y2="160" stroke="#cbd5e1" stroke-width="3"/>
+                            <!-- Electro shock effect graphic (Hidden by default) -->
+                            <path id="shock-spark" d="M 125 50 L 135 30 L 145 60 L 155 40 L 165 70" stroke="#facc15" stroke-width="4" fill="none" class="hidden opacity-0 animate-pulse"/>
+                            <text id="human-label" x="40" y="190" text-anchor="middle" fill="#cbd5e1" font-size="12" font-weight="bold">TOUCH METAL CASING</text>
+                        </g>
+
+                        <!-- Animated fault current flow through human body -->
+                        <path id="flow-human" d="M 520 160 L 500 160 L 500 230 L 400 240 L 400 290 L 380 340" fill="none" stroke="#facc15" stroke-width="4" stroke-linecap="round" class="opacity-0 pointer-events-none transition-opacity duration-300"/>
+                        <path id="flow-human-branch" d="M 400 290 L 420 340" fill="none" stroke="#facc15" stroke-width="4" stroke-linecap="round" class="opacity-0 pointer-events-none transition-opacity duration-300"/>
+
+                    </svg>
+
+                    <!-- Sparks Overlay inside Canvas -->
+                    <div id="fuse-sparks" class="absolute left-[20%] top-[20%] text-2xl hidden pointer-events-none">💥</div>
+                </div>
+
+                <!-- NEW POSITION: Fault indicator warning block placed directly below the circuit board -->
+                <div id="fault-indicator" class="mt-3 bg-red-600 border border-red-500 text-white font-bold text-center text-xs sm:text-sm py-2.5 px-4 rounded-lg shadow-lg hidden transition-all duration-300 animate-pulse">
+                    🚨 FAULT OCCURRED! LIVE TOUCHING CASING!
+                </div>
+
+                <!-- Simulation Control Panel Toggles -->
+                <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 bg-slate-900/60 p-3 rounded-lg border border-slate-700">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[10px] text-slate-400 font-bold uppercase">Mains Switch</label>
+                        <button id="toggle-switch-btn" onclick="toggleSwitch()" class="w-full py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded transition shadow-sm">
+                            Switch ON
+                        </button>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[10px] text-slate-400 font-bold uppercase">Inject Fault</label>
+                        <button id="toggle-fault-btn" onclick="toggleFault()" class="w-full py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold text-xs rounded transition shadow-sm">
+                            Inject Fault
+                        </button>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[10px] text-slate-400 font-bold uppercase">Earth Wire Status</label>
+                        <button id="toggle-earth-btn" onclick="toggleEarth()" class="w-full py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded transition shadow-sm">
+                            Earth Connected
+                        </button>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-[10px] text-slate-400 font-bold uppercase">Switch Location</label>
+                        <button id="toggle-wiring-btn" onclick="toggleWiring()" class="w-full py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold text-xs rounded transition shadow-sm">
+                            Switch on Live
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Syllabus Context Corner -->
+            <div class="bg-slate-800 rounded-xl p-5 border border-slate-700 shadow-xl">
+                <h3 class="text-sm font-bold text-indigo-400 mb-2 uppercase tracking-wide">💡 Singapore syllabus Cheat Sheet (Lower Sec Science)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs text-slate-300">
+                    <div class="p-2 bg-slate-900 rounded-md border border-slate-700">
+                        <strong class="text-amber-500 block mb-1">Live Wire (Brown):</strong>
+                        Connects appliance to high potential (240V in Singapore). Always houses the <strong>Fuse</strong> and <strong>Switch</strong> for isolating safety.
+                    </div>
+                    <div class="p-2 bg-slate-900 rounded-md border border-slate-700">
+                        <strong class="text-sky-500 block mb-1">Neutral Wire (Blue):</strong>
+                        Completes the electric circuit. Maintained at a safe potential of approximately <strong>0V</strong>.
+                    </div>
+                    <div class="p-2 bg-slate-900 rounded-md border border-slate-700">
+                        <strong class="text-emerald-500 block mb-1">Earth Wire (Green/Yellow):</strong>
+                        Connects metal casing directly to ground (0V). Acts as a low resistance escape path for fault currents.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Column: Lesson Guidance & Syllabus Sandbox -->
+        <section class="lg:col-span-5 flex flex-col gap-4">
+            <!-- Educational Panel Container -->
+            <div class="bg-slate-800 rounded-xl p-5 border border-slate-700 shadow-xl flex-grow flex flex-col">
+                <!-- Tabs -->
+                <div class="flex border-b border-slate-700 mb-4">
+                    <button onclick="changeRightTab('learn')" id="tab-learn-btn" class="flex-1 py-2 text-center text-sm font-bold border-b-2 border-indigo-500 text-indigo-400 transition">
+                        📖 Lesson Guide
+                    </button>
+                    <button onclick="changeRightTab('quiz')" id="tab-quiz-btn" class="flex-1 py-2 text-center text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-300 transition">
+                        📝 Syllabus Quiz
+                    </button>
+                </div>
+
+                <!-- Tab 1: Learn/Guide Content -->
+                <div id="tab-learn-content" class="flex-grow flex flex-col gap-4">
+                    <div id="lesson-info-box" class="space-y-4">
+                        <!-- Dynamic Lesson Markdown injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Tab 2: Interactive MOE Style Quiz -->
+                <div id="tab-quiz-content" class="hidden flex-grow flex flex-col gap-4">
+                    <div class="flex justify-between items-center bg-slate-900 p-2.5 rounded border border-slate-700">
+                        <span class="text-xs font-semibold text-slate-400">Singapore GCE O-Level / Sec 2 Prep Quiz</span>
+                        <span id="quiz-progress" class="text-xs bg-indigo-900/50 text-indigo-300 font-mono px-2 py-0.5 rounded border border-indigo-800">Q1 of 4</span>
+                    </div>
+
+                    <!-- Question Container -->
+                    <div class="bg-slate-900 p-4 rounded-lg border border-slate-800 flex-grow">
+                        <h4 id="quiz-question-text" class="text-sm font-semibold text-white leading-relaxed mb-4">
+                            <!-- Question text dynamically injected -->
+                        </h4>
+                        <div id="quiz-options-container" class="space-y-2">
+                            <!-- Options rendered dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Feedback Box -->
+                    <div id="quiz-feedback" class="p-3 rounded-lg text-xs hidden">
+                        <!-- Feedback text -->
+                    </div>
+
+                    <div class="flex justify-between items-center mt-2">
+                        <span id="quiz-score" class="text-xs text-slate-400 font-semibold">Score: 0/0</span>
+                        <button id="next-question-btn" onclick="nextQuestion()" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded font-semibold text-xs transition shadow hidden">
+                            Next Question ➡️
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal Notification Engine (Replaces browser Alerts for rich sandboxed experience) -->
+    <div id="alert-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div class="bg-slate-800 rounded-xl border border-slate-700 max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center gap-3 mb-4">
+                <span id="modal-icon" class="text-3xl">⚠️</span>
+                <h3 id="modal-title" class="text-lg font-bold text-white">Warning Notification</h3>
+            </div>
+            <p id="modal-desc" class="text-sm text-slate-300 mb-6 leading-relaxed">
+                Modal description details...
+            </p>
+            <div class="flex justify-end gap-2">
+                <button onclick="closeModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg transition">
+                    Acknowledge
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800 py-3 text-center text-xs text-slate-500">
+        <p>© Secondary 2 Science Digital Sandbox. Compliant with Singapore MOE Lower Secondary Science Syllabus.</p>
+    </footer>
+
+    <!-- Interactive Script Mechanics -->
+    <script>
+        // State variables
+        let isSwitchClosed = true;
+        let isFuseBlown = false;
+        let activeFault = 'none'; // 'none' or 'live-to-casing'
+        let isEarthConnected = true;
+        let isSwitchOnLive = true;
+        let activeLesson = 'normal';
+        let activeTab = 'learn';
+
+        // Circuit references
+        const fuseWire = document.getElementById('fuse-wire');
+        const fuseSparks = document.getElementById('fuse-sparks');
+        const switchLiveBlade = document.getElementById('switch-live-blade');
+        const switchNeutralBlade = document.getElementById('switch-neutral-blade');
+        const switchLiveGroup = document.getElementById('switch-live-group');
+        const switchNeutralGroup = document.getElementById('switch-neutral-group');
+        const casing = document.getElementById('appliance-casing');
+        const loadCoil = document.getElementById('load-coil');
+        const flowLive = document.getElementById('flow-live');
+        const flowNeutral = document.getElementById('flow-neutral');
+        const flowEarth = document.getElementById('flow-earth');
+        const wireLive = document.getElementById('wire-live');
+        const wireNeutral = document.getElementById('wire-neutral');
+        const faultWire = document.getElementById('wire-fault');
+        const faultIndicator = document.getElementById('fault-indicator');
+        
+        // Human interactive components
+        const humanGroup = document.getElementById('human-group');
+        const humanArm = document.getElementById('human-arm');
+        const humanHead = document.getElementById('human-head');
+        const humanSpine = document.getElementById('human-spine');
+        const shockSpark = document.getElementById('shock-spark');
+        const humanLabel = document.getElementById('human-label');
+        
+        // Human current paths
+        const flowHuman = document.getElementById('flow-human');
+        const flowHumanBranch = document.getElementById('flow-human-branch');
+
+        // Buttons
+        const toggleSwitchBtn = document.getElementById('toggle-switch-btn');
+        const toggleFaultBtn = document.getElementById('toggle-fault-btn');
+        const toggleEarthBtn = document.getElementById('toggle-earth-btn');
+        const toggleWiringBtn = document.getElementById('toggle-wiring-btn');
+
+        // Lesson Definitions matching SG Syllabus
+        const lessons = {
+            normal: {
+                title: "Lesson 1: Normal Working Circuit",
+                content: `
+                    <div class="p-3 bg-indigo-950/40 rounded-lg border border-indigo-900/60 text-xs text-indigo-300 leading-relaxed">
+                        <strong>🇸🇬 MOE Syllabus Focus:</strong> Learn the path of current in a healthy operating domestic circuit, and understand the critical arrangement of components.
+                    </div>
+                    <div class="space-y-3 text-slate-300 text-xs mt-2">
+                        <p>In a normal, safely-designed household appliance connected to a <strong>240V AC supply</strong>:</p>
+                        <ul class="list-disc pl-4 space-y-1">
+                            <li><strong>The Live Wire (Brown, 240V)</strong> carries current from the mains supply to the appliance load.</li>
+                            <li><strong>The Neutral Wire (Blue, 0V)</strong> returns current from the load to the supply, completing the circuit.</li>
+                            <li><strong>The Earth Wire (Green & Yellow, 0V)</strong> is connected directly to the <strong>metal casing</strong>. It carries no current during normal operation.</li>
+                        </ul>
+                        <div class="p-2.5 bg-amber-950/30 rounded border border-amber-800 text-amber-200 mt-2">
+                            <strong>Why is the Switch & Fuse on the Live Wire?</strong><br>
+                            If the switch is open or the fuse blows, the appliance is isolated from the dangerous 240V high potential, making internal parts touch-safe!
+                        </div>
+                        <div class="bg-slate-900 p-2 rounded">
+                            <span class="text-slate-400 block font-bold text-[10px] uppercase">Interactive Action:</span>
+                            Try opening and closing the switch using the controls to observe the electric current stop and start flowing.
+                        </div>
+                    </div>
+                `
+            },
+            fault: {
+                title: "Lesson 2: Electric Faults & Earthing Savior",
+                content: `
+                    <div class="p-3 bg-red-950/40 rounded-lg border border-red-900/60 text-xs text-red-300 leading-relaxed">
+                        <strong>🇸🇬 MOE Syllabus Focus:</strong> Understand how the metal casing, earth wire, and fuse act as a unified protective system when a fault develops.
+                    </div>
+                    <div class="space-y-3 text-slate-300 text-xs mt-2">
+                        <p>Imagine a fault where a loose <strong>Live wire touches the inner metal casing</strong>:</p>
+                        <ol class="list-decimal pl-4 space-y-1.5">
+                            <li><strong>If Earth Wire is Connected (Safe):</strong> A pathway of extremely low resistance is created from Live to Earth. This causes a massive surge in current. The surge instantly exceeds the fuse rating, melting (blowing) the fuse, cutting off power completely.</li>
+                            <li><strong>If Earth Wire is Disconnected (Dangerous!):</strong> The metal casing becomes live at 240V. There is no path for current to escape. If a human touches it, current flows through the body to Earth, resulting in a severe or lethal shock!</li>
+                        </ol>
+                        <div class="bg-slate-900 p-2 rounded">
+                            <span class="text-slate-400 block font-bold text-[10px] uppercase">Interactive Action:</span>
+                            <ol class="list-decimal pl-4 mt-1 space-y-1 text-slate-300 text-[11px]">
+                                <li>Ensure "Earth Connected" is active, and click <strong>"Inject Fault"</strong>. Observe how the fuse blows instantly to save the circuit.</li>
+                                <li>Reset, disable Earth, inject fault, and then click the human <strong>"Touch Metal Casing"</strong> to witness the danger!</li>
+                            </ol>
+                        </div>
+                    </div>
+                `
+            },
+            neutral: {
+                title: "Lesson 3: The Hazard of Neutral Wiring Switches",
+                content: `
+                    <div class="p-3 bg-yellow-950/40 rounded-lg border border-yellow-900/60 text-xs text-yellow-300 leading-relaxed">
+                        <strong>🇸🇬 MOE Syllabus Focus:</strong> Critical structural design. Why must switches and fuses never be wired on the Neutral wire?
+                    </div>
+                    <div class="space-y-3 text-slate-300 text-xs mt-2">
+                        <p>In this mode, we relocate the <strong>Switch onto the Neutral Wire (Blue)</strong>. Look what happens when the switch is opened (OFF):</p>
+                        <ul class="list-disc pl-4 space-y-1">
+                            <li>The current path is indeed broken, and the appliance stops working.</li>
+                            <li><strong>However:</strong> Since the Live wire is still connected directly to the appliance load, the entire internal system (and the metal casing if there's a fault) remains energized at a deadly <strong>240V potential</strong>.</li>
+                        </ul>
+                        <div class="p-2.5 bg-red-950/30 rounded border border-red-800 text-red-200 mt-2">
+                            <strong>The Danger:</strong> If a technician tries to service the appliance thinking it is safe because the switch is "OFF", they will receive an electric shock as soon as they touch any internal parts.
+                        </div>
+                        <div class="bg-slate-900 p-2 rounded">
+                            <span class="text-slate-400 block font-bold text-[10px] uppercase">Interactive Action:</span>
+                            Click <strong>"Switch Location"</strong> to move the switch onto the Neutral wire. Turn the switch OFF. Note how the Live wire up to the load glows red (carrying high potential voltage), presenting an unseen danger!
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        // Quiz Question Database for Singapore Lower Secondary Science
+        const quizQuestions = [
+            {
+                q: "In a standard Singapore domestic plug, what is the color of the insulation on the Live, Neutral, and Earth wires respectively?",
+                options: [
+                    "Brown, Blue, Green/Yellow",
+                    "Blue, Brown, Green/Yellow",
+                    "Brown, Green/Yellow, Blue",
+                    "Green/Yellow, Blue, Brown"
+                ],
+                correct: 0,
+                explanation: "The Singapore standard colors are: Live = Brown, Neutral = Blue, Earth = Yellow & Green stripes."
+            },
+            {
+                q: "A hair dryer is rated at 240V, 1200W. Which of the following fuse ratings is most appropriate for this appliance?",
+                options: [
+                    "2 A",
+                    "3 A",
+                    "5 A",
+                    "13 A"
+                ],
+                correct: 2,
+                explanation: "Using Power Formula: Current I = P / V = 1200W / 240V = 5A. The fuse should be slightly higher than the working current to prevent nuisance trips but low enough to protect it. Therefore, a 13A fuse is too high to protect against small surges, and 5A is perfect to protect the wire."
+            },
+            {
+                q: "What is the primary function of connecting the Earth wire to the metal casing of an appliance?",
+                options: [
+                    "To supply electrical energy when the Live wire breaks.",
+                    "To create a low resistance path to ground, causing a large current to blow the fuse if a fault makes the casing live.",
+                    "To keep the current constant in the appliance.",
+                    "To ensure that current only flows when the switch is closed."
+                ],
+                correct: 1,
+                explanation: "If a fault makes the casing live, current flows safely to ground via the earth wire instead of a user. The resulting low-resistance path triggers a high-current surge that blows the fuse, shutting off power."
+            },
+            {
+                q: "Why must a fuse always be placed in the Live wire instead of the Neutral wire?",
+                options: [
+                    "The current in the live wire is always twice as large as the neutral wire.",
+                    "The live wire is connected to 240V high potential. Placing the fuse here ensures the appliance is disconnected from high voltage when it blows.",
+                    "Neutral wires do not conduct electricity.",
+                    "It is purely aesthetic."
+                ],
+                correct: 1,
+                explanation: "By placing the fuse in the Live wire, when the fuse melts, the appliance is completely isolated from the high 240V source potential, rendering it safe."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        // --- Core Simulation Logic ---
+
+        function updateSimulation() {
+            // Determine active switch position
+            if (isSwitchOnLive) {
+                switchLiveGroup.classList.remove('hidden', 'opacity-0');
+                switchNeutralGroup.classList.add('hidden', 'opacity-0');
+            } else {
+                switchLiveGroup.classList.add('hidden', 'opacity-0');
+                switchNeutralGroup.classList.remove('hidden', 'opacity-0');
+            }
+
+            // Update Switch Blade Angle & Visibility
+            // When Switch is on Neutral wire (Neutral Hazard active) and Switch is OFF (mains switch off):
+            // We remove (hide) the blue blade inside the switch, keeping everything else same.
+            if (!isSwitchOnLive && !isSwitchClosed) {
+                switchNeutralBlade.classList.add('hidden');
+            } else {
+                switchNeutralBlade.classList.remove('hidden');
+            }
+
+            switchLiveBlade.setAttribute('y2', isSwitchClosed ? 20 : 5);
+            switchNeutralBlade.setAttribute('y2', isSwitchClosed ? 20 : 5);
+
+            // Update Live Wire Path dynamically based on active switch location
+            let wireLivePath = "";
+            if (isSwitchOnLive) {
+                // Split live wire for switch at 320 to 380 coordinates
+                wireLivePath = "M 80 212 L 80 120 L 160 120 M 230 120 L 320 120 M 380 120 L 520 120 L 520 180 L 560 180";
+            } else {
+                // Continuous live wire through the space where the switch was previously placed
+                wireLivePath = "M 80 212 L 80 120 L 160 120 M 230 120 L 520 120 L 520 180 L 560 180";
+            }
+            wireLive.setAttribute('d', wireLivePath);
+            flowLive.setAttribute('d', wireLivePath);
+
+            // Update Neutral Wire Path dynamic alignment based on active switch location
+            let wireNeutralPath = "";
+            if (isSwitchOnLive) {
+                // Continuous neutral wire (no switch in its physical alignment path)
+                wireNeutralPath = "M 680 200 L 710 200 L 710 380 L 80 380 L 80 268";
+            } else {
+                // Split neutral wire dynamically to attach neatly to Neutral Switch left/right terminals (330, 380) and (370, 380)
+                wireNeutralPath = "M 680 200 L 710 200 L 710 380 L 370 380 M 330 380 L 80 380 L 80 268";
+            }
+            wireNeutral.setAttribute('d', wireNeutralPath);
+            flowNeutral.setAttribute('d', wireNeutralPath);
+
+            // Update Fuse Wire State
+            if (isFuseBlown) {
+                fuseWire.setAttribute('stroke', '#64748b'); // Grey/burnt wire
+                fuseWire.setAttribute('stroke-dasharray', '5 5');
+            } else {
+                fuseWire.setAttribute('stroke', '#f59e0b'); // Intact copper wire
+                fuseWire.removeAttribute('stroke-dasharray');
+            }
+
+            // Fault state UI
+            if (activeFault === 'live-to-casing') {
+                faultWire.classList.remove('hidden');
+                faultWire.classList.add('opacity-100');
+                faultIndicator.classList.remove('hidden');
+            } else {
+                faultWire.classList.add('hidden');
+                faultWire.classList.remove('opacity-100');
+                faultIndicator.classList.add('hidden');
+            }
+
+            // Earth Wire Connection UI state
+            if (isEarthConnected) {
+                document.getElementById('wire-earth').classList.remove('opacity-20');
+                document.getElementById('earth-wire-label').classList.remove('opacity-20');
+            } else {
+                document.getElementById('wire-earth').classList.add('opacity-20');
+                document.getElementById('earth-wire-label').classList.add('opacity-20');
+            }
+
+            // Calculate Flow States & Voltages
+            let liveHasVoltage = !isFuseBlown;
+            let neutralCompleted = isSwitchClosed;
+            
+            // Calculate status & current logic
+            let stateMessage = "";
+            let bannerClass = "";
+            let voltageText = "240V AC OK";
+
+            // Determine if appliance casing is electrified
+            let isCasingElectrified = false;
+            if (activeFault === 'live-to-casing' && !isFuseBlown) {
+                isCasingElectrified = true;
+            }
+
+            if (isFuseBlown) {
+                stateMessage = "<strong>FUSE BLOWN:</strong> Excess current melted the fuse wire. The appliance is isolated from 240V.";
+                bannerClass = "bg-amber-950/80 border-amber-800 text-amber-300";
+                voltageText = "0V - POWER CUT";
+                
+                // Deactivate current flow graphics
+                flowLive.classList.add('opacity-0');
+                flowNeutral.classList.add('opacity-0');
+                flowEarth.classList.add('opacity-0');
+                loadCoil.setAttribute('stroke', '#475569');
+                
+                // Turn off human body currents
+                flowHuman.classList.add('opacity-0');
+                flowHuman.classList.remove('current-flow-surge', 'current-flow-active');
+                flowHumanBranch.classList.add('opacity-0');
+                flowHumanBranch.classList.remove('current-flow-surge', 'current-flow-active');
+            } else {
+                // If switch is open (using different paths for live/neutral switch)
+                let switchInterruption = !isSwitchClosed;
+                
+                if (switchInterruption) {
+                    flowLive.classList.add('opacity-0');
+                    flowNeutral.classList.add('opacity-0');
+                    flowEarth.classList.add('opacity-0');
+                    loadCoil.setAttribute('stroke', '#475569');
+                    
+                    // Turn off human body currents
+                    flowHuman.classList.add('opacity-0');
+                    flowHumanBranch.classList.add('opacity-0');
+                    
+                    if (!isSwitchOnLive) {
+                        stateMessage = "<strong>DANGER STATE:</strong> Switch is OFF on Neutral. Internal load remains energized at 240V!";
+                        bannerClass = "bg-red-950/80 border-red-800 text-red-300";
+                        // Keep live wire glowing up to the load
+                        flowLive.classList.remove('opacity-0');
+                        flowLive.classList.remove('current-flow-active');
+                    } else {
+                        stateMessage = "<strong>Circuit OFF:</strong> Switch on Live is open. Current flow isolated safely.";
+                        bannerClass = "bg-slate-800 border-slate-700 text-slate-300";
+                    }
+                } else {
+                    // Normal complete operation
+                    if (activeFault === 'none') {
+                        stateMessage = "<strong>Normal Working Circuit:</strong> Current flowing correctly through Live and back via Neutral.";
+                        bannerClass = "bg-emerald-950/80 border-emerald-800 text-emerald-300";
+                        
+                        flowLive.classList.remove('opacity-0', 'current-flow-surge');
+                        flowLive.classList.add('current-flow-active');
+                        flowNeutral.classList.remove('opacity-0', 'current-flow-surge');
+                        flowNeutral.classList.add('current-flow-active');
+                        flowEarth.classList.add('opacity-0');
+                        
+                        // Human current off
+                        flowHuman.classList.add('opacity-0');
+                        flowHumanBranch.classList.add('opacity-0');
+                        
+                        loadCoil.setAttribute('stroke', '#f59e0b');
+                    } else if (activeFault === 'live-to-casing') {
+                        if (isEarthConnected) {
+                            // High surge fault pathway -> fuse blows instantly!
+                            stateMessage = "<strong>FAULT ENCOUNTERED:</strong> Live wire touched metal casing! Huge surge flowing to Ground... FUSE MELTING!";
+                            bannerClass = "bg-rose-950/80 border-rose-800 text-rose-300";
+                            
+                            flowLive.classList.remove('opacity-0', 'current-flow-active');
+                            flowLive.classList.add('current-flow-surge');
+                            flowEarth.classList.remove('opacity-0');
+                            flowEarth.classList.add('current-flow-surge');
+                            
+                            // Human body current surge gets a tiny visual bump before breaking
+                            flowHuman.classList.remove('opacity-0');
+                            flowHuman.classList.add('current-flow-surge');
+                            flowHumanBranch.classList.remove('opacity-0');
+                            flowHumanBranch.classList.add('current-flow-surge');
+                            
+                            // Blow fuse after dynamic animation delay
+                            triggerFuseBlow();
+                        } else {
+                            // Fatal State: Live touches casing but no Earth connection
+                            stateMessage = "<strong>EXTREME HAZARD:</strong> Metal casing is LIVE (240V)! Current flowing through the person touching the metal casing!";
+                            bannerClass = "bg-red-950 border-red-700 text-red-400";
+                            voltageText = "240V LIVE CASING";
+                            
+                            flowLive.classList.remove('opacity-0');
+                            flowLive.classList.add('current-flow-active');
+                            flowNeutral.classList.add('opacity-0');
+                            flowEarth.classList.add('opacity-0');
+                            
+                            // Animate fault current going straight through human
+                            flowHuman.classList.remove('opacity-0');
+                            flowHuman.classList.add('current-flow-surge');
+                            flowHumanBranch.classList.remove('opacity-0');
+                            flowHumanBranch.classList.add('current-flow-surge');
+                        }
+                    }
+                }
+            }
+
+            // Update Casing Visual State
+            if (isCasingElectrified) {
+                casing.setAttribute('stroke', '#ef4444');
+                casing.setAttribute('fill', '#450a0a');
+                casing.classList.add('wire-danger');
+            } else {
+                casing.setAttribute('stroke', '#94a3b8');
+                casing.setAttribute('fill', '#1e293b');
+                casing.classList.remove('wire-danger');
+            }
+
+            // Set text & states
+            document.getElementById('status-text').innerHTML = stateMessage;
+            const banner = document.getElementById('status-banner');
+            banner.className = `mb-4 p-3 rounded-lg border text-sm flex items-center justify-between ${bannerClass}`;
+            document.getElementById('voltage-indicator').innerText = voltageText;
+
+            updateButtonsUI();
+        }
+
+        function triggerFuseBlow() {
+            fuseSparks.classList.remove('hidden');
+            setTimeout(() => {
+                isFuseBlown = true;
+                fuseSparks.classList.add('hidden');
+                updateSimulation();
+                showModal("💥 Fuse Melted (Blown)!", "Because the Earth wire connected the live fault to 0V ground, resistance was very low, causing a massive current surge. The 13A fuse successfully melted to cut off the 240V supply, protecting the user from harm.");
+            }, 1200);
+        }
+
+        // Action controls
+        function toggleSwitch() {
+            if (isFuseBlown) {
+                showModal("Operation Blocked", "The fuse is currently blown. Please reset the circuit first.");
+                return;
+            }
+            isSwitchClosed = !isSwitchClosed;
+            updateSimulation();
+        }
+
+        function toggleFault() {
+            if (activeFault === 'none') {
+                activeFault = 'live-to-casing';
+                // Move hand to casing to complete the circuit immediately
+                humanArm.setAttribute('x2', '145');
+                humanArm.setAttribute('y2', '50');
+                if (!isEarthConnected) {
+                    // Shock the human instantly if earth protection isn't working
+                    humanHead.setAttribute('fill', '#facc15');
+                    humanSpine.setAttribute('stroke', '#ef4444');
+                    shockSpark.classList.remove('hidden', 'opacity-0');
+                    humanLabel.innerText = "⚡ BEING SHOCKED! ⚡";
+                }
+            } else {
+                activeFault = 'none';
+                resetHumanPosture();
+            }
+            updateSimulation();
+        }
+
+        function toggleWiring() {
+            isSwitchOnLive = !isSwitchOnLive;
+            updateSimulation();
+        }
+
+        // Helper for auto interactions
+        function triggerHumanShockVisuals() {
+            humanHead.setAttribute('fill', '#facc15');
+            humanSpine.setAttribute('stroke', '#ef4444');
+            shockSpark.classList.remove('hidden', 'opacity-0');
+            humanLabel.innerText = "⚡ BEING SHOCKED! ⚡";
+        }
+
+        function toggleEarth() {
+            isEarthConnected = !isEarthConnected;
+            // Update shock visual state if a fault is active
+            if (activeFault === 'live-to-casing' && !isEarthConnected && !isFuseBlown) {
+                triggerHumanShockVisuals();
+            } else if (activeFault === 'live-to-casing' && isEarthConnected) {
+                resetHumanPosture();
+                // We keep arm extended to casing
+                humanArm.setAttribute('x2', '145');
+                humanArm.setAttribute('y2', '50');
+            }
+            updateSimulation();
+        }
+
+        // Click on Fuse Station
+        function clickFuse() {
+            if (isFuseBlown) {
+                isFuseBlown = false;
+                updateSimulation();
+                showModal("Fuse Repaired", "You replaced the blown fuse with a new 13A fuse. The circuit is active again.");
+            } else {
+                showModal("Fuse Intact", "This fuse will melt automatically if current exceeds its 13A safety limit.");
+            }
+        }
+
+        function resetCircuit() {
+            isSwitchClosed = true;
+            isFuseBlown = false;
+            activeFault = 'none';
+            isEarthConnected = true;
+            isSwitchOnLive = true;
+            resetHumanPosture();
+            updateSimulation();
+        }
+
+        function resetHumanPosture() {
+            humanArm.setAttribute('x2', '140');
+            humanArm.setAttribute('y2', '60');
+            humanHead.setAttribute('fill', '#cbd5e1');
+            humanSpine.setAttribute('stroke', '#cbd5e1');
+            shockSpark.classList.add('hidden', 'opacity-0');
+            humanLabel.innerText = "TOUCH METAL CASING";
+        }
+
+        function humanTouchAppliance() {
+            if (isFuseBlown) {
+                showModal("Safe Touch", "The fuse is blown. There is no active voltage in the circuit. The human is safe.");
+                return;
+            }
+
+            // Extend arm towards casing
+            humanArm.setAttribute('x2', '145');
+            humanArm.setAttribute('y2', '50');
+
+            if (activeFault === 'live-to-casing' && !isEarthConnected) {
+                // Dangerous electric shock
+                triggerHumanShockVisuals();
+                showModal("😱 Severe Electric Shock!", "Because the Earth wire was disconnected, the metal casing of the appliance was energized at a deadly 240V. When the human touched the casing, current used the human body as an easy route to get to earth. This is highly lethal!");
+            } else if (activeFault === 'live-to-casing' && isEarthConnected) {
+                // Appliance casing is already safe because fuse is blown immediately
+                showModal("Protected!", "The human touches the casing safely. Even though there was a short circuit, the fuse blew instantly because the Earth wire completed the safe low-resistance path to the ground, shutting off the supply.");
+            } else {
+                // Normal harmless touch
+                showModal("Appliance is Safe", "The appliance is working normally. The Earth wire is correctly installed and there are no electrical faults.");
+                setTimeout(resetHumanPosture, 2000);
+            }
+        }
+
+        // Update button visual states
+        function updateButtonsUI() {
+            // Switch button
+            if (isSwitchClosed) {
+                toggleSwitchBtn.innerText = "Switch ON";
+                toggleSwitchBtn.className = "w-full py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded transition shadow-sm";
+            } else {
+                toggleSwitchBtn.innerText = "Switch OFF";
+                toggleSwitchBtn.className = "w-full py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 font-semibold text-xs rounded transition shadow-sm";
+            }
+
+            // Fault Button
+            if (activeFault === 'live-to-casing') {
+                toggleFaultBtn.innerText = "Fault Present";
+                toggleFaultBtn.className = "w-full py-1.5 bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs rounded transition shadow-sm";
+            } else {
+                toggleFaultBtn.innerText = "No Fault";
+                toggleFaultBtn.className = "w-full py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 font-semibold text-xs rounded transition shadow-sm";
+            }
+
+            // Earth wire button
+            if (isEarthConnected) {
+                toggleEarthBtn.innerText = "Earth Connected";
+                toggleEarthBtn.className = "w-full py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded transition shadow-sm";
+            } else {
+                toggleEarthBtn.innerText = "Earth CUT";
+                toggleEarthBtn.className = "w-full py-1.5 bg-red-600 hover:bg-red-500 text-white font-semibold text-xs rounded transition shadow-sm";
+            }
+
+            // Switch wiring location button
+            if (isSwitchOnLive) {
+                toggleWiringBtn.innerText = "Switch on Live";
+                toggleWiringBtn.className = "w-full py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs rounded transition shadow-sm";
+            } else {
+                toggleWiringBtn.innerText = "Switch on Neutral";
+                toggleWiringBtn.className = "w-full py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-semibold text-xs rounded transition shadow-sm";
+            }
+        }
+
+        // Modal triggers
+        function showModal(title, description, icon = "⚡") {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-desc').innerText = description;
+            document.getElementById('modal-icon').innerText = icon;
+            const modal = document.getElementById('alert-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        // Close details modal
+        function closeModal() {
+            const modal = document.getElementById('alert-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Lesson management
+        function changeLesson(type) {
+            activeLesson = type;
+            // Highlight button
+            document.querySelectorAll('.lesson-btn').forEach(btn => {
+                btn.className = "lesson-btn px-3 py-1.5 rounded-md text-xs font-semibold bg-slate-700 text-slate-300 transition hover:bg-slate-600";
+            });
+            document.getElementById(`btn-${type}`).className = "lesson-btn px-3 py-1.5 rounded-md text-xs font-semibold bg-indigo-600 text-white transition hover:bg-indigo-500";
+            
+            // Set guide container
+            document.getElementById('lesson-info-box').innerHTML = `
+                <h3 class="text-base font-bold text-white mb-1">${lessons[type].title}</h3>
+                ${lessons[type].content}
+            `;
+
+            // Adjust live components based on selected guide
+            if (type === 'normal') {
+                resetCircuit();
+            } else if (type === 'fault') {
+                resetCircuit();
+                // Inject fault and force touch
+                toggleFault();
+            } else if (type === 'neutral') {
+                resetCircuit();
+                isSwitchOnLive = false;
+                isSwitchClosed = false;
+                updateSimulation();
+            }
+            changeRightTab('learn');
+        }
+
+        // Tab switches
+        function changeRightTab(tab) {
+            activeTab = tab;
+            const learnBtn = document.getElementById('tab-learn-btn');
+            const quizBtn = document.getElementById('tab-quiz-btn');
+            const learnCont = document.getElementById('tab-learn-content');
+            const quizCont = document.getElementById('tab-quiz-content');
+
+            if (tab === 'learn') {
+                learnBtn.className = "flex-1 py-2 text-center text-sm font-bold border-b-2 border-indigo-500 text-indigo-400 transition";
+                quizBtn.className = "flex-1 py-2 text-center text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-300 transition";
+                learnCont.classList.remove('hidden');
+                quizCont.classList.add('hidden');
+            } else {
+                quizBtn.className = "flex-1 py-2 text-center text-sm font-bold border-b-2 border-indigo-500 text-indigo-400 transition";
+                learnBtn.className = "flex-1 py-2 text-center text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-300 transition";
+                quizCont.classList.remove('hidden');
+                learnCont.classList.add('hidden');
+                loadQuestion();
+            }
+        }
+
+        function loadQuestion() {
+            const qData = quizQuestions[currentQuestionIndex];
+            document.getElementById('quiz-progress').innerText = `Q${currentQuestionIndex + 1} of ${quizQuestions.length}`;
+            document.getElementById('quiz-question-text').innerText = qData.q;
+            
+            const optionsDiv = document.getElementById('quiz-options-container');
+            optionsDiv.innerHTML = '';
+            
+            qData.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 border border-slate-700 transition flex justify-between items-center";
+                btn.innerHTML = `<span>${opt}</span> <span class="text-slate-500">Choice ${String.fromCharCode(65 + idx)}</span>`;
+                btn.onclick = () => submitAnswer(idx);
+                optionsDiv.appendChild(btn);
+            });
+
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('next-question-btn').classList.add('hidden');
+        }
+
+        function submitAnswer(idx) {
+            const qData = quizQuestions[currentQuestionIndex];
+            const feedbackBox = document.getElementById('quiz-feedback');
+            const nextBtn = document.getElementById('next-question-btn');
+            
+            // Disable further choice clicks
+            const optionButtons = document.getElementById('quiz-options-container').querySelectorAll('button');
+            optionButtons.forEach(btn => btn.disabled = true);
+
+            if (idx === qData.correct) {
+                score++;
+                feedbackBox.className = "p-3 rounded-lg text-xs bg-emerald-950/80 border border-emerald-800 text-emerald-300";
+                feedbackBox.innerHTML = `<strong>✅ Correct Answer!</strong><br>${qData.explanation}`;
+            } else {
+                feedbackBox.className = "p-3 rounded-lg text-xs bg-red-950/80 border border-red-800 text-red-300";
+                feedbackBox.innerHTML = `<strong>❌ Incorrect Choice.</strong><br>${qData.explanation}`;
+            }
+
+            feedbackBox.classList.remove('hidden');
+            document.getElementById('quiz-score').innerText = `Score: ${score}/${currentQuestionIndex + 1}`;
+            nextBtn.classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < quizQuestions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                // Show final performance summary
+                const feedbackBox = document.getElementById('quiz-feedback');
+                document.getElementById('quiz-options-container').innerHTML = '';
+                document.getElementById('quiz-question-text').innerHTML = `
+                    <div class="text-center py-4">
+                        <span class="text-4xl block mb-2">🏆</span>
+                        <h4 class="text-base font-bold text-white mb-1">Quiz Completed!</h4>
+                        <p class="text-slate-400">You scored ${score} out of ${quizQuestions.length}.</p>
+                    </div>
+                `;
+                feedbackBox.classList.add('hidden');
+                document.getElementById('next-question-btn').innerText = "Restart Quiz 🔄";
+                document.getElementById('next-question-btn').onclick = restartQuiz;
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById('quiz-score').innerText = "Score: 0/0";
+            document.getElementById('next-question-btn').innerText = "Next Question ➡️";
+            document.getElementById('next-question-btn').onclick = nextQuestion;
+            loadQuestion();
+        }
+
+        // Initialize App
+        window.onload = function() {
+            changeLesson('normal');
+        }
+    </script>
+</body>
+</html>
