@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power, Energy & Cost Calculator | O-Level Physics</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Fixed Navigation Bar -->
+    <header class="navbar">
+        <div class="logo">
+            <span class="neon-text">⚡ ELECTRO</span><span class="calc-text">CALC</span>
+        </div>
+        <nav class="nav-links">
+            <button class="nav-btn active" data-section="intro" id="btn-intro">
+                <i class="fa-solid fa-book-open"></i><span>Intro</span>
+            </button>
+            <button class="nav-btn" data-section="explore" id="btn-explore">
+                <i class="fa-solid fa-sliders"></i><span>Explore</span>
+            </button>
+            <button class="nav-btn" data-section="flashcards" id="btn-flashcards">
+                <i class="fa-solid fa-clone"></i><span>Revision</span>
+            </button>
+            <button class="nav-btn" data-section="quiz" id="btn-quiz">
+                <i class="fa-solid fa-graduation-cap"></i><span>Quiz</span>
+            </button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Section 1: Concept Introduction -->
+        <section id="sec-intro" class="app-section active">
+            <h1 class="section-title">Practical Electricity</h1>
+            <p class="section-subtitle">Master the formulas and relationships used to compute electrical power, energy transfer, and cost.</p>
+
+            <div class="intro-grid">
+                <!-- Formula 1 -->
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">Electrical Power</span>
+                        <h2 class="formula-math">P = V &times; I</h2>
+                    </div>
+                    <div class="formula-body">
+                        <div class="unit-badge">Unit: Watt (W)</div>
+                        <p class="formula-desc">Power is the rate at which electrical energy is transferred by a circuit.</p>
+                        <div class="vars-list">
+                            <div><strong>V:</strong> Potential Difference / Voltage (V)</div>
+                            <div><strong>I:</strong> Current (A)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formula 2 -->
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">Energy Transferred</span>
+                        <h2 class="formula-math">E = P &times; t = V &times; I &times; t</h2>
+                    </div>
+                    <div class="formula-body">
+                        <div class="unit-badge">Units: Joule (J) or kWh</div>
+                        <p class="formula-desc">Total electrical energy transferred over an operating duration.</p>
+                        <div class="vars-list">
+                            <div><strong>t:</strong> Operating time in seconds (for Joules) or hours (for kWh)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formula 3 -->
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">Cost of Usage</span>
+                        <h2 class="formula-math">Cost = E<sub>(kWh)</sub> &times; Tariff</h2>
+                    </div>
+                    <div class="formula-body">
+                        <div class="unit-badge">Unit: Dollars ($)</div>
+                        <p class="formula-desc">The financial cost of operating an appliance based on energy consumed in kilowatt-hours.</p>
+                        <div class="vars-list">
+                            <div><strong>Tariff:</strong> Cost rate per kWh ($/kWh)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conversion and Real World Examples -->
+            <div class="info-block">
+                <h3 class="block-title"><i class="fa-solid fa-shuffle"></i> Energy Conversion Rule</h3>
+                <div class="conversion-visual">
+                    <div class="conv-box">
+                        <span class="conv-val">E (Joules)</span>
+                        <span class="conv-sub">SI Unit</span>
+                    </div>
+                    <div class="conv-arrow">
+                        <i class="fa-solid fa-circle-right"></i>
+                        <span>Divide by 3,600,000</span>
+                    </div>
+                    <div class="conv-box accent-box">
+                        <span class="conv-val">E (kWh)</span>
+                        <span class="conv-sub">Billing Unit</span>
+                    </div>
+                </div>
+                <p class="conversion-text">Electricity billing uses <strong>kilowatt-hours (kWh)</strong> because the Joule (J) is too small, resulting in impractical, massive numbers. (1 kWh = 1,000 W &times; 3,600 s = 3,600,000 J = 3.6 &times; 10<sup>6</sup> J).</p>
+            </div>
+
+            <!-- Appliance Benchmarks -->
+            <div class="appliance-section">
+                <h3 class="block-title"><i class="fa-solid fa-plug"></i> Appliance Power Benchmarks</h3>
+                <div class="appliance-grid">
+                    <div class="appliance-card">
+                        <div class="appliance-icon"><i class="fa-solid fa-wind"></i></div>
+                        <h4>Air Conditioner</h4>
+                        <div class="appliance-power">~1000 W</div>
+                        <p>High electrical energy draw due to compressor load. Used for long hours.</p>
+                    </div>
+                    <div class="appliance-card">
+                        <div class="appliance-icon"><i class="fa-solid fa-mug-hot"></i></div>
+                        <h4>Electric Kettle</h4>
+                        <div class="appliance-power">~2000 W</div>
+                        <p>Very high electrical power consumption to change state rapidly. Used for short durations.</p>
+                    </div>
+                    <div class="appliance-card">
+                        <div class="appliance-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                        <h4>LED Desk Bulb</h4>
+                        <div class="appliance-power">~10 W</div>
+                        <p>Extremely efficient light output. Low electrical power draw.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Interactive Exploration -->
+        <section id="sec-explore" class="app-section">
+            <h1 class="section-title">Interactive Sandbox</h1>
+            <p class="section-subtitle">Slide the controls to observe the relationship between electrical values, energy usage, and cost.</p>
+
+            <div class="sandbox-layout">
+                <!-- Sliders Panel -->
+                <div class="control-panel">
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span class="slider-label"><i class="fa-solid fa-hand-holding-dollar"></i> Tariff Rate</span>
+                            <span class="slider-val-bubble" id="explore-tariff-val">$0.30</span>
+                            <input type="text" id="guess-tariff" class="guess-input" style="display:none;" placeholder="? $/kWh">
+                        </div>
+                        <input type="range" id="slide-tariff" min="0.25" max="0.35" value="0.30" step="0.01">
+                        <div class="slider-limits"><span>$0.25</span><span>$0.35</span></div>
+                    </div>
+
+                    <!-- Challenge Controls -->
+                    <div class="challenge-controls-wrapper">
+                        <button type="button" class="action-btn" id="btn-challenge-rand"><i class="fa-solid fa-dice"></i> Randomise &amp; Hide</button>
+                        <div class="challenge-action-row">
+                            <button type="button" class="action-btn sec-btn" id="btn-challenge-check" style="display:none;"><i class="fa-solid fa-circle-check"></i> Check</button>
+                            <button type="button" class="action-btn sec-btn" id="btn-challenge-reveal" style="display:none;"><i class="fa-solid fa-eye"></i> Reveal</button>
+                        </div>
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span class="slider-label"><i class="fa-solid fa-bolt"></i> Voltage (V)</span>
+                            <span class="slider-val-bubble" id="val-voltage">240 V</span>
+                            <input type="text" id="guess-voltage" class="guess-input" style="display:none;" placeholder="? V">
+                        </div>
+                        <input type="range" id="slide-voltage" min="3" max="240" value="240" step="1">
+                        <div class="slider-limits"><span>3 V</span><span>240 V</span></div>
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span class="slider-label"><i class="fa-solid fa-gauge-high"></i> Current (I)</span>
+                            <span class="slider-val-bubble" id="val-current">8.5 A</span>
+                            <input type="text" id="guess-current" class="guess-input" style="display:none;" placeholder="? A">
+                        </div>
+                        <input type="range" id="slide-current" min="0.1" max="13" value="8.5" step="0.1">
+                        <div class="slider-limits"><span>0.1 A</span><span>13 A</span></div>
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span class="slider-label"><i class="fa-solid fa-clock"></i> Daily Usage (t)</span>
+                            <span class="slider-val-bubble" id="val-time">2.0 hr</span>
+                            <input type="text" id="guess-time" class="guess-input" style="display:none;" placeholder="? hr">
+                        </div>
+                        <input type="range" id="slide-time" min="0.1" max="24" value="2.0" step="0.1">
+                        <div class="slider-limits"><span>0.1 hr</span><span>24 hr</span></div>
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <span class="slider-label"><i class="fa-solid fa-calendar-days"></i> Number of Days</span>
+                            <span class="slider-val-bubble" id="val-days">30 days</span>
+                            <input type="text" id="guess-days" class="guess-input" style="display:none;" placeholder="? days">
+                        </div>
+                        <input type="range" id="slide-days" min="1" max="31" value="30" step="1">
+                        <div class="slider-limits"><span>1 day</span><span>31 days</span></div>
+                    </div>
+                </div>
+
+                <!-- Live Results Panel -->
+                <div class="results-panel">
+                    <div class="power-meter-container">
+                        <div class="power-meter-glow" id="power-glow"></div>
+                        <div class="power-meter-circle">
+                            <span class="meter-label">POWER</span>
+                            <span class="meter-value" id="calc-p">2040 W</span>
+                            <input type="text" id="guess-power" class="guess-input" style="display:none; font-size:1.2rem; padding:6px; margin:4px 0;" placeholder="? W">
+                            <span class="meter-warning" id="meter-warn">HIGH POWER LOAD</span>
+                        </div>
+                    </div>
+
+                    <div class="live-metrics">
+                        <!-- Power Box -->
+                        <div class="metric-box">
+                            <div class="metric-top">
+                                <span class="metric-title">POWER P</span>
+                                <span class="metric-formula">P = V &times; I</span>
+                            </div>
+                            <div class="metric-value-row">
+                                <span class="metric-val" id="metric-p">2,040 W</span>
+                                <input type="text" id="guess-power-box" class="guess-input" style="display:none;" placeholder="? W">
+                            </div>
+                        </div>
+
+                        <!-- Energy Joules Box -->
+                        <div class="metric-box">
+                            <div class="metric-top">
+                                <span class="metric-title">ENERGY E (JOULES)</span>
+                                <span class="metric-formula">E = P &times; t<sub>(s)</sub></span>
+                            </div>
+                            <div class="metric-value-row">
+                                <span class="metric-val text-sm" id="metric-e-j">440.64 MJ</span>
+                            </div>
+                        </div>
+
+                        <!-- Energy kWh Box -->
+                        <div class="metric-box">
+                            <div class="metric-top">
+                                <span class="metric-title">ENERGY E (kWh)</span>
+                                <span class="metric-formula">E = P<sub>(kW)</sub> &times; t<sub>(hr)</sub></span>
+                            </div>
+                            <div class="metric-value-row">
+                                <span class="metric-val" id="metric-e-kwh">122.40 kWh</span>
+                                <input type="text" id="guess-energy" class="guess-input" style="display:none;" placeholder="? kWh">
+                            </div>
+                        </div>
+
+                        <!-- Cost Box -->
+                        <div class="metric-box accent-box-glow">
+                            <div class="metric-top">
+                                <span class="metric-title">TOTAL COST</span>
+                                <span class="metric-formula">Cost = E<sub>(kWh)</sub> &times; Tariff</span>
+                            </div>
+                            <div class="metric-value-row">
+                                <span class="metric-val highlight-val" id="metric-cost">$36.72</span>
+                                <input type="text" id="guess-cost" class="guess-input highlight-val" style="display:none; background:rgba(0,0,0,0.5); border-color:var(--neon-cyan);" placeholder="? $">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Flashcard Revision -->
+        <section id="sec-flashcards" class="app-section">
+            <h1 class="section-title">Revision Cards</h1>
+            <p class="section-subtitle">Flip through the cards to build a strong theoretical foundation before starting the quiz.</p>
+
+            <div class="flashcards-container">
+                <div class="flashcard-deck" id="flashcards-deck">
+                    <!-- Cards will be dynamically inserted here by Javascript -->
+                </div>
+                <div class="flashcard-controls">
+                    <button class="control-btn" id="fc-prev"><i class="fa-solid fa-arrow-left"></i> Prev</button>
+                    <button class="control-btn" id="fc-shuffle"><i class="fa-solid fa-shuffle"></i> Shuffle</button>
+                    <span class="deck-progress" id="fc-progress">1 / 12</span>
+                    <button class="control-btn" id="fc-next">Next <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Quiz -->
+        <section id="sec-quiz" class="app-section">
+            <!-- Quiz Progress and HUD -->
+            <div class="quiz-hud" id="quiz-hud">
+                <div class="hud-item">
+                    <span class="hud-label">Question</span>
+                    <span class="hud-value" id="quiz-progress-text">1 / 15</span>
+                </div>
+                <div class="hud-item">
+                    <span class="hud-label">Score</span>
+                    <span class="hud-value" id="quiz-score-text">0</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="quiz-progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- Start Screen -->
+            <div id="quiz-start-screen" class="quiz-state-screen active">
+                <div class="quiz-intro-card">
+                    <div class="quiz-icon"><i class="fa-solid fa-ranking-star"></i></div>
+                    <h2>Electricity Challenge</h2>
+                    <p>Test your knowledge with 15 randomly selected questions. Includes conceptual MCQs and calculations with randomised variables.</p>
+                    <div class="quiz-rules">
+                        <div><i class="fa-solid fa-keyboard"></i> Type answers with correct units (e.g. <code>1500 W</code>, <code>4.5 kWh</code>, <code>$1.35</code>).</div>
+                        <div><i class="fa-solid fa-bullseye"></i> Answers must be within a &plusmn;2% numerical tolerance.</div>
+                        <div><i class="fa-solid fa-lightbulb"></i> Tap the 💡 icon on calculation steps to view working formulas.</div>
+                    </div>
+                    <button class="action-btn" id="quiz-start-btn">Start Challenge</button>
+                </div>
+            </div>
+
+            <!-- Active Question Screen -->
+            <div id="quiz-active-screen" class="quiz-state-screen">
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-type-badge" id="quiz-q-type">CALCULATION</span>
+                        <button class="reveal-working-btn" id="quiz-reveal-btn" title="Reveal Formulas and Working">
+                            <i class="fa-regular fa-lightbulb"></i> Working
+                        </button>
+                    </div>
+
+                    <!-- Hidden Working Panel -->
+                    <div class="working-panel" id="quiz-working-panel">
+                        <h5><i class="fa-solid fa-gears"></i> Step-by-Step Formula &amp; Strategy:</h5>
+                        <p id="quiz-working-content">Substitute values into the formula P = V &times; I...</p>
+                    </div>
+
+                    <div class="question-text" id="quiz-q-text">
+                        Calculate the power of an electric kettle operating on a 240 V mains supply while drawing a current of 8.5 A.
+                    </div>
+
+                    <!-- Answer Options (MCQ or Input) -->
+                    <div class="answer-container" id="quiz-answers-container">
+                        <!-- Input Answer Format -->
+                        <div id="quiz-input-format" class="answer-format-block">
+                            <label for="quiz-user-input" class="input-label">Your Answer (include units):</label>
+                            <input type="text" id="quiz-user-input" placeholder="e.g. 2040 W" autocomplete="off">
+                            <div class="input-helper">Separate value and unit with a space. Dollar values start with $ (e.g., $3.60).</div>
+                        </div>
+
+                        <!-- MCQ Options Format -->
+                        <div id="quiz-mcq-format" class="answer-format-block">
+                            <div class="mcq-grid" id="quiz-mcq-options">
+                                <!-- Generated buttons -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Button -->
+                    <div class="question-actions">
+                        <button class="action-btn" id="quiz-submit-btn">Submit Answer</button>
+                    </div>
+
+                    <!-- Feedback Box (after submission) -->
+                    <div class="quiz-feedback-box" id="quiz-feedback-box">
+                        <div class="feedback-indicator" id="quiz-feedback-indicator">
+                            <i class="fa-solid fa-circle-check"></i> <span>Correct!</span>
+                        </div>
+                        <div class="worked-solution" id="quiz-worked-solution">
+                            <h5>Worked Solution:</h5>
+                            <div class="solution-text">P = V &times; I = 240 &times; 8.5 = 2040 W</div>
+                        </div>
+                        <button class="action-btn next-q-btn" id="quiz-next-btn">Next Question <i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scoring and Feedback Screen -->
+            <div id="quiz-result-screen" class="quiz-state-screen">
+                <div class="result-card">
+                    <div class="result-badge-container">
+                        <div class="result-score-circle">
+                            <span class="score-num" id="result-score-val">12</span>
+                            <span class="score-total">/ 15</span>
+                        </div>
+                    </div>
+                    <h2 id="result-headline">Excellent Job!</h2>
+                    <p id="result-message">You have a strong grasp of P = VI and E = VIt calculations.</p>
+                    
+                    <div class="result-actions">
+                        <button class="action-btn" id="quiz-retry-btn"><i class="fa-solid fa-rotate-left"></i> Try Again</button>
+                        <button class="action-btn sec-btn" id="quiz-go-intro"><i class="fa-solid fa-book-open"></i> Review Concepts</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Celebration Screen overlay -->
+    <div class="celebration-overlay" id="celebration-overlay"></div>
+
+    <!-- Main JavaScript Logic -->
+    <script src="app.js"></script>
+</body>
+</html>
