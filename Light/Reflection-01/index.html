@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reflection Laws & Ray Diagrams - O-Level Physics (6091)</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Neon Background Ambient Glows -->
+  <div class="glow-bg-cyan"></div>
+  <div class="glow-bg-yellow"></div>
+
+  <!-- Mobile-first App Wrapper -->
+  <div class="app-container">
+    <header class="app-header">
+      <div class="header-content">
+        <h1>REFLECTION LAWS</h1>
+        <span class="syllabus-tag">O-Level Physics 6091</span>
+      </div>
+    </header>
+
+    <!-- Navigation Bar above the app -->
+    <nav class="app-nav">
+      <button class="nav-item active" data-section="section-intro">
+        <span class="nav-icon">💡</span>
+        <span class="nav-label">Intro</span>
+      </button>
+      <button class="nav-item" data-section="section-explore">
+        <span class="nav-icon">🔍</span>
+        <span class="nav-label">Explore</span>
+      </button>
+      <button class="nav-item" data-section="section-examples">
+        <span class="nav-icon">📝</span>
+        <span class="nav-label">Examples</span>
+      </button>
+      <button class="nav-item" data-section="section-flashcards">
+        <span class="nav-icon">🎴</span>
+        <span class="nav-label">Revision</span>
+      </button>
+      <button class="nav-item" data-section="section-quiz">
+        <span class="nav-icon">🏆</span>
+        <span class="nav-label">Quiz</span>
+      </button>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+      
+      <!-- SECTION 1: CONCEPT INTRO -->
+      <section id="section-intro" class="app-section active">
+        <div class="section-card">
+          <h2>Concept Intro</h2>
+          <div class="intro-animation-container">
+            <svg id="intro-svg" viewBox="0 0 400 300">
+              <!-- Mirror Surface -->
+              <line x1="50" y1="220" x2="350" y2="220" class="mirror-line" />
+              <g class="mirror-backing">
+                <line x1="50" y1="220" x2="60" y2="230" />
+                <line x1="80" y1="220" x2="90" y2="230" />
+                <line x1="110" y1="220" x2="120" y2="230" />
+                <line x1="140" y1="220" x2="150" y2="230" />
+                <line x1="170" y1="220" x2="180" y2="230" />
+                <line x1="200" y1="220" x2="210" y2="230" />
+                <line x1="230" y1="220" x2="240" y2="230" />
+                <line x1="260" y1="220" x2="270" y2="230" />
+                <line x1="290" y1="220" x2="300" y2="230" />
+                <line x1="320" y1="220" x2="330" y2="230" />
+              </g>
+              
+              <!-- Normal Line (Dashed) -->
+              <line x1="200" y1="50" x2="200" y2="220" class="normal-line" />
+              
+              <!-- Light Rays (Animated via CSS) -->
+              <path d="M 80,100 L 200,220" class="ray incident-ray anim-incident" />
+              <path d="M 200,220 L 320,100" class="ray reflected-ray anim-reflected" />
+              
+              <!-- Arrowheads at Midpoints (Animated together with lines) -->
+              <path d="M 125,155 L 140,160 L 135,145" fill="none" stroke="var(--neon-cyan)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="ray anim-incident-arrow" />
+              <path d="M 255,175 L 260,160 L 245,165" fill="none" stroke="var(--neon-cyan)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="ray anim-reflected-arrow" />
+
+              <!-- Angle Arcs -->
+              <path d="M 170,190 A 42,42 0 0,1 200,178" class="angle-arc arc-i" />
+              <path d="M 200,178 A 42,42 0 0,1 230,190" class="angle-arc arc-r" />
+              
+              <!-- Labels -->
+              <text x="200" y="40" class="label-text label-normal">Normal</text>
+              <text x="90" y="80" class="label-text label-incident">Incident Ray</text>
+              <text x="310" y="80" class="label-text label-reflected">Reflected Ray</text>
+              <text x="165" y="160" class="label-text angle-label">i</text>
+              <text x="225" y="160" class="label-text angle-label">r</text>
+              <text x="200" y="245" class="label-text label-mirror">Mirror</text>
+            </svg>
+          </div>
+          <div class="fact-box">
+            <p class="neon-text-yellow">Angle of incidence (i) = Angle of reflection (r)</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: INTERACTIVE EXPLORATION -->
+      <section id="section-explore" class="app-section">
+        <div class="section-card">
+          <h2>Interactive Ray Diagram</h2>
+          
+          <div class="interactive-container">
+            <svg id="explore-svg" viewBox="0 0 400 300">
+              <!-- Mirror Surface -->
+              <line x1="40" y1="220" x2="360" y2="220" class="mirror-line" />
+              <g class="mirror-backing">
+                <!-- Repeated stripes representing mirror back -->
+                <line x1="50" y1="220" x2="58" y2="228" />
+                <line x1="80" y1="220" x2="88" y2="228" />
+                <line x1="110" y1="220" x2="118" y2="228" />
+                <line x1="140" y1="220" x2="148" y2="228" />
+                <line x1="170" y1="220" x2="178" y2="228" />
+                <line x1="200" y1="220" x2="208" y2="228" />
+                <line x1="230" y1="220" x2="238" y2="228" />
+                <line x1="260" y1="220" x2="268" y2="228" />
+                <line x1="290" y1="220" x2="298" y2="228" />
+                <line x1="320" y1="220" x2="328" y2="228" />
+                <line x1="350" y1="220" x2="358" y2="228" />
+              </g>
+              
+              <!-- Normal Line (Permanently Visible) -->
+              <line x1="200" y1="40" x2="200" y2="220" class="normal-line" />
+              <text x="200" y="30" class="label-text label-normal">Normal</text>
+
+              <!-- Rays -->
+              <line x1="200" y1="220" x2="200" y2="220" id="explore-incident-ray" class="ray incident-ray" />
+              <line x1="200" y1="220" x2="200" y2="220" id="explore-reflected-ray" class="ray reflected-ray" />
+              
+              <!-- Arrowheads at Midpoints -->
+              <path id="explore-incident-arrow" class="ray incident-ray" fill="none" />
+              <path id="explore-reflected-arrow" class="ray reflected-ray" fill="none" />
+
+              <!-- Angle Arcs -->
+              <path d="" id="explore-arc-i" class="angle-arc arc-i-interactive" />
+              <path d="" id="explore-arc-r" class="angle-arc arc-r-interactive" />
+
+              <!-- Interactive Texts -->
+              <text x="120" y="150" id="explore-label-i" class="label-text angle-label-interactive">i = 45°</text>
+              <text x="280" y="150" id="explore-label-r" class="label-text angle-label-interactive">r = 45°</text>
+            </svg>
+          </div>
+
+          <div class="control-panel">
+            <div class="control-row">
+              <label for="angle-slider">Angle of Incidence (from Normal): <span id="angle-value" class="neon-text-cyan">45°</span></label>
+              <input type="range" id="angle-slider" min="0" max="90" value="45" class="neon-slider">
+            </div>
+            
+            <div class="control-row toggle-row">
+              <span>Show Angle Labels</span>
+              <label class="switch">
+                <input type="checkbox" id="toggle-labels" checked>
+                <span class="slider-round"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: WORKED EXAMPLES -->
+      <section id="section-examples" class="app-section">
+        <div class="section-card">
+          <h2>Worked Examples</h2>
+          
+          <div class="example-selector">
+            <button class="btn-tab active" data-example="0">Example 1</button>
+            <button class="btn-tab" data-example="1">Example 2</button>
+            <button class="btn-tab" data-example="2">Example 3</button>
+          </div>
+
+          <div id="example-content-area" class="example-content">
+            <!-- Content populated dynamically by JavaScript -->
+          </div>
+
+          <div class="example-stepper">
+            <button id="btn-prev-step" class="btn-action">Back</button>
+            <span id="step-indicator">Step 1 of 3</span>
+            <button id="btn-reveal-answer" class="btn-action border-yellow">👁 Reveal</button>
+            <button id="btn-next-step" class="btn-action btn-highlight">Next Step</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: FLASHCARDS -->
+      <section id="section-flashcards" class="app-section">
+        <div class="section-card">
+          <h2>Flashcard Revision</h2>
+          
+          <div class="flashcard-container">
+            <div class="flashcard" id="flashcard">
+              <div class="flashcard-front">
+                <p id="card-front-text">Question/Term</p>
+                <span class="card-tap-hint">Tap to flip</span>
+              </div>
+              <div class="flashcard-back">
+                <p id="card-back-text">Answer/Explanation</p>
+                <span class="card-tap-hint">Tap to flip</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flashcard-controls">
+            <button id="btn-card-back" class="btn-action border-yellow">Back</button>
+            <button id="btn-shuffle-cards" class="btn-action">Shuffle ⇆</button>
+            <button id="btn-card-next" class="btn-action border-cyan">Next</button>
+          </div>
+
+          <div class="flashcard-progress">
+            <span id="flashcard-counter">Card 1 of 5</span>
+            <div class="progress-bar-container">
+              <div id="flashcard-progress-bar" class="progress-bar-cyan"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5: QUIZ -->
+      <section id="section-quiz" class="app-section">
+        <div class="section-card">
+          <h2>Revision Quiz</h2>
+          
+          <!-- Start View -->
+          <div id="quiz-start-view" class="quiz-view active">
+            <p class="quiz-intro-text">Test your mastery of Reflection. Ready to take on 30 questions based on Singapore O-Level Syllabus 6091?</p>
+            <button id="btn-start-quiz" class="btn-action btn-highlight">Start Quiz</button>
+          </div>
+
+          <!-- Question View -->
+          <div id="quiz-question-view" class="quiz-view">
+            <div class="quiz-header">
+              <span id="quiz-progress-text">Question 1/30</span>
+              <div class="progress-bar-container">
+                <div id="quiz-progress-bar" class="progress-bar-cyan"></div>
+              </div>
+            </div>
+
+            <div class="question-container">
+              <p id="quiz-question-text" class="question-text">Question goes here</p>
+              
+              <!-- Diagram container for question (if needed) -->
+              <div id="quiz-question-diagram" class="question-diagram-container">
+                <!-- SVGs will be drawn here dynamically -->
+              </div>
+
+              <!-- MCQ Options -->
+              <div id="quiz-mcq-options" class="mcq-options-container">
+                <!-- Buttons dynamically loaded -->
+              </div>
+
+              <!-- Numerical Input -->
+              <div id="quiz-num-input-container" class="num-input-container">
+                <input type="number" id="quiz-num-input" class="neon-num-input" placeholder="Enter angle in degrees">
+                <button id="btn-submit-num" class="btn-action btn-highlight">Submit Answer</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feedback / Solution View -->
+          <div id="quiz-solution-view" class="quiz-view">
+            <h3 id="quiz-feedback-title" class="feedback-title neon-text-cyan">Correct!</h3>
+            
+            <div id="quiz-solution-diagram" class="solution-diagram-container">
+              <!-- SVG diagram illustrating the solution -->
+            </div>
+
+            <div id="quiz-solution-text" class="solution-text">
+              <!-- Text solution explanation -->
+            </div>
+
+            <button id="btn-next-question" class="btn-action btn-highlight">Next Question</button>
+          </div>
+
+          <!-- Final Score View -->
+          <div id="quiz-results-view" class="quiz-view">
+            <h3>Quiz Completed!</h3>
+            <div class="score-circle">
+              <span id="final-score" class="score-number">28/30</span>
+              <span id="final-percentage" class="score-percent">93%</span>
+            </div>
+            <h4 id="grade-feedback" class="grade-feedback-text neon-text-yellow">Grade: A1 (Distinction)</h4>
+            <p id="grade-comment" class="grade-comment-text">Excellent! You've masterfully applied the laws of reflection.</p>
+            <button id="btn-restart-quiz" class="btn-action">Try Again</button>
+          </div>
+        </div>
+      </main>
+
+      <!-- Confetti Canvas for correct answers -->
+      <canvas id="confetti-canvas"></canvas>
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
