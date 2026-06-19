@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magnetic Field Around A Current / Charge | Physics Code 6091</title>
+  <meta name="description" content="An interactive simulation of the magnetic field around a straight current-carrying wire, designed for GCE O-Level Physics syllabus 6091.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="logo-area">
+        <span class="badge">PHYSICS 6091</span>
+        <h1>Magnetic Field Around A Current / Charge</h1>
+      </div>
+      <div class="subtitle">Interactive Electromagnetism Lab</div>
+    </header>
+
+    <main class="app-workspace">
+      <!-- LEFT SIDE: ANIMATION CANVAS -->
+      <section class="canvas-section">
+        <div class="canvas-card">
+          <div class="canvas-header">
+            <div class="canvas-title">
+              <span class="pulse-dot"></span>
+              <span id="view-mode-title">3D Perspective View</span>
+            </div>
+            <div class="canvas-actions">
+              <button id="btn-toggle-view" class="btn btn-secondary">Switch to 2D Cross-Section</button>
+            </div>
+          </div>
+          
+          <div class="canvas-wrapper">
+            <canvas id="physics-canvas"></canvas>
+            
+            <!-- Floating indicator overlays -->
+            <div class="canvas-overlay bottom-left">
+              <div class="legend-item"><span class="legend-color conventional"></span>Conventional Current (+)</div>
+              <div class="legend-item"><span class="legend-color electron"></span>Electron Flow (-)</div>
+              <div class="legend-item"><span class="legend-color magnetic"></span>Magnetic Field Lines</div>
+            </div>
+            
+            <div class="canvas-overlay top-right">
+              <div class="compass-rose" id="compass-overlay">
+                Right-Hand Grip Rule Active
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT SIDE: CONTROLS & DESCRIPTION -->
+      <section class="controls-section">
+        <div class="control-card">
+          <h2>Simulation Controls</h2>
+          
+          <div class="control-group">
+            <label class="control-label">Current Direction</label>
+            <div class="toggle-button-group">
+              <input type="radio" id="dir-up" name="current-direction" value="up" checked>
+              <label for="dir-up" class="toggle-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                Upwards / Out of Page
+              </label>
+              
+              <input type="radio" id="dir-down" name="current-direction" value="down">
+              <label for="dir-down" class="toggle-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                Downwards / Into Page
+              </label>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Flow Representation</label>
+            <div class="toggle-button-group">
+              <input type="radio" id="flow-conventional" name="flow-type" value="conventional" checked>
+              <label for="flow-conventional" class="toggle-btn">Conventional Current</label>
+              
+              <input type="radio" id="flow-electron" name="flow-type" value="electron">
+              <label for="flow-electron" class="toggle-btn">Electron Flow</label>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="slider-header">
+              <label class="control-label">Current Magnitude</label>
+              <span id="magnitude-val" class="slider-val">2.0 A</span>
+            </div>
+            <input type="range" id="current-magnitude" min="0" max="5" step="0.1" value="2.0" class="custom-slider">
+            <div class="slider-ticks">
+              <span>0 (Off)</span>
+              <span>1</span>
+              <span>2</span>
+              <span>3</span>
+              <span>4</span>
+              <span>5 (Max)</span>
+            </div>
+          </div>
+
+          <div class="control-group border-top">
+            <label class="control-label">3D Field Planes Stack</label>
+            <div class="toggle-button-group">
+              <input type="radio" id="planes-one" name="field-planes" value="1" checked>
+              <label for="planes-one" class="toggle-btn">1 Plane</label>
+              
+              <input type="radio" id="planes-ten" name="field-planes" value="10">
+              <label for="planes-ten" class="toggle-btn">10 Planes</label>
+            </div>
+          </div>
+
+          <div class="control-group border-top">
+            <label class="control-label">Helper Guides</label>
+            <div class="checkbox-group">
+              <label class="checkbox-container">
+                <input type="checkbox" id="show-hand-rule" checked>
+                <span class="checkmark"></span>
+                Show Right-Hand Grip Guide
+              </label>
+              <label class="checkbox-container">
+                <input type="checkbox" id="show-field-dots" checked>
+                <span class="checkmark"></span>
+                Show Field Intensity Glow
+              </label>
+              <label class="checkbox-container">
+                <input type="checkbox" id="show-field-direction" checked>
+                <span class="checkmark"></span>
+                Show Field Direction (Arrows)
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- EDUCATIONAL GUIDANCE CARD -->
+        <div class="info-card">
+          <h3>The Right-Hand Grip Rule</h3>
+          <p>For a straight current-carrying wire, point your <strong>right thumb</strong> in the direction of the <strong>conventional current</strong>. Your <strong>curled fingers</strong> will point in the direction of the <strong>magnetic field lines</strong>.</p>
+          <div class="syllabus-tip">
+            <strong>O-Level Syllabus Tip (6091):</strong>
+            <ul>
+              <li>Field lines are <strong>concentric circles</strong> centered on the wire.</li>
+              <li>Spacing increases as you move further away, representing a weaker field.</li>
+              <li>Reversing current direction reverses the field direction.</li>
+              <li>Increasing current increases field strength (denser lines).</li>
+            </ul>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="app.js"></script>
+  </body>
+  </html>
