@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Converging Lens – O-Level Physics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- Confetti library for celebrations -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="logo">
+        <span class="neon-cyan">Lens</span><span class="neon-yellow">Lab</span>
+      </div>
+      <p class="tagline">O-Level Physics (Syllabus 6091)</p>
+    </header>
+
+    <nav class="app-nav">
+      <button class="nav-btn active" data-section="intro">Intro</button>
+      <button class="nav-btn" data-section="explore">Explore</button>
+      <button class="nav-btn" data-section="examples">Examples</button>
+      <button class="nav-btn" data-section="flashcards">Review</button>
+      <button class="nav-btn" data-section="quiz">Quiz</button>
+    </nav>
+
+    <main class="app-main">
+      <!-- SECTION 1: CONCEPT INTRO -->
+      <section id="intro" class="app-section active">
+        <div class="card">
+          <h2>Converging Lens Behavior</h2>
+          <p class="section-desc">A converging lens bends parallel light rays inward to meet at a single focal point.</p>
+          <div class="animation-container">
+            <svg id="intro-svg" viewBox="0 0 600 250">
+              <!-- Principal Axis -->
+              <line x1="20" y1="125" x2="580" y2="125" class="axis-line" stroke-dasharray="4 4" />
+              <!-- Focal Points -->
+              <circle cx="150" cy="125" r="4" class="focus-point" />
+              <text x="150" y="145" class="label-text">f</text>
+              <circle cx="450" cy="125" r="4" class="focus-point" />
+              <text x="450" y="145" class="label-text">f</text>
+              
+              <!-- Lens Plane (Vertical line indicator) -->
+              <line x1="300" y1="20" x2="300" y2="230" stroke="rgba(0, 229, 255, 0.2)" stroke-width="2" />
+              
+              <!-- Lens Shape -->
+              <path d="M 300 20 Q 325 125 300 230 Q 275 125 300 20 Z" class="lens-shape" />
+              
+              <!-- Light Rays (animated in CSS) -->
+              <g class="ray-group">
+                <!-- Top Ray -->
+                <path d="M 20 50 L 300 50 L 450 125 L 580 190" class="ray-line ray-top" />
+                <!-- Mid-Top Ray -->
+                <path d="M 20 85 L 300 85 L 450 125 L 580 158.75" class="ray-line ray-mid-top" />
+                <!-- Center Ray -->
+                <path d="M 20 125 L 580 125" class="ray-line ray-center" stroke-dasharray="none" />
+                <!-- Mid-Bottom Ray -->
+                <path d="M 20 165 L 300 165 L 450 125 L 580 91.25" class="ray-line ray-mid-bottom" />
+                <!-- Bottom Ray -->
+                <path d="M 20 200 L 300 200 L 450 125 L 580 60" class="ray-line ray-bottom" />
+              </g>
+
+              <!-- Focal Length Bracket / Label -->
+              <path d="M 300 155 L 300 165 M 300 160 L 450 160 M 450 155 L 450 165" class="dimension-line" />
+              <text x="375" y="180" class="label-text dimension-label">Focal Length (f)</text>
+            </svg>
+          </div>
+          <div class="quick-facts">
+            <div class="fact-box">
+              <span class="fact-icon">🔍</span>
+              <span><strong>Focal Length (f):</strong> The distance from the optical center to the focal point.</span>
+            </div>
+            <div class="fact-box">
+              <span class="fact-icon">🔆</span>
+              <span><strong>Converging action:</strong> Thicker in the middle than at the edges.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: INTERACTIVE EXPLORATION -->
+      <section id="explore" class="app-section">
+        <div class="tabs-header">
+          <button class="tab-btn active" data-tab="slider-mode">Slider Mode</button>
+          <button class="tab-btn" data-tab="drag-mode">Drag-to-Construct</button>
+        </div>
+
+        <!-- Tab A: Slider Mode -->
+        <div id="slider-mode" class="tab-content active">
+          <div class="card">
+            <div class="interactive-panel">
+              <div class="svg-wrapper">
+                <svg id="slider-svg" viewBox="0 0 800 350">
+                  <defs>
+                    <marker id="arrow-head" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+                      <path d="M0,0 L6,3 L0,6 Z" fill="#ffd600" />
+                    </marker>
+                    <marker id="arrow-head-inverted" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+                      <path d="M0,0 L6,3 L0,6 Z" fill="#00e5ff" />
+                    </marker>
+                  </defs>
+                  
+                  <!-- Principal Axis -->
+                  <line x1="20" y1="175" x2="780" y2="175" class="axis-line" stroke-dasharray="4 4" />
+                  
+                  <!-- Key reference points on axis -->
+                  <!-- Left side -->
+                  <circle cx="200" cy="175" r="4" class="focus-point" />
+                  <text x="200" y="195" class="label-text">2f</text>
+                  
+                  <circle cx="300" cy="175" r="4" class="focus-point" />
+                  <text x="300" y="195" class="label-text">f</text>
+                  
+                  <!-- Optical Center -->
+                  <circle cx="400" cy="175" r="4" class="focus-point center-point" />
+                  <text x="400" y="195" class="label-text">C</text>
+
+                  <!-- Right side -->
+                  <circle cx="500" cy="175" r="4" class="focus-point" />
+                  <text x="500" y="195" class="label-text">f</text>
+                  
+                  <circle cx="600" cy="175" r="4" class="focus-point" />
+                  <text x="600" y="195" class="label-text">2f</text>
+
+                  <!-- Lens -->
+                  <line x1="400" y1="30" x2="400" y2="320" stroke="rgba(0, 229, 255, 0.15)" stroke-width="2" />
+                  <path d="M 400 30 Q 420 175 400 320 Q 380 175 400 30 Z" class="lens-shape" />
+
+                  <!-- Rays Group -->
+                  <g id="slider-rays"></g>
+
+                  <!-- Object (Interactive / Dynamic) -->
+                  <g id="slider-object"></g>
+
+                  <!-- Image (Dynamic) -->
+                  <g id="slider-image"></g>
+                </svg>
+              </div>
+
+              <div class="control-box">
+                <label for="u-slider" class="slider-label">
+                  <span>Object Position:</span>
+                  <span id="slider-u-val" class="neon-yellow">u = 2f</span>
+                </label>
+                <input type="range" id="u-slider" min="50" max="380" value="200" class="neon-slider">
+                
+                <div class="zone-badge" id="slider-zone-badge">Zone: u = 2f</div>
+              </div>
+            </div>
+
+            <!-- Image Characteristics Stats Card -->
+            <div class="stats-grid">
+              <div class="stat-card">
+                <span class="stat-title">Nature</span>
+                <span class="stat-val neon-cyan" id="stat-nature">Real</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-title">Orientation</span>
+                <span class="stat-val neon-cyan" id="stat-orientation">Inverted</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-title">Size</span>
+                <span class="stat-val neon-cyan" id="stat-size">Same Size</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab B: Drag-to-Construct Mode -->
+        <div id="drag-mode" class="tab-content">
+          <div class="card">
+            <div class="drag-instructions">
+              <span id="drag-task-text">Draw the construction rays for the object shown below.</span>
+              <div class="drag-controls-top">
+                <button id="btn-hint" class="action-btn secondary-btn">💡 Hint</button>
+                <button id="btn-reset-drag" class="action-btn secondary-btn">🔄 Reset</button>
+              </div>
+            </div>
+
+            <div class="interactive-panel">
+              <div class="svg-wrapper" style="position: relative;">
+                <svg id="drag-svg" viewBox="0 0 800 350">
+                  <!-- Bench and Lens Elements (same as slider) -->
+                  <line x1="20" y1="175" x2="780" y2="175" class="axis-line" stroke-dasharray="4 4" />
+                  
+                  <circle cx="200" cy="175" r="4" class="focus-point" />
+                  <text x="200" y="195" class="label-text">2f</text>
+                  <circle cx="300" cy="175" r="4" class="focus-point" />
+                  <text x="300" y="195" class="label-text">f</text>
+                  <circle cx="400" cy="175" r="4" class="focus-point center-point" />
+                  <text x="400" y="195" class="label-text">C</text>
+                  <circle cx="500" cy="175" r="4" class="focus-point" />
+                  <text x="500" y="195" class="label-text">f</text>
+                  <circle cx="600" cy="175" r="4" class="focus-point" />
+                  <text x="600" y="195" class="label-text">2f</text>
+                  
+                  <line x1="400" y1="30" x2="400" y2="320" stroke="rgba(0, 229, 255, 0.15)" stroke-width="2" />
+                  <path d="M 400 30 Q 420 175 400 320 Q 380 175 400 30 Z" class="lens-shape" />
+
+                  <!-- Object -->
+                  <g id="drag-object"></g>
+
+                  <!-- Dynamic feedback elements -->
+                  <g id="drag-feedback-rays"></g>
+
+                  <!-- Active drawing line -->
+                  <line id="active-draw-line" class="draw-line-temp" x1="0" y1="0" x2="0" y2="0" stroke="#00e5ff" stroke-width="3" stroke-dasharray="5 5" display="none" />
+                  
+                  <!-- Target hotspots for dragging/snapping -->
+                  <g id="drag-hotspots"></g>
+                  
+                  <!-- Resulting image (revealed on success) -->
+                  <g id="drag-result-image" display="none"></g>
+                </svg>
+              </div>
+
+              <div class="drag-guide-box">
+                <p><strong>How to draw:</strong></p>
+                <ul class="guide-list">
+                  <li><strong>Ray 1 (Parallel Ray):</strong> Click & drag from the object tip horizontally to the Lens plane, then drag from there down through the right Focus (f).</li>
+                  <li><strong>Ray 2 (Optical Center Ray):</strong> Click & drag from the object tip directly through the Optical Center (C).</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: WORKED EXAMPLES -->
+      <section id="examples" class="app-section">
+        <div class="card">
+          <h2>Step-by-Step Construction</h2>
+          <div class="example-selector">
+            <button class="ex-btn active" data-ex="1">1. Object beyond 2f (u &gt; 2f)</button>
+            <button class="ex-btn" data-ex="2">2. Object between f and 2f (f &lt; u &lt; 2f)</button>
+            <button class="ex-btn" data-ex="3">3. Object within f (u &lt; f)</button>
+          </div>
+
+          <div class="example-content">
+            <div class="svg-wrapper">
+              <svg id="example-svg" viewBox="0 0 800 350">
+                <line x1="20" y1="175" x2="780" y2="175" class="axis-line" stroke-dasharray="4 4" />
+                <circle cx="200" cy="175" r="4" class="focus-point" />
+                <text x="200" y="195" class="label-text">2f</text>
+                <circle cx="300" cy="175" r="4" class="focus-point" />
+                <text x="300" y="195" class="label-text">f</text>
+                <circle cx="400" cy="175" r="4" class="focus-point center-point" />
+                <text x="400" y="195" class="label-text">C</text>
+                <circle cx="500" cy="175" r="4" class="focus-point" />
+                <text x="500" y="195" class="label-text">f</text>
+                <circle cx="600" cy="175" r="4" class="focus-point" />
+                <text x="600" y="195" class="label-text">2f</text>
+                
+                <line x1="400" y1="30" x2="400" y2="320" stroke="rgba(0, 229, 255, 0.15)" stroke-width="2" />
+                <path d="M 400 30 Q 420 175 400 320 Q 380 175 400 30 Z" class="lens-shape" />
+
+                <!-- Example Object / Rays / Image dynamically populated by step -->
+                <g id="ex-elements"></g>
+              </svg>
+            </div>
+
+            <div class="step-controls">
+              <div class="step-indicator">Step <span id="current-step-num">1</span> of <span id="total-steps-num">4</span></div>
+              <div class="step-desc" id="step-description">Position the object beyond 2f.</div>
+              <div class="step-buttons">
+                <button id="btn-prev-step" class="action-btn secondary-btn" disabled>Back</button>
+                <button id="btn-next-step" class="action-btn primary-btn">Next Step</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: FLASHCARDS -->
+      <section id="flashcards" class="app-section">
+        <div class="card flashcard-container">
+          <div class="flashcard-controls-top" style="justify-content: flex-end;">
+            <span id="card-progress">1 / 9</span>
+          </div>
+
+          <div class="flashcard" id="active-card">
+            <div class="flashcard-inner">
+              <div class="flashcard-front">
+                <div class="card-category" id="card-cat-front">Definition</div>
+                <div class="card-question" id="card-q">What is the focal length of a lens?</div>
+                <div class="tap-hint">Tap to flip</div>
+              </div>
+              <div class="flashcard-back">
+                <div class="card-category" id="card-cat-back">Definition</div>
+                <div class="card-answer" id="card-a">The distance between the optical center of the lens and its focal point.</div>
+                <div class="tap-hint">Tap to flip back</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flashcard-actions">
+            <button id="btn-prev-card" class="action-btn secondary-btn">← Prev</button>
+            <button id="btn-shuffle-cards" class="action-btn secondary-btn">Shuffle Cards</button>
+            <button id="btn-next-card" class="action-btn secondary-btn">Next →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5: QUIZ -->
+      <section id="quiz" class="app-section">
+        <!-- Quiz Landing Card -->
+        <div class="card" id="quiz-landing">
+          <h2>Revision Challenge</h2>
+          <p class="section-desc">Test your understanding of Converging Lens concepts and Ray Diagram properties.</p>
+          <div class="quiz-summary-box">
+            <p>📝 <strong>30-Question Pool</strong></p>
+            <p>🎯 Multiple Choice & True/False questions</p>
+            <p>✨ Detailed worked solutions with ray diagrams for every question</p>
+          </div>
+          <button id="btn-start-quiz" class="action-btn primary-btn large-btn">Start Quiz</button>
+        </div>
+
+        <!-- Active Quiz Card -->
+        <div class="card" id="quiz-active" style="display: none;">
+          <div class="quiz-header">
+            <span id="quiz-progress">Question 1 of 10</span>
+            <span id="quiz-score">Score: 0</span>
+          </div>
+
+          <div class="quiz-question-box">
+            <div id="quiz-question-text" class="question-text">Question loading...</div>
+            <div id="quiz-diagram-wrapper" class="svg-wrapper" style="display: none;">
+              <!-- Mini SVG for displaying diagnostic diagrams during quiz -->
+              <svg id="quiz-svg" viewBox="0 0 600 250">
+                <line x1="20" y1="125" x2="580" y2="125" class="axis-line" stroke-dasharray="4 4" />
+                <circle cx="150" cy="125" r="4" class="focus-point" />
+                <text x="150" y="145" class="label-text">2f</text>
+                <circle cx="225" cy="125" r="4" class="focus-point" />
+                <text x="225" y="145" class="label-text">f</text>
+                <circle cx="300" cy="125" r="4" class="focus-point center-point" />
+                <text x="300" y="145" class="label-text">C</text>
+                <circle cx="375" cy="125" r="4" class="focus-point" />
+                <text x="375" y="145" class="label-text">f</text>
+                <circle cx="450" cy="125" r="4" class="focus-point" />
+                <text x="450" y="145" class="label-text">2f</text>
+                
+                <line x1="300" y1="20" x2="300" y2="230" stroke="rgba(0, 229, 255, 0.15)" stroke-width="2" />
+                <path d="M 300 20 Q 320 125 300 230 Q 280 125 300 20 Z" class="lens-shape" />
+                <g id="quiz-diagram-elements"></g>
+              </svg>
+            </div>
+          </div>
+
+          <div class="quiz-options" id="quiz-options-container">
+            <!-- Option buttons injected here -->
+          </div>
+
+          <!-- Worked Solution (Revealed on submission) -->
+          <div id="quiz-solution-box" class="solution-box" style="display: none;">
+            <div id="quiz-solution-status" class="solution-status">Correct!</div>
+            <div id="quiz-solution-text" class="solution-text">Solution details...</div>
+            
+            <div class="svg-wrapper quiz-sol-svg-wrapper">
+              <svg id="quiz-solution-svg" viewBox="0 0 600 220">
+                <line x1="20" y1="110" x2="580" y2="110" class="axis-line" stroke-dasharray="4 4" />
+                <circle cx="150" cy="110" r="4" class="focus-point" />
+                <text x="150" y="130" class="label-text">2f</text>
+                <circle cx="225" cy="110" r="4" class="focus-point" />
+                <text x="225" y="130" class="label-text">f</text>
+                <circle cx="300" cy="110" r="4" class="focus-point center-point" />
+                <text x="300" y="130" class="label-text">C</text>
+                <circle cx="375" cy="110" r="4" class="focus-point" />
+                <text x="375" y="130" class="label-text">f</text>
+                <circle cx="450" cy="110" r="4" class="focus-point" />
+                <text x="450" y="130" class="label-text">2f</text>
+                <line x1="300" y1="15" x2="300" y2="205" stroke="rgba(0, 229, 255, 0.15)" stroke-width="2" />
+                <path d="M 300 15 Q 320 110 300 205 Q 280 110 300 15 Z" class="lens-shape" />
+                <g id="quiz-solution-diagram-elements"></g>
+              </svg>
+            </div>
+            
+            <button id="btn-next-question" class="action-btn primary-btn">Continue</button>
+          </div>
+        </div>
+
+        <!-- Quiz Results Card -->
+        <div class="card" id="quiz-results" style="display: none;">
+          <h2>Your Results</h2>
+          <div class="results-score-circle">
+            <span id="results-score-percent">80%</span>
+          </div>
+          <div id="results-grade-feedback" class="results-grade-feedback">Excellent! You've mastered Converging Lens Concepts!</div>
+          <p id="results-score-raw">You scored 8 out of 10.</p>
+          <div class="results-buttons">
+            <button id="btn-restart-quiz" class="action-btn primary-btn">Try Again</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
