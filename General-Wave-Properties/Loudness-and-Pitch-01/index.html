@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loudness, Pitch & Waves | O-Level Physics</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-logo">
+        <span class="logo-icon">🔊</span>
+        <div>
+          <h1>Acoustics Lab</h1>
+          <p class="subtitle">O-Level Physics 6091</p>
+        </div>
+      </div>
+      <nav class="app-nav" id="appNav">
+        <button class="nav-tab active" data-section="section1" id="tab-sec1">
+          <span class="tab-num">01</span>
+          <span class="tab-label">Intro</span>
+        </button>
+        <button class="nav-tab" data-section="section2" id="tab-sec2">
+          <span class="tab-num">02</span>
+          <span class="tab-label">Explore</span>
+        </button>
+        <button class="nav-tab" data-section="section3" id="tab-sec3">
+          <span class="tab-num">03</span>
+          <span class="tab-label">Match</span>
+        </button>
+        <button class="nav-tab" data-section="section4" id="tab-sec4">
+          <span class="tab-num">04</span>
+          <span class="tab-label">Flashcards</span>
+        </button>
+        <button class="nav-tab" data-section="section5" id="tab-sec5">
+          <span class="tab-num">05</span>
+          <span class="tab-label">Quiz</span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- SECTION 1: CONCEPT INTRODUCTION -->
+      <section id="section1" class="app-section active">
+        <div class="section-card">
+          <div class="card-header">
+            <span class="badge">Topic Overview</span>
+            <h2>How Sound Waves Work</h2>
+            <p>Sound travels as longitudinal waves. We represent them visually using transverse waveform diagrams to analyze their amplitude and frequency.</p>
+          </div>
+          
+          <div class="intro-grid">
+            <!-- Loudness vs Amplitude comparison -->
+            <div class="intro-panel">
+              <h3>Loudness & Amplitude</h3>
+              <p class="panel-desc">Both waves have the same frequency, but different heights (amplitudes).</p>
+              
+              <div class="wave-comparison-box">
+                <div class="wave-item">
+                  <div class="wave-canvas-wrapper">
+                    <canvas id="introWaveLoud" width="300" height="120"></canvas>
+                  </div>
+                  <span class="wave-tag loud-tag">LOUD (Large Amplitude)</span>
+                </div>
+                <div class="wave-item">
+                  <div class="wave-canvas-wrapper">
+                    <canvas id="introWaveSoft" width="300" height="120"></canvas>
+                  </div>
+                  <span class="wave-tag soft-tag">SOFT (Small Amplitude)</span>
+                </div>
+              </div>
+              
+              <div class="rule-box">
+                <span class="rule-icon">💡</span>
+                <p><strong>Amplitude</strong> relates to <strong>Loudness</strong>. Larger amplitude = Louder sound.</p>
+              </div>
+            </div>
+            
+            <!-- Pitch vs Frequency comparison -->
+            <div class="intro-panel">
+              <h3>Pitch & Frequency</h3>
+              <p class="panel-desc">Both waves have the same height, but different cycle spacings (frequencies).</p>
+              
+              <div class="wave-comparison-box">
+                <div class="wave-item">
+                  <div class="wave-canvas-wrapper">
+                    <canvas id="introWaveHigh" width="300" height="120"></canvas>
+                  </div>
+                  <span class="wave-tag pitch-high-tag">HIGH PITCH (High Frequency)</span>
+                </div>
+                <div class="wave-item">
+                  <div class="wave-canvas-wrapper">
+                    <canvas id="introWaveLow" width="300" height="120"></canvas>
+                  </div>
+                  <span class="wave-tag pitch-low-tag">LOW PITCH (Low Frequency)</span>
+                </div>
+              </div>
+              
+              <div class="rule-box">
+                <span class="rule-icon">💡</span>
+                <p><strong>Frequency</strong> relates to <strong>Pitch</strong>. Higher frequency = Higher pitch.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-footer">
+            <button class="btn btn-primary next-section-btn" data-next="section2">
+              Start Exploring <span class="arrow">→</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: INTERACTIVE EXPLORATION -->
+      <section id="section2" class="app-section">
+        <div class="section-card">
+          <div class="card-header">
+            <span class="badge">Interactive Lab</span>
+            <h2>Visual Oscilloscope</h2>
+            <p>Adjust the sliders to see how amplitude and frequency modify the waveform in real time.</p>
+          </div>
+
+          <div class="oscilloscope-container">
+            <!-- Screen -->
+            <div class="scope-screen-wrapper">
+              <div class="scope-header-readout">
+                <span class="scope-indicator">LIVE MONITOR</span>
+                <div class="scope-readouts">
+                  <div class="readout-item">
+                    <span class="readout-label">LOUDNESS:</span>
+                    <span id="readoutLoudness" class="readout-value">Moderate</span>
+                  </div>
+                  <div class="readout-item">
+                    <span class="readout-label">PITCH:</span>
+                    <span id="readoutPitch" class="readout-value">Medium</span>
+                  </div>
+                </div>
+              </div>
+              <div class="scope-screen">
+                <canvas id="oscilloscopeCanvas"></canvas>
+                <div class="grid-overlay"></div>
+              </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="scope-controls">
+              <div class="control-group">
+                <div class="control-header">
+                  <label for="amplitudeSlider">Amplitude (Loudness)</label>
+                  <span id="amplitudeVal" class="control-value">50%</span>
+                </div>
+                <div class="slider-wrapper">
+                  <span class="slider-hint">Soft</span>
+                  <input type="range" id="amplitudeSlider" min="5" max="80" value="40" class="scope-slider">
+                  <span class="slider-hint">Loud</span>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <div class="control-header">
+                  <label for="frequencySlider">Frequency (Pitch)</label>
+                  <span id="frequencyVal" class="control-value">1.5 Hz</span>
+                </div>
+                <div class="slider-wrapper">
+                  <span class="slider-hint">Low Pitch</span>
+                  <input type="range" id="frequencySlider" min="0.5" max="5.0" step="0.1" value="2.0" class="scope-slider">
+                  <span class="slider-hint">High Pitch</span>
+                </div>
+              </div>
+              
+              <div class="scope-summary-card">
+                <p id="scopeSummaryText">A sound wave with moderate amplitude and medium frequency.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-footer">
+            <button class="btn btn-secondary prev-section-btn" data-prev="section1">← Back</button>
+            <button class="btn btn-primary next-section-btn" data-next="section3">
+              Play Matching Game <span class="arrow">→</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: DRAG-AND-DROP WAVEFORM MATCHING -->
+      <section id="section3" class="app-section">
+        <div class="section-card">
+          <div class="card-header">
+            <span class="badge">Challenge Game</span>
+            <h2>Waveform Matcher</h2>
+            <p>Match the physical descriptions to the correct waveform diagrams. Drag the descriptions onto the wave boxes, or click a card then click a slot to match.</p>
+          </div>
+
+          <div class="matching-game-wrapper">
+            <!-- Descriptors (Draggables) -->
+            <div class="draggables-container" id="draggablesContainer">
+              <!-- Draggables will be dynamically generated and shuffled here -->
+            </div>
+
+            <!-- Targets (Dropzones) -->
+            <div class="targets-grid" id="targetsGrid">
+              <!-- Grid items will be dynamically generated here -->
+            </div>
+            
+            <div class="game-actions">
+              <button class="btn btn-secondary" id="resetGameBtn">Reset Game</button>
+              <button class="btn btn-accent" id="checkGameBtn">Check All Matches</button>
+            </div>
+
+            <div class="game-feedback-banner" id="gameFeedbackBanner"></div>
+          </div>
+
+          <div class="section-footer">
+            <button class="btn btn-secondary prev-section-btn" data-prev="section2">← Back</button>
+            <button class="btn btn-primary next-section-btn" data-next="section4">
+              Review Flashcards <span class="arrow">→</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: FLASHCARD REVISION MODE -->
+      <section id="section4" class="app-section">
+        <div class="section-card">
+          <div class="card-header">
+            <span class="badge">Revision Deck</span>
+            <h2>Key Concepts Flashcards</h2>
+            <p>Tap a card to flip it and reveal the explanation. Swipe left or right (or use navigation buttons) to browse the deck.</p>
+          </div>
+
+          <div class="flashcard-deck-wrapper">
+            <div class="flashcard-carousel">
+              <button class="carousel-control prev" id="prevCardBtn" aria-label="Previous card">‹</button>
+              
+              <div class="flashcard-container" id="flashcardContainer">
+                <div class="flashcard" id="flashcard">
+                  <div class="flashcard-front">
+                    <div class="card-content">
+                      <!-- Front content populated dynamically -->
+                    </div>
+                    <div class="tap-hint">Tap to Flip</div>
+                  </div>
+                  <div class="flashcard-back">
+                    <div class="card-content">
+                      <!-- Back content populated dynamically -->
+                    </div>
+                    <div class="tap-hint">Tap to Flip back</div>
+                  </div>
+                </div>
+              </div>
+
+              <button class="carousel-control next" id="nextCardBtn" aria-label="Next card">›</button>
+            </div>
+
+            <div class="deck-controls">
+              <div class="deck-progress">
+                Card <span id="currentCardIndex">1</span> of <span id="totalCardsCount">4</span>
+              </div>
+              <button class="btn btn-secondary" id="shuffleCardsBtn">🔀 Shuffle Deck</button>
+            </div>
+          </div>
+
+          <div class="section-footer">
+            <button class="btn btn-secondary prev-section-btn" data-prev="section3">← Back</button>
+            <button class="btn btn-primary next-section-btn" data-next="section5">
+              Take the Quiz <span class="arrow">→</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5: RANDOMISED QUIZ -->
+      <section id="section5" class="app-section">
+        <div class="section-card" id="quizCard">
+          <div class="card-header quiz-header-flex">
+            <div>
+              <span class="badge">O-Level Prep</span>
+              <h2>Test Your Understanding</h2>
+            </div>
+            <div class="quiz-timer-score">
+              <div class="quiz-tracker">Question <span id="quizCurrentNum">0</span> of <span id="quizTotalNum">10</span></div>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="quiz-progress-wrapper">
+            <div class="quiz-progress-bar" id="quizProgressBar" style="width: 0%"></div>
+          </div>
+
+          <!-- Quiz Start View -->
+          <div class="quiz-start-view" id="quizStartView">
+            <div class="quiz-intro-content">
+              <span class="quiz-large-icon">📝</span>
+              <h3>Ready for the acoustics challenge?</h3>
+              <p>Test your knowledge with 8 randomized conceptual and diagram-based questions drawn from our test pool. Aim for 80% or above to pass!</p>
+              <button class="btn btn-primary btn-large" id="startQuizBtn">Start Assessment</button>
+            </div>
+          </div>
+
+          <!-- Quiz Question View -->
+          <div class="quiz-question-view hidden" id="quizQuestionView">
+            <div class="question-container">
+              <h3 id="questionText">Question Content</h3>
+              
+              <!-- Dynamic graphics/waveform rendering if needed for comparison/identification questions -->
+              <div id="questionGraphicContainer" class="question-graphic-container hidden">
+                <!-- Canvases/SVGs will be generated here -->
+              </div>
+              
+              <!-- Options List -->
+              <div class="quiz-options" id="quizOptions">
+                <!-- Options populated dynamically -->
+              </div>
+            </div>
+
+            <!-- Quiz Navigation / Feedback -->
+            <div class="quiz-feedback hidden" id="quizFeedback">
+              <div class="feedback-indicator">
+                <span id="feedbackIcon" class="feedback-icon"></span>
+                <span id="feedbackTitle" class="feedback-title">Correct!</span>
+              </div>
+              <p id="feedbackExplanation" class="feedback-explanation">Explanation goes here.</p>
+              <button class="btn btn-accent" id="nextQuestionBtn">Next Question</button>
+            </div>
+          </div>
+
+          <!-- Quiz Score View -->
+          <div class="quiz-score-view hidden" id="quizScoreView">
+            <div class="score-results-wrapper">
+              <div class="score-animation-container">
+                <div class="radial-progress">
+                  <svg class="radial-svg" viewBox="0 0 120 120">
+                    <circle class="radial-bg" cx="60" cy="60" r="50"></circle>
+                    <circle class="radial-fill" id="scoreRadialFill" cx="60" cy="60" r="50"></circle>
+                  </svg>
+                  <div class="radial-text">
+                    <span id="scorePercentage">0%</span>
+                    <span class="score-fraction" id="scoreFraction">0/10</span>
+                  </div>
+                </div>
+              </div>
+
+              <h3 id="scoreGradeMessage">Grade message</h3>
+              <p id="scoreSubMessage">Detail description</p>
+
+              <!-- Topic Breakdown -->
+              <div class="performance-breakdown">
+                <h4>Topic Mastery Breakdown</h4>
+                <div class="breakdown-item">
+                  <div class="breakdown-header">
+                    <span>Loudness & Amplitude</span>
+                    <span id="masteryLoudnessPct">0%</span>
+                  </div>
+                  <div class="breakdown-bar-bg">
+                    <div class="breakdown-bar-fill" id="masteryLoudnessBar"></div>
+                  </div>
+                </div>
+                <div class="breakdown-item">
+                  <div class="breakdown-header">
+                    <span>Pitch & Frequency</span>
+                    <span id="masteryPitchPct">0%</span>
+                  </div>
+                  <div class="breakdown-bar-bg">
+                    <div class="breakdown-bar-fill" id="masteryPitchBar"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="score-actions">
+                <button class="btn btn-secondary" id="restartQuizBtn">Retake Quiz</button>
+                <button class="btn btn-primary" id="returnToStudyBtn">Review Concepts</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="app-footer">
+      <p>&copy; 2026 Singapore O-Level Physics Acoustics Lab. Colour-blind friendly interactive tool.</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
