@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solenoid Right-Hand Grip Rule Simulator</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #0b0f19;
+            color: #f1f5f9;
+            font-family: system-ui, -apple-system, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 100%;
+            max-width: 650px;
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            padding: 20px;
+            box-sizing: border-box;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        h1 {
+            font-size: 1.2rem;
+            margin: 0 0 5px 0;
+            text-align: center;
+            color: #06b6d4;
+        }
+        p.subtitle {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin: 0 0 20px 0;
+        }
+        canvas {
+            width: 100%;
+            background: #070a12;
+            border-radius: 12px;
+            border: 1px solid #1e293b;
+            margin-bottom: 20px;
+            display: block;
+        }
+        .control-group {
+            margin-bottom: 16px;
+        }
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        input[type="range"] {
+            width: 100%;
+            accent-color: #06b6d4;
+            background: #1f2937;
+            height: 6px;
+            border-radius: 3px;
+            outline: none;
+        }
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            background: #1f2937;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #374151;
+        }
+        .toggle-container label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-left: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .toggle-input {
+            width: 18px;
+            height: 18px;
+            accent-color: #ef4444;
+            cursor: pointer;
+        }
+        .perf-monitor {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Solenoid Right-Hand Grip Rule Simulator</h1>
+    <p class="subtitle">Field arrows scale, trace, and reverse dynamically with physics orientation</p>
+    
+    <canvas id="contourCanvas" width="600" height="360"></canvas>
+
+    <div class="toggle-container">
+        <input type="checkbox" id="reverseToggle" class="toggle-input">
+        <label for="reverseToggle">Reverse Current Flow Polarity</label>
+    </div>
+
+    <div class="control-group">
+        <div class="control-label">
+            <span>Base Current Intensity</span>
+            <span id="currentVal" style="color: #f59e0b;">Level 3</span>
+        </div>
+        <input type="range" id="currentSlider" min="1" max="5" value="3">
+    </div>
+
+    <div class="control-group">
+        <div class="control-label">
+            <span>Number of Turns (Stretches Length)</span>
+            <span id="turnsVal" style="color: #06b6d4;">13 Coils</span>
+        </div>
+        <input type="range" id="turnsSlider" min="13" max="30" value="13">
+    </div>
+
+    <div class="perf-monitor" id="perfMonitor">Render Time: -- ms</div>
+</div>
+
+<script>
+    const canvas = document.getElementById('contourCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const currentSlider = document.getElementById('currentSlider');
+    const turnsSlider = document.getElementById('turnsSlider');
+    const reverseToggle = document.getElementById('reverseToggle');
+    const currentVal = document.getElementById('currentVal');
+    const turnsVal = document.getElementById('turnsVal');
+    const perfMonitor = document.getElementById('perfMonitor');
+
+    let currentLevel = 3;
+    let numLoops = 13;
+    let currentDirection = 1; 
+
+    const gridResX = 140;
+    const gridResY = 84;
+
+    function computeVectorPotential(x, y, loopPositions, radius) {
+        let A = 0;
+        const absY = Math.abs(y);
+        const signY = y < 0 ? -1 : 1;
+
+        for (let i = 0; i < loopPositions.length; i++) {
+            const dx = x - loopPositions[i];
+            const r2 = dx * dx + (absY + radius) * (absY + radius);
+            const dist = Math.sqrt(r2);
+            if (dist < 1) continue;
+
+            const numerator = radius * radius;
+            const denominator = Math.pow(dx * dx + radius * radius + absY * absY, 1.32);
+            A += numerator / denominator;
+        }
+        return A * absY * signY * currentDirection;
+    }
+
+    function drawArrow(ctx, fromX, fromY, toX, toY, color, size = 6) {
+        const dx = toX - fromX;
+        const dy = toY - fromY;
+        const angle = Math.atan2(dy, dx);
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(toX, toY);
+        ctx.lineTo(toX - size * Math.cos(angle - Math.PI / 6), toY - size * Math.sin(angle - Math.PI / 6));
+        ctx.lineTo(toX - size * Math.cos(angle + Math.PI / 6), toY - size * Math.sin(angle + Math.PI / 6));
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    function draw() {
+        const t0 = performance.now();
+
+        ctx.fillStyle = '#070a12';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        
+        const radius = 12; 
+        const solWidth = 140; 
+        const startX = centerX - solWidth / 2;
+        const loopSpacing = solWidth / (numLoops - 1);
+        
+        let loopPositions = [];
+        for (let i = 0; i < numLoops; i++) {
+            loopPositions.push(startX + (i * loopSpacing));
+        }
+
+        // Cache centered loop positions to avoid re-mapping inside the inner grid loop
+        const centeredLoopPositions = loopPositions.map(p => p - centerX);
+
+        // --- STEP 1: CALCULATE VECTOR FIELD SCALAR MATRIX ---
+        const grid = [];
+        for (let gx = 0; gx <= gridResX; gx++) {
+            grid[gx] = [];
+            const worldX = (gx / gridResX) * canvas.width;
+            for (let gy = 0; gy <= gridResY; gy++) {
+                const worldY = (gy / gridResY) * canvas.height;
+                grid[gx][gy] = computeVectorPotential(worldX - centerX, worldY - centerY, centeredLoopPositions, radius);
+            }
+        }
+
+        // --- STEP 2: EDGE CLIPPING GUARD DETECTION ---
+        let edgeMinPotential = Infinity;
+        for (let gx = 0; gx <= gridResX; gx++) {
+            const topVal = Math.abs(grid[gx][0]);
+            const bottomVal = Math.abs(grid[gx][gridResY]);
+            if (topVal < edgeMinPotential) edgeMinPotential = topVal;
+            if (bottomVal < edgeMinPotential) edgeMinPotential = bottomVal;
+        }
+        const safeLimit = edgeMinPotential * 1.25;
+
+        // --- STEP 3: CONTOUR STEP ARRAYS GENERATION ---
+        const generatedLinesCount = Math.floor(currentLevel * (numLoops / 4));
+        const targets = [];
+        const centerPeak = Math.abs(computeVectorPotential(0, radius * 0.5, centeredLoopPositions, radius));
+        
+        for (let l = 1; l <= generatedLinesCount; l++) {
+            const fraction = l / (generatedLinesCount + 0.5);
+            const targetVal = safeLimit + (centerPeak - safeLimit) * fraction;
+            targets.push(targetVal * currentDirection);
+            targets.push(-targetVal * currentDirection);
+        }
+
+        // --- STEP 4: ISOCONTOUR LINE EXTRACTION & ARROW INJECTION ---
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = '#a855f7';
+
+        const cellW = canvas.width / gridResX;
+        const cellH = canvas.height / gridResY;
+
+        // Generate 5 evenly spaced indices from the layer stack
+        let arrowCandidates = [];
+        const targetedArrowCount = 5;
+        
+        for (let k = 0; k < targetedArrowCount; k++) {
+            let idx = Math.floor((generatedLinesCount - 1) * (k / (targetedArrowCount - 1)));
+            if (idx < 0) idx = 0;
+            
+            // Isolate absolute potential scalar values safely to find them uniformly inside the loop
+            const absPotentialVal = Math.abs(targets[idx * 2]);
+            arrowCandidates.push({ absTarget: absPotentialVal, topSeg: null, botSeg: null });
+        }
+
+        targets.forEach(target => {
+            const absT = Math.abs(target);
+            const cand = arrowCandidates.find(c => Math.abs(c.absTarget - absT) < 0.00001);
+
+            for (let x = 0; x < gridResX; x++) {
+                const x0 = x * cellW;
+                const x1 = x0 + cellW;
+                for (let y = 0; y < gridResY; y++) {
+                    const y0 = y * cellH;
+                    const y1 = y0 + cellH;
+
+                    const v00 = grid[x][y];
+                    const v10 = grid[x+1][y];
+                    const v11 = grid[x+1][y+1];
+                    const v00_b = grid[x][y+1];
+
+                    let segments = [];
+
+                    function getIntersect(p1, p2, v1, v2) {
+                        return p1 + (target - v1) / (v2 - v1) * (p2 - p1);
+                    }
+
+                    if ((v00 >= target && v10 < target) || (v00 < target && v10 >= target)) {
+                        segments.push({x: getIntersect(x0, x1, v00, v10), y: y0});
+                    }
+                    if ((v10 >= target && v11 < target) || (v10 < target && v11 >= target)) {
+                        segments.push({x: x1, y: getIntersect(y0, y1, v10, v11)});
+                    }
+                    if ((v11 >= target && v00_b < target) || (v11 < target && v00_b >= target)) {
+                        segments.push({x: getIntersect(x1, x0, v11, v00_b), y: y1});
+                    }
+                    if ((v00_b >= target && v00 < target) || (v00_b < target && v00 >= target)) {
+                        segments.push({x: x0, y: getIntersect(y1, y0, v00_b, v00)});
+                    }
+
+                    if (segments.length >= 2) {
+                        ctx.beginPath();
+                        ctx.moveTo(segments[0].x, segments[0].y);
+                        ctx.lineTo(segments[1].x, segments[1].y);
+                        ctx.stroke();
+
+                        if (cand) {
+                            const segMidX = (segments[0].x + segments[1].x) / 2;
+                            const segMidY = (segments[0].y + segments[1].y) / 2;
+
+                            if (segMidY < centerY) {
+                                // Upper hemisphere tracking
+                                if (!cand.topSeg || Math.abs(segMidX - centerX) < Math.abs(((cand.topSeg[0].x + cand.topSeg[1].x)/2) - centerX)) {
+                                    cand.topSeg = [segments[0], segments[1]];
+                                }
+                            } else {
+                                // Lower hemisphere tracking
+                                if (!cand.botSeg || Math.abs(segMidX - centerX) < Math.abs(((cand.botSeg[0].x + cand.botSeg[1].x)/2) - centerX)) {
+                                    cand.botSeg = [segments[0], segments[1]];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // --- STEP 4b: DRAW CAPTURED MAGNETIC FIELD ARROWS ---
+        arrowCandidates.forEach(cand => {
+            // Render upper loop arrowheads (5 layers)
+            if (cand.topSeg) {
+                let p1 = cand.topSeg[0];
+                let p2 = cand.topSeg[1];
+                if (p1.x > p2.x) { const tmp = p1; p1 = p2; p2 = tmp; }
+
+                const segMidY = (p1.y + p2.y) / 2;
+                const isInsideCore = Math.abs(segMidY - centerY) <= radius;
+                const pointLeftToRight = isInsideCore ? (currentDirection > 0) : (currentDirection < 0);
+
+                if (pointLeftToRight) {
+                    drawArrow(ctx, p1.x, p1.y, p2.x, p2.y, '#c084fc', 7);
+                } else {
+                    drawArrow(ctx, p2.x, p2.y, p1.x, p1.y, '#c084fc', 7);
+                }
+            }
+            // Render lower loop arrowheads (5 layers)
+            if (cand.botSeg) {
+                let p1 = cand.botSeg[0];
+                let p2 = cand.botSeg[1];
+                if (p1.x > p2.x) { const tmp = p1; p1 = p2; p2 = tmp; }
+
+                const segMidY = (p1.y + p2.y) / 2;
+                const isInsideCore = Math.abs(segMidY - centerY) <= radius;
+                const pointLeftToRight = isInsideCore ? (currentDirection > 0) : (currentDirection < 0);
+
+                if (pointLeftToRight) {
+                    drawArrow(ctx, p1.x, p1.y, p2.x, p2.y, '#c084fc', 7);
+                } else {
+                    drawArrow(ctx, p2.x, p2.y, p1.x, p1.y, '#c084fc', 7);
+                }
+            }
+        });
+
+        // --- STEP 5: DRAW COILS & CURRENT DIRECTION ARROWS ---
+        ctx.strokeStyle = '#06b6d4';
+        ctx.lineWidth = 1.2;
+        ctx.lineCap = 'round';
+        
+        loopPositions.forEach(lx => {
+            ctx.beginPath();
+            ctx.arc(lx, centerY, radius, -Math.PI/2, Math.PI/2, false);
+            ctx.stroke();
+
+            const arrowY = centerY;
+            const arrowX = lx + radius;
+            
+            if (currentDirection > 0) {
+                drawArrow(ctx, arrowX, arrowY - 2, arrowX, arrowY + 2, '#06b6d4', 5);
+            } else {
+                drawArrow(ctx, arrowX, arrowY + 2, arrowX, arrowY - 2, '#06b6d4', 5);
+            }
+        });
+
+        const t1 = performance.now();
+        perfMonitor.innerText = `Render Time: ${(t1 - t0).toFixed(1)} ms`;
+    }
+
+    currentSlider.addEventListener('input', (e) => {
+        currentLevel = parseInt(e.target.value);
+        currentVal.innerText = `Level ${currentLevel}`;
+        draw();
+    });
+
+    turnsSlider.addEventListener('input', (e) => {
+        numLoops = parseInt(e.target.value);
+        turnsVal.innerText = `${numLoops} Coils`;
+        draw();
+    });
+
+    reverseToggle.addEventListener('change', (e) => {
+        currentDirection = e.target.checked ? -1 : 1;
+        draw();
+    });
+
+    draw();
+</script>
+
+</body>
+</html>
